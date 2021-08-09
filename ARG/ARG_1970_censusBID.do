@@ -26,7 +26,7 @@ log using "`log_file'", replace
 /***************************************************************************
                  BASES DE DATOS DE CENSOS POBLACIONALES
 País: Argentina
-Año:
+Año: 1970
 Autores: 
 Última versión: 
 
@@ -87,6 +87,16 @@ label value region_BID_c region_BID_c
       label value region_c region_c
       label var region_c "division politico-administrativa, provincia"
 
+    *********
+	*pais_c*
+	*********
+    gen str3 pais_c="ARG"
+	
+	*********
+	*anio_c*
+	*********
+    gen int anio_c=year
+	
 	
 			****************************
 			*  VARIABLES DE DISENO     *
@@ -127,12 +137,28 @@ label value region_BID_c region_BID_c
 	capture gen edad_ci=age
 	replace edad_ci=98 if edad_ci>=98 
 	
+	*************
+	*relacion_ci*
+	*************	
+	gen relacion_ci=1 if relate==1000
+    replace relacion_ci=2 if relate==2000
+    replace relacion_ci=3 if relate==3000
+    replace relacion_ci=4 if relate==4100 | relate==4200 | relate==4900
+    replace relacion_ci=5 if relate==5310 | relate==5600 | relate==5900
+    replace relacion_ci=6 if relate==5210
+	label var relacion_ci "Relación de parentesco con el jefe de hogar"
+    label define relacion_ci 1 "Jefe" 2 "Conyuge" 3 "Hijo" 4 "Otros Parientes" 5 "Otros no Parientes" 6 "Servicio Domestico"
+    label values relacion_ci relacion_ci
+
+	
 	**************
 	*Estado Civil*
 	**************
+	*2010 no tiene variable marst
 	
 	recode marst (2=1 "Union formal o informal") (3=2 "Divorciado o separado") (4=3 "Viudo") (1=4 "Soltero") (else=.), gen(civil_ci) 
 	label variable civil_ci "Estado civil"
+	
 	
     *********
 	*jefe_ci*
@@ -141,31 +167,24 @@ label value region_BID_c region_BID_c
 	gen jefe_ci=(relate==1)
 
 	
+    ***********
+	*nhijos_ch*
+	***********
+	*2010 no tiene variable nchild
+	
+    gen byte nhijos_ch=nchild
+	
 
 			***********************************
 			***VARIABLES DEL MERCADO LABORAL***
 			***********************************
 			
-			
-    *******************
-    ****    pet    ****
-    *******************
-	gen pet=.
-	replace pet=1 if age>14
-	replace pet=0 if age<=14
-	label var pet "Población en edad de trabajar"
-	
-	
-	*********************************
-    ****    fuerza de trabajo    ****
-    *********************************
-    gen fuerza_ci=(labforce==2)
-	
-	
+
      *******************
      ****condocup_ci****
      *******************
-
+	 *2010 no tiene variable empstat
+	 
     gen condocup_ci=.
     replace condocup_ci=1 if empstat==1
     replace condocup_ci=2 if empstat==2
@@ -175,10 +194,46 @@ label value region_BID_c region_BID_c
     label var condocup_ci "Condicion de ocupación"
     label define condocup_ci 1 "Ocupado" 2 "Desocupado" 3 "Inactivo" 4 "Menor de PET" 
     label value condocup_ci condocup_ci
+	
+	
+	  ************
+      ***emp_ci***
+      ************
+    gen emp_ci=(condocup_ci==1)
+
+	
+      ****************
+      ***desemp_ci***
+      ****************
+    gen desemp_ci=(condocup_ci==2)
+	
+	
+	  *************
+      ***pea_ci***
+      *************
+    gen pea_ci=(emp_ci==1 | desemp_ci==1)
+	
+	
+     *********************
+     ****categopri_ci****
+     *********************
+	 *OBSERVACIONES: El censo no distingue entre actividad principal o secundaria, asigno por default principal.	
+	 *2010 no tiene variable classwkd
+    gen categopri_ci=.
+    replace categopri_ci=0 if classwkd==999
+    replace categopri_ci=1 if classwkd==110
+    replace categopri_ci=2 if classwkd==120
+    replace categopri_ci=3 if classwkd==203 | classwkd==204
+    replace categopri_ci=4 if classwkd==310
+    label var categopri_ci "categoría ocupacional de la actividad principal "
+    label define categopri_ci 0 "Otra clasificación" 1 "Patrón o empleador" 2 "Cuenta Propia o independiente" 3 "Empleado o asalariado" 4 "Trabajador no remunerado" 
+    label value categopri_ci categopri_ci	 
+
 
      *************************
      ****rama de actividad****
-     *************************	
+     *************************
+	 *2010 no tiene variable indgen
     gen rama_ci = .
     replace rama_ci = 1 if indgen==10
     replace rama_ci = 2 if indgen==20  
@@ -200,22 +255,11 @@ label value region_BID_c region_BID_c
     label val rama_ci rama_ci
 	
 	
-	  ************
-      ***emp_ci***
-      ************
-    gen emp_ci=(condocup_ci==1)
-
-      ****************
-      ***desemp_ci***
-      ****************
-    gen desemp_ci=(condocup_ci==2)
-
-      *************
-      ***pea_ci***
-      *************
-    gen pea_ci=(emp_ci==1 | desemp_ci==1)
-
-
+	  *****************
+      ***spublico_ci***
+      *****************
+    gen spublico_ci=(indgen==100)	
+	
 
 
 
