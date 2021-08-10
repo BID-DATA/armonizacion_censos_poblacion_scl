@@ -119,6 +119,13 @@ label value region_BID_c region_BID_c
 	label var factor_ci "Factor de expansion del individuo"
 	
 	
+	****************
+    idh_ch (idhogar)
+    ****************
+	
+    gen str13 idh_ch=string(serial)
+	
+	
 		    ****************************
 			***VARIABLES DEMOGRAFICAS***
 			****************************
