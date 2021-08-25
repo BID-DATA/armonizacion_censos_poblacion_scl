@@ -269,8 +269,34 @@ label value region_BID_c region_BID_c
 	
 
 
+			***********************************
+			***VARIABLES DEL MERCADO LABORAL***
+			***********************************
+			
 
-
+      *******************
+      ****migrante_ci****
+      *******************
+	gen migrante_ci = (nativity == 2)
+	label var migrante_ci "=1 si es migrante"
+	 
+      *******************
+      **migantiguo5_ci***
+      *******************
+	gen migantiguo5_ci = (yrsimm > 5)
+	replace migantiguo5_ci = . if (yrsimm == 99 | yrsimm == 98)
+	label var migantiguo5_ci "=1 si es migrante antiguo (5 anos o mas)"
+	
+	
+	**********************
+	*** migrantelac_ci ***
+	**********************
+	
+	gen migrantelac_ci= 1 if inlist(bplcountry, 23040, 23100, 23020, 29999, 23130, 23030)
+	replace migrantelac_ci= 0 if inlist(bplcountry, 49999, 43070, 43120, 30000, 50000, 10000)
+	label var migrantelac_ci "=1 si es migrante proveniente de un pais LAC"
+	
+	
 compress
 
 save "`base_out'", replace 
