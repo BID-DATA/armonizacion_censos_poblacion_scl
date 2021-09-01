@@ -156,22 +156,6 @@
     gen pea_ci=(emp_ci==1 | desemp_ci==1)
 	
 	
-     *********************
-     ****categopri_ci****
-     *********************
-	 *OBSERVACIONES: El censo no distingue entre actividad principal o secundaria, asigno por default principal.	
-	 *2010 no tiene variable classwkd
-    gen categopri_ci=.
-    replace categopri_ci=0 if classwkd==999
-    replace categopri_ci=1 if classwkd==110
-    replace categopri_ci=2 if classwkd==120
-    replace categopri_ci=3 if classwkd==203 | classwkd==204
-    replace categopri_ci=4 if classwkd==310
-    label var categopri_ci "categoría ocupacional de la actividad principal "
-    label define categopri_ci 0 "Otra clasificación" 1 "Patrón o empleador" 2 "Cuenta Propia o independiente" 3 "Empleado o asalariado" 4 "Trabajador no remunerado" 
-    label value categopri_ci categopri_ci	 
-
-
      *************************
      ****rama de actividad****
      *************************
