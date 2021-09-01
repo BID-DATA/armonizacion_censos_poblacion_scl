@@ -82,7 +82,7 @@ label value region_BID_c region_BID_c
    replace region_c=99 if geo1_ar==32099			/*Unknown*/
 
 
-	  label define region_c 1"Ciudad de Buenos Aires" 2"Provincia de Buenos Aires" 3"Catamarca" 4"Córdoba" 5"Corrientes" 6"Chaco" 7"Chubut" 8"Entre Ríos" 9"Formosa" 10"Jujuy" 11"La Pampa" 12"La Rioja" 13"Mendoza" 14"Misiones" 15"Neuquén" 16"Río Negro" 17"Salta" 18"San Juan" 19"San Luis" 20"Santa Cruz" 21"Santa Fe" 22"Santiago del Estero" 23"Tucumán" 24"Tierra del Fuego" 25""
+	  label define region_c 1"Ciudad de Buenos Aires" 2"Provincia de Buenos Aires" 3"Catamarca" 4"Córdoba" 5"Corrientes" 6"Chaco" 7"Chubut" 8"Entre Ríos" 9"Formosa" 10"Jujuy" 11"La Pampa" 12"La Rioja" 13"Mendoza" 14"Misiones" 15"Neuquén" 16"Río Negro" 17"Salta" 18"San Juan" 19"San Luis" 20"Santa Cruz" 21"Santa Fe" 22"Santiago del Estero" 23"Tucumán" 24"Tierra del Fuego" 99""
 
       label value region_c region_c
       label var region_c "division politico-administrativa, provincia"
@@ -147,12 +147,12 @@ label value region_BID_c region_BID_c
 	*************
 	*relacion_ci*
 	*************	
-	gen relacion_ci=1 if relate==1000
-    replace relacion_ci=2 if relate==2000
-    replace relacion_ci=3 if relate==3000
-    replace relacion_ci=4 if relate==4100 | relate==4200 | relate==4900
-    replace relacion_ci=5 if relate==5310 | relate==5600 | relate==5900
-    replace relacion_ci=6 if relate==5210
+	gen relacion_ci=1 if related==1000
+    replace relacion_ci=2 if related==2000
+    replace relacion_ci=3 if related==3000
+    replace relacion_ci=4 if related==4100 | related==4200 | related==4900
+    replace relacion_ci=5 if related==5310 | related==5600 | related==5900
+    replace relacion_ci=6 if related==5210
 	label var relacion_ci "Relación de parentesco con el jefe de hogar"
     label define relacion_ci 1 "Jefe" 2 "Conyuge" 3 "Hijo" 4 "Otros Parientes" 5 "Otros no Parientes" 6 "Servicio Domestico"
     label values relacion_ci relacion_ci
