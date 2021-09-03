@@ -14,8 +14,8 @@ set more off
 
 /***************************************************************************
                  BASES DE DATOS DE CENSOS POBLACIONALES
-País: Uruguay
-Año: 2006
+País: Nicaragua
+Año: 2005
 Autores: Cesar Lins
 Última versión: Septiembre, 2021
 
@@ -23,8 +23,8 @@ Autores: Cesar Lins
 ****************************************************************************/
 
 
-local PAIS URY
-local ANO "2006"
+local PAIS NIC
+local ANO "2005"
 
 **************************************
 ** Setup code, load database,       **
@@ -42,17 +42,17 @@ include "../Base/base.do"
 *******************************************************				
 * Cesar Lins & Nathalia Maya - Septiembre 2021	
 
-			
 	***************
 	***afroind_ci***
 	***************
 **Pregunta: 
 
 gen afroind_ci=. 
-replace afroind_ci=1  if race == 30 | race==52
-replace afroind_ci=2 if race == 20 | race == 56 /* two or more races */
-replace afroind_ci=3 if race == 10 | race == 40 | race == 60
+replace afroind_ci=1  if inlist(ethnicni, 1, 3, 4, 5, 8, 9, 10, 11, 12, 13)
+replace afroind_ci=2 if ethnicni==2 | ethnicni==6 | ethnicni==7
+replace afroind_ci=3 if ethnicni==99
 
+gen etnia_ci=.
 
 	***************
 	***afroind_ch***
@@ -65,7 +65,8 @@ drop afroind_jefe
 	*******************
 	***afroind_ano_c***
 	*******************
-gen afroind_ano_c=2006
+gen afroind_ano_c=2005
+
 
 ********************
 *** discapacidad ***

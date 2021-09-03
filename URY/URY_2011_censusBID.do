@@ -15,7 +15,7 @@ set more off
 /***************************************************************************
                  BASES DE DATOS DE CENSOS POBLACIONALES
 País: Uruguay
-Año: 2006
+Año: 2011
 Autores: Cesar Lins
 Última versión: Septiembre, 2021
 
@@ -24,7 +24,7 @@ Autores: Cesar Lins
 
 
 local PAIS URY
-local ANO "2006"
+local ANO "2011"
 
 **************************************
 ** Setup code, load database,       **

@@ -14,8 +14,8 @@ set more off
 
 /***************************************************************************
                  BASES DE DATOS DE CENSOS POBLACIONALES
-País: Uruguay
-Año: 2006
+País: Panamá
+Año: 2010
 Autores: Cesar Lins
 Última versión: Septiembre, 2021
 
@@ -23,8 +23,8 @@ Autores: Cesar Lins
 ****************************************************************************/
 
 
-local PAIS URY
-local ANO "2006"
+local PAIS PAN
+local ANO "2010"
 
 **************************************
 ** Setup code, load database,       **
@@ -42,17 +42,16 @@ include "../Base/base.do"
 *******************************************************				
 * Cesar Lins & Nathalia Maya - Septiembre 2021	
 
-			
 	***************
 	***afroind_ci***
 	***************
 **Pregunta: 
-
+/* IPUMS does not keep the afro question */
 gen afroind_ci=. 
-replace afroind_ci=1  if race == 30 | race==52
-replace afroind_ci=2 if race == 20 | race == 56 /* two or more races */
-replace afroind_ci=3 if race == 10 | race == 40 | race == 60
+replace afroind_ci=1  if indig==1 
+replace afroind_ci=3 if indig==2 
 
+gen etnia_ci=.
 
 	***************
 	***afroind_ch***
@@ -65,7 +64,7 @@ drop afroind_jefe
 	*******************
 	***afroind_ano_c***
 	*******************
-gen afroind_ano_c=2006
+gen afroind_ano_c=2000
 
 ********************
 *** discapacidad ***

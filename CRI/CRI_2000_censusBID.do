@@ -14,8 +14,8 @@ set more off
 
 /***************************************************************************
                  BASES DE DATOS DE CENSOS POBLACIONALES
-País: Uruguay
-Año: 2006
+País: Costa Rica
+Año: 2000
 Autores: Cesar Lins
 Última versión: Septiembre, 2021
 
@@ -23,8 +23,8 @@ Autores: Cesar Lins
 ****************************************************************************/
 
 
-local PAIS URY
-local ANO "2006"
+local PAIS CRI
+local ANO "2000"
 
 **************************************
 ** Setup code, load database,       **
@@ -42,16 +42,16 @@ include "../Base/base.do"
 *******************************************************				
 * Cesar Lins & Nathalia Maya - Septiembre 2021	
 
-			
 	***************
 	***afroind_ci***
 	***************
 **Pregunta: 
 
 gen afroind_ci=. 
-replace afroind_ci=1  if race == 30 | race==52
-replace afroind_ci=2 if race == 20 | race == 56 /* two or more races */
-replace afroind_ci=3 if race == 10 | race == 40 | race == 60
+replace afroind_ci=1  if race == 30
+replace afroind_ci=2 if race == 20
+replace afroind_ci=3 if race == 10 | race == 40 
+replace afroind_ci=. if race == 99
 
 
 	***************
@@ -65,7 +65,8 @@ drop afroind_jefe
 	*******************
 	***afroind_ano_c***
 	*******************
-gen afroind_ano_c=2006
+gen afroind_ano_c=2000
+
 
 ********************
 *** discapacidad ***
