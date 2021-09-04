@@ -268,7 +268,6 @@ label value region_BID_c region_BID_c
     gen spublico_ci=(indgen==100)	
 	
 
-
 			***********************************
 			***VARIABLES DEL MERCADO LABORAL***
 			***********************************
@@ -295,6 +294,7 @@ label value region_BID_c region_BID_c
 	gen migrantelac_ci= 1 if inlist(bplcountry, 23040, 23100, 23020, 29999, 23130, 23030)
 	replace migrantelac_ci= 0 if inlist(bplcountry, 49999, 43070, 43120, 30000, 50000, 10000)
 	label var migrantelac_ci "=1 si es migrante proveniente de un pais LAC"
+
 	
 	
 compress
