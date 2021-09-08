@@ -49,15 +49,7 @@ label value region_BID_c region_BID_c
 
 
 
-    *********
-	*pais_c*
-	*********
-    gen str3 pais_c="CRI"
-	
-    ****************************************
-    * Variables comunes a todos los países *
-    ****************************************
-    include "../Base/base.do"
+
 
 
 
