@@ -269,7 +269,7 @@ label value region_BID_c region_BID_c
 	
 
 			***********************************
-			***VARIABLES DEL MERCADO LABORAL***
+			***    VARIABLES DE MIGRACIÓN.  ***
 			***********************************
 			
 
