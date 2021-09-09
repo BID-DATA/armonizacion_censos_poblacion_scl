@@ -286,7 +286,6 @@ label value region_BID_c region_BID_c
 	label var migrantelac_ci "=1 si es migrante proveniente de un pais LAC"
 
 
-
 compress
 
 save "`base_out'", replace 
