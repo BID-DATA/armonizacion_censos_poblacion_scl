@@ -13,7 +13,7 @@ set more off
 
 global ruta = "${censusFolder}"
 local PAIS CHL
-local ANO "1960"
+local ANO "1992"
 
 local log_file = "$ruta\harmonized\\`PAIS'\\log\\`PAIS'_`ANO'_censusBID.log"
 local base_in  = "$ruta\census\\`PAIS'\\`ANO'\data_merge\\`PAIS'_`ANO'_IPUMS.dta"
@@ -26,7 +26,7 @@ log using "`log_file'", replace
 /***************************************************************************
                  BASES DE DATOS DE CENSOS POBLACIONALES
 País: Chile
-Año: 1960
+Año: 1992
 Autores: 
 Última versión: 
 
@@ -36,7 +36,7 @@ Autores:
 
 use "`base_in'", clear
 
-rename __000001 CHL_1960
+
 
 ****************
 * region_BID_c *
@@ -54,6 +54,7 @@ label value region_BID_c region_BID_c
      *** region_c ***
      ****************
    * Clasificación válida para 1960 y 1970
+   gen geo1alt_cl=geolev1
    gen region_c=.   
    replace region_c=1 if geo1alt_cl==152001			    /*Tarapacá*/
    replace region_c=2 if geo1alt_cl==152002			    /*Antofagasta*/
@@ -162,8 +163,15 @@ label value region_BID_c region_BID_c
 	**************
 	*Estado Civil*
 	**************
+	gen civil_ci=.
+	replace civil_ci=1 if marst==2
+	replace civil_ci=2 if marst==3
+	replace civil_ci=3 if marst==4
+	replace civil_ci=4 if marst==1
 	
-	recode marst (2=1 "Union formal o informal") (3=2 "Divorciado o separado") (4=3 "Viudo") (1=4 "Soltero") (else=.), gen(civil_ci) 
+	label def civil_ci 1 "Union formal o informal" 2 "Divorciado o separado" ///
+	3 "Viudo" 4 "Soltero"
+	label val civil_ci civil_ci
 	label variable civil_ci "Estado civil"
 	
 	
@@ -273,8 +281,8 @@ label value region_BID_c region_BID_c
       *******************
       **migantiguo5_ci***
       *******************
-	gen migantiguo5_ci = (migyrs1 > 5) & migrante_ci == 1
-	replace migantiguo5_ci = . if (migyrs1 == 99 | migyrs1 == 98)
+	gen migantiguo5_ci = (yrsimm > 5) & migrante_ci == 1
+	replace migantiguo5_ci = . if (yrsimm == 99 | yrsimm == 98)
 	label var migantiguo5_ci "=1 si es migrante antiguo (5 anos o mas)"
 
 
@@ -289,20 +297,26 @@ label value region_BID_c region_BID_c
 *** Health indicators **********
 ********************************
 	gen discapacidad_ci =.
+	replace discapacidad_ci =1 if disabled ==1
 	label var discapacidad_ci "Discapacidad"
 
 	gen ceguera_ci=.
+	replace ceguera_ci=1 if disblnd==1
 	label var ceguera_ci "Ciego o con discpacidad visual"
 	
 	gen sordera_ci  =.
+	replace sordera_ci  =1 if disdeaf ==1
 	label var sordera_ci "Sordera o con discpacidad auditiva"
 
 	gen mudez_ci=.
+	replace mudez_ci=1 if dismute==1
 	label var mudez_ci "Mudo o con discpacidad de lenguaje"
 
 	gen dismental_ci=.
+	replace dismental_ci=1 if dismntl==1
 	label var dismental_ci "Discapacidad mental"
 
+	
 compress
 
 save "`base_out'", replace 
