@@ -12,7 +12,7 @@ set more off
 *Population and Housing Censuses/Harmonized Censuses - IPUMS
 
 global ruta = "${censusFolder}"
-local PAIS ARG
+local PAIS CHL
 local ANO "1970"
 
 local log_file = "$ruta\harmonized\\`PAIS'\\log\\`PAIS'_`ANO'_censusBID.log"
@@ -25,7 +25,7 @@ log using "`log_file'", replace
 
 /***************************************************************************
                  BASES DE DATOS DE CENSOS POBLACIONALES
-País: Argentina
+País: Chile
 Año: 1970
 Autores: 
 Última versión: 
@@ -36,7 +36,7 @@ Autores:
 
 use "`base_in'", clear
 
-rename __000000 ARG_1970
+
 
 ****************
 * region_BID_c *
@@ -53,36 +53,38 @@ label value region_BID_c region_BID_c
      ****************
      *** region_c ***
      ****************
+   * Clasificación válida para 1960 y 1970
 
    gen region_c=.   
-   replace region_c=1 if geo1_ar==32002			    /*Ciudad de Buenos Aires*/
-   replace region_c=2 if geo1_ar==32006			    /*Provincia de Buenos Aires*/
-   replace region_c=3 if geo1_ar==32010			    /*Catamarca*/
-   replace region_c=4 if geo1_ar==32014			    /*Córdoba*/
-   replace region_c=5 if geo1_ar==32018		     	/*Corrientes*/
-   replace region_c=6 if geo1_ar==32022			    /*Chaco*/
-   replace region_c=7 if geo1_ar==32026			    /*Chubut*/
-   replace region_c=8 if geo1_ar==32030			    /*Entre Rí­os*/
-   replace region_c=9 if geo1_ar==32034			    /*Formosa*/
-   replace region_c=10 if geo1_ar==32038			/*Jujuy*/
-   replace region_c=11 if geo1_ar==32042			/*La Pampa*/
-   replace region_c=12 if geo1_ar==32046			/*La Rioja*/
-   replace region_c=13 if geo1_ar==32050			/*Mendoza*/
-   replace region_c=14 if geo1_ar==32054			/*Misiones*/
-   replace region_c=15 if geo1_ar==32058			/*Neuquén*/
-   replace region_c=16 if geo1_ar==32062			/*Rio Negro*/
-   replace region_c=17 if geo1_ar==32066			/*Salta*/
-   replace region_c=18 if geo1_ar==32070			/*San Juan*/
-   replace region_c=19 if geo1_ar==32074			/*San Luis*/
-   replace region_c=20 if geo1_ar==32078			/*Santa Cruz*/
-   replace region_c=21 if geo1_ar==32082			/*Santa Fe*/
-   replace region_c=22 if geo1_ar==32086			/*Santiago del Estero*/
-   replace region_c=23 if geo1_ar==32090			/*Tucumán*/
-   replace region_c=24 if geo1_ar==32094			/*Tierra del Fuego*/
-   replace region_c=99 if geo1_ar==32099			/*Unknown*/
+   replace region_c=1 if geo1alt_cl==152001			    /*Tarapacá*/
+   replace region_c=2 if geo1alt_cl==152002			    /*Antofagasta*/
+   replace region_c=3 if geo1alt_cl==152003			    /*Atacama*/
+   replace region_c=4 if geo1alt_cl==152004			    /*Coquimbo*/
+   replace region_c=5 if geo1alt_cl==152005		     	/*Aconcagua*/
+   replace region_c=6 if geo1alt_cl==152006			    /*Valparaiso*/
+   replace region_c=7 if geo1alt_cl==152007			    /*Santiago*/
+   replace region_c=8 if geo1alt_cl==152008			    /*Ohiggins*/
+   replace region_c=9 if geo1alt_cl==152009			    /*Colchagua*/
+   replace region_c=10 if geo1alt_cl==152010			/*Curico*/
+   replace region_c=11 if geo1alt_cl==152011			/*Talca*/
+   replace region_c=12 if geo1alt_cl==152012			/*Maule*/
+   replace region_c=13 if geo1alt_cl==152013			/*Linares*/
+   replace region_c=14 if geo1alt_cl==152014			/*Nuble*/
+   replace region_c=15 if geo1alt_cl==152015			/*Concepción*/
+   replace region_c=16 if geo1alt_cl==152016			/*Arauco*/
+   replace region_c=17 if geo1alt_cl==152017			/*Bio Bio*/
+   replace region_c=18 if geo1alt_cl==152018			/*Malleco*/
+   replace region_c=19 if geo1alt_cl==152019			/*Cautin*/
+   replace region_c=20 if geo1alt_cl==152020			/*Valdivia*/
+   replace region_c=21 if geo1alt_cl==152021			/*Osorno*/
+   replace region_c=22 if geo1alt_cl==152022			/*Llanquihue*/
+   replace region_c=23 if geo1alt_cl==152023			/*Chiloe*/
+   replace region_c=24 if geo1alt_cl==152024			/*Aysen*/
+   replace region_c=25 if geo1alt_cl==152025			/*Magallanes*/
+   replace region_c=99 if geo1alt_cl==152099			/*Unknown*/
 
 
-	  label define region_c 1"Ciudad de Buenos Aires" 2"Provincia de Buenos Aires" 3"Catamarca" 4"Córdoba" 5"Corrientes" 6"Chaco" 7"Chubut" 8"Entre Ríos" 9"Formosa" 10"Jujuy" 11"La Pampa" 12"La Rioja" 13"Mendoza" 14"Misiones" 15"Neuquén" 16"Río Negro" 17"Salta" 18"San Juan" 19"San Luis" 20"Santa Cruz" 21"Santa Fe" 22"Santiago del Estero" 23"Tucumán" 24"Tierra del Fuego" 99""
+	  label define region_c 1"Tarapacá" 2"Antofagasta" 3"Atacama" 4"Coquimbo" 5"Aconcagua" 6"Valparaíso" 7"Santiago" 8"Ohiggins" 9"Colchagua" 10"Curico" 11"Talca" 12"Maule" 13"Linares" 14"Nuble" 15"Concepción" 16"Arauco" 17"Bio Bio" 18"Malleco" 19"Cautin" 20"Valdivia" 21"Osorno" 22"Llanquihue" 23"Chiloe" 24"Aysen" 25"Magallanes" 99""
 
       label value region_c region_c
       label var region_c "division politico-administrativa, provincia"
@@ -90,7 +92,7 @@ label value region_BID_c region_BID_c
     *********
 	*pais_c*
 	*********
-    gen str3 pais_c="ARG"
+    gen str3 pais_c="CHL"
 	
 	*********
 	*anio_c*
@@ -150,8 +152,8 @@ label value region_BID_c region_BID_c
 	gen relacion_ci=1 if related==1000
     replace relacion_ci=2 if related==2000
     replace relacion_ci=3 if related==3000
-    replace relacion_ci=4 if related==4100 | related==4200 | related==4900
-    replace relacion_ci=5 if related==5310 | related==5600 | related==5900
+    replace relacion_ci=4 if related==4000
+    replace relacion_ci=5 if related==5320 | related==5600 | related==5900
     replace relacion_ci=6 if related==5210
 	label var relacion_ci "Relación de parentesco con el jefe de hogar"
     label define relacion_ci 1 "Jefe" 2 "Conyuge" 3 "Hijo" 4 "Otros Parientes" 5 "Otros no Parientes" 6 "Servicio Domestico"
@@ -161,9 +163,15 @@ label value region_BID_c region_BID_c
 	**************
 	*Estado Civil*
 	**************
-	*2010 no tiene variable marst
+	gen civil_ci=.
+	replace civil_ci=1 if marst==2
+	replace civil_ci=2 if marst==3
+	replace civil_ci=3 if marst==4
+	replace civil_ci=4 if marst==1
 	
-	recode marst (2=1 "Union formal o informal") (3=2 "Divorciado o separado") (4=3 "Viudo") (1=4 "Soltero") (else=.), gen(civil_ci) 
+	label def civil_ci 1 "Union formal o informal" 2 "Divorciado o separado" ///
+	3 "Viudo" 4 "Soltero"
+	label val civil_ci civil_ci
 	label variable civil_ci "Estado civil"
 	
 	
@@ -174,14 +182,6 @@ label value region_BID_c region_BID_c
 	gen jefe_ci=(relate==1)
 
 	
-    ***********
-	*nhijos_ch*
-	***********
-	*2010 no tiene variable nchild
-	
-    gen byte nhijos_ch=nchild
-	
-
 			***********************************
 			***VARIABLES DEL MERCADO LABORAL***
 			***********************************
@@ -190,7 +190,6 @@ label value region_BID_c region_BID_c
      *******************
      ****condocup_ci****
      *******************
-	 *2010 no tiene variable empstat
 	 
     gen condocup_ci=.
     replace condocup_ci=1 if empstat==1
@@ -225,12 +224,11 @@ label value region_BID_c region_BID_c
      ****categopri_ci****
      *********************
 	 *OBSERVACIONES: El censo no distingue entre actividad principal o secundaria, asigno por default principal.	
-	 *2010 no tiene variable classwkd
     gen categopri_ci=.
-    replace categopri_ci=0 if classwkd==999
+    replace categopri_ci=0 if classwkd==400 | classwkd==999
     replace categopri_ci=1 if classwkd==110
     replace categopri_ci=2 if classwkd==120
-    replace categopri_ci=3 if classwkd==203 | classwkd==204
+    replace categopri_ci=3 if classwkd==203 | classwkd==204 | classwkd==216 | classwkd==230 
     replace categopri_ci=4 if classwkd==310
     label var categopri_ci "categoría ocupacional de la actividad principal "
     label define categopri_ci 0 "Otra clasificación" 1 "Patrón o empleador" 2 "Cuenta Propia o independiente" 3 "Empleado o asalariado" 4 "Trabajador no remunerado" 
@@ -240,7 +238,6 @@ label value region_BID_c region_BID_c
      *************************
      ****rama de actividad****
      *************************
-	 *2010 no tiene variable indgen
     gen rama_ci = .
     replace rama_ci = 1 if indgen==10
     replace rama_ci = 2 if indgen==20  
@@ -266,33 +263,35 @@ label value region_BID_c region_BID_c
       ***spublico_ci***
       *****************
     gen spublico_ci=(indgen==100)	
-	
 
+
+	
 			***********************************
-			***    VARIABLES DE MIGRACIÓN.  ***
+			***** VARIABLES DE MIGRACIÓN ******
 			***********************************
-			
+
+
 
       *******************
       ****migrante_ci****
       *******************
 	gen migrante_ci = (nativity == 2)
 	label var migrante_ci "=1 si es migrante"
-	 
+
       *******************
       **migantiguo5_ci***
       *******************
-	gen migantiguo5_ci = (yrsimm > 5)
-	replace migantiguo5_ci = . if (yrsimm == 99 | yrsimm == 98)
+	gen migantiguo5_ci = .
+	*replace migantiguo5_ci=. if (yrsimm > 5) & migrante_ci == 1
+	*replace migantiguo5_ci = . if (yrsimm == 99 | yrsimm == 98)
 	label var migantiguo5_ci "=1 si es migrante antiguo (5 anos o mas)"
-	
-	
+
+
 	**********************
 	*** migrantelac_ci ***
 	**********************
-	
-	gen migrantelac_ci= 1 if inlist(bplcountry, 23040, 23100, 23020, 29999, 23130, 23030)
-	replace migrantelac_ci= 0 if inlist(bplcountry, 49999, 43070, 43120, 30000, 50000, 10000)
+
+	gen migrantelac_ci= .
 	label var migrantelac_ci "=1 si es migrante proveniente de un pais LAC"
 
 ********************************
@@ -311,7 +310,8 @@ label value region_BID_c region_BID_c
 	label var mudez_ci "Mudo o con discpacidad de lenguaje"
 
 	gen dismental_ci=.
-	label var dismental_ci "Discapacidad mental"	
+	label var dismental_ci "Discapacidad mental"
+
 	
 compress
 

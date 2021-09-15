@@ -285,6 +285,23 @@ label value region_BID_c region_BID_c
 	gen migrantelac_ci= .
 	label var migrantelac_ci "=1 si es migrante proveniente de un pais LAC"
 
+********************************
+*** Health indicators **********
+********************************
+	gen discapacidad_ci =.
+	label var discapacidad_ci "Discapacidad"
+
+	gen ceguera_ci=.
+	label var ceguera_ci "Ciego o con discpacidad visual"
+	
+	gen sordera_ci  =.
+	label var sordera_ci "Sordera o con discpacidad auditiva"
+
+	gen mudez_ci=.
+	label var mudez_ci "Mudo o con discpacidad de lenguaje"
+
+	gen dismental_ci=.
+	label var dismental_ci "Discapacidad mental"
 
 compress
 
