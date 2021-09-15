@@ -12,8 +12,8 @@ set more off
 *Population and Housing Censuses/Harmonized Censuses - IPUMS
 
 global ruta = "${censusFolder}"
-local PAIS CRI
-local ANO "1963"
+local PAIS BRA
+local ANO "2000"
 
 local log_file = "$ruta\harmonized\\`PAIS'\\log\\`PAIS'_`ANO'_censusBID.log"
 local base_in  = "$ruta\census\\`PAIS'\\`ANO'\data_merge\\`PAIS'_`ANO'_IPUMS.dta"
@@ -25,8 +25,8 @@ log using "`log_file'", replace
 
 /***************************************************************************
                  BASES DE DATOS DE CENSOS POBLACIONALES
-País: Costa Rica
-Año: 1963
+País: Brasil
+Año: 2000
 Autores: 
 Última versión: 
 
@@ -36,7 +36,8 @@ Autores:
 
 use "`base_in'", clear
 
-rename __000003 CRI_1963
+
+rename __000002 BRA_2000
 
 ****************
 * region_BID_c *
@@ -54,24 +55,41 @@ label value region_BID_c region_BID_c
      ****************
 
    gen region_c=.   
-   replace region_c=1 if geo1_cr==188001			    /*San José*/
-   replace region_c=2 if geo1_cr==188002			    /*Alajuela*/
-   replace region_c=3 if geo1_cr==188003			    /*Cartago*/
-   replace region_c=4 if geo1_cr==188004			    /*Heredia*/
-   replace region_c=5 if geo1_cr==188005		     	/*Guanacaste*/
-   replace region_c=6 if geo1_cr==188006			    /*Puntarenas*/
-   replace region_c=7 if geo1_cr==188007			    /*Limón*/
-  *replace region_c=99 if geo1_cr==188099			    /*Unknown*/
+   replace region_c=1 if geo1_br==76011			    /*Rondonia*/
+   replace region_c=2 if geo1_br==76012		        /*Acre*/
+   replace region_c=3 if geo1_br==76013			    /*Amazonas*/
+   replace region_c=4 if geo1_br==76014			    /*Roraima*/
+   replace region_c=5 if geo1_br==76015		     	/*Para*/
+   replace region_c=6 if geo1_br==76016			    /*Amapa*/
+   replace region_c=7 if geo1_br==76021			    /*Maranhao*/
+   replace region_c=8 if geo1_br==76022		        /*Piaui*/
+   replace region_c=9 if geo1_br==76023		        /*Ceara*/
+   replace region_c=10 if geo1_br==76024			    /*Rio Grande do Norte*/
+   replace region_c=11 if geo1_br==76025		       	/*Paraiba*/
+   replace region_c=12 if geo1_br==76026			    /*Pernambuco*/
+   replace region_c=13 if geo1_br==76027			    /*Alagoas*/
+   replace region_c=14 if geo1_br==76028			    /*Sergipe*/
+   replace region_c=15 if geo1_br==76029			    /*Bahia*/
+   replace region_c=16 if geo1_br==76031			    /*Minas Gerais*/
+   replace region_c=17 if geo1_br==76032			    /*Espirito Santo*/
+   replace region_c=18 if geo1_br==76033			    /*Rio de Janeiro*/
+   replace region_c=19 if geo1_br==76035			    /*Sao Paulo*/
+   replace region_c=20 if geo1_br==76041			    /*Parana*/
+   replace region_c=21 if geo1_br==76042			    /*Santa Catarina*/
+   replace region_c=22 if geo1_br==76043			    /*Rio Grande do Sul*/ 
+   replace region_c=23 if geo1_br==76051			    /*Mato Grosso*/ 
+   replace region_c=24 if geo1_br==76052			    /*Goias*/ 
+   replace region_c=25 if geo1_br==76053			    /*Distrito Federal*/    
+  *replace region_c=99 if geo1_br==76099			    /*Unknown*/
 
-
-	  label define region_c 1"San José" 2"Alajuela" 3"Cartago" 4"Heredia" 5"Guanacaste" 6"Puntarenas" 7"Limón"
+	  label define region_c 1"Rondonia" 2"Acre" 3"Amazonas" 4"Roraima" 5"Para" 6"Amapa" 7"Maranhao" 8"Piaui" 9"Ceara" 10"Rio Grande do Norte" 11"Paraiba" 12"Pernambuco" 13"Alagoas" 14"Sergipe" 15"Bahia" 16"Minas Gerais" 17"Espirito Santo" 18"Rio de Janeiro" 19"Sao Paulo" 20"Parana" 21"Santa Catarina" 22"Rio Grande do Sul" 23"Mato Grosso" 24"Goias" 25"Distrito Federal"99""
       label value region_c region_c
-      label var region_c "division politico-administrativa, provincia"
+      label var region_c "division politico-administrativa, estado"
 
     *********
 	*pais_c*
 	*********
-    gen str3 pais_c="CRI"
+    gen str3 pais_c="BRA"
 	
 	*********
 	*anio_c*
@@ -128,12 +146,11 @@ label value region_BID_c region_BID_c
 	*************
 	*relacion_ci*
 	*************	
-	*6000 incluye otros no parientes
 	gen relacion_ci=1 if related==1000
-    replace relacion_ci=2 if related==2100 | related==2200
+    replace relacion_ci=2 if related==2000
     replace relacion_ci=3 if related==3000
-    replace relacion_ci=4 if related==6000 
-    replace relacion_ci=5 if related==5520 | related==55600
+    replace relacion_ci=4 if related==4100 | related==4200 | related==4410 | related==4900
+    replace relacion_ci=5 if related==5220 | related==5310 | related==5510 | related==5600
     replace relacion_ci=6 if related==5210
 	label var relacion_ci "Relación de parentesco con el jefe de hogar"
     label define relacion_ci 1 "Jefe" 2 "Conyuge" 3 "Hijo" 4 "Otros Parientes" 5 "Otros no Parientes" 6 "Servicio Domestico"
@@ -161,11 +178,10 @@ label value region_BID_c region_BID_c
 			***VARIABLES DEL MERCADO LABORAL***
 			***********************************
 			
+
      *******************
      ****condocup_ci****
      *******************
-	 *2010 no tiene variable empstat
-	 
     gen condocup_ci=.
     replace condocup_ci=1 if empstat==1
     replace condocup_ci=2 if empstat==2
@@ -197,16 +213,16 @@ label value region_BID_c region_BID_c
      *********************
      ****categopri_ci****
      *********************
-	 /*OBSERVACIONES: 1963 no tiene la variable classwkd
+	 *OBSERVACIONES: 
     gen categopri_ci=.
-    replace categopri_ci=0 if classwkd==999
+    replace categopri_ci=0 if classwkd==230 | classwkd==340
     replace categopri_ci=1 if classwkd==110
-    replace categopri_ci=2 if classwkd==120
-    replace categopri_ci=3 if classwkd==203 | classwkd==204
+    replace categopri_ci=2 if classwkd==120 | classwkd==123
+    replace categopri_ci=3 if classwkd==200 | classwkd==209
     replace categopri_ci=4 if classwkd==310
     label var categopri_ci "categoría ocupacional de la actividad principal "
     label define categopri_ci 0 "Otra clasificación" 1 "Patrón o empleador" 2 "Cuenta Propia o independiente" 3 "Empleado o asalariado" 4 "Trabajador no remunerado" 
-    label value categopri_ci categopri_ci */
+    label value categopri_ci categopri_ci	 
 
 
      *************************
@@ -227,9 +243,10 @@ label value region_BID_c region_BID_c
     replace rama_ci = 12 if indgen==112
     replace rama_ci = 13 if indgen==113 
     replace rama_ci = 14 if indgen==114 
-    replace rama_ci = 15 if indgen==120
+    replace rama_ci = 15 if indgen==120 
+	replace rama_ci = 16 if indgen==999
     label var rama_ci "Rama de actividad"
-    label def rama_ci 1"Agricultura, pesca y forestal" 2"Minería y extracción" 3"Industrias manufactureras" 4"Electricidad, gas, agua y manejo de residuos" 5"Construcción" 6"Comercio" 7"Hoteles y restaurantes" 8"Transporte, almacenamiento y comunicaciones" 9"Servicios financieros y seguros" 10"Administración pública y defensa" 11"Servicios empresariales e inmobiliarios" 12"Educación" 13"Salud y trabajo social" 14"Otros servicios" 15"Servicio doméstico"
+    label def rama_ci 1"Agricultura, pesca y forestal" 2"Minería y extracción" 3"Industrias manufactureras" 4"Electricidad, gas, agua y manejo de residuos" 5"Construcción" 6"Comercio" 7"Hoteles y restaurantes" 8"Transporte, almacenamiento y comunicaciones" 9"Servicios financieros y seguros" 10"Administración pública y defensa" 11"Servicios empresariales e inmobiliarios" 12"Educación" 13"Salud y trabajo social" 14"Otros servicios" 15"Servicio doméstico" 16"Otras ramas"
     label val rama_ci rama_ci
 	
 	
@@ -237,6 +254,9 @@ label value region_BID_c region_BID_c
       ***spublico_ci***
       *****************
     gen spublico_ci=(indgen==100)	
+
+
+
 
 
 compress
