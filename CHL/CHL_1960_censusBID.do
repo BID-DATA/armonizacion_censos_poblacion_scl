@@ -29,7 +29,6 @@ País: Chile
 Año: 1960
 Autores: 
 Última versión: 
-
 							SCL/LMK - IADB
 ****************************************************************************/
 ****************************************************************************
@@ -257,40 +256,36 @@ label value region_BID_c region_BID_c
     gen spublico_ci=(indgen==100)	
 
 
-*******************************************************
-***           VARIABLES DE DIVERSIDAD               ***
-*******************************************************				
-* Cesar Lins & Nathalia Maya - Septiembre 2021	
+	
+			***********************************
+			***** VARIABLES DE MIGRACIÓN ******
+			***********************************
 
-			
-	***************
-	***afroind_ci***
-	***************
-gen afroind_ci=. 
 
-	***************
-	***afroind_ch***
-	***************
-gen afroind_ch=. 
 
-	*******************
-	***afroind_ano_c***
-	*******************
-gen afroind_ano_c=.		
+      *******************
+      ****migrante_ci****
+      *******************
+	gen migrante_ci = (nativity == 2)
+	label var migrante_ci "=1 si es migrante"
 
-	*******************
-	***dis_ci***
-	*******************
-gen dis_ci=. 
+      *******************
+      **migantiguo5_ci***
+      *******************
+	gen migantiguo5_ci = (migyrs1 > 5) & migrante_ci == 1
+	replace migantiguo5_ci = . if (migyrs1 == 99 | migyrs1 == 98)
+	label var migantiguo5_ci "=1 si es migrante antiguo (5 anos o mas)"
 
-	*******************
-	***dis_ch***
-	*******************
-gen dis_ch=. 
+
+	**********************
+	*** migrantelac_ci ***
+	**********************
+
+	gen migrantelac_ci= .
+	label var migrantelac_ci "=1 si es migrante proveniente de un pais LAC"
 
 
 compress
 
 save "`base_out'", replace 
 log close
-
