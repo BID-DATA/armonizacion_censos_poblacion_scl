@@ -282,7 +282,7 @@ label value region_BID_c region_BID_c
       *******************
       **migantiguo5_ci***
       *******************
-	gen migantiguo5_ci = (yrsimm > 5)
+	gen migantiguo5_ci = (yrsimm >= 5)
 	replace migantiguo5_ci = . if (yrsimm == 99 | yrsimm == 98)
 	label var migantiguo5_ci "=1 si es migrante antiguo (5 anos o mas)"
 	
