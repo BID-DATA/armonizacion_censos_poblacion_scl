@@ -17,6 +17,35 @@
 * D.1.1 y D.1.1.3.
 *******************************************
 
+/*
+* Antes de incluyer este archivo, definir las variables en su .do:
+* local PAIS XXX (use ISO-alpha-3 code)
+* local ANO 20XX
+*/
+
+
+global ruta = "${censusFolder}"
+local log_file = "$ruta\harmonized\\`PAIS'\\log\\`PAIS'_`ANO'_censusBID.log"
+local base_in  = "$ruta\census\\`PAIS'\\`ANO'\data_merge\\`PAIS'_`ANO'_IPUMS.dta"
+local base_out = "$ruta\harmonized\\`PAIS'\data_arm\\`PAIS'_`ANO'_censusBID.dta"
+                                                    
+capture log close
+log using "`log_file'", replace 
+
+use "`base_in'", clear
+
+
+****************
+* region_BID_c *
+****************
+	
+gen region_BID_c=.
+
+
+	*********
+	*pais_c*
+	*********
+    gen str3 pais_c=`"`PAIS'"'
 	
 	*********
 	*anio_c*
@@ -51,19 +80,22 @@
 	rename urban zona_c 
 	
 
-    ****************************
-	***VARIABLES DEMOGRAFICAS***
-	****************************
+*********************************************
+***         VARIABLES DEMOGRAFICAS        ***
+*********************************************
 	
 	*********
 	*sexo_c*
 	*********
 	rename sex sexo_ci
+	drop if sexo_ci>2 | sexo_ci<1  /* sex=9 corresponde a "unknown" */
 	
 	*********
 	*edad_c*
 	*********
 	rename age edad_ci
+	replace edad_ci=. if edad_ci==999 /* age=999 corresponde a "unknown" */
+	replace edad_ci=98 if edad_ci>=98  /* age=100 corresponde a 100+ */
 	
 
  	*************
@@ -75,10 +107,6 @@
     replace relacion_ci=4 if relate==4100 | relate==4200 | relate==4900
     replace relacion_ci=5 if relate==5310 | relate==5600 | relate==5900
     replace relacion_ci=6 if relate==5210
-	label var relacion_ci "Relación de parentesco con el jefe de hogar"
-    label define relacion_ci 1 "Jefe" 2 "Conyuge" 3 "Hijo" 4 "Otros Parientes" 5 "Otros no Parientes" 6 "Servicio Domestico"
-    label values relacion_ci relacion_ci
-
 	
 	**************
 	*Estado Civil*
@@ -86,7 +114,6 @@
 	*2010 no tiene variable marst
 	
 	recode marst (2=1 "Union formal o informal") (3=2 "Divorciado o separado") (4=3 "Viudo") (1=4 "Soltero") (else=.), gen(civil_ci) 
-	label variable civil_ci "Estado civil"
 	
 	
     *********
@@ -110,16 +137,16 @@
 	rename persons nmiembros_ch 
 	
 
-	***********************************
-	***VARIABLES DE EDUCACIÓN       ***
-	***********************************	
+********************************************
+***         VARIABLES DE EDUCACIÓN       ***
+********************************************
 
 	rename yrschool aedu_ci
 
 
-	***********************************
-	***VARIABLES DEL MERCADO LABORAL***
-	***********************************
+**********************************************
+***      VARIABLES DEL MERCADO LABORAL     ***
+**********************************************
 			
 
      *******************
@@ -133,10 +160,6 @@
     replace condocup_ci=3 if empstat==3
     replace condocup_ci=. if empstat==9
     replace condocup_ci=4 if empstat==0
-    label var condocup_ci "Condicion de ocupación"
-    label define condocup_ci 1 "Ocupado" 2 "Desocupado" 3 "Inactivo" 4 "Menor de PET" 
-    label value condocup_ci condocup_ci
-	
 	
 	  ************
       ***emp_ci***
@@ -176,9 +199,6 @@
     replace rama_ci = 13 if indgen==113 
     replace rama_ci = 14 if indgen==114 
     replace rama_ci = 15 if indgen==120 
-    label var rama_ci "Rama de actividad"
-    label def rama_ci 1"Agricultura, pesca y forestal" 2"Minería y extracción" 3"Industrias manufactureras" 4"Electricidad, gas, agua y manejo de residuos" 5"Construcción" 6"Comercio" 7"Hoteles y restaurantes" 8"Transporte, almacenamiento y comunicaciones" 9"Servicios financieros y seguros" 10"Administración pública y defensa" 11"Servicios empresariales e inmobiliarios" 12"Educación" 13"Salud y trabajo social" 14"Otros servicios" 15"Servicio doméstico"
-    label val rama_ci rama_ci
 	
 	
 	  *****************
