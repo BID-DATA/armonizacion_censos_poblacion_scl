@@ -83,7 +83,6 @@ label value region_BID_c region_BID_c
 
 
 
-
 compress
 
 save "`base_out'", replace 
