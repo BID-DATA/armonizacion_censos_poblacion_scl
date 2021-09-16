@@ -77,7 +77,28 @@ label value region_BID_c region_BID_c
 	gen dismental_ci=.
 	label var dismental_ci "Discapacidad mental"	
 	
+	***********************************
+	***    VARIABLES DE MIGRACIÓN.  ***
+	***********************************
+			
 
+      *******************
+      ****migrante_ci****
+      *******************
+	gen migrante_ci = (nativity == 2)
+	 
+      *******************
+      **migantiguo5_ci***
+      *******************
+	gen migantiguo5_ci = (mig1_5_bo == 68097)
+	
+	
+	**********************
+	*** migrantelac_ci ***
+	**********************
+	
+	gen migrantelac_ci= 1 if inlist(bplcountry, 21100, 23010, 22060, 23110, 22020, 22040, 23050, 23100, 22030, 23060, 23140, 22050, 23040, 23100, 29999, 23130, 23030, 21250, 21999, 22010, 22070, 22080, 22999)
+	replace migrantelac_ci = 0 if migrantelac_ci == . & nativity == 2
 
 
 compress
