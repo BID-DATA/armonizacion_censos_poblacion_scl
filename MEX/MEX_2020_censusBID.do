@@ -59,7 +59,29 @@ label value region_BID_c region_BID_c
     include "../Base/base.do"
 
 
+********************************
+*** Health indicators **********
+********************************
 
+	gen discapacidad_ci =.
+	replace discapacidad_ci =1 if disabled ==1
+	label var discapacidad_ci "Discapacidad"
+
+	gen ceguera_ci=.
+	replace ceguera_ci=1 if disblnd==1
+	label var ceguera_ci "Ciego o con discpacidad visual"
+	
+	gen sordera_ci  =.
+	replace sordera_ci  =1 if disdeaf ==1
+	label var sordera_ci "Sordera o con discpacidad auditiva"
+
+	gen mudez_ci=.
+	replace mudez_ci=1 if dismute==1
+	label var mudez_ci "Mudo o con discpacidad de lenguaje"
+
+	gen dismental_ci=.
+	replace dismental_ci=1 if dismntl==1
+	label var dismental_ci "Discapacidad mental"
 
 
 
