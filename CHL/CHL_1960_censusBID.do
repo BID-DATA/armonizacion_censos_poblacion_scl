@@ -11,16 +11,8 @@ set more off
  
 *Population and Housing Censuses/Harmonized Censuses - IPUMS
 
-global ruta = "${censusFolder}"
 local PAIS CHL
 local ANO "1960"
-
-local log_file = "$ruta\harmonized\\`PAIS'\\log\\`PAIS'_`ANO'_censusBID.log"
-local base_in  = "$ruta\census\\`PAIS'\\`ANO'\data_merge\\`PAIS'_`ANO'_IPUMS.dta"
-local base_out = "$ruta\harmonized\\`PAIS'\data_arm\\`PAIS'_`ANO'_censusBID.dta"
-                                                    
-capture log close
-log using "`log_file'", replace 
 
 
 /***************************************************************************
@@ -34,21 +26,12 @@ Autores:
 ****************************************************************************/
 ****************************************************************************
 
-use "`base_in'", clear
+**************************************
+** Setup code, load database,       **
+** and include all common variables **
+**************************************
 
-rename __000001 CHL_1960
-
-****************
-* region_BID_c *
-****************
-	
-gen region_BID_c=.
-
-label var region_BID_c "Regiones BID"
-label define region_BID_c 1 "Centroamérica_(CID)" 2 "Caribe_(CCB)" 3 "Andinos_(CAN)" 4 "Cono_Sur_(CSC)"
-label value region_BID_c region_BID_c
-
-
+include "../Base/base.do"
 
      ****************
      *** region_c ***
@@ -88,220 +71,47 @@ label value region_BID_c region_BID_c
       label value region_c region_c
       label var region_c "division politico-administrativa, provincia"
 
-    *********
-	*pais_c*
-	*********
-    gen str3 pais_c="CHL"
 	
-	*********
-	*anio_c*
-	*********
-    gen int anio_c=year
-	
-	
-			****************************
-			*  VARIABLES DE DISENO     *
-			****************************
-	
-	
-	*******************************************
-	*Factor de expansion del hogar (factor_ch)*
-	*******************************************
+	  
+*******************************************************
+***           VARIABLES DE DIVERSIDAD               ***
+*******************************************************
+* Cesar Lins & Nathalia Maya - Septiembre 2021	
 
-	gen factor_ch=hhwt
-	label var factor_ch "Factor de expansion del hogar"
-	
+	***************
+	***afroind_ci***
+	***************
+**Pregunta: 
 
-	****************************************
-	*factor expansión individio (factor_ci)*
-	****************************************
+gen afroind_ci=. 
 
-	gen factor_ci=perwt
-	label var factor_ci "Factor de expansion del individuo"
-	
-	
-	******************
-    *idh_ch (idhogar)*
-    ******************
-	
-    gen str13 idh_ch=string(serial)
-	
-	
-		    ****************************
-			***VARIABLES DEMOGRAFICAS***
-			****************************
+	***************
+	***afroind_ch***
+	***************
+gen afroind_jefe=.
+gen afroind_ch  =.
 
-	*********
-	*sexo_ci*
-	*********
-	
-	capture gen sexo_ci=sex
-	drop if sexo_ci>2 | sexo_ci<1 
-	
-	*********
-	*edad_ci*
-	*********
-	
-	capture gen edad_ci=age
-	replace edad_ci=98 if edad_ci>=98 
-	
-	*************
-	*relacion_ci*
-	*************	
-	gen relacion_ci=1 if related==1000
-    replace relacion_ci=2 if related==2000
-    replace relacion_ci=3 if related==3000
-    replace relacion_ci=4 if related==4000
-    replace relacion_ci=5 if related==5320 | related==5600 | related==5900
-    replace relacion_ci=6 if related==5210
-	label var relacion_ci "Relación de parentesco con el jefe de hogar"
-    label define relacion_ci 1 "Jefe" 2 "Conyuge" 3 "Hijo" 4 "Otros Parientes" 5 "Otros no Parientes" 6 "Servicio Domestico"
-    label values relacion_ci relacion_ci
+drop afroind_jefe 
 
-	
-	**************
-	*Estado Civil*
-	**************
-	
-	recode marst (2=1 "Union formal o informal") (3=2 "Divorciado o separado") (4=3 "Viudo") (1=4 "Soltero") (else=.), gen(civil_ci) 
-	label variable civil_ci "Estado civil"
-	
-	
-    *********
-	*jefe_ci*
-	*********
+	*******************
+	***afroind_ano_c***
+	*******************
+gen afroind_ano_c=.
 
-	gen jefe_ci=(relate==1)
+********************
+*** discapacid
+********************
+gen dis_ci=.
+gen dis_ch=.
 
-	
-			***********************************
-			***VARIABLES DEL MERCADO LABORAL***
-			***********************************
-			
+*****************************
+** Include all labels of   **
+**  harmonized variables   **
+*****************************
+include "../Base/labels.do"
 
-     *******************
-     ****condocup_ci****
-     *******************
-	 
-    gen condocup_ci=.
-    replace condocup_ci=1 if empstat==1
-    replace condocup_ci=2 if empstat==2
-    replace condocup_ci=3 if empstat==3
-    replace condocup_ci=. if empstat==9
-    replace condocup_ci=4 if empstat==0
-    label var condocup_ci "Condicion de ocupación"
-    label define condocup_ci 1 "Ocupado" 2 "Desocupado" 3 "Inactivo" 4 "Menor de PET" 
-    label value condocup_ci condocup_ci
-	
-	
-	  ************
-      ***emp_ci***
-      ************
-    gen emp_ci=(condocup_ci==1)
+order region_BID_c pais_c estrato_ci zona_c relacion_ci civil_ci idh_ch factor_ch idp_ci factor_ci edad_ci sexo_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch miembros_ci condocup_ci emp_ci desemp_ci pea_ci rama_ci spublico_ci migrante_ci migantiguo5_ci aguared_ch luz_ch bano_ch des1_ch piso_ch pared_ch techo_ch dorm_ch cuartos_ch cocina_ch refrig_ch auto_ch internet_ch cel_ch viviprop_ch viviprop_ch1 region_c categopri_ci discapacidad_ci ceguera_ci sordera_ci mudez_ci dismental_ci afroind_ci afroind_ch afroind_ano_c dis_ci dis_ch aedu_ci
 
-	
-      ****************
-      ***desemp_ci***
-      ****************
-    gen desemp_ci=(condocup_ci==2)
-	
-	
-	  *************
-      ***pea_ci***
-      *************
-    gen pea_ci=(emp_ci==1 | desemp_ci==1)
-	
-	
-     *********************
-     ****categopri_ci****
-     *********************
-	 *OBSERVACIONES: El censo no distingue entre actividad principal o secundaria, asigno por default principal.	
-    gen categopri_ci=.
-    replace categopri_ci=0 if classwkd==400 | classwkd==999
-    replace categopri_ci=1 if classwkd==110
-    replace categopri_ci=2 if classwkd==120
-    replace categopri_ci=3 if classwkd==203 | classwkd==204 | classwkd==216 | classwkd==230 
-    replace categopri_ci=4 if classwkd==310
-    label var categopri_ci "categoría ocupacional de la actividad principal "
-    label define categopri_ci 0 "Otra clasificación" 1 "Patrón o empleador" 2 "Cuenta Propia o independiente" 3 "Empleado o asalariado" 4 "Trabajador no remunerado" 
-    label value categopri_ci categopri_ci	 
-
-
-     *************************
-     ****rama de actividad****
-     *************************
-    gen rama_ci = .
-    replace rama_ci = 1 if indgen==10
-    replace rama_ci = 2 if indgen==20  
-    replace rama_ci = 3 if indgen==30   
-    replace rama_ci = 4 if indgen==40    
-    replace rama_ci = 5 if indgen==50    
-    replace rama_ci = 6 if indgen==60    
-    replace rama_ci = 7 if indgen==70    
-    replace rama_ci = 8 if indgen==80    
-    replace rama_ci = 9 if indgen==90
-    replace rama_ci = 10 if indgen==100  
-    replace rama_ci = 11 if indgen==111  
-    replace rama_ci = 12 if indgen==112
-    replace rama_ci = 13 if indgen==113 
-    replace rama_ci = 14 if indgen==114 
-    replace rama_ci = 15 if indgen==120 
-    label var rama_ci "Rama de actividad"
-    label def rama_ci 1"Agricultura, pesca y forestal" 2"Minería y extracción" 3"Industrias manufactureras" 4"Electricidad, gas, agua y manejo de residuos" 5"Construcción" 6"Comercio" 7"Hoteles y restaurantes" 8"Transporte, almacenamiento y comunicaciones" 9"Servicios financieros y seguros" 10"Administración pública y defensa" 11"Servicios empresariales e inmobiliarios" 12"Educación" 13"Salud y trabajo social" 14"Otros servicios" 15"Servicio doméstico"
-    label val rama_ci rama_ci
-	
-	
-	  *****************
-      ***spublico_ci***
-      *****************
-    gen spublico_ci=(indgen==100)	
-
-
-	
-			***********************************
-			***** VARIABLES DE MIGRACIÓN ******
-			***********************************
-
-
-
-      *******************
-      ****migrante_ci****
-      *******************
-	gen migrante_ci = (nativity == 2)
-	label var migrante_ci "=1 si es migrante"
-
-      *******************
-      **migantiguo5_ci***
-      *******************
-	gen migantiguo5_ci = (migyrs1 > 5) & migrante_ci == 1
-	replace migantiguo5_ci = . if (migyrs1 == 99 | migyrs1 == 98)
-	label var migantiguo5_ci "=1 si es migrante antiguo (5 anos o mas)"
-
-
-	**********************
-	*** migrantelac_ci ***
-	**********************
-
-	gen migrantelac_ci= .
-	label var migrantelac_ci "=1 si es migrante proveniente de un pais LAC"
-
-********************************
-*** Health indicators **********
-********************************
-	gen discapacidad_ci =.
-	label var discapacidad_ci "Discapacidad"
-
-	gen ceguera_ci=.
-	label var ceguera_ci "Ciego o con discpacidad visual"
-	
-	gen sordera_ci  =.
-	label var sordera_ci "Sordera o con discpacidad auditiva"
-
-	gen mudez_ci=.
-	label var mudez_ci "Mudo o con discpacidad de lenguaje"
-
-	gen dismental_ci=.
-	label var dismental_ci "Discapacidad mental"
 
 compress
 
