@@ -330,36 +330,6 @@ use "`base_in'", clear
       *****************
     gen spublico_ci=(indgen==100)	
 
-***********************************
-***    VARIABLES DE MIGRACIÓN.  ***
-***********************************
-			
-
-      *******************
-      ****migrante_ci****
-      *******************
-	gen migrante_ci =.
-	cap confirm variable nativity
-	if (_rc==0) {
-	replace migrante_ci=(nativity == 2)
-	
-	}
-      *******************
-      **migantiguo5_ci***
-      *******************
-	gen migantiguo5_ci =.
-	cap confirm variable yrsimm 
-	if (_rc==0) {
-	replace migantiguo5_ci=(yrsimm >= 5)
-	replace migantiguo5_ci = . if (yrsimm == 99 | yrsimm == 98)
-	}
-
-		**********************
-		*** migrantelac_ci ***
-		**********************
-
-		gen migrantelac_ci= .
-
 
 		**********************************
 		**** VARIABLES DE LA VIVIENDA ****
