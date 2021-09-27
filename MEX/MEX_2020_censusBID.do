@@ -12,8 +12,8 @@ set more off
 *Population and Housing Censuses/Harmonized Censuses - IPUMS
 
 global ruta = "${censusFolder}"
-local PAIS CRI
-local ANO "1963"
+local PAIS MEX
+local ANO "2020"
 
 local log_file = "$ruta\harmonized\\`PAIS'\\log\\`PAIS'_`ANO'_censusBID.log"
 local base_in  = "$ruta\census\\`PAIS'\\`ANO'\data_merge\\`PAIS'_`ANO'_IPUMS.dta"
@@ -25,7 +25,7 @@ log using "`log_file'", replace
 
 /***************************************************************************
                  BASES DE DATOS DE CENSOS POBLACIONALES
-País: Costa Rica
+País: Mexico
 Año:
 Autores: 
 Última versión: 
@@ -49,40 +49,9 @@ label value region_BID_c region_BID_c
 
 
 
-    *********
-	*pais_c*
-	*********
-    gen str3 pais_c="CRI"
-	
-    ****************************************
-    * Variables comunes a todos los países *
-    ****************************************
-    include "../Base/base.do"
-
-	
-	
-	***********************************
-	***    VARIABLES DE MIGRACIÓN.  ***
-	***********************************
 
 
-      *******************
-      ****migrante_ci****
-      *******************
-	gen migrante_ci = (nativity == 2)
 
-      *******************
-      **migantiguo5_ci***
-      *******************
-	gen migantiguo5_ci = (migyrs1 >= 5) & migrante_ci == 1
-	replace migantiguo5_ci = . if migantiguo5_ci == 0 & nativity != 2
-
-	**********************
-	*** migrantelac_ci ***
-	**********************
-
-	gen migrantelac_ci= 1 if inlist(bplcountry, 21100, 23010, 22060, 23110, 22040, 23100, 22030, 23060, 23140, 22050, 23050, 23040, 23100, 29999, 23130, 23030, 21250, 21999, 22010, 22070, 22080, 22999)
-	replace migrantelac_ci = 0 if migrantelac_ci == . & nativity == 2
 
 
 
@@ -90,3 +59,4 @@ compress
 
 save "`base_out'", replace 
 log close
+

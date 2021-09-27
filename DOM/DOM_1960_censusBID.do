@@ -67,4 +67,3 @@ compress
 
 save "`base_out'", replace 
 log close
-
