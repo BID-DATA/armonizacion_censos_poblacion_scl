@@ -16,7 +16,41 @@
 * Consultar los documentos de gobernanza
 * D.1.1 y D.1.1.3.
 *******************************************
+global ruta = "${censusFolder}"
 
+local log_file = "$ruta\harmonized\\`PAIS'\\log\\`PAIS'_`ANO'_censusBID.log"
+local base_in  = "$ruta\census\\`PAIS'\\`ANO'\data_merge\\`PAIS'_`ANO'_IPUMS.dta"
+local base_out = "$ruta\harmonized\\`PAIS'\data_arm\\`PAIS'_`ANO'_censusBID.dta"
+                                                    
+capture log close
+log using "`log_file'", replace
+
+use "`base_in'", clear
+
+			****************************
+			*  VARIABLES DE DISENO     *
+			****************************
+
+	****************
+	* region_BID_c *
+	****************
+	*CSC
+		if `"`PAIS'"'=="ARG" | `"`PAIS'"'=="URY" | `"`PAIS'"'=="BRA" | `"`PAIS'"'=="PRY" | `"`PAIS'"'=="CHL" local reg_bid 4
+	*CAN	
+		if `"`PAIS'"'=="BOL" | `"`PAIS'"'=="COL" | `"`PAIS'"'=="ECU" | `"`PAIS'"'=="PER" | `"`PAIS'"'=="VEN" local reg_bid 3
+		
+	*CCB	
+		if `"`PAIS'"'=="BHS" | `"`PAIS'"'=="GUY" | `"`PAIS'"'=="JAM" | `"`PAIS'"'=="SUR" | `"`PAIS'"'=="BRB" | `"`PAIS'"'=="TTO" local reg_bid 2
+	
+	*CID
+		if `"`PAIS'"'=="BLZ" | `"`PAIS'"'=="CRI" | `"`PAIS'"'=="SLV" | `"`PAIS'"'=="GTM" | `"`PAIS'"'=="HTI" | `"`PAIS'"'=="HON" | `"`PAIS'"'=="PAN" | `"`PAIS'"'=="MEX" | `"`PAIS'"'=="DOM" | `"`PAIS'"'=="NIC" local reg_bid 1
+		
+	gen region_BID_c=`reg_bid'
+
+	*********
+	*pais_c*
+	*********
+    rename __00000 pais_c
 	
 	*********
 	*anio_c*
@@ -26,8 +60,13 @@
 	******************
     *idh_ch (id hogar)*
     ******************
-    gen str13 idh_ch=string(serial)
+    rename serial idh_ch 
 	
+	******************
+    *idp_ci (idpersonas)*
+    ******************
+	
+	rename pernum idp_ci 
 	
 	****************************************
 	*factor expansión individio (factor_ci)*
@@ -39,87 +78,181 @@
 	*******************************************
 	rename hhwt factor_ch
 	
+	
 	***********
 	* estrato *
 	***********
-	rename strata estrato_ci
+	gen estrato_ci=.
+	cap confirm variable strata
+	if (_rc==0) {
+	replace estrato_ci=strata 
+	}
+
 	
 	***************************
 	* Zona urbana (1) o rural (0)
 	***************************
+	gen zona_c=.
+	cap confirm variable urban
+	if (_rc==0) {
 	replace urban = urban-1
-	rename urban zona_c 
+	replace zona_c=urban
+	}
 	
 
-    ****************************
-	***VARIABLES DEMOGRAFICAS***
-	****************************
+	
+
+*********************************************
+***         VARIABLES DEMOGRAFICAS        ***
+*********************************************
 	
 	*********
 	*sexo_c*
 	*********
 	rename sex sexo_ci
+	drop if sexo_ci>2 | sexo_ci<1  /* sex=9 corresponde a "unknown" */
 	
 	*********
 	*edad_c*
 	*********
 	rename age edad_ci
+	replace edad_ci=. if edad_ci==999 /* age=999 corresponde a "unknown" */
+	replace edad_ci=98 if edad_ci>=98  /* age=100 corresponde a 100+ */
 	
 
  	*************
 	*relacion_ci*
 	*************	
-	gen relacion_ci=1 if relate==1000
-    replace relacion_ci=2 if relate==2000
-    replace relacion_ci=3 if relate==3000
-    replace relacion_ci=4 if relate==4100 | relate==4200 | relate==4900
-    replace relacion_ci=5 if relate==5310 | relate==5600 | relate==5900
-    replace relacion_ci=6 if relate==5210
-	label var relacion_ci "Relación de parentesco con el jefe de hogar"
-    label define relacion_ci 1 "Jefe" 2 "Conyuge" 3 "Hijo" 4 "Otros Parientes" 5 "Otros no Parientes" 6 "Servicio Domestico"
-    label values relacion_ci relacion_ci
-
-	
+	gen relacion_ci=1 if related==1000
+    replace relacion_ci=2 if related==2000
+    replace relacion_ci=3 if related==3000
+    replace relacion_ci=4 if related==4100 | related==4200 | related==4900
+    replace relacion_ci=5 if related==5310 | related==5600 | related==5900
+    replace relacion_ci=6 if related==5210
+	replace relacion_ci=9 if related==9999
 	**************
 	*Estado Civil*
 	**************
 	*2010 no tiene variable marst
-	
+	cap confirm variable marst
+	if (_rc==0) {
 	recode marst (2=1 "Union formal o informal") (3=2 "Divorciado o separado") (4=3 "Viudo") (1=4 "Soltero") (else=.), gen(civil_ci) 
-	label variable civil_ci "Estado civil"
-	
+	}
 	
     *********
 	*jefe_ci*
 	*********
 
 	gen jefe_ci=(relate==1)
-
 	
-    ***********
+
+	**************
+	*nconyuges_ch*
+	**************
+
+	by idh_ch, sort: egen nconyuges_ch=sum(relacion_ci==2)
+
+
+	***********
 	*nhijos_ch*
 	***********
-	*2010 no tiene variable nchild
 	
-    rename nchild nhijos_ch
- 	
- 	
-	*****************************
-	* Numero de miembros en el hogar
-	*****************************
-	rename persons nmiembros_ch 
-	
+	by idh_ch, sort: egen nhijos_ch=sum(relacion_ci==3) 
 
-	***********************************
-	***VARIABLES DE EDUCACIÓN       ***
-	***********************************	
+	**************
+	*notropari_ch*
+	**************
+
+	by idh_ch, sort: egen notropari_ch=sum(relacion_ci==4)
+	
+	****************
+	*notronopari_ch*
+	****************
+	
+	by idh_ch, sort: egen notronopari_ch=sum(relacion_ci==5)
+	
+	************
+	*nempdom_ch*
+	************
+
+	*NOTA: se utiliza la variable related la cual tiene más desagregación en cuanto a la relación con el jefe de hogar
+	tab related, nol
+	
+	by idh_ch, sort: egen nempdom_ch=sum(related==5210) if relacion_ci==6	  
+	
+	*************
+	*clasehog_ch*
+	*************
+
+	gen byte clasehog_ch=0
+		**** unipersonal
+	replace clasehog_ch=1 if nhijos_ch==0 & nconyuges_ch==0 & notropari_ch==0 & notronopari_ch==0
+		**** nuclear (child with or without spouse but without other relatives)
+	replace clasehog_ch=2 if nhijos_ch>0 & notropari_ch==0 & notronopari_ch==0
+		**** nuclear (spouse with or without children but without other relatives)
+	replace clasehog_ch=2 if nhijos_ch==0 & nconyuges_ch>0 & notropari_ch==0 & notronopari_ch==0
+		**** ampliado
+	replace clasehog_ch=3 if notropari_ch>0 & notronopari_ch==0
+		**** compuesto (some relatives plus non relative)
+	replace clasehog_ch=4 if ((nconyuges_ch>0 | nhijos_ch>0 | notropari_ch>0) & (notronopari_ch>0))
+		**** corresidente
+	replace clasehog_ch=5 if nhijos_ch==0 & nconyuges_ch==0 & notropari_ch==0 & notronopari_ch>0
+	
+	**************
+	*nmiembros_ch*
+	**************
+
+	by idh_ch, sort: egen byte nmiembros_ch=sum(relacion_ci>0 & relacion_ci<9)
+
+	*************
+	*nmayor21_ch*
+	*************
+
+	by idh_ch, sort: egen byte nmayor21_ch=sum((relacion_ci>0 & relacion_ci<9) & (edad_ci>=21 & edad_ci<=98))
+
+	*************
+	*nmenor21_ch*
+	*************
+
+	by idh_ch, sort: egen byte nmenor21_ch=sum((relacion_ci>0 & relacion_ci<9) & (edad_ci<21))
+
+	*************
+	*nmayor65_ch*
+	*************
+
+	by idh_ch, sort: egen byte nmayor65_ch=sum((relacion_ci>0 & relacion_ci<9) & (edad_ci>=65 & edad_ci!=.))
+
+	************
+	*nmenor6_ch*
+	************
+
+	by idh_ch, sort: egen byte nmenor6_ch=sum((relacion_ci>0 & relacion_ci<9) & (edad_ci<6))
+
+	************
+	*nmenor1_ch*
+	************
+
+	by idh_ch, sort: egen byte nmenor1_ch=sum((relacion_ci>0 & relacion_ci<9) & (edad_ci<1))
+
+	************
+	*miembros_ci
+	************
+	
+	gen miembros_ci=(relacion_ci>=1 & relacion_ci<9) 
+	tab persons
+	tab miembros_ci	
+
+
+********************************************
+***         VARIABLES DE EDUCACIÓN       ***
+********************************************
 
 	rename yrschool aedu_ci
 
 
-	***********************************
-	***VARIABLES DEL MERCADO LABORAL***
-	***********************************
+**********************************************
+***      VARIABLES DEL MERCADO LABORAL     ***
+**********************************************
 			
 
      *******************
@@ -133,10 +266,6 @@
     replace condocup_ci=3 if empstat==3
     replace condocup_ci=. if empstat==9
     replace condocup_ci=4 if empstat==0
-    label var condocup_ci "Condicion de ocupación"
-    label define condocup_ci 1 "Ocupado" 2 "Desocupado" 3 "Inactivo" 4 "Menor de PET" 
-    label value condocup_ci condocup_ci
-	
 	
 	  ************
       ***emp_ci***
@@ -176,16 +305,222 @@
     replace rama_ci = 13 if indgen==113 
     replace rama_ci = 14 if indgen==114 
     replace rama_ci = 15 if indgen==120 
-    label var rama_ci "Rama de actividad"
-    label def rama_ci 1"Agricultura, pesca y forestal" 2"Minería y extracción" 3"Industrias manufactureras" 4"Electricidad, gas, agua y manejo de residuos" 5"Construcción" 6"Comercio" 7"Hoteles y restaurantes" 8"Transporte, almacenamiento y comunicaciones" 9"Servicios financieros y seguros" 10"Administración pública y defensa" 11"Servicios empresariales e inmobiliarios" 12"Educación" 13"Salud y trabajo social" 14"Otros servicios" 15"Servicio doméstico"
-    label val rama_ci rama_ci
+	
+	  *********************
+     ****categopri_ci****
+     *********************
+	 *OBSERVACIONES: El censo no distingue entre actividad principal o secundaria, asigno por default principal.	
+    gen categopri_ci=.
+	cap confirm variable classwkd
+	if (_rc==0) {
+    replace categopri_ci=0 if classwkd==400 | classwkd==999
+    replace categopri_ci=1 if classwkd==110
+    replace categopri_ci=2 if classwkd==120
+    replace categopri_ci=3 if classwkd==203 | classwkd==204 | classwkd==216 | classwkd==230 
+    replace categopri_ci=4 if classwkd==310
+    label var categopri_ci "categoría ocupacional de la actividad principal "
+    label define categopri_ci 0 "Otra clasificación" 1 "Patrón o empleador" 2 "Cuenta Propia o independiente" 3 "Empleado o asalariado" 4 "Trabajador no remunerado" 
+    label value categopri_ci categopri_ci	 
+	}
+
 	
 	
 	  *****************
       ***spublico_ci***
       *****************
     gen spublico_ci=(indgen==100)	
+
+
+		**********************************
+		**** VARIABLES DE LA VIVIENDA ****
+		**********************************
+		
+	************
+	*aguared_ch*
+	************
+
+	gen aguared_ch=.
+	cap confirm variable watsup
+	if (_rc==0) {
+	replace aguared_ch=(watsup>=10 & watsup<20)
+	replace aguared_ch=. if watsup==99
+	}
+
+
+	********
+	*luz_ch*
+	********
+	*En la nueva encuesta no se encontro si se pregunta por instalacion electrica
+	gen luz_ch=.
+	cap confirm variable electric
+	if (_rc==0) {
+	 replace luz_ch=(electric==1)
+	 replace luz_ch=. if electric==9
+	}
+
+	*********
+	*bano_ch*
+	*********
+
+	gen bano_ch=.
+	gen des1_ch=.
+	cap confirm variable toilet
+	if (_rc==0) {
+	replace bano_ch=(toilet==20 | toilet==21 | toilet==22 | toilet==23)
+ 	replace bano_ch=. if toilet==99
+	*********
+	*des1_ch*
+	*********
+	replace des1_ch=0 if bano_ch==0
+	replace des1_ch=1 if toilet==21
+	replace des1_ch=2 if toilet==22
+	replace des1_ch=. if toilet==99
+	
+	}
 	
 
+	*********
+	*piso_ch*
+	*********
+    
+	gen piso_ch=.
+ 	cap confirm variable floor
+	if (_rc==0) {
+	replace piso_ch=1 if (floor>=100 & floor<=120)
+	replace piso_ch=2 if floor>=200 & floor<999
+	replace piso_ch=. if floor==999
+	}
+
+	**********
+	*pared_ch*
+	**********
+
+	gen pared_ch=.
+	cap confirm variable wall
+	if (_rc==0) {
+	    replace pared_ch=(wall>=500 & wall<=600)
+		replace pared_ch=. if wall=999
+	}
+
+
+	**********
+	*techo_ch*
+	**********
+*Modificación SGR Julio 2019
+	gen techo_ch=.
+	
+	cap confirm variable roof
+	if (_rc==0) {
+	replace techo_ch=1  if roof>=10 & roof<20
+    replace techo_ch=1  if roof>=20 & roof<80
+	replace techo_ch=2  if roof==80
+	}
+	
+	*********
+	*dorm_ch*
+	*********
+	gen dorm_ch=.
+	cap confirm variable bedrooms
+	if (_rc==0) {
+	replace dorm_ch=bedrooms 
+	replace dorm_ch=. if bedrooms==99 | bedrooms==98
+	}
+	************
+	*cuartos_ch*
+	************
+
+	gen cuartos_ch=.
+	cap confirm variable rooms
+	if (_rc==0) {
+	replace cuartos_ch=rooms
+	replace cuartos_ch=. if rooms==99 | rooms==98
+	}
+
+	***********
+	*cocina_ch*
+	***********
+
+	gen cocina_ch=.
+	cap confirm variable kitchen
+	if (_rc==0) {
+	replace cocina_ch=(kitchen>=20 & kitchen<=28 )
+	replace cocina_ch=. if kitchen==99
+	}
+
+
+	***********
+	*refrig_ch*
+	***********
+	gen refrig_ch=.
+	cap confirm variable refrig
+	if (_rc==0) {
+	replace refrig_ch=(refrig==1)
+	replace refrig_ch=. if refrig==9
+	}
+
+
+
+	*********
+	*auto_ch*
+	*********
+
+	gen auto_ch=.
+	cap confirm variable autos
+	if (_rc==0) {
+	replace auto_ch=(autos>0 & autos<8)
+	replace auto_ch=. if autos==8 | autos==9
+	}
+
+
+
+	*************
+	*internet_ch*
+	*************
+
+	gen internet_ch=.
+	cap confirm variable internet
+	if (_rc==0) {
+	replace internet_ch=(internet==1)
+	replace internet_ch=. if internet==9
+	}
+	
+	********
+	*cel_ch*
+	********
+	gen cel_ch=.
+	cap confirm variable cell
+	if (_rc==0) {
+	    replace cel_ch=(cell==1)
+		replace cel_ch=. if cell==9
+	}
+	
+
+	*************
+	*viviprop_ch*
+	*************
+	*NOTA: aqui se genera una variable parecida, pues no se puede saber si es propia total o parcialmente pagada
+	gen viviprop_ch1=.
+	cap confirm variable ownership
+	if (_rc==0) {
+	replace viviprop_ch1=0 if ownership==2
+	replace viviprop_ch1=1 if ownership==1
+	*replace viviprop_ch1=3 if 
+	replace viviprop_ch1=. if ownership==9
+	}
+	
+********************************
+*** Health indicators **********
+********************************
+	gen discapacidad_ci =.
+	
+
+	gen ceguera_ci=.
 	
 	
+	gen sordera_ci  =.
+	
+
+	gen mudez_ci=.
+	
+
+	gen dismental_ci=.

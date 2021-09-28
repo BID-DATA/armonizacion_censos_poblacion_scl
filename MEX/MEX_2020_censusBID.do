@@ -47,18 +47,6 @@ label var region_BID_c "Regiones BID"
 label define region_BID_c 1 "Centroamérica_(CID)" 2 "Caribe_(CCB)" 3 "Andinos_(CAN)" 4 "Cono_Sur_(CSC)"
 label value region_BID_c region_BID_c
 
-
-    *********
-	*pais_c*
-	*********
-    gen str3 pais_c="MEX"
-	
-    ****************************************
-    * Variables comunes a todos los países *
-    ****************************************
-    include "../Base/base.do"
-
-
 ********************************
 *** Health indicators **********
 ********************************
@@ -84,9 +72,9 @@ label value region_BID_c region_BID_c
 	label var dismental_ci "Discapacidad mental"
 
 
-
 compress
 
 save "`base_out'", replace 
 log close
+
 
