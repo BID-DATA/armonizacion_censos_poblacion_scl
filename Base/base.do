@@ -23,7 +23,7 @@ local base_in  = "$ruta\census\\`PAIS'\\`ANO'\data_merge\\`PAIS'_`ANO'_IPUMS.dta
 local base_out = "$ruta\harmonized\\`PAIS'\data_arm\\`PAIS'_`ANO'_censusBID.dta"
                                                     
 capture log close
-log using "`log_file'", replace 
+log using "`log_file'", replace
 
 use "`base_in'", clear
 
@@ -422,7 +422,7 @@ use "`base_in'", clear
 	gen dorm_ch=.
 	cap confirm variable bedrooms
 	if (_rc==0) {
-	gen dorm_ch=bedrooms 
+	replace dorm_ch=bedrooms 
 	replace dorm_ch=. if bedrooms==99 | bedrooms==98
 	}
 	************
