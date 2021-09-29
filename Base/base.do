@@ -360,7 +360,7 @@ use "`base_in'", clear
 	gen des1_ch=.
 	cap confirm variable toilet
 	if (_rc==0) {
-	replace bano_ch= 1 if toilet==20 | toilet==21 | toilet==22 | toilet==23)
+	replace bano_ch= 1 if toilet==20 | toilet==21 | toilet==22 | toilet==23
 	replace bano_ch= 0 if toilet==10
  	replace bano_ch=. if toilet==99
 
@@ -544,7 +544,16 @@ use "`base_in'", clear
 	*replace viviprop_ch1=3 if 
 	replace viviprop_ch1=. if ownership==9
 	}
-	
+**********************************
+**** VARIABLES DE INGRESO ****
+***********************************
+*NOTA: variables se generan vacias para que en cada do se cambien dependiendo de la variable de ingreso disponible
+
+   gen ylm_ci=.
+ 
+   gen ynlm_ci=.
+   
+   gen ylm_ch =.
 ********************************
 *** Health indicators **********
 ********************************
