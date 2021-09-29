@@ -79,7 +79,6 @@ include "../Base/base.do"
      ***********
 	  *ylm_ci*
 	 ***********
-   gen ylm_ci=.
    cap confirm variable incearn
    if (_rc==0) {
    replace ylm_ci = incearn
@@ -89,7 +88,6 @@ include "../Base/base.do"
 	 *********
 	 *ynlm_ci*
 	 *********
-   gen ynlm_ci=.
    cap confirm variable incwel
    if (_rc==0) {
    replace ynlm_ci=incwel
@@ -99,18 +97,8 @@ include "../Base/base.do"
      ***********
 	  *ylm_ch*
 	 ***********
-   by idh_ch, sort: egen ylm_ch=sum(ylm_ci) if miembros_ci==1
+   by idh_ch, sort: replace ylm_ch=sum(ylm_ci) if miembros_ci==1
    
-   /*variables que faltan generar
-   gen ylmho_ci=ylm_ci/(horaspri_ci*4.3)
-   replace ylmho_ci=. if ylmho_ci<=0
-   gen nrylm_ci=(ylm_ci=. & emp_ci==1)
-   replace nrylm_ci=. if emp_ci!=1
-   sort idh_ch: egen nrylm_ch=max(nrylm_ci) if miembros_ci==1
-   by idh_ch, sort: egen ylmnr_ch=sum(ylm_ci) if miembros_ci==1
-   replace ylmnr_ch=. if nrylm_ch==1 
-   gen tcylm_ci=.
-   gen tcylm_ch=.*/
  
 *******************************************************
 ***           VARIABLES DE DIVERSIDAD               ***
