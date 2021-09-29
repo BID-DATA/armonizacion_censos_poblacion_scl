@@ -336,7 +336,8 @@ use "`base_in'", clear
 	gen aguared_ch=.
 	cap confirm variable watsup
 	if (_rc==0) {
-	replace aguared_ch=(watsup>=10 & watsup<20)
+	replace aguared_ch=1 if watsup>=10 & watsup<20
+	replace aguared_ch=0 if watsup ==20
 	replace aguared_ch=. if watsup==99
 	}
 
@@ -347,7 +348,8 @@ use "`base_in'", clear
 	gen luz_ch=.
 	cap confirm variable electric
 	if (_rc==0) {
-	 replace luz_ch=(electric==1)
+	 replace luz_ch = 0 if electric== 2
+	 replace luz_ch = 1 if electric== 1
 	 replace luz_ch=. if electric==9
 	}
 
@@ -358,7 +360,8 @@ use "`base_in'", clear
 	gen des1_ch=.
 	cap confirm variable toilet
 	if (_rc==0) {
-	replace bano_ch=(toilet==20 | toilet==21 | toilet==22 | toilet==23)
+	replace bano_ch= 1 if toilet==20 | toilet==21 | toilet==22 | toilet==23)
+	replace bano_ch= 0 if toilet==10
  	replace bano_ch=. if toilet==99
 
 	*********
@@ -377,7 +380,8 @@ use "`base_in'", clear
 	gen piso_ch=.
  	cap confirm variable floor
 	if (_rc==0) {
-	replace piso_ch=1 if (floor>=100 & floor<=120)
+	replace piso_ch=0 if floor==100
+	replace piso_ch=1 if (floor>100 & floor<=120)
 	replace piso_ch=2 if floor>=200 & floor<999
 	replace piso_ch=. if floor==999
 	}
@@ -456,7 +460,8 @@ use "`base_in'", clear
 	gen cocina_ch=.
 	cap confirm variable kitchen
 	if (_rc==0) {
-	replace cocina_ch=(kitchen>=20 & kitchen<=28 )
+	replace cocina_ch= 1 if kitchen>=20 & kitchen<=28
+	replace cocina_ch = 0 if kitchen == 10
 	replace cocina_ch=. if kitchen==99
 	}
 	
@@ -488,7 +493,8 @@ use "`base_in'", clear
 	gen auto_ch=.
 	cap confirm variable autos
 	if (_rc==0) {
-	replace auto_ch=(autos>0 & autos<8)
+	replace auto_ch= 1 if autos>0 & autos<8
+	replace auto_ch= 0 if autos==0
 	replace auto_ch=. if autos==8 | autos==9
 	}
 	

@@ -147,6 +147,15 @@ gen afroind_ano_c=1990
 gen dis_ci=.
 gen dis_ch=.
 
+***********************************
+***    VARIABLES DE MIGRACIÓN.  ***
+***********************************
+	gen migrante_ci=.
+
+	gen migantiguo5_ci=.
+	
+	gen migrantelac_ci=.
+
 
 *****************************
 ** Include all labels of   **

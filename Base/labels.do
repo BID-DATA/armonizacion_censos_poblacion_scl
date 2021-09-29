@@ -241,30 +241,30 @@ label var luz_ch  "La principal fuente de iluminación es electricidad"
 label var bano_ch "El hogar tiene servicio sanitario"
 
 label var des1_ch "Tipo de desague según unimproved de MDG"
-	label def des1_ch 0"No_tiene_servicio_sanitario" 1"Conectado_a_red_general_o_cámara_séptica", add modify
-	label def des1_ch 2"Letrina_o_conectado_a_pozo_ciego" 3"Desemboca_en_río_o_calle", add modify
-	label val des1_ch des1_ch
+	label define des1_ch 0 "No_tiene_servicio_sanitario" 1 "Conectado_a_red_general_o_cámara_séptica" 2"Letrina_o_conectado_a_pozo_ciego" 3"Desemboca_en_río_o_calle", add modify
+	label values des1_ch des1_ch
 
 	label var auto_ch "El hogar posee automovil particular"
 	
 label var piso_ch "Materiales de construcción del piso"  
-	label def piso_ch 0"Piso_de_tierra" 1"Materiales_permanentes", add modify
-	label val piso_ch piso_ch
+	label define piso_ch 0"Sin piso o sin terminar" 1 "Piso de tierra" 2 "Materiales_permanentes", add modify
+	label values piso_ch piso_ch
 
 label var banomejorado_ch "Tipo de desague"
-	label def banomejorado_ch 0"No tiene servicio sanitario" 1"Eliminacion de aguas residuales o fosa séptica"
+	label define banomejorado_ch 0 "No tiene servicio sanitario" 1"Eliminacion de aguas residuales o fosa séptica"
+	label values banomejorado_ch banomejorado_ch
 	
 label var pared_ch "Materiales de construcción de las paredes"
-	label def pared_ch 0"No tiene paredes"  1	"Materiales_no_permanentes" 2 "Materiales permanentes", add modify
-	label var pared_ch pared_ch
+	label define pared_ch 0 "No tiene paredes"  1	"Materiales_no_permanentes" 2 "Materiales permanentes", add modify
+	label values pared_ch pared_ch
 
 label var techo_ch "Materiales de construcción del techo" 
-	label def techo_ch 1"Materiales_permanentes"  0"Materiales_no_permanentes" 2 "Otros_materiales", add modify
-label var techo_ch techo_ch 
+	label define techo_ch 1 "Materiales_permanentes"  0"Materiales_no_permanentes" 2 "Otros_materiales", add modify
+label values techo_ch techo_ch 
 
 label var resid_ch "Método de eliminación de residuos" 
-	label def resid_ch 0"Recolección pública o privada" 1"Quemados o enterrados" 2 "Tirados a un espacio abierto" 3"Otros", add modify
-label var resid_ch resid_ch
+	label define resid_ch 0"Recolección pública o privada" 1"Quemados o enterrados" 2 "Tirados a un espacio abierto" 3"Otros", add modify
+label values resid_ch resid_ch
 	
 label var dorm_ch "# de habitaciones exclusivas para dormir"
 label var cuartos_ch "# Habitaciones en el hogar"
