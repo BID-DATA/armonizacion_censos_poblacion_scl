@@ -127,10 +127,15 @@ label var spublico_ci "=1: Personas que trabajan en el sector público"
  label var rama_ci "Rama de actividad"
     label def rama_ci 1"Agricultura, pesca y forestal" 2"Minería y extracción" 3"Industrias manufactureras" 4"Electricidad, gas, agua y manejo de residuos" 5"Construcción" 6"Comercio" 7"Hoteles y restaurantes" 8"Transporte, almacenamiento y comunicaciones" 9"Servicios financieros y seguros" 10"Administración pública y defensa" 11"Servicios empresariales e inmobiliarios" 12"Educación" 13"Salud y trabajo social" 14"Otros servicios" 15"Servicio doméstico", add modify
     label val rama_ci rama_ci	
+*====================================================================================================================================*
+*                                                          VARIABLES DE INGRESO                                              *
+*====================================================================================================================================*	
+	label var ylm_ci "Ingreso laboral monetario total individual"
+	label var ynlm_ci "Ingreso no laboral monetario total individual"
+	label var ylm_ch "Ingreso laboral monetario del hogar"
 /*	
 label var durades_ci "Duracion del desempleo en meses"
 	
-	* Ingresos
 	*Actividad Principal
 label var ylmpri_ci "Ingreso laboral monetario actividad principal" 
 label var nrylmpri_ci "ID de no respuesta ingreso de la actividad principal"  
@@ -149,9 +154,7 @@ label var ylmhopri_ci "Salario monetario horario de la actividad principal"
 label var ylmho_ci "Salario monetario horario de todas las actividades" 
 
 			* Totales individuales
-label var ylnm_ci "Ingreso laboral NO monetario total individual"  	
-label var ylm_ci "Ingreso laboral monetario total individual"  
-label var ynlm_ci "Ingreso no laboral monetario total individual"  
+label var ylnm_ci "Ingreso laboral NO monetario total individual"  	  
 label var ynlnm_ci "Ingreso no laboral no monetario total individual" 
 			
 			* Totales a nivel de hogar
@@ -228,7 +231,7 @@ label var edupub_ci "Asiste a un centro de ensenanza público"
 */
 
 *====================================================================================================================================*
-*                                                          VARIABLES DE INFRAESTRUCTURA DEL HOGAR                                    *
+* VARIABLES DE INFRAESTRUCTURA DEL HOGAR                       *
 *====================================================================================================================================*
 
 label var aguared_ch "Acceso a fuente de agua por red"
@@ -238,35 +241,48 @@ label var luz_ch  "La principal fuente de iluminación es electricidad"
 label var bano_ch "El hogar tiene servicio sanitario"
 
 label var des1_ch "Tipo de desague según unimproved de MDG"
-	label def des1_ch 0"No_tiene_servicio_sanitario" 1"Conectado_a_red_general_o_cámara_séptica", add modify
-	label def des1_ch 2"Letrina_o_conectado_a_pozo_ciego" 3"Desemboca_en_río_o_calle", add modify
-	label val des1_ch des1_ch
+	label define des1_ch 0 "No_tiene_servicio_sanitario" 1 "Conectado_a_red_general_o_cámara_séptica" 2"Letrina_o_conectado_a_pozo_ciego" 3"Desemboca_en_río_o_calle", add modify
+	label values des1_ch des1_ch
 
 	label var auto_ch "El hogar posee automovil particular"
 	
 label var piso_ch "Materiales de construcción del piso"  
-	label def piso_ch 0"Piso_de_tierra" 1"Materiales_permanentes", add modify
-	label val piso_ch piso_ch
+	label define piso_ch 0"Sin piso o sin terminar" 1 "Piso de tierra" 2 "Materiales_permanentes", add modify
+	label values piso_ch piso_ch
 
-	label var pared_ch "Materiales de construcción de las paredes"
+label var banomejorado_ch "Tipo de desague"
+	label define banomejorado_ch 0 "No tiene servicio sanitario" 1"Eliminacion de aguas residuales o fosa séptica"
+	label values banomejorado_ch banomejorado_ch
+	
+label var pared_ch "Materiales de construcción de las paredes"
+	label define pared_ch 0 "No tiene paredes"  1	"Materiales_no_permanentes" 2 "Materiales permanentes", add modify
+	label values pared_ch pared_ch
+
 label var techo_ch "Materiales de construcción del techo" 
-	label def techo_ch 1"Materiales_permanentes"  0"Materiales_no_permanentes" 2 "Otros_materiales", add modify
-label var techo_ch techo_ch 
+	label define techo_ch 1 "Materiales_permanentes"  0"Materiales_no_permanentes" 2 "Otros_materiales", add modify
+label values techo_ch techo_ch 
 
+label var resid_ch "Método de eliminación de residuos" 
+	label define resid_ch 0"Recolección pública o privada" 1"Quemados o enterrados" 2 "Tirados a un espacio abierto" 3"Otros", add modify
+label values resid_ch resid_ch
 	
 label var dorm_ch "# de habitaciones exclusivas para dormir"
 label var cuartos_ch "# Habitaciones en el hogar"
 
 label var cocina_ch "Cuarto separado y exclusivo para cocinar"
 
+label var telef_ch "El hogar tiene servicio telefónico fijo"
+
 label var refrig_ch "El hogar posee refrigerador o heladera"
 
+label var auto_ch "El hogar posee automovil"
 
+label var compu_ch "El hogar posee computadora"
 
 label var internet_ch "El hogar posee conexión a internet"
+
 label var cel_ch "El hogar tiene servicio telefonico celular"
 
-		
 label var viviprop_ch1 "Propiedad de la vivienda" 
 	label def viviprop_ch 0"Alquilada" 1"Propia" 3"Ocupada_(propia_de_facto)", add modify
 	label val viviprop_ch viviprop_ch1
