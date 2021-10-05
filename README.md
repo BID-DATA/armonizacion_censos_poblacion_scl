@@ -92,6 +92,7 @@ Debido a que el trabajo de armonización principalmente se realiza de forma para
 3) Una vez se realiza la solitud de merge, se revisa y verifica que no existan errores en el nuevo pull antes de aceptar el merge a la branch principal. 
 
 Para ampliar la explicación del flujo de trabajo en el repositorio ver **“M.2.1.2 Git Conventions.pptx”**.
+Asimismo, revisar documentación armonización de censos para los pasos siguientes.
 
 ## Cómo citar el uso del banco de datos armonizado
 La información tomada de este banco de datos debe ser citada como:
