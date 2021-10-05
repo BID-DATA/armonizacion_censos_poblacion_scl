@@ -30,8 +30,11 @@ base.do.
 #### Preliminares
 
 Antes de empezar a trabajar o contribuir en la armonización de los censos de población y vivienda se deben realizar los siguientes pasos:
+**1. Información necesaria**
 
-**1. Clonar el repositorio**
+El primer input es la información no armonizada que se encuentra en SCLData o en Platform on Demand. En primer lugar, se debe determinar si se trabajará de forma local en cuyo caso es necesario descargar los censos de la carpeta [SCL Data](https://scldata.iadb.org/app/folder/C3FA5FBA-CCAE-4DF7-BABF-EB7E1B278956). O si se hará en Platform on Demand, en dónde la información se encuentra almacenada en la carpeta: `SCLDataPoD > Harmonized Censuses - IPUMS > raw`. 
+
+**2. Clonar el repositorio**
 
 Se debe de clonar el repositorio **"armonizacion_censos_poblacion_scl"** a nivel local en el desktop personal. Para esto se puede usar GitHub
 Desktop o la consola. 
@@ -58,7 +61,7 @@ git branch feature_armonizacion_scl
 ```
 Esta es la forma de hacerlo si la armonización se realiza en Platform on Demand. 
 
-**2. Definir path de datos**
+**3. Definir path de datos**
 
 Para el trabajo con la armonización se deben precisar dos global principales con el objetivo de definir los path necesarios para generar la armonización de las bases. Los global se deben definir a nivel local. Se recomienda que los global se definan en el Do-File `profile.do` alojado en la carpeta local **“PERSONAL”** para que una vez se inicie el programa de STATA ya los global estén definidos:
 
