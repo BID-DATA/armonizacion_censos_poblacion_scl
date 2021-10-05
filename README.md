@@ -108,6 +108,6 @@ Por último, ya que las variables se añadieron al script de forma correcta es n
 
 En conjunto el repositorio y estos dos documentos deben de ser suficientes para que una persona que no forme parte de los TS pueda contribuir y entender todo el contenido. Así como para promover la continuidad de este proyecto.
 
-## Cómo citar el uso del banco de datos armonizado
+## Cómo citar el uso del banco de datos armonizados
 La información tomada de este banco de datos debe ser citada como:
 "Fuente: Banco Interamericano de Desarrollo: Banco de Datos Armonizado de Censos de Población". Se sugiere hacer referencia a la fecha en que las bases de datos fueron consultadas, dado que la información contenida en ellas podría cambiar. Asimismo, se agradece una copia de las publicaciones o informes que utilicen la información contenida en este banco de datos para nuestros registros. **PENDIENTE**
