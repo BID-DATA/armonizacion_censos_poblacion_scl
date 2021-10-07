@@ -32,7 +32,6 @@ local ANO "2005"
 **************************************
 include "../Base/base.do"
 
-
 *****************************************************
 ******* Variables specific for this census **********
 *****************************************************
@@ -59,6 +58,7 @@ replace afroind_ci=3 if race == 10 | race == 60
 gen afroind_jefe= afroind_ci if relate==1
 egen afroind_ch  = min(afroind_jefe), by(serial) 
 
+
 drop afroind_jefe 
 
 	*******************
@@ -74,12 +74,12 @@ gen dis_ci=.
 gen dis_ch=.
 
 
+
 *****************************
 ** Include all labels of   **
 **  harmonized variables   **
 *****************************
 include "../Base/labels.do"
-
 
 compress
 

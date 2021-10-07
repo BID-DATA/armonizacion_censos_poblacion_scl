@@ -23,6 +23,7 @@ local base_in  = "$ruta\census\\`PAIS'\\`ANO'\data_merge\\`PAIS'_`ANO'_IPUMS.dta
 local base_out = "$ruta\harmonized\\`PAIS'\data_arm\\`PAIS'_`ANO'_censusBID.dta"
                                                     
 capture log close
+
 log using "`log_file'", replace 
 
 use "`base_in'", clear
@@ -99,9 +100,6 @@ use "`base_in'", clear
 	replace zona_c=urban
 	}
 	
-
-	
-
 *********************************************
 ***         VARIABLES DEMOGRAFICAS        ***
 *********************************************
@@ -118,7 +116,6 @@ use "`base_in'", clear
 	rename age edad_ci
 	replace edad_ci=. if edad_ci==999 /* age=999 corresponde a "unknown" */
 	replace edad_ci=98 if edad_ci>=98  /* age=100 corresponde a 100+ */
-	
 
  	*************
 	*relacion_ci*
@@ -322,14 +319,11 @@ use "`base_in'", clear
     label define categopri_ci 0 "Otra clasificación" 1 "Patrón o empleador" 2 "Cuenta Propia o independiente" 3 "Empleado o asalariado" 4 "Trabajador no remunerado" 
     label value categopri_ci categopri_ci	 
 	}
-
-	
 	
 	  *****************
       ***spublico_ci***
       *****************
     gen spublico_ci=(indgen==100)	
-
 
 		**********************************
 		**** VARIABLES DE LA VIVIENDA ****
@@ -346,7 +340,6 @@ use "`base_in'", clear
 	replace aguared_ch=. if watsup==99
 	}
 
-
 	********
 	*luz_ch*
 	********
@@ -361,13 +354,14 @@ use "`base_in'", clear
 	*********
 	*bano_ch*
 	*********
-
 	gen bano_ch=.
 	gen des1_ch=.
 	cap confirm variable toilet
 	if (_rc==0) {
+
 	replace bano_ch=(toilet==20 | toilet==21 | toilet==22 | toilet==23)
  	replace bano_ch=. if toilet==99
+
 	*********
 	*des1_ch*
 	*********
@@ -377,8 +371,7 @@ use "`base_in'", clear
 	replace des1_ch=. if toilet==99
 	
 	}
-	
-
+  
 	*********
 	*piso_ch*
 	*********
@@ -402,7 +395,6 @@ use "`base_in'", clear
 		replace pared_ch=. if wall=999
 	}
 
-
 	**********
 	*techo_ch*
 	**********
@@ -422,6 +414,7 @@ use "`base_in'", clear
 	gen dorm_ch=.
 	cap confirm variable bedrooms
 	if (_rc==0) {
+
 	gen dorm_ch=bedrooms 
 	replace dorm_ch=. if bedrooms==99 | bedrooms==98
 	}
@@ -446,7 +439,6 @@ use "`base_in'", clear
 	replace cocina_ch=(kitchen>=20 & kitchen<=28 )
 	replace cocina_ch=. if kitchen==99
 	}
-
 
 	***********
 	*refrig_ch*
@@ -508,6 +500,7 @@ use "`base_in'", clear
 	replace viviprop_ch1=. if ownership==9
 	}
 	
+
 ********************************
 *** Health indicators **********
 ********************************

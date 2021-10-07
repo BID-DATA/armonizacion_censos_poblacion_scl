@@ -53,7 +53,6 @@ replace afroind_ci=2 if race == 20 | race == 51
 replace afroind_ci=3 if race == 10 | race == 40 
 replace afroind_ci=. if race == 99
 
-
 	***************
 	***afroind_ch***
 	***************

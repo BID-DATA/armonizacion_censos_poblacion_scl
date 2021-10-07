@@ -152,7 +152,6 @@ label var ylmho_ci "Salario monetario horario de todas las actividades"
 label var ylnm_ci "Ingreso laboral NO monetario total individual"  	
 label var ylm_ci "Ingreso laboral monetario total individual"  
 label var ynlm_ci "Ingreso no laboral monetario total individual"  
-label var ynlnm_ci "Ingreso no laboral no monetario total individual" 
 			
 			* Totales a nivel de hogar
 label var nrylmpri_ch "Hogares con algún miembro que no respondió por ingresos"
@@ -229,7 +228,6 @@ label var edupub_ci "Asiste a un centro de ensenanza público"
 
 *====================================================================================================================================*
 *                                                          VARIABLES DE INFRAESTRUCTURA DEL HOGAR                                    *
-*====================================================================================================================================*
 
 label var aguared_ch "Acceso a fuente de agua por red"
 
@@ -252,7 +250,6 @@ label var piso_ch "Materiales de construcción del piso"
 label var techo_ch "Materiales de construcción del techo" 
 	label def techo_ch 1"Materiales_permanentes"  0"Materiales_no_permanentes" 2 "Otros_materiales", add modify
 label var techo_ch techo_ch 
-
 	
 label var dorm_ch "# de habitaciones exclusivas para dormir"
 label var cuartos_ch "# Habitaciones en el hogar"

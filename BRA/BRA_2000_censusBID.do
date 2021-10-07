@@ -53,11 +53,11 @@ replace afroind_ci=2 if race == 20 | race == 51
 replace afroind_ci=3 if race == 10 | race == 40 
 replace afroind_ci=. if race == 99
 
-
 	***************
 	***afroind_ch***
 	***************
 gen afroind_jefe= afroind_ci if relate==1
+
 egen afroind_ch  = min(afroind_jefe), by(serial) 
 
 drop afroind_jefe 
@@ -72,7 +72,6 @@ gen afroind_ano_c=1990
 ********************
 gen dis_ci=.
 gen dis_ch=.
-
 
 *****************************
 ** Include all labels of   **
