@@ -11,16 +11,8 @@ set more off
  
 *Population and Housing Censuses/Harmonized Censuses - IPUMS
 
-global ruta = "${censusFolder}"
 local PAIS BOL
 local ANO "1976"
-
-local log_file = "$ruta\harmonized\\`PAIS'\\log\\`PAIS'_`ANO'_censusBID.log"
-local base_in  = "$ruta\census\\`PAIS'\\`ANO'\data_merge\\`PAIS'_`ANO'_IPUMS.dta"
-local base_out = "$ruta\harmonized\\`PAIS'\data_arm\\`PAIS'_`ANO'_censusBID.dta"
-                                                    
-capture log close
-log using "`log_file'", replace 
 
 
 /***************************************************************************
@@ -34,25 +26,74 @@ Autores:
 ****************************************************************************/
 ****************************************************************************
 
-use "`base_in'", clear
+**************************************
+** Setup code, load database,       **
+** and include all common variables **
+**************************************
 
+include "../Base/base.do"
 
 ****************
-* region_BID_c *
-****************
+ *** region_c ***
+ ****************
+
+
+   gen region_c=.
+   replace region_c=1 if geo1_bo==68001  
+   replace region_c=2 if geo1_bo==68002
+   replace region_c=3 if geo1_bo==68003
+   replace region_c=4 if geo1_bo==68004
+   replace region_c=5 if geo1_bo==68005
+   replace region_c=6 if geo1_bo==68006
+   replace region_c=7 if geo1_bo==68007
+   replace region_c=8 if geo1_bo==68008
+   replace region_c=9 if geo1_bo==68009
+   
+   label define region_c 1 "Chuqisaca" 2 "La paz" 3 "Cochabamba" 4 "Oruro" 5 "Potosá" 6 "Tarija" 7 "Santa Cruz" 8 "Beni" 9 "Pando", add modify 
+   label value region_c region_c 
+ 
+
+
+********************************
+*** Health indicators **********
+********************************
+	gen discapacidad_ci =.
+	label var discapacidad_ci "Discapacidad"
+
+	gen ceguera_ci=.
+	label var ceguera_ci "Ciego o con discpacidad visual"
 	
-gen region_BID_c=.
+	gen sordera_ci  =.
+	label var sordera_ci "Sordera o con discpacidad auditiva"
 
-label var region_BID_c "Regiones BID"
-label define region_BID_c 1 "Centroamérica_(CID)" 2 "Caribe_(CCB)" 3 "Andinos_(CAN)" 4 "Cono_Sur_(CSC)"
-label value region_BID_c region_BID_c
+	gen mudez_ci=.
+	label var mudez_ci "Mudo o con discpacidad de lenguaje"
 
+	gen dismental_ci=.
+	label var dismental_ci "Discapacidad mental"	
+	
+	***********************************
+	***    VARIABLES DE MIGRACIÓN.  ***
+	***********************************
+			
 
-
-
-
-
-
+      *******************
+      ****migrante_ci****
+      *******************
+	gen migrante_ci = (nativity == 2)
+	 
+      *******************
+      **migantiguo5_ci***
+      *******************
+	gen migantiguo5_ci = (mig1_5_bo == 68097)
+	
+	
+	**********************
+	*** migrantelac_ci ***
+	**********************
+	
+	gen migrantelac_ci= 1 if inlist(bplcountry, 21100, 23010, 22060, 23110, 22020, 22040, 23050, 23100, 22030, 23060, 23140, 22050, 23040, 23100, 29999, 23130, 23030, 21250, 21999, 22010, 22070, 22080, 22999)
+	replace migrantelac_ci = 0 if migrantelac_ci == . & nativity == 2
 
 
 compress

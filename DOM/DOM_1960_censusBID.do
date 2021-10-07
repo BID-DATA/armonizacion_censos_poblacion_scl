@@ -48,7 +48,15 @@ label define region_BID_c 1 "Centroamérica_(CID)" 2 "Caribe_(CCB)" 3 "Andinos_(
 label value region_BID_c region_BID_c
 
 
-
+    *********
+	*pais_c*
+	*********
+    gen str3 pais_c="DOM"
+	
+    ****************************************
+    * Variables comunes a todos los países *
+    ****************************************
+    include "../Base/base.do"
 
 
 
@@ -59,4 +67,3 @@ compress
 
 save "`base_out'", replace 
 log close
-
