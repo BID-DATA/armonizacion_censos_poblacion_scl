@@ -21,7 +21,6 @@ País: Bolivia
 Año:
 Autores: 
 Última versión: 
-
 							SCL/LMK - IADB
 ****************************************************************************/
 ****************************************************************************
@@ -53,15 +52,6 @@ include "../Base/base.do"
    label value region_c region_c 
  
 
-    *********
-	*pais_c*
-	*********
-    gen str3 pais_c="BOL"
-	
-    ****************************************
-    * Variables comunes a todos los países *
-    ****************************************
-    include "../Base/base.do"
 
 ********************************
 *** Health indicators **********
@@ -77,8 +67,8 @@ include "../Base/base.do"
 
 	gen mudez_ci=.
 	label var mudez_ci "Mudo o con discpacidad de lenguaje"
-	
-  gen dismental_ci=.
+
+	gen dismental_ci=.
 	label var dismental_ci "Discapacidad mental"	
 	
 	***********************************
@@ -109,4 +99,3 @@ compress
 
 save "`base_out'", replace 
 log close
-

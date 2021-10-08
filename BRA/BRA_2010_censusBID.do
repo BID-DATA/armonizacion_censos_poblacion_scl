@@ -18,7 +18,6 @@ País: Brasil
 Año: 2010
 Autores: Cesar Lins
 Última versión: Septiembre, 2021
-
 							SCL/LMK - IADB
 ****************************************************************************/
 
@@ -36,6 +35,68 @@ include "../Base/base.do"
 *****************************************************
 ******* Variables specific for this census **********
 *****************************************************
+
+****************
+ *** region_c ***
+ ****************
+ 
+ gen region_c=.
+ replace region_c=1 if geo1_br2010 ==11  /*Rondônia*/
+ replace region_c=2 if geo1_br2010 ==12  /*Acre*/
+ replace region_c=3 if geo1_br2010 ==13 /*Amazonas*/
+ replace region_c=4 if geo1_br2010 ==14 /*Roraima*/
+ replace region_c=5 if geo1_br2010 ==15 /*Pará*/
+ replace region_c=6 if geo1_br2010 ==16 /*Amapá*/
+ replace region_c=7 if geo1_br2010 ==17 /*Tocantins*/
+ replace region_c=8 if geo1_br2010 ==21 /*Maranhão*/
+ replace region_c=9 if geo1_br2010 ==22 /*Piauí*/
+ replace region_c=10 if geo1_br2010 ==23 /*Ceará*/
+ replace region_c=11 if geo1_br2010 ==24 /*Rio Grande do Norte*/
+ replace region_c=12 if geo1_br2010 ==25 /*Paraíba*/
+ replace region_c=13 if geo1_br2010 ==26 /*Pernambuco*/
+ replace region_c=14 if geo1_br2010 ==27 /*Alagoas*/
+ replace region_c=15 if geo1_br2010 ==28 /*Sergipe*/
+ replace region_c=16 if geo1_br2010 ==29 /*Bahia*/
+ replace region_c=17 if geo1_br2010 ==31 /*Minas Gerais*/
+ replace region_c=18 if geo1_br2010 ==32 /*Espírito Santo*/
+ replace region_c=19 if geo1_br2010 ==33 /*Rio de Janeiro*/
+ replace region_c=20 if geo1_br2010 ==35 /*São Paulo*/
+ replace region_c=21 if geo1_br2010 ==41 /*Paraná*/
+ replace region_c=22 if geo1_br2010 ==42 /*Santa Catarina*/
+ replace region_c=23 if geo1_br2010 ==43 /*Rio Grande do Sul*/
+ replace region_c=24 if geo1_br2010 ==50 /*Mato Grosso do Sul*/
+ replace region_c=25 if geo1_br2010 ==51 /*Mato Grosso*/
+ replace region_c=26 if geo1_br2010 ==52 /*Goiás*/
+ replace region_c=27 if geo1_br2010 ==53 /*Distrito Federal*/
+
+ label define region_c 1"Rondônia" 2"Acre" 3"Amazonas" 4"Roraima" 5"Pará" 6"Amapá" 7"Tocantins" 8"Maranhão" 9"Piauí" 10"Ceará" 11"Rio Grande do Norte" 12"Paraíba" 13"Pernambuco" 14"Alagoas" 15"Sergipe" 16"Bahia" 17"Minas Gerais" 18"Espírito Santo" 19"Rio de Janeiro" 20"São Paulo" 21"Paraná" 22"Santa Catarina" 23"Rio Grande do Sul" 24"Mato Grosso do Sul" 25"Mato Grosso" 26"Goiás" 27"Distrito Federal"
+ 
+**********************************
+**** VARIABLES DE INGRESO ****
+**********************************
+	
+     ***********
+	  *ylm_ci*
+	 ***********
+   cap confirm variable incearn
+   if (_rc==0) {
+   replace ylm_ci = incearn
+   replace ylm_ci =. if incearn==99999999 | incearn==99999998
+   }
+
+	 *********
+	 *ynlm_ci*
+	 *********
+   cap confirm variable incwel
+   if (_rc==0) {
+   replace ynlm_ci=incwel
+   replace ynlm_ci=. if incwel== 99999999 | incearn==99999998
+   } 
+   
+     ***********
+	  *ylm_ch*
+	 ***********
+   by idh_ch, sort: replace ylm_ch=sum(ylm_ci) if miembros_ci==1
 
 *******************************************************
 ***           VARIABLES DE DIVERSIDAD               ***
@@ -84,4 +145,3 @@ compress
 
 save "`base_out'", replace 
 log close
-

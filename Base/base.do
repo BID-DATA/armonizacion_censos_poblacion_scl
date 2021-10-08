@@ -23,8 +23,7 @@ local base_in  = "$ruta\census\\`PAIS'\\`ANO'\data_merge\\`PAIS'_`ANO'_IPUMS.dta
 local base_out = "$ruta\harmonized\\`PAIS'\data_arm\\`PAIS'_`ANO'_censusBID.dta"
                                                     
 capture log close
-
-log using "`log_file'", replace 
+log using "`log_file'", replace
 
 use "`base_in'", clear
 
@@ -100,6 +99,7 @@ use "`base_in'", clear
 	replace zona_c=urban
 	}
 	
+
 *********************************************
 ***         VARIABLES DEMOGRAFICAS        ***
 *********************************************
@@ -303,7 +303,7 @@ use "`base_in'", clear
     replace rama_ci = 14 if indgen==114 
     replace rama_ci = 15 if indgen==120 
 	
-	  *********************
+	 *********************
      ****categopri_ci****
      *********************
 	 *OBSERVACIONES: El censo no distingue entre actividad principal o secundaria, asigno por default principal.	
@@ -325,9 +325,9 @@ use "`base_in'", clear
       *****************
     gen spublico_ci=(indgen==100)	
 
-		**********************************
-		**** VARIABLES DE LA VIVIENDA ****
-		**********************************
+**********************************
+**** VARIABLES DE LA VIVIENDA ****
+**********************************
 		
 	************
 	*aguared_ch*
@@ -336,7 +336,8 @@ use "`base_in'", clear
 	gen aguared_ch=.
 	cap confirm variable watsup
 	if (_rc==0) {
-	replace aguared_ch=(watsup>=10 & watsup<20)
+	replace aguared_ch=1 if watsup>=10 & watsup<20
+	replace aguared_ch=0 if watsup ==20
 	replace aguared_ch=. if watsup==99
 	}
 
@@ -347,7 +348,8 @@ use "`base_in'", clear
 	gen luz_ch=.
 	cap confirm variable electric
 	if (_rc==0) {
-	 replace luz_ch=(electric==1)
+	 replace luz_ch = 0 if electric== 2
+	 replace luz_ch = 1 if electric== 1
 	 replace luz_ch=. if electric==9
 	}
 
@@ -358,8 +360,8 @@ use "`base_in'", clear
 	gen des1_ch=.
 	cap confirm variable toilet
 	if (_rc==0) {
-
-	replace bano_ch=(toilet==20 | toilet==21 | toilet==22 | toilet==23)
+	replace bano_ch= 1 if toilet==20 | toilet==21 | toilet==22 | toilet==23
+	replace bano_ch= 0 if toilet==10
  	replace bano_ch=. if toilet==99
 
 	*********
@@ -371,28 +373,40 @@ use "`base_in'", clear
 	replace des1_ch=. if toilet==99
 	
 	}
-  
+	
 	*********
 	*piso_ch*
 	*********
-    
 	gen piso_ch=.
  	cap confirm variable floor
 	if (_rc==0) {
-	replace piso_ch=1 if (floor>=100 & floor<=120)
+	replace piso_ch=0 if floor==100
+	replace piso_ch=1 if (floor>100 & floor<=120)
 	replace piso_ch=2 if floor>=200 & floor<999
 	replace piso_ch=. if floor==999
+	}
+	
+	*****************
+	*banomejorado_ch*
+	*****************
+	gen banomejorado_ch=.
+ 	cap confirm variable sewage
+	if (_rc==0) {
+	replace banomejorado_ch=1 if sewage == 11 | sewage == 12 
+	replace banomejorado_ch=0 if sewage == 20
+	replace piso_ch=. if sewage == 99
 	}
 
 	**********
 	*pared_ch*
 	**********
-
 	gen pared_ch=.
 	cap confirm variable wall
 	if (_rc==0) {
-	    replace pared_ch=(wall>=500 & wall<=600)
-		replace pared_ch=. if wall=999
+		replace pared_ch = 0 if wall == 100
+		replace pared_ch = 1 if wall>100 & wall<500
+	    replace pared_ch= 2 if wall>=500 & wall<=600
+		replace pared_ch=. if wall==999
 	}
 
 	**********
@@ -400,12 +414,24 @@ use "`base_in'", clear
 	**********
 *Modificación SGR Julio 2019
 	gen techo_ch=.
-	
 	cap confirm variable roof
 	if (_rc==0) {
 	replace techo_ch=1  if roof>=10 & roof<20
-    replace techo_ch=1  if roof>=20 & roof<80
+    replace techo_ch=0  if roof>=20 & roof<80
 	replace techo_ch=2  if roof==80
+	}
+	
+	**********
+	*resid_ch*
+	**********
+	gen resid_ch=.
+	cap confirm variable trash
+	if (_rc==0) {
+	replace resid_ch=0  if trash == 11 | trash == 12
+    replace resid_ch=1  if trash == 21 |trash == 22 | trash == 23
+	replace resid_ch=2  if trash == 24 |trash == 25 
+	replace resid_ch=3  if trash == 39
+	replace resid_ch=.  if trash == 99
 	}
 	
 	*********
@@ -414,14 +440,13 @@ use "`base_in'", clear
 	gen dorm_ch=.
 	cap confirm variable bedrooms
 	if (_rc==0) {
-
-	gen dorm_ch=bedrooms 
+	replace dorm_ch=bedrooms 
 	replace dorm_ch=. if bedrooms==99 | bedrooms==98
 	}
+	
 	************
 	*cuartos_ch*
 	************
-
 	gen cuartos_ch=.
 	cap confirm variable rooms
 	if (_rc==0) {
@@ -432,12 +457,23 @@ use "`base_in'", clear
 	***********
 	*cocina_ch*
 	***********
-
 	gen cocina_ch=.
 	cap confirm variable kitchen
 	if (_rc==0) {
-	replace cocina_ch=(kitchen>=20 & kitchen<=28 )
+	replace cocina_ch= 1 if kitchen>=20 & kitchen<=28
+	replace cocina_ch = 0 if kitchen == 10
 	replace cocina_ch=. if kitchen==99
+	}
+	
+	***********
+	*telef_ch*
+	***********
+	gen telef_ch=.
+	cap confirm variable phone
+	if (_rc==0) {
+	replace telef_ch=0 if phone == 1	
+	replace telef_ch=1 if phone == 2
+	replace telef_ch=. if phone == 9
 	}
 
 	***********
@@ -446,34 +482,43 @@ use "`base_in'", clear
 	gen refrig_ch=.
 	cap confirm variable refrig
 	if (_rc==0) {
-	replace refrig_ch=(refrig==1)
+	replace refrig_ch=0 if refrig==1
+	replace refrig_ch=1 if refrig==2
 	replace refrig_ch=. if refrig==9
 	}
-
-
 
 	*********
 	*auto_ch*
 	*********
-
 	gen auto_ch=.
 	cap confirm variable autos
 	if (_rc==0) {
-	replace auto_ch=(autos>0 & autos<8)
+	replace auto_ch= 1 if autos>0 & autos<8
+	replace auto_ch= 0 if autos==0
 	replace auto_ch=. if autos==8 | autos==9
 	}
-
-
+	
+	********
+	*compu_ch*
+	********
+	gen compu_ch=.
+	cap confirm variable computer
+	if (_rc==0) {
+	    replace compu_ch=0 if computer==1
+		replace compu_ch=1 if computer==2
+		replace compu_ch=. if computer==9
+	}
 
 	*************
 	*internet_ch*
-	*************
-
+	************* 
+	*pendiente esta variable no es lo que queremos generar
 	gen internet_ch=.
 	cap confirm variable internet
 	if (_rc==0) {
-	replace internet_ch=(internet==1)
-	replace internet_ch=. if internet==9
+	replace internet_ch=0 if internet == 1
+	replace internet_ch=1 if internet == 2
+	replace internet_ch=. if internet == 9
 	}
 	
 	********
@@ -482,10 +527,10 @@ use "`base_in'", clear
 	gen cel_ch=.
 	cap confirm variable cell
 	if (_rc==0) {
-	    replace cel_ch=(cell==1)
-		replace cel_ch=. if cell==9
+	replace cel_ch=0 if cell == 1	
+	replace cel_ch=1 if cell == 2
+	replace cel_ch=. if cell == 9
 	}
-	
 
 	*************
 	*viviprop_ch*
@@ -499,8 +544,16 @@ use "`base_in'", clear
 	*replace viviprop_ch1=3 if 
 	replace viviprop_ch1=. if ownership==9
 	}
-	
+**********************************
+**** VARIABLES DE INGRESO ****
+***********************************
+*NOTA: variables se generan vacias para que en cada do se cambien dependiendo de la variable de ingreso disponible
 
+   gen ylm_ci=.
+ 
+   gen ynlm_ci=.
+   
+   gen ylm_ch =.
 ********************************
 *** Health indicators **********
 ********************************

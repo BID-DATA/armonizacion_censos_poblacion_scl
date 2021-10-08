@@ -17,7 +17,6 @@ País: Colombia
 Año:
 Autores: 
 Última versión: 
-
 							SCL/LMK - IADB
 ****************************************************************************/
 ****************************************************************************
@@ -73,35 +72,13 @@ replace region_c=29 if geo1_co1964 ==95 /*Amazonas, Guaviare, Vaupes, Vichada, G
 label define region_c 1"Antioquia" 2"Atlántico" 3"Bogotá" 4"Bolívar" 5"Boyacá" 6"Caldas" 7"Caquetá" 8"Cauca" 9"Cesár" 10"Córdoba" 11"Cundinamarca" 12"Chocó" 13"Huila" 14"La Guajira" 15"Magdalena" 16"Meta" 17"Nariño" 18"Norte de Santander" 19"Quindío" 20"Risaralda" 21"Santander" 22"Sucre" 23"Tolima" 24"Valle" 25"Arauca" 26"Casanare" 27"Putumayo" 28"San Andrés" 29"Amazonas, Guaviare, Vaupes, Vichada, Guania"	
 label value region_c region_c
 	
-gen region_BID_c=.
-
-label var region_BID_c "Regiones BID"
-label define region_BID_c 1 "Centroamérica_(CID)" 2 "Caribe_(CCB)" 3 "Andinos_(CAN)" 4 "Cono_Sur_(CSC)"
-label value region_BID_c region_BID_c
-
-
-
-
-    *********
-	*pais_c*
-	*********
-    gen str3 pais_c="BOL"
-	
-    ****************************************
-    * Variables comunes a todos los países *
-    ****************************************
-    include "../Base/base.do"
-
-
-		***********************************
-	***    VARIABLES DE MIGRACIÓN.  ***
 	***********************************
-			
+	***    VARIABLES DE MIGRACIÓN.  ***
+	***********************************	
 
       *******************
       ****migrante_ci****
-      *******************
-
+ ylm_ch      *******************
 	gen migrante_ci = (nativity == 2)
 	 
       *******************
@@ -122,4 +99,3 @@ compress
 
 save "`base_out'", replace 
 log close
-
