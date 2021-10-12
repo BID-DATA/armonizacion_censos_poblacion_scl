@@ -78,7 +78,7 @@ label value region_c region_c
 
       *******************
       ****migrante_ci****
- ylm_ch      *******************
+      *******************
 	gen migrante_ci = (nativity == 2)
 	 
       *******************
