@@ -90,7 +90,7 @@ include "../Base/base.do"
    cap confirm variable incwel
    if (_rc==0) {
    replace ynlm_ci=incwel
-   replace ynlm_ci=. if incwel== 99999999 | incearn==99999998
+   replace ynlm_ci=. if incwel== 99999999 | incwel==99999998
    } 
    
      ***********
