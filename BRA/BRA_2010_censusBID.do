@@ -96,7 +96,13 @@ include "../Base/base.do"
      ***********
 	  *ylm_ch*
 	 ***********
-   by idh_ch, sort: replace ylm_ch=sum(ylm_ci) if miembros_ci==1
+   
+   by idh_ch, sort: egen ylm_ch=sum(ylm_ci) if miembros_ci==1, missing
+   
+    ***********
+	  *ynlm_ch*
+	 ***********
+   by idh_ch, sort: egen ynlm_ch=sum(ynlm_ci) if miembros_ci==1, missing
 
 *******************************************************
 ***           VARIABLES DE DIVERSIDAD               ***
