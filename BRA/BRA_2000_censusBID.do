@@ -87,10 +87,10 @@ include "../Base/base.do"
 	 *********
 	 *ynlm_ci*
 	 *********
-   cap confirm variable pension
+   cap confirm variable incwel
    if (_rc==0) {
-   replace ynlm_ci=pension
-   replace ynlm_ci=. if pension== 99999999 | pension==99999998
+   replace ynlm_ci=incwel
+   replace ynlm_ci=. if incwel== 99999999 | incwel==99999998
    } 
    
      ***********
