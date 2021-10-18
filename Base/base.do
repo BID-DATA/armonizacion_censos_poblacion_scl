@@ -545,7 +545,6 @@ use "`base_in'", clear
  
    gen ynlm_ci=.
    
-   gen ylm_ch =.
 ********************************
 *** Health indicators **********
 ********************************
