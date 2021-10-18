@@ -24,7 +24,7 @@ Autores:
 ****************************************************************************
 
 local PAIS ARG
-local ANO "1970"
+local ANO "2001"
 
 **************************************
 ** Setup code, load database,       **
@@ -90,7 +90,6 @@ variables de ingreso por hogar porque no están en el do Base*/
 	***********
    by idh_ch, sort: egen ynlm_ch=sum(ynlm_ci) if miembros_ci==1, missing
 	  
-	  
 *******************************************************
 ***           VARIABLES DE DIVERSIDAD               ***
 *******************************************************
@@ -119,6 +118,7 @@ gen afroind_ano_c=.
 ********************
 gen dis_ci=.
 gen dis_ch=.
+
 
 
 *******************************************************
