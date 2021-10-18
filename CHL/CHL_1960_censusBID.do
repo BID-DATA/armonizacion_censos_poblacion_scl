@@ -80,7 +80,132 @@ include "../Base/base.do"
       label value region_c region_c
       label var region_c "division politico-administrativa, provincia"
 
-	
+
+************************
+* VARIABLES EDUCATIVAS *
+************************
+
+****************
+* asiste_ci    * 
+**************** 
+gen asiste_ci=1 if school==1
+replace asiste_ci=. if school==0 // not in universe as missing 
+replace asiste_ci=. if school==9 // Unknown/missing as missing
+replace asiste_ci=0 if school==2
+label var asiste_ci "Personas que actualmente asisten a centros de enseñanza"
+
+****************
+* aedu_ci      * 
+**************** 
+
+gen aedu_ci=yrschool
+replace aedu_ci=. if aedu_ci==98
+replace aedu_ci=. if aedu_ci==99
+label var aedu_ci "Anios de educacion aprobados" 
+
+**************
+***eduno_ci***
+**************
+gen byte eduno_ci=0
+replace eduno_ci=1 if aedu_ci==0
+replace eduno_ci=. if aedu_ci==.
+label variable eduno_ci "Cero anios de educacion"
+
+**************
+***edupi_ci***
+**************
+gen byte edupi_ci=0
+replace edupi_ci=1 if aedu_ci>0 & aedu_ci<6
+replace edupi_ci=. if aedu_ci==.
+label variable edupi_ci "Primaria incompleta"
+
+**************
+***edupc_ci***
+**************
+gen byte edupc_ci=0
+replace edupc_ci=1 if aedu_ci==6
+replace edupc_ci=. if aedu_ci==.
+label variable edupc_ci "Primaria completa"
+
+**************
+***edusi_ci***
+**************
+gen byte edusi_ci=0
+replace edusi_ci=1 if aedu_ci>6 & aedu_ci<12
+replace edusi_ci=. if aedu_ci==.
+label variable edusi_ci "Secundaria incompleta"
+
+**************
+***edusc_ci***
+**************
+gen byte edusc_ci=0
+replace edusc_ci=1 if aedu_ci==12
+replace edusc_ci=. if aedu_ci==.
+label variable edusc_ci "Secundaria completa"
+
+**************
+***eduui_ci***
+**************
+gen byte eduui_ci=0
+replace eduui_ci=1 if aedu_ci>12 & aedu_ci<17
+replace eduui_ci=. if aedu_ci==.
+label variable eduui_ci "Universitaria incompleta"
+
+***************
+***eduuc_ci****
+***************
+gen byte eduuc_ci=0
+replace eduuc_ci=1 if aedu_ci>=17
+replace eduuc_ci=. if aedu_ci==.
+label variable eduuc_ci "Universitaria completa o mas"
+
+***************
+***edus1i_ci***
+***************
+gen byte edus1i_ci=0
+replace edus1i_ci=1 if aedu_ci>6 & aedu_ci<9
+replace edus1i_ci=. if aedu_ci==.
+label variable edus1i_ci "1er ciclo de la secundaria incompleto"
+
+***************
+***edus1c_ci***
+***************
+gen byte edus1c_ci=0
+replace edus1c_ci=1 if aedu_ci==9 
+replace edus1c_ci=. if aedu_ci==.
+label variable edus1c_ci "1er ciclo de la secundaria completo"
+
+***************
+***edus2i_ci***
+***************
+gen byte edus2i_ci=0
+replace edus2i_ci=1 if aedu_ci>9 & aedu_ci<12
+replace edus2i_ci=. if aedu_ci==.
+label variable edus2i_ci "2do ciclo de la secundaria incompleto"
+
+***************
+***edus2c_ci***
+***************
+gen byte edus2c_ci=0
+replace edus2c_ci=1 if aedu_ci==12
+replace edus2c_ci=. if aedu_ci==.
+label variable edus2c_ci "2do ciclo de la secundaria completo"
+
+***************
+***edupre_ci***
+***************
+gen edupre_ci=.
+label variable edupre_ci "Educacion preescolar"
+
+** Other variables 
+***************
+***literacy***
+***************
+gen literacy=. if lit==0
+replace literacy=. if lit==9
+replace literacy=0 if lit==1
+replace literacy=1 if lit==2
+	  
 	  
 *******************************************************
 ***           VARIABLES DE DIVERSIDAD               ***
