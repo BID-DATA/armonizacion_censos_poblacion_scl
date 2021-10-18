@@ -50,31 +50,10 @@ include "../Base/base.do"
    
    label define region_c 1 "Chuqisaca" 2 "La paz" 3 "Cochabamba" 4 "Oruro" 5 "Potosá" 6 "Tarija" 7 "Santa Cruz" 8 "Beni" 9 "Pando", add modify 
    label value region_c region_c 
- 
-
-
-********************************
-*** Health indicators **********
-********************************
-	gen discapacidad_ci =.
-	label var discapacidad_ci "Discapacidad"
-
-	gen ceguera_ci=.
-	label var ceguera_ci "Ciego o con discpacidad visual"
-	
-	gen sordera_ci  =.
-	label var sordera_ci "Sordera o con discpacidad auditiva"
-
-	gen mudez_ci=.
-	label var mudez_ci "Mudo o con discpacidad de lenguaje"
-
-	gen dismental_ci=.
-	label var dismental_ci "Discapacidad mental"	
 	
 	***********************************
 	***    VARIABLES DE MIGRACIÓN.  ***
 	***********************************
-			
 
       *******************
       ****migrante_ci****
@@ -86,7 +65,6 @@ include "../Base/base.do"
       *******************
 	gen migantiguo5_ci = (mig1_5_bo == 68097)
 	
-	
 	**********************
 	*** migrantelac_ci ***
 	**********************
@@ -94,7 +72,7 @@ include "../Base/base.do"
 	gen migrantelac_ci= 1 if inlist(bplcountry, 21100, 23010, 22060, 23110, 22020, 22040, 23050, 23100, 22030, 23060, 23140, 22050, 23040, 23100, 29999, 23130, 23030, 21250, 21999, 22010, 22070, 22080, 22999)
 	replace migrantelac_ci = 0 if migrantelac_ci == . & nativity == 2
 
-	************************
+************************
 * VARIABLES EDUCATIVAS *
 ************************
 
