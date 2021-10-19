@@ -47,16 +47,34 @@ label var region_BID_c "Regiones BID"
 label define region_BID_c 1 "Centroamérica_(CID)" 2 "Caribe_(CCB)" 3 "Andinos_(CAN)" 4 "Cono_Sur_(CSC)"
 label value region_BID_c region_BID_c
 
+********************************
+*** Health indicators **********
+********************************
 
+	gen discapacidad_ci =.
+	replace discapacidad_ci =1 if disabled ==1
+	label var discapacidad_ci "Discapacidad"
 
+	gen ceguera_ci=.
+	replace ceguera_ci=1 if disblnd==1
+	label var ceguera_ci "Ciego o con discpacidad visual"
+	
+	gen sordera_ci  =.
+	replace sordera_ci  =1 if disdeaf ==1
+	label var sordera_ci "Sordera o con discpacidad auditiva"
 
+	gen mudez_ci=.
+	replace mudez_ci=1 if dismute==1
+	label var mudez_ci "Mudo o con discpacidad de lenguaje"
 
-
-
+	gen dismental_ci=.
+	replace dismental_ci=1 if dismntl==1
+	label var dismental_ci "Discapacidad mental"
 
 
 compress
 
 save "`base_out'", replace 
 log close
+
 

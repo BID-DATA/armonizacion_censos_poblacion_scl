@@ -17,7 +17,6 @@ País: Colombia
 Año:
 Autores: 
 Última versión: 
-
 							SCL/LMK - IADB
 ****************************************************************************/
 ****************************************************************************
@@ -37,8 +36,8 @@ include "../Base/base.do"
 
 ****************
  *** region_c ***
- ****************
- 
+****************
+
 gen region_c =.
 replace region_c=1 if geo1_co1964 ==5 /*Antioquia*/ 
 replace region_c=2 if geo1_co1964 ==8 /*Atlántico*/ 
@@ -72,7 +71,25 @@ replace region_c=29 if geo1_co1964 ==95 /*Amazonas, Guaviare, Vaupes, Vichada, G
 
 label define region_c 1"Antioquia" 2"Atlántico" 3"Bogotá" 4"Bolívar" 5"Boyacá" 6"Caldas" 7"Caquetá" 8"Cauca" 9"Cesár" 10"Córdoba" 11"Cundinamarca" 12"Chocó" 13"Huila" 14"La Guajira" 15"Magdalena" 16"Meta" 17"Nariño" 18"Norte de Santander" 19"Quindío" 20"Risaralda" 21"Santander" 22"Sucre" 23"Tolima" 24"Valle" 25"Arauca" 26"Casanare" 27"Putumayo" 28"San Andrés" 29"Amazonas, Guaviare, Vaupes, Vichada, Guania"	
 label value region_c region_c
+
+********************************
+*** Health indicators **********
+********************************
+	gen discapacidad_ci =.
+	label var discapacidad_ci "Discapacidad"
+
+	gen ceguera_ci=.
+	label var ceguera_ci "Ciego o con discpacidad visual"
 	
+	gen sordera_ci  =.
+	label var sordera_ci "Sordera o con discpacidad auditiva"
+
+	gen mudez_ci=.
+	label var mudez_ci "Mudo o con discpacidad de lenguaje"
+
+	gen dismental_ci=.
+	label var dismental_ci "Discapacidad mental"
+
 	***********************************
 	***    VARIABLES DE MIGRACIÓN.  ***
 	***********************************	

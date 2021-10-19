@@ -18,9 +18,9 @@
 *******************************************
 global ruta = "${censusFolder}"
 
-local log_file = "$ruta\harmonized\\`PAIS'\\log\\`PAIS'_`ANO'_censusBID.log"
-local base_in  = "$ruta\census\\`PAIS'\\`ANO'\data_merge\\`PAIS'_`ANO'_IPUMS.dta"
-local base_out = "$ruta\harmonized\\`PAIS'\data_arm\\`PAIS'_`ANO'_censusBID.dta"
+local log_file = "$ruta\\clean\\`PAIS'\\log\\`PAIS'_`ANO'_censusBID.log"
+local base_in = "$ruta\\raw\\`PAIS'\\`PAIS'_`ANO'_IPUMS.dta"
+local base_out = "$ruta\\clean\\`PAIS'\\`PAIS'_`ANO'_censusBID.dta"
                                                     
 capture log close
 log using "`log_file'", replace
@@ -238,14 +238,6 @@ use "`base_in'", clear
 	gen miembros_ci=(relacion_ci>=1 & relacion_ci<9) 
 	tab persons
 	tab miembros_ci	
-
-
-********************************************
-***         VARIABLES DE EDUCACIÓN       ***
-********************************************
-
-	rename yrschool aedu_ci
-
 
 **********************************************
 ***      VARIABLES DEL MERCADO LABORAL     ***
@@ -547,13 +539,13 @@ use "`base_in'", clear
 **********************************
 **** VARIABLES DE INGRESO ****
 ***********************************
-*NOTA: variables se generan vacias para que en cada do se cambien dependiendo de la variable de ingreso disponible
+*NOTA: variables se generan vacias para que en el do del País y Anio se cambien dependiendo de la variable de ingreso disponible
 
    gen ylm_ci=.
  
    gen ynlm_ci=.
+
    
-   gen ylm_ch =.
 ********************************
 *** Health indicators **********
 ********************************

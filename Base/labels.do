@@ -112,7 +112,6 @@ label var categopri_ci "Categoria ocupacional en la actividad principal"
 label var tipocontrato_ci "Tipo de contrato segun su duracion"
 label define tipocontrato_ci 0 "Con contrato" 1 "Permanente/indefinido" 2 "Temporal" 3 "Sin_contrato/verbal", add modify
 label value tipocontrato_ci tipocontrato_ci
-
 *label var segsoc_ci "Personas que tienen seguridad social en SALUD por su trabajo" - ver si se incluye
 label var nempleos_ci "# de empleos" 
 	capture label define nempleos_ci 1 "Un empleo" 2 "Mas de un empleo"
@@ -152,7 +151,6 @@ label var autocons_ci "Autoconsumo reportado por el individuo"
 label var remesas_ci "Remesas mensuales reportadas por el individuo" 
 label var ylmhopri_ci "Salario monetario horario de la actividad principal" 
 label var ylmho_ci "Salario monetario horario de todas las actividades" 
-
 			* Totales individuales
 label var ylnm_ci "Ingreso laboral NO monetario total individual"  	  
 label var ynlnm_ci "Ingreso no laboral no monetario total individual" 
@@ -165,12 +163,10 @@ label var ylmnr_ch "Ingreso laboral monetario del hogar con missing en NR"
 label var ynlm_ch "Ingreso no laboral monetario del hogar"
 label var ynlnm_ch "Ingreso no laboral no monetario del hogar"
 label var rentaimp_ch "Rentas imputadas del hogar"
-
 label var autocons_ch "Autoconsumo reportado por el hogar"
 label var remesas_ch "Remesas mensuales del hogar"	
 label var ypen_ci "Monto de ingreso por pension contributiva"
 label var ypensub_ci "Monto de ingreso por pension subsidiada / no contributiva"
-
 * LINEAS DE POBREZA y OTRAS VARIABLES EXTERNAS DE REFERENCIA
 capture label var lp19_ci  "Línea de pobreza USD1.9 día en moneda local a precios corrientes a PPA 2011"
 capture label var lp31_ci  "Línea de pobreza USD3.1 día en moneda local a precios corrientes a PPA 2011"
@@ -199,7 +195,6 @@ label var instpen_ci "Institucion proveedora de la pension - variable original d
 label var instcot_ci "Institucion a la cual cotiza o es afiliado - variable original de cada pais" 
 label var pension_ci "=1: Recibe pension contributiva"
 label var pensionsub_ci "=1: recibe pension subsidiada / no contributiva"
-
 */
 
 *====================================================================================================================================*
