@@ -1,3 +1,4 @@
+
 * (Versión Stata 12)
 clear
 set more off
@@ -84,9 +85,26 @@ label value region_BID_c region_BID_c
 	gen migrantelac_ci= 1 if inlist(bplcountry, 21100, 23010, 22060, 23110, 22040, 23100, 22030, 23060, 23140, 22050, 23050, 23040, 23100, 29999, 23130, 23030, 21250, 21999, 22010, 22070, 22080, 22999)
 	replace migrantelac_ci = 0 if migrantelac_ci == . & nativity == 2
 
+********************************
+*** Health indicators **********
+********************************
+	gen discapacidad_ci =.
+	label var discapacidad_ci "Discapacidad"
 
+	gen ceguera_ci=.
+	label var ceguera_ci "Ciego o con discpacidad visual"
+	
+	gen sordera_ci  =.
+	label var sordera_ci "Sordera o con discpacidad auditiva"
+
+	gen mudez_ci=.
+	label var mudez_ci "Mudo o con discpacidad de lenguaje"
+
+	gen dismental_ci=.
+	label var dismental_ci "Discapacidad mental"
 
 compress
 
 save "`base_out'", replace 
 log close
+

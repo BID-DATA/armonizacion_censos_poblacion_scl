@@ -539,11 +539,12 @@ use "`base_in'", clear
 **********************************
 **** VARIABLES DE INGRESO ****
 ***********************************
-*NOTA: variables se generan vacias para que en cada do se cambien dependiendo de la variable de ingreso disponible
+*NOTA: variables se generan vacias para que en el do del País y Anio se cambien dependiendo de la variable de ingreso disponible
 
    gen ylm_ci=.
  
    gen ynlm_ci=.
+
    
 ********************************
 *** Health indicators **********

@@ -90,13 +90,19 @@ include "../Base/base.do"
    cap confirm variable incwel
    if (_rc==0) {
    replace ynlm_ci=incwel
-   replace ynlm_ci=. if incwel== 99999999 | incearn==99999998
+   replace ynlm_ci=. if incwel== 99999999 | incwel==99999998
    } 
    
      ***********
 	  *ylm_ch*
 	 ***********
-   by idh_ch, sort: replace ylm_ch=sum(ylm_ci) if miembros_ci==1
+   
+   by idh_ch, sort: egen ylm_ch=sum(ylm_ci) if miembros_ci==1, missing
+   
+    ***********
+	  *ynlm_ch*
+	 ***********
+   by idh_ch, sort: egen ynlm_ch=sum(ynlm_ci) if miembros_ci==1, missing
 
 *******************************************************
 ***           VARIABLES DE DIVERSIDAD               ***

@@ -131,6 +131,7 @@ gen dis_ch=.
 *que terciario completo implica 3 años de educacion adicional a la secundaria, universitario 5 años adicionales y 
 *postgrado 7. Esto solo se basa en la modas de finalización de estos niveles. ESTO SE DEBE DISCUTIR 
 
+
 gen aedu_ci=yrschool
 replace aedu_ci=. if yrschool>=90 & yrschool<100 // categorias NIU; missing; + categorias nivel educativo pero pero sin años de escolaridad
 
@@ -138,7 +139,7 @@ replace aedu_ci=. if yrschool>=90 & yrschool<100 // categorias NIU; missing; + c
 	*eduno_ci* // no ha completado ningún año de educación // Para esta variable no se puede usar aedu_ci porque aedu_ci=0 es none o pre-school
 	**********
 
-gen eduno_ci=(educar==110) // never attended
+gen eduno_ci=(aedu_ci==0) // never attended or pre-school
 replace eduno_ci=. if educar==0 | educar==999 // NIU & missing
 	
 	**********
@@ -213,8 +214,8 @@ gen byte edus2c_ci=.
 	*asiste_ci*
 	***********
 	
-gen asiste_ci=(school==1) // 0 includes NIU (0), attended in the past (3), never attended (4) and unknown/missing (9)
-replace asiste_ci=. if edattaind==0 | edattaind==999 // missing a los NIU & missing
+gen asiste_ci=(school==1) // 0 includes attended in the past (3) and never attended (4)
+replace asiste_ci=. if school==0 | school==9 // missing a los NIU & missing
 	
 *Other variables
 
@@ -222,8 +223,8 @@ replace asiste_ci=. if edattaind==0 | edattaind==999 // missing a los NIU & miss
 	* literacy *
 	************
 
-gen literacy=(lit==2) // 0 includes illiterate (1), NIU(0) and unknown/missing (9)
-replace literacy=. if edattaind==0 | edattaind==999 // missing a los NIU & missing
+gen literacy=1 if lit==2 // literate
+replace literacy=0 if lit==1 // illiterate
 
 *******************************************************
 ***           VARIABLES DE MIGRACIÓN              ***
