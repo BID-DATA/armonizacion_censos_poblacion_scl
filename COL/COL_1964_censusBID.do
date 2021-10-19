@@ -219,11 +219,15 @@ replace edus2i_ci=. if aedu_ci==. // NIU
 gen byte edus2c_ci=.
 
 ***********
-*asiste_ci*
+*asiste_ci* // la variable school no está disponible para 1964 (si para 1973, 1985 y 1993). Dejo el código armado para el resto de los años
 ***********
+
+gen asiste_ci=.
 	
+/*
 gen asiste_ci=(school==1) // 0 includes NIU (0), attended in the past (3), never attended (4) and unknown/missing (9)
 replace asiste_ci=. if edattaind==0 | edattaind==999 // missing a los NIU & missing
+*/
 	
 *Other variables
 
