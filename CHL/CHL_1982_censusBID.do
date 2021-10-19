@@ -14,7 +14,7 @@ set more off
 /***************************************************************************
                  BASES DE DATOS DE CENSOS POBLACIONALES
 País: Chile
-Año: 1960
+Año: 1982
 Autores: 
 Última versión: 
 
@@ -22,7 +22,7 @@ Autores:
 ****************************************************************************/
 ****************************************************************************
 local PAIS CHL
-local ANO "1960"
+local ANO "1982"
 
 **************************************
 ** Setup code, load database,       **
@@ -35,6 +35,7 @@ include "../Base/base.do"
      *** region_c ***
      ****************
    * Clasificación válida para 1960 y 1970
+   gen geo1alt_cl=geolev1
    gen region_c=.   
    replace region_c=1 if geo1alt_cl==152001			    /*Tarapacá*/
    replace region_c=2 if geo1alt_cl==152002			    /*Antofagasta*/
@@ -67,7 +68,33 @@ include "../Base/base.do"
 	  label define region_c 1"Tarapacá" 2"Antofagasta" 3"Atacama" 4"Coquimbo" 5"Aconcagua" 6"Valparaíso" 7"Santiago" 8"Ohiggins" 9"Colchagua" 10"Curico" 11"Talca" 12"Maule" 13"Linares" 14"Nuble" 15"Concepción" 16"Arauco" 17"Bio Bio" 18"Malleco" 19"Cautin" 20"Valdivia" 21"Osorno" 22"Llanquihue" 23"Chiloe" 24"Aysen" 25"Magallanes" 99""
 
       label value region_c region_c
-      label var region_c "division politico-administrativa, provincia"
+      label var region_c "division politico-administrativa, provincia" 
+	
+			***********************************
+			***** VARIABLES DE MIGRACIÓN ******
+			***********************************
+
+      *******************
+      ****migrante_ci****
+      *******************
+	gen migrante_ci = (nativity == 2)
+	label var migrante_ci "=1 si es migrante"
+
+      *******************
+      **migantiguo5_ci***
+      *******************
+	gen migantiguo5_ci = .
+	*replace migantiguo5_ci=. if (yrsimm > 5) & migrante_ci == 1
+	*replace migantiguo5_ci = . if (yrsimm == 99 | yrsimm == 98)
+	label var migantiguo5_ci "=1 si es migrante antiguo (5 anos o mas)"
+
+
+	**********************
+	*** migrantelac_ci ***
+	**********************
+
+	gen migrantelac_ci= .
+	label var migrantelac_ci "=1 si es migrante proveniente de un pais LAC"
 
 
 ************************
@@ -180,47 +207,8 @@ gen literacy=. if lit==0
 replace literacy=. if lit==9
 replace literacy=0 if lit==1
 replace literacy=1 if lit==2
-	  
-	  
-*******************************************************
-***           VARIABLES DE DIVERSIDAD               ***
-*******************************************************
-* Cesar Lins & Nathalia Maya - Septiembre 2021	
 
-	***************
-	***afroind_ci***
-	***************
-**Pregunta: 
-
-gen afroind_ci=. 
-
-	***************
-	***afroind_ch***
-	***************
-gen afroind_jefe=.
-gen afroind_ch  =.
-
-drop afroind_jefe 
-
-	*******************
-	***afroind_ano_c***
-	*******************
-gen afroind_ano_c=.
-
-********************
-*** discapacid
-********************
-gen dis_ci=.
-gen dis_ch=.
-
-*****************************
-** Include all labels of   **
-**  harmonized variables   **
-*****************************
-include "../Base/labels.do"
-
-order region_BID_c pais_c estrato_ci zona_c relacion_ci civil_ci idh_ch factor_ch idp_ci factor_ci edad_ci sexo_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch miembros_ci condocup_ci emp_ci desemp_ci pea_ci rama_ci spublico_ci migrante_ci migantiguo5_ci aguared_ch luz_ch bano_ch des1_ch piso_ch pared_ch techo_ch dorm_ch cuartos_ch cocina_ch refrig_ch auto_ch internet_ch cel_ch viviprop_ch viviprop_ch1 region_c categopri_ci discapacidad_ci ceguera_ci sordera_ci mudez_ci dismental_ci afroind_ci afroind_ch afroind_ano_c dis_ci dis_ch aedu_ci
-
+	
 compress
 
 save "`base_out'", replace 

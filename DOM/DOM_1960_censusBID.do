@@ -1,3 +1,4 @@
+
 * (Versión Stata 12)
 clear
 set more off
@@ -48,11 +49,33 @@ label define region_BID_c 1 "Centroamérica_(CID)" 2 "Caribe_(CCB)" 3 "Andinos_(
 label value region_BID_c region_BID_c
 
 
+  ********
+	*pais_c*
+	*********
+    gen str3 pais_c="DOM"
+    
+********************************
+*** Health indicators **********
+********************************
+	gen discapacidad_ci =.
+	label var discapacidad_ci "Discapacidad"
 
+	gen ceguera_ci=.
+	label var ceguera_ci "Ciego o con discpacidad visual"
+	
+	gen sordera_ci  =.
+	label var sordera_ci "Sordera o con discpacidad auditiva"
 
+	gen mudez_ci=.
+	label var mudez_ci "Mudo o con discpacidad de lenguaje"
 
+	gen dismental_ci=.
+	label var dismental_ci "Discapacidad mental"
 
-
+    ****************************************
+    * Variables comunes a todos los países *
+    ****************************************
+    include "../Base/base.do"
 
 
 compress
