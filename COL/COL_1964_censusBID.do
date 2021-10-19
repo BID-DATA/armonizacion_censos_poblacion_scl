@@ -128,7 +128,7 @@ replace aedu_ci=18 if yrschool==18 // 18 or more
 replace aedu_ci=. if yrschool==99 // NIU
 
 **********
-*eduno_ci* // no ha completado ningún año de educación // Para esta variable no se puede usar aedu_ci porque aedu_ci=0 es none o pre-school
+*eduno_ci* // no ha completado ningún año de educación
 **********
 	
 gen eduno_ci=(aedu_ci==0) // none (incluye preescolar)
@@ -218,7 +218,7 @@ replace edus2c_ci=. if aedu_ci==. // NIU
 gen asiste_ci=.
 	
 /*
-gen asiste_ci=(school==1) // 0 includes NIU (0), attended in the past (3), never attended (4) and unknown/missing (9)
+gen asiste_ci=(school==1) // 0 attended in the past (3) and never attended (4)
 replace asiste_ci=. if school==0 | school==9 // missing a los NIU & missing
 */
 	
