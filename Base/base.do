@@ -544,6 +544,8 @@ use "`base_in'", clear
    gen ylm_ci=.
  
    gen ynlm_ci=.
+   
+   gen ylm_ch=.
 
    
 ********************************

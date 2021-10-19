@@ -201,7 +201,7 @@ label var pensionsub_ci "=1: recibe pension subsidiada / no contributiva"
 *                                                          VARIABLES DE EDUCACION                                             *
 *====================================================================================================================================*
 label var aedu_ci "Anios de educacion aprobados"
-/*
+
 label var eduno_ci "Sin educacion"
 label var edupi_ci "Primaria incompleta"
 label var edupc_ci "Primaria completa"	
@@ -209,15 +209,16 @@ label var edusi_ci "Secundaria incompleta"
 label var edusc_ci "Secundaria completa"	
 label var eduui_ci "Superior incompleto"	
 label var eduuc_ci "Superior completo"
+
 label var edus1i_ci "1er ciclo de la secundaria incompleto"
 label var edus1c_ci "1er ciclo de la secundaria completo"
 label var edus2i_ci "2do ciclo de la secundaria incompleto"
 label var edus2c_ci "2do ciclo de la secundaria completo"
 label var edupre_ci "Educacion preescolar"
 label var eduac_ci "Superior universitario vs superior no universitario"	
-label var asiste_ci "=1 si asiste actualmente a la escuela"
 label var tecnica_ci "=1: formacion terciaria tecnica"
-								
+label var asiste_ci "=1 si asiste actualmente a la escuela"
+/*							
 label var pqnoasis_ci "Razones para no asistir a la escuela-variable original de cada pais"
 label var pqnoasis1_ci "Razones para no asistir a la escuela-variable armonizada"
 label var repite_ci "Ha repetido al menos un grado"
@@ -282,7 +283,7 @@ label var viviprop_ch1 "Propiedad de la vivienda"
 	label def viviprop_ch 0"Alquilada" 1"Propia" 3"Ocupada_(propia_de_facto)", add modify
 	label val viviprop_ch viviprop_ch1
 	
-*/
+
 ********************************
 *** Health indicators **********
 ********************************
