@@ -113,57 +113,63 @@ replace aedu_ci=15 if yrschool==15
 replace aedu_ci=16 if yrschool==16
 replace aedu_ci=17 if yrschool==17
 replace aedu_ci=. if yrschool==98 | yrschool==99 | yrschool==95 // unknown/missing or NIU + 95=adult literacy (de acuerdo a los documentos de EDU primaria completa es 4 anos en BRA y según la base if yrschool==95, then edattaind==Some primary complete; however, we don't know how many).
-replace aedu_ci==. if educbr==3900 // secondary, grade unspecified
-
-label var aedu_ci "Años de educacion aprobados"
+replace aedu_ci=. if educbr==3900 // secondary, grade unspecified
 
 **********
-*eduno_ci* // no ha completado ningún año de educación // Para esta variable no se puede usar aedu_ci porque aedu_ci=0 es none o pre-school
+*eduno_ci* // no ha completado ningún año de educación
 **********
 	
-gen eduno_ci=(aedu_ci==0 & educbr!=1200 & educbr!=1700 & educbr!=4130 & educbr!=2900) // none
+gen eduno_ci=(aedu_ci==0) // none
+replace eduno_ci=. if aedu_ci==.
 
 ***************
 ***edupre_ci***
 ***************
+
 gen byte edupre_ci=(educbr==1200) // pre-school
-label variable edupre_ci "Educacion preescolar"
+replace edupre_ci=. if aedu_ci==.
 	
 **********
 *edupi_ci* // no completó la educación primaria
 **********
 	
 gen edupi_ci=(aedu_ci>=1 & aedu_ci<=7 | educbr==1700 | educbr==2900) // 1 a 7 anos de educación + attending first grade + primary grade unspecified
+replace edupi_ci=. if aedu_ci==.
 
 ********** 
 *edupc_ci* // completó la educación primaria
 **********
 	
 gen edupc_ci=(aedu_ci==8) // 8 anos de educación
+replace edupc_ci=. if aedu_ci==.
 
 **********
 *edusi_ci* // no completó la educación secundaria
 **********
 	
 gen edusi_ci=(aedu_ci==9 | aedu_ci==10) // 9 y 10 anos de educación
+replace edusi_ci=. if aedu_ci==.
 
 **********
 *edusc_ci* // completó la educación secundaria
 **********
 	
 gen edusc_ci=(aedu_ci==11) // 11 anos de educación
+replace edusc_ci=. if aedu_ci==.
 
 **********
 *eduui_ci* // no completó la educación universitaria o terciaria
 **********
 	
 gen eduui_ci=(aedu_ci>=12 & aedu_ci<=14) // some college completed + anos 15 de educación que aparece como universitario completo pero no lo sería
+replace eduui_ci=. if aedu_ci==.
 
 **********
 *eduuc_ci* // completó la educación universitaria o terciaria
 **********
 	
 gen eduuc_ci=(aedu_ci==15 | aedu_ci==16 | aedu_ci==17) // 15 a 17 anos de educación
+replace eduuc_ci=. if aedu_ci==.
 
 ***********
 *edus1i_ci* // no completó el primer ciclo de la educación secundaria
@@ -193,9 +199,8 @@ gen byte edus2c_ci=.
 **asiste_ci***
 **************
 
-gen asiste_ci=(school==1) // 0 includes NIU (0), attended in the past (3), never attended (4) and unknown/missing (9)
-replace asiste_ci=. if edattaind==0 // missing a los NIU & missing
-label var asiste_ci "Personas que actualmente asisten a un centro de enseñanza"
+gen asiste_ci=(school==1) // 0 includes attended in the past (3) and never attended (4)
+replace asiste_ci=. if school==0 | school==9 // missing a los NIU & missing
 	
 *Other variables
 
@@ -203,8 +208,8 @@ label var asiste_ci "Personas que actualmente asisten a un centro de enseñanza"
 * literacy *
 ************
 
-gen literacy=(lit==2) // 0 includes illiterate (1), NIU(0) and unknown/missing (9)
-replace literacy=. if edattaind==0 | edattaind==999 // missing a los NIU & missing
+gen literacy=1 if lit==2 // literate
+replace literacy=0 if lit==1 // illiterate
 
 compress
 
