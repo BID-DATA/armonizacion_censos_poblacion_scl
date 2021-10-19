@@ -79,7 +79,7 @@ label value region_c region_c
 
       *******************
       ****migrante_ci****
- ylm_ch      *******************
+      *******************
 	gen migrante_ci = (nativity == 2)
 	 
       *******************
@@ -94,12 +94,6 @@ label value region_c region_c
 	
 	gen migrantelac_ci= 1 if inlist(bplcountry, 21100, 23010, 22060, 23110, 22020, 22040, 23100, 22030, 23060, 23140, 22050, 23040, 23100, 29999, 23130, 23030, 21250, 21999, 22010, 22070, 22080, 22999)
 	replace migrantelac_ci = 0 if migrantelac_ci == . & nativity == 2
-
-*********
-*edad_ci*
-*********
-	
-rename age edad_ci
 
 ****************************
 ***VARIABLES DE EDUCACION***
@@ -139,7 +133,7 @@ label var aedu_ci "Años de educacion aprobados"
 *eduno_ci* // no ha completado ningún año de educación // Para esta variable no se puede usar aedu_ci porque aedu_ci=0 es none o pre-school
 **********
 	
-gen eduno_ci=(aedu_ci==0  & educo!=110) // none
+gen eduno_ci=(aedu_ci==0  & educco!=110) // none
 replace eduno_ci=. if aedu_ci==. // NIU
 
 ***************
