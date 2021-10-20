@@ -73,24 +73,78 @@ include "../Base/base.do"
 
     label value region_c region_c
 	
-*******************************************************
-***           VARIABLES DE INGRESO                  ***
-*******************************************************
-/*Argentina no tiene vars de ingreso pero se incluyen las 
-variables de ingreso por hogar porque no están en el do Base*/	
+	**********************************************
+***      VARIABLES DEL MERCADO LABORAL     ***
+**********************************************	
 
-    ***********
-	**ylm_ch*
-	***********
-   
-   by idh_ch, sort: egen ylm_ch=sum(ylm_ci) if miembros_ci==1, missing
-   
-    ***********
-	**ynlm_ch*
-	***********
-   by idh_ch, sort: egen ynlm_ch=sum(ynlm_ci) if miembros_ci==1, missing
-	  
-*******************************************************
+     *******************
+     ****condocup_ci****
+     *******************
+	 *2010 no tiene variable empstat
+	 
+    gen condocup_ci=.
+    replace condocup_ci=1 if empstat==1
+    replace condocup_ci=2 if empstat==2
+    replace condocup_ci=3 if empstat==3
+    replace condocup_ci=. if empstat==9
+    replace condocup_ci=4 if empstat==0
+	
+	  ************
+      ***emp_ci***
+      ************
+    gen emp_ci=(condocup_ci==1)
+
+	
+      ****************
+      ***desemp_ci***
+      ****************
+    gen desemp_ci=(condocup_ci==2)
+	
+	  *************
+      ***pea_ci***
+      *************
+    gen pea_ci=(emp_ci==1 | desemp_ci==1)
+	
+     *************************
+     ****rama de actividad****
+     *************************
+	 *2010 no tiene variable indgen
+    gen rama_ci = .
+    replace rama_ci = 1 if indgen==10
+    replace rama_ci = 2 if indgen==20  
+    replace rama_ci = 3 if indgen==30   
+    replace rama_ci = 4 if indgen==40    
+    replace rama_ci = 5 if indgen==50    
+    replace rama_ci = 6 if indgen==60    
+    replace rama_ci = 7 if indgen==70    
+    replace rama_ci = 8 if indgen==80    
+    replace rama_ci = 9 if indgen==90
+    replace rama_ci = 10 if indgen==100  
+    replace rama_ci = 11 if indgen==111  
+    replace rama_ci = 12 if indgen==112
+    replace rama_ci = 13 if indgen==113 
+    replace rama_ci = 14 if indgen==114 
+    replace rama_ci = 15 if indgen==120 
+	
+	 *********************
+     ****categopri_ci****
+     *********************
+	 *OBSERVACIONES: El censo no distingue entre actividad principal o secundaria, asigno por default principal.	
+    gen categopri_ci=.
+	cap confirm variable classwkd
+	if (_rc==0) {
+    replace categopri_ci=0 if classwkd==400 | classwkd==999
+    replace categopri_ci=1 if classwkd==110
+    replace categopri_ci=2 if classwkd==120
+    replace categopri_ci=3 if classwkd==203 | classwkd==204 | classwkd==216 | classwkd==230 
+    replace categopri_ci=4 if classwkd==310
+	}
+	  *****************
+      ***spublico_ci***
+      *****************
+    gen spublico_ci=(indgen==100)
+	
+	*******************************************************
 ***           VARIABLES DE DIVERSIDAD               ***
 *******************************************************
 * Cesar Lins & Nathalia Maya - Septiembre 2021	
@@ -118,7 +172,23 @@ gen afroind_ano_c=.
 ********************
 gen dis_ci=.
 gen dis_ch=.
+	
+*******************************************************
+***           VARIABLES DE INGRESO                  ***
+*******************************************************
+/*Argentina no tiene vars de ingreso pero se incluyen las 
+variables de ingreso por hogar porque no están en el do Base*/	
 
+    ***********
+	**ylm_ch*
+	***********
+   
+   by idh_ch, sort: egen ylm_ch=sum(ylm_ci) if miembros_ci==1, missing
+   
+    ***********
+	**ynlm_ch*
+	***********
+   by idh_ch, sort: egen ynlm_ch=sum(ynlm_ci) if miembros_ci==1, missing
 
 
 *******************************************************
