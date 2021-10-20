@@ -181,21 +181,19 @@ replace aedu_ci=17 if yrschool==17
 replace aedu_ci=18 if yrschool==18 // 18 or more
 replace aedu_ci=. if yrschool==99 // NIU
 
-label var aedu_ci "Años de educacion aprobados"
-	
 **********
-*eduno_ci* // no ha completado ningún año de educación // Para esta variable no se puede usar aedu_ci porque aedu_ci=0 es none o pre-school
+*eduno_ci* // no ha completado ningún año de educación
 **********
 	
-gen eduno_ci=(aedu_ci==0  & educco!=110) // none
+gen eduno_ci=(aedu_ci==0) // none (incluye preescolar)
 replace eduno_ci=. if aedu_ci==. // NIU
 
 ***************
 ***edupre_ci***
 ***************
+
 gen byte edupre_ci=(educco==110) // pre-school
 replace edupre_ci=. if aedu_ci==. // NIU
-label variable edupre_ci "Educacion preescolar"
 	
 **********
 *edupi_ci* // no completó la educación primaria
@@ -264,13 +262,24 @@ replace edus2i_ci=. if aedu_ci==. // NIU
 *edus2c_ci* // completó el segundo ciclo de la educación secundaria
 ***********
 
-gen byte edus2c_ci=.
+gen byte edus2c_ci=(aedu_ci==11)
+replace edus2c_ci=. if aedu_ci==. // NIU
 
 ***********
-*asiste_ci*
+*asiste_ci* // la variable school no está disponible para 1964 (si para 1973, 1985 y 1993). Dejo el código armado para el resto de los años
 ***********
+<<<<<<< HEAD
 *Nota: COL 1964 no tiene esta variable se genera en Missing	
 gen asiste_ci=.
+=======
+
+gen asiste_ci=.
+	
+/*
+gen asiste_ci=(school==1) // 0 attended in the past (3) and never attended (4)
+replace asiste_ci=. if school==0 | school==9 // missing a los NIU & missing
+*/
+>>>>>>> 0f7dbc207790e6c63a7bfa7a0daa1773447ca7d8
 	
 *Other variables
 
@@ -278,9 +287,10 @@ gen asiste_ci=.
 * literacy *
 ************
 
-gen literacy=(lit==2) // 0 includes illiterate (1), NIU(0) and unknown/missing (9)
-replace literacy=. if edattaind==0 | edattaind==999 // missing a los NIU & missing
+gen literacy=1 if lit==2 // literate
+replace literacy=0 if lit==1 // illiterate
 
+<<<<<<< HEAD
 ***********************************
 ***    VARIABLES DE MIGRACIÓN.  ***	***********************************	
 
@@ -311,6 +321,8 @@ include "../Base/labels.do"
 
 order region_BID_c pais_c estrato_ci zona_c relacion_ci civil_ci idh_ch factor_ch idp_ci factor_ci edad_ci sexo_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch miembros_ci condocup_ci emp_ci desemp_ci pea_ci rama_ci spublico_ci migrante_ci migantiguo5_ci aguared_ch luz_ch bano_ch des1_ch piso_ch pared_ch techo_ch dorm_ch cuartos_ch cocina_ch refrig_ch auto_ch internet_ch cel_ch viviprop_ch viviprop_ch1 region_c categopri_ci discapacidad_ci ceguera_ci sordera_ci mudez_ci dismental_ci afroind_ci afroind_ch afroind_ano_c dis_ci dis_ch aedu_ci
 
+=======
+>>>>>>> 0f7dbc207790e6c63a7bfa7a0daa1773447ca7d8
 compress
 
 save "`base_out'", replace 
