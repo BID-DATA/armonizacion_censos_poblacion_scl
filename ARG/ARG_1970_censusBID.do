@@ -212,13 +212,12 @@ variables de ingreso por hogar porque no están en el do Base*/
 *que terciario completo implica 3 años de educacion adicional a la secundaria, universitario 5 años adicionales y 
 *postgrado 7. Esto solo se basa en la modas de finalización de estos niveles. ESTO SE DEBE DISCUTIR 
 
-
 gen aedu_ci=yrschool
 replace aedu_ci=. if yrschool>=90 & yrschool<100 // categorias NIU; missing; + categorias nivel educativo pero pero sin años de escolaridad
-
-	**********
-	*eduno_ci* // no ha completado ningún año de educación // Para esta variable no se puede usar aedu_ci porque aedu_ci=0 es none o pre-school
-	**********
+	
+**********
+*eduno_ci* // no ha completado ningún año de educación
+**********
 
 gen eduno_ci=(aedu_ci==0) // never attended or pre-school
 replace eduno_ci=. if educar==0 | educar==999 // NIU & missing
