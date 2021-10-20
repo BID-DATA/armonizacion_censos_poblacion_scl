@@ -90,6 +90,160 @@ label value region_BID_c region_BID_c
 	*pais_c*
 	*********
     gen str3 pais_c="BRA"
+
+     ***********
+	  *ylm_ci*
+	 ***********
+   cap confirm variable incearn
+   if (_rc==0) {
+   replace ylm_ci = incearn
+   replace ylm_ci =. if incearn==99999999 | incearn==99999998
+   }
+
+	 *********
+	 *ynlm_ci*
+	 *********
+   cap confirm variable incwel
+   if (_rc==0) {
+   replace ynlm_ci=incwel
+   replace ynlm_ci=. if incwel== 99999999 | incwel==99999998
+   } 
+   
+     ***********
+	  *ylm_ch*
+	 ***********
+   
+   by idh_ch, sort: egen ylm_ch=sum(ylm_ci) if miembros_ci==1, missing
+   
+    ***********
+	  *ynlm_ch*
+	 ***********
+   by idh_ch, sort: egen ynlm_ch=sum(ynlm_ci) if miembros_ci==1, missing
+   
+ 
+			***********************************
+			***VARIABLES DEL MERCADO LABORAL***
+			***********************************
+			
+
+     *******************
+     ****condocup_ci****
+     *******************
+    gen condocup_ci=.
+    replace condocup_ci=1 if empstat==1
+    replace condocup_ci=2 if empstat==2
+    replace condocup_ci=3 if empstat==3
+    replace condocup_ci=4 if empstat==0
+    label var condocup_ci "Condicion de ocupación"
+    label define condocup_ci 1 "Ocupado" 2 "Desocupado" 3 "Inactivo" 4 "Menor de PET" 
+    label value condocup_ci condocup_ci
+	
+	
+	  ************
+      ***emp_ci***
+      ************
+    gen emp_ci=(condocup_ci==1)
+
+	
+      ****************
+      ***desemp_ci***
+      ****************
+    gen desemp_ci=(condocup_ci==2)
+	
+	
+	  *************
+      ***pea_ci***
+      *************
+    gen pea_ci=(emp_ci==1 | desemp_ci==1)
+	
+	
+     *********************
+     ****categopri_ci****
+     *********************
+	 *OBSERVACIONES: 
+    gen categopri_ci=.
+    replace categopri_ci=0 if classwkd==230 | classwkd==340
+    replace categopri_ci=1 if classwkd==110
+    replace categopri_ci=2 if classwkd==120 | classwkd==123
+    replace categopri_ci=3 if classwkd==200 | classwkd==209
+    replace categopri_ci=4 if classwkd==310
+    label var categopri_ci "categoría ocupacional de la actividad principal "
+    label define categopri_ci 0 "Otra clasificación" 1 "Patrón o empleador" 2 "Cuenta Propia o independiente" 3 "Empleado o asalariado" 4 "Trabajador no remunerado" 
+    label value categopri_ci categopri_ci	 
+
+
+     *************************
+     ****rama de actividad****
+     *************************
+    gen rama_ci = .
+    replace rama_ci = 1 if indgen==10
+    replace rama_ci = 2 if indgen==20  
+    replace rama_ci = 3 if indgen==30   
+    replace rama_ci = 4 if indgen==40    
+    replace rama_ci = 5 if indgen==50    
+    replace rama_ci = 6 if indgen==60    
+    replace rama_ci = 7 if indgen==70    
+    replace rama_ci = 8 if indgen==80    
+    replace rama_ci = 9 if indgen==90
+    replace rama_ci = 10 if indgen==100  
+    replace rama_ci = 11 if indgen==111  
+    replace rama_ci = 12 if indgen==112
+    replace rama_ci = 13 if indgen==113 
+    replace rama_ci = 14 if indgen==114 
+    replace rama_ci = 15 if indgen==120 
+	replace rama_ci = 16 if indgen==999
+    label var rama_ci "Rama de actividad"
+    label def rama_ci 1"Agricultura, pesca y forestal" 2"Minería y extracción" 3"Industrias manufactureras" 4"Electricidad, gas, agua y manejo de residuos" 5"Construcción" 6"Comercio" 7"Hoteles y restaurantes" 8"Transporte, almacenamiento y comunicaciones" 9"Servicios financieros y seguros" 10"Administración pública y defensa" 11"Servicios empresariales e inmobiliarios" 12"Educación" 13"Salud y trabajo social" 14"Otros servicios" 15"Servicio doméstico" 16"Otras ramas"
+    label val rama_ci rama_ci
+	
+	
+	  *****************
+      ***spublico_ci***
+      *****************
+    gen spublico_ci=(indgen==100)	
+
+
+*******************************************************
+***           VARIABLES DE DIVERSIDAD               ***
+*******************************************************				
+* Cesar Lins & Nathalia Maya - Septiembre 2021	
+
+	***************
+	***afroind_ci***
+	***************
+**Pregunta: 
+
+gen afroind_ci=. 
+replace afroind_ci=1  if race == 30
+replace afroind_ci=2 if race == 20 | race == 51 
+replace afroind_ci=3 if race == 10 | race == 40 
+replace afroind_ci=. if race == 99
+
+	***************
+	***afroind_ch***
+	***************
+gen afroind_jefe= afroind_ci if relate==1
+egen afroind_ch  = min(afroind_jefe), by(idh_ch) 
+
+drop afroind_jefe 
+
+	*******************
+	***afroind_ano_c***
+	*******************
+gen afroind_ano_c=1990
+
+********************
+*** discapacidad ***
+********************
+gen dis_ci=.
+gen dis_ch=.
+
+***********************************
+***    VARIABLES DE MIGRACIÓN.  ***
+***********************************
+	gen migrante_ci=.
+
+	gen migantiguo5_ci=.
 	
 	*********
 	*anio_c*

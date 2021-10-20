@@ -82,10 +82,209 @@ label value region_BID_c region_BID_c
    replace region_c=99 if geo1_ar==32099			/*Unknown*/
 
 
-	  label define region_c 1"Ciudad de Buenos Aires" 2"Provincia de Buenos Aires" 3"Catamarca" 4"Córdoba" 5"Corrientes" 6"Chaco" 7"Chubut" 8"Entre Ríos" 9"Formosa" 10"Jujuy" 11"La Pampa" 12"La Rioja" 13"Mendoza" 14"Misiones" 15"Neuquén" 16"Río Negro" 17"Salta" 18"San Juan" 19"San Luis" 20"Santa Cruz" 21"Santa Fe" 22"Santiago del Estero" 23"Tucumán" 24"Tierra del Fuego" 99""
-
+	label define region_c 1"Ciudad de Buenos Aires" 2"Provincia de Buenos Aires" 3"Catamarca" 4"Córdoba" 5"Corrientes" 6"Chaco" 7"Chubut" 8"Entre Ríos" 9"Formosa" 10"Jujuy" 11"La Pampa" 12"La Rioja" 13"Mendoza" 14"Misiones" 15"Neuquén" 16"Río Negro" 17"Salta" 18"San Juan" 19"San Luis" 20"Santa Cruz" 21"Santa Fe" 22"Santiago del Estero" 23"Tucumán" 24"Tierra del Fuego" 99""
       label value region_c region_c
       label var region_c "division politico-administrativa, provincia"
+    label value region_c region_c
+
+
+**********************************************
+***      VARIABLES DEL MERCADO LABORAL     ***
+**********************************************
+			
+
+     *******************
+     ****condocup_ci****
+     *******************
+	 *2010 no tiene variable empstat
+	 
+    gen condocup_ci=.
+    replace condocup_ci=1 if empstat==1
+    replace condocup_ci=2 if empstat==2
+    replace condocup_ci=3 if empstat==3
+    replace condocup_ci=. if empstat==9
+    replace condocup_ci=4 if empstat==0
+	
+	  ************
+      ***emp_ci***
+      ************
+    gen emp_ci=(condocup_ci==1)
+
+	
+      ****************
+      ***desemp_ci***
+      ****************
+    gen desemp_ci=(condocup_ci==2)
+	
+	
+	  *************
+      ***pea_ci***
+      *************
+    gen pea_ci=(emp_ci==1 | desemp_ci==1)
+	
+	
+     *************************
+     ****rama de actividad****
+     *************************
+	 *2010 no tiene variable indgen
+    gen rama_ci = .
+    replace rama_ci = 1 if indgen==10
+    replace rama_ci = 2 if indgen==20  
+    replace rama_ci = 3 if indgen==30   
+    replace rama_ci = 4 if indgen==40    
+    replace rama_ci = 5 if indgen==50    
+    replace rama_ci = 6 if indgen==60    
+    replace rama_ci = 7 if indgen==70    
+    replace rama_ci = 8 if indgen==80    
+    replace rama_ci = 9 if indgen==90
+    replace rama_ci = 10 if indgen==100  
+    replace rama_ci = 11 if indgen==111  
+    replace rama_ci = 12 if indgen==112
+    replace rama_ci = 13 if indgen==113 
+    replace rama_ci = 14 if indgen==114 
+    replace rama_ci = 15 if indgen==120 
+	
+	 *********************
+     ****categopri_ci****
+     *********************
+	 *OBSERVACIONES: El censo no distingue entre actividad principal o secundaria, asigno por default principal.	
+    gen categopri_ci=.
+	cap confirm variable classwkd
+	if (_rc==0) {
+    replace categopri_ci=0 if classwkd==400 | classwkd==999
+    replace categopri_ci=1 if classwkd==110
+    replace categopri_ci=2 if classwkd==120
+    replace categopri_ci=3 if classwkd==203 | classwkd==204 | classwkd==216 | classwkd==230 
+    replace categopri_ci=4 if classwkd==310
+    label var categopri_ci "categoría ocupacional de la actividad principal "
+    label define categopri_ci 0 "Otra clasificación" 1 "Patrón o empleador" 2 "Cuenta Propia o independiente" 3 "Empleado o asalariado" 4 "Trabajador no remunerado" 
+    label value categopri_ci categopri_ci	 
+	}
+	
+	*****************
+      ***spublico_ci***
+      *****************
+    gen spublico_ci=(indgen==100)	
+
+
+*******************************************************
+***           VARIABLES DE DIVERSIDAD               ***
+*******************************************************
+* Cesar Lins & Nathalia Maya - Septiembre 2021	
+
+	***************
+	***afroind_ci***
+	***************
+**Pregunta: 
+
+gen afroind_ci=. 
+
+	***************
+	***afroind_ch***
+	***************
+gen afroind_jefe=.
+gen afroind_ch  =.
+
+drop afroind_jefe 
+
+	*******************
+	***afroind_ano_c***
+	*******************
+gen afroind_ano_c=.
+
+********************
+*** discapacid
+********************
+gen dis_ci=.
+gen dis_ch=.
+
+****************************
+***VARIABLES DE EDUCACION***
+****************************
+
+*********
+*aedu_ci* // años de educacion aprobados
+*********
+*NOTA: Como terciario, universitario y posgrado tienen una duración variable se supone 
+*que terciario completo implica 3 años de educacion adicional a la secundaria, universitario 5 años adicionales y 
+*postgrado 7. Esto solo se basa en la modas de finalización de estos niveles. ESTO SE DEBE DISCUTIR 
+
+gen aedu_ci=0 if yrschool==0 // none or pre-school
+replace aedu_ci=1 if yrschool==1
+replace aedu_ci=2 if yrschool==2
+replace aedu_ci=3 if yrschool==3
+replace aedu_ci=4 if yrschool==4
+replace aedu_ci=5 if yrschool==5
+replace aedu_ci=6 if yrschool==6
+replace aedu_ci=7 if yrschool==7
+replace aedu_ci=8 if yrschool==8
+replace aedu_ci=9 if yrschool==9
+replace aedu_ci=10 if yrschool==10
+replace aedu_ci=11 if yrschool==11
+replace aedu_ci=12 if yrschool==12
+replace aedu_ci=13 if yrschool==13
+replace aedu_ci=14 if yrschool==14
+replace aedu_ci=15 if yrschool==15
+replace aedu_ci=16 if yrschool==16
+replace aedu_ci=17 if yrschool==17
+replace aedu_ci=18 if yrschool==18 // 18 or more
+replace aedu_ci=. if yrschool==98 | yrschool==99 // unknown/missing or NIU
+
+label var aedu_ci "Años de educacion aprobados"
+	
+**********
+*eduno_ci* // no ha completado ningún año de educación // Para esta variable no se puede usar aedu_ci porque aedu_ci=0 es none o pre-school
+**********
+
+gen eduno_ci=(educar==110) // never attended
+replace eduno_ci=. if educar==0 | educar==999 // NIU & missing
+	
+**********
+*edupi_ci* // no completó la educación primaria
+**********
+	
+gen edupi_ci=(educar==130 | educar==210 | educar==220 | educar==230 | educar==240 | educar==250 | educar==280) // primary (zero years completed) + grade 1-5 + primary grade unknown
+replace edupi_ci=. if educar==0 | educar==999 // NIU & missing
+
+********** 
+*edupc_ci* // completó la educación primaria
+**********
+	
+gen edupc_ci=(educar==260 | educar==270) // grade 6 + grade 7
+replace edupc_ci=. if educar==0 | educar==999 // NIU & missing
+
+**********
+*edusi_ci* // no completó la educación secundaria
+**********
+	
+gen edusi_ci=(aedu_ci>=8 & aedu_ci<=11) // 8 a 11 anos de educación
+replace edusi_ci=. if educar==0 | educar==999 // NIU & missing
+
+**********
+*edusc_ci* // completó la educación secundaria
+**********
+	
+gen edusc_ci=(aedu_ci==12 | aedu_ci==13) // 12 y 13 anos de educación
+replace edusc_ci=. if educar==0 | educar==999 // NIU & missing
+
+**********
+*eduui_ci* // no completó la educación universitaria o terciaria
+**********
+	
+gen eduui_ci=(aedu_ci>=14 & aedu_ci<=16) // 14 a 16 anos de educación
+replace eduui_ci=. if educar==0 | educar==999 // NIU & missing
+
+**********
+*eduuc_ci* // completó la educación universitaria o terciaria
+**********
+	
+gen eduuc_ci=(aedu_ci==17 | aedu_ci==18) // 17 y 18 anos de educación
+replace eduuc_ci=. if edattaind==0 | edattaind==999 // missing a los NIU & missing
+
+***********
+*edus1i_ci* // no completó el primer ciclo de la educación secundaria
+***********
+
 
     *********
 	*pais_c*

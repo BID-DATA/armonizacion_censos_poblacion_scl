@@ -173,7 +173,7 @@ label value region_BID_c region_BID_c
 
 	gen jefe_ci=(relate==1)
 
-	
+
 			***********************************
 			***VARIABLES DEL MERCADO LABORAL***
 			***********************************
@@ -255,6 +255,12 @@ label value region_BID_c region_BID_c
       ***spublico_ci***
       *****************
     gen spublico_ci=(indgen==100)	
+
+
+    
+************************
+* VARIABLES EDUCATIVAS *
+************************
 
 
 
