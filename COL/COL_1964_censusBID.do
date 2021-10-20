@@ -17,7 +17,6 @@ País: Colombia
 Año:
 Autores: 
 Última versión: 
-
 							SCL/LMK - IADB
 ****************************************************************************/
 ****************************************************************************
@@ -37,8 +36,8 @@ include "../Base/base.do"
 
 ****************
  *** region_c ***
- ****************
- 
+****************
+
 gen region_c =.
 replace region_c=1 if geo1_co1964 ==5 /*Antioquia*/ 
 replace region_c=2 if geo1_co1964 ==8 /*Atlántico*/ 
@@ -74,7 +73,8 @@ label define region_c 1"Antioquia" 2"Atlántico" 3"Bogotá" 4"Bolívar" 5"Boyac�
 label value region_c region_c
 
 ***********************************
-***VARIABLES DEL MERCADO LABORAL***			***********************************
+***VARIABLES DEL MERCADO LABORAL***
+***********************************
 
      *******************
      ****condocup_ci****
@@ -148,28 +148,6 @@ label value region_c region_c
       ***spublico_ci***
       *****************
     gen spublico_ci=(indgen==100)
-	
-	***********************************
-	***    VARIABLES DE MIGRACIÓN.  ***
-	***********************************	
-
-      *******************
-      ****migrante_ci****
-      *******************
-	gen migrante_ci = (nativity == 2)
-	 
-      *******************
-      **migantiguo5_ci***
-      *******************
-	gen migantiguo5_ci = (migyrs1 >= 5) & migrante_ci == 1
-	replace migantiguo5_ci = . if migantiguo5_ci == 0 & nativity != 2
-	
-	**********************
-	*** migrantelac_ci ***
-	**********************
-	
-	gen migrantelac_ci= 1 if inlist(bplcountry, 21100, 23010, 22060, 23110, 22020, 22040, 23100, 22030, 23060, 23140, 22050, 23040, 23100, 29999, 23130, 23030, 21250, 21999, 22010, 22070, 22080, 22999)
-	replace migrantelac_ci = 0 if migrantelac_ci == . & nativity == 2
 
 ****************************
 ***VARIABLES DE EDUCACION***
@@ -302,6 +280,27 @@ gen asiste_ci=.
 
 gen literacy=(lit==2) // 0 includes illiterate (1), NIU(0) and unknown/missing (9)
 replace literacy=. if edattaind==0 | edattaind==999 // missing a los NIU & missing
+
+***********************************
+***    VARIABLES DE MIGRACIÓN.  ***	***********************************	
+
+      *******************
+      ****migrante_ci****
+      *******************
+	gen migrante_ci = (nativity == 2)
+	 
+      *******************
+      **migantiguo5_ci***
+      *******************
+	gen migantiguo5_ci = (migyrs1 >= 5) & migrante_ci == 1
+	replace migantiguo5_ci = . if migantiguo5_ci == 0 & nativity != 2
+	
+	**********************
+	*** migrantelac_ci ***
+	**********************
+	
+	gen migrantelac_ci= 1 if inlist(bplcountry, 21100, 23010, 22060, 23110, 22020, 22040, 23100, 22030, 23060, 23140, 22050, 23040, 23100, 29999, 23130, 23030, 21250, 21999, 22010, 22070, 22080, 22999)
+	replace migrantelac_ci = 0 if migrantelac_ci == . & nativity == 2
 
 *****************************
 ** Include all labels of   **

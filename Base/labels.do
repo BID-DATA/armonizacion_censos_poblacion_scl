@@ -112,7 +112,6 @@ label var categopri_ci "Categoria ocupacional en la actividad principal"
 label var tipocontrato_ci "Tipo de contrato segun su duracion"
 label define tipocontrato_ci 0 "Con contrato" 1 "Permanente/indefinido" 2 "Temporal" 3 "Sin_contrato/verbal", add modify
 label value tipocontrato_ci tipocontrato_ci
-
 *label var segsoc_ci "Personas que tienen seguridad social en SALUD por su trabajo" - ver si se incluye
 label var nempleos_ci "# de empleos" 
 	capture label define nempleos_ci 1 "Un empleo" 2 "Mas de un empleo"
@@ -152,7 +151,6 @@ label var autocons_ci "Autoconsumo reportado por el individuo"
 label var remesas_ci "Remesas mensuales reportadas por el individuo" 
 label var ylmhopri_ci "Salario monetario horario de la actividad principal" 
 label var ylmho_ci "Salario monetario horario de todas las actividades" 
-
 			* Totales individuales
 label var ylnm_ci "Ingreso laboral NO monetario total individual"  	  
 label var ynlnm_ci "Ingreso no laboral no monetario total individual" 
@@ -165,12 +163,10 @@ label var ylmnr_ch "Ingreso laboral monetario del hogar con missing en NR"
 label var ynlm_ch "Ingreso no laboral monetario del hogar"
 label var ynlnm_ch "Ingreso no laboral no monetario del hogar"
 label var rentaimp_ch "Rentas imputadas del hogar"
-
 label var autocons_ch "Autoconsumo reportado por el hogar"
 label var remesas_ch "Remesas mensuales del hogar"	
 label var ypen_ci "Monto de ingreso por pension contributiva"
 label var ypensub_ci "Monto de ingreso por pension subsidiada / no contributiva"
-
 * LINEAS DE POBREZA y OTRAS VARIABLES EXTERNAS DE REFERENCIA
 capture label var lp19_ci  "Línea de pobreza USD1.9 día en moneda local a precios corrientes a PPA 2011"
 capture label var lp31_ci  "Línea de pobreza USD3.1 día en moneda local a precios corrientes a PPA 2011"
@@ -199,36 +195,29 @@ label var instpen_ci "Institucion proveedora de la pension - variable original d
 label var instcot_ci "Institucion a la cual cotiza o es afiliado - variable original de cada pais" 
 label var pension_ci "=1: Recibe pension contributiva"
 label var pensionsub_ci "=1: recibe pension subsidiada / no contributiva"
-
 */
 
 *====================================================================================================================================*
 *                                                          VARIABLES DE EDUCACION                                             *
 *====================================================================================================================================*
 label var aedu_ci "Anios de educacion aprobados"
-/*
-label var eduno_ci "Sin educacion"
+    label def aedu_ci 0"Cero o preescolar" 1"1 año" 2"2 años" 3"3 años" 4"4 años" 5"5 años" 6"6 años" 7"7 años" 8"8 años" 9"9 años" 10"10 años" 11"11 años" 12"12 años" 13"13 años" 14"14 años" 15"15 años" 16"16 años" 17"17 años" 18"18 años o más"  
+    label val aedu_ci aedu_ci	
+
+label var asiste_ci "Personas que actualmente asisten a centros de enseñanza"
+label var eduno_ci "Cero anios de educacion"
 label var edupi_ci "Primaria incompleta"
-label var edupc_ci "Primaria completa"	
-label var edusi_ci "Secundaria incompleta"	
-label var edusc_ci "Secundaria completa"	
-label var eduui_ci "Superior incompleto"	
-label var eduuc_ci "Superior completo"
+label var edupc_ci "Primaria completa"
+label var edusi_ci "Secundaria incompleta"
+label var edusc_ci "Secundaria completa"
+label var eduui_ci "Universitaria incompleta"
+label var eduuc_ci "Universitaria completa o mas"
 label var edus1i_ci "1er ciclo de la secundaria incompleto"
 label var edus1c_ci "1er ciclo de la secundaria completo"
 label var edus2i_ci "2do ciclo de la secundaria incompleto"
 label var edus2c_ci "2do ciclo de la secundaria completo"
 label var edupre_ci "Educacion preescolar"
-label var eduac_ci "Superior universitario vs superior no universitario"	
-label var asiste_ci "=1 si asiste actualmente a la escuela"
-label var tecnica_ci "=1: formacion terciaria tecnica"
-								
-label var pqnoasis_ci "Razones para no asistir a la escuela-variable original de cada pais"
-label var pqnoasis1_ci "Razones para no asistir a la escuela-variable armonizada"
-label var repite_ci "Ha repetido al menos un grado"
-label var repiteult_ci "Ha repetido el último grado"
-label var edupub_ci "Asiste a un centro de ensenanza público"
-*/
+label var literacy "Alfabetización"
 
 *====================================================================================================================================*
 * VARIABLES DE INFRAESTRUCTURA DEL HOGAR                       *

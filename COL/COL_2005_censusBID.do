@@ -18,7 +18,6 @@ País: Colombia
 Año: 2005
 Autores: Cesar Lins
 Última versión: Septiembre, 2021
-
 							SCL/LMK - IADB
 ****************************************************************************/
 
@@ -130,4 +129,3 @@ compress
 
 save "`base_out'", replace 
 log close
-

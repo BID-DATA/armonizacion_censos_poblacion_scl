@@ -14,8 +14,6 @@ set more off
 local PAIS CHL
 local ANO "1970"
 
-
-
 /***************************************************************************
                  BASES DE DATOS DE CENSOS POBLACIONALES
 País: Chile
@@ -75,6 +73,116 @@ include "../Base/base.do"
       label var region_c "division politico-administrativa, provincia"
 
 
+************************
+* VARIABLES EDUCATIVAS *
+************************
+
+****************
+* asiste_ci    * 
+**************** 
+gen asiste_ci=1 if school==1
+replace asiste_ci=. if school==0 // not in universe as missing 
+replace asiste_ci=. if school==9 // Unknown/missing as missing
+replace asiste_ci=0 if school==2
+
+****************
+* aedu_ci      * 
+**************** 
+
+gen aedu_ci=yrschool
+replace aedu_ci=. if aedu_ci==98
+replace aedu_ci=. if aedu_ci==99
+
+**************
+***eduno_ci***
+**************
+gen byte eduno_ci=0
+replace eduno_ci=1 if aedu_ci==0
+replace eduno_ci=. if aedu_ci==.
+
+**************
+***edupi_ci***
+**************
+gen byte edupi_ci=0
+replace edupi_ci=1 if aedu_ci>0 & aedu_ci<6
+replace edupi_ci=. if aedu_ci==.
+
+**************
+***edupc_ci***
+**************
+gen byte edupc_ci=0
+replace edupc_ci=1 if aedu_ci==6
+replace edupc_ci=. if aedu_ci==.
+
+**************
+***edusi_ci***
+**************
+gen byte edusi_ci=0
+replace edusi_ci=1 if aedu_ci>6 & aedu_ci<12
+replace edusi_ci=. if aedu_ci==.
+
+**************
+***edusc_ci***
+**************
+gen byte edusc_ci=0
+replace edusc_ci=1 if aedu_ci==12
+replace edusc_ci=. if aedu_ci==.
+
+**************
+***eduui_ci***
+**************
+gen byte eduui_ci=0
+replace eduui_ci=1 if aedu_ci>12 & aedu_ci<17
+replace eduui_ci=. if aedu_ci==.
+
+***************
+***eduuc_ci****
+***************
+gen byte eduuc_ci=0
+replace eduuc_ci=1 if aedu_ci>=17
+replace eduuc_ci=. if aedu_ci==.
+
+***************
+***edus1i_ci***
+***************
+gen byte edus1i_ci=0
+replace edus1i_ci=1 if aedu_ci>6 & aedu_ci<9
+replace edus1i_ci=. if aedu_ci==.
+
+***************
+***edus1c_ci***
+***************
+gen byte edus1c_ci=0
+replace edus1c_ci=1 if aedu_ci==9 
+replace edus1c_ci=. if aedu_ci==.
+
+***************
+***edus2i_ci***
+***************
+gen byte edus2i_ci=0
+replace edus2i_ci=1 if aedu_ci>9 & aedu_ci<12
+replace edus2i_ci=. if aedu_ci==.
+
+***************
+***edus2c_ci***
+***************
+gen byte edus2c_ci=0
+replace edus2c_ci=1 if aedu_ci==12
+replace edus2c_ci=. if aedu_ci==.
+
+***************
+***edupre_ci***
+***************
+gen edupre_ci=.
+
+** Other variables 
+***************
+***literacy***
+***************
+gen literacy=. if lit==0
+replace literacy=. if lit==9
+replace literacy=0 if lit==1
+replace literacy=1 if lit==2
 	  
 *******************************************************
 ***           VARIABLES DE DIVERSIDAD               ***
