@@ -89,7 +89,7 @@ label value region_c region_c
     label value condocup_ci condocup_ci
 	
 	
-	  ************
+      ************
       ***emp_ci***
       ************
     gen emp_ci=(condocup_ci==1)
@@ -101,7 +101,7 @@ label value region_c region_c
     gen desemp_ci=(condocup_ci==2)
 	
 	
-	  *************
+      *************
       ***pea_ci***
       *************
     gen pea_ci=(emp_ci==1 | desemp_ci==1)
@@ -144,7 +144,7 @@ label value region_c region_c
     label def rama_ci 1"Agricultura, pesca y forestal" 2"Minería y extracción" 3"Industrias manufactureras" 4"Electricidad, gas, agua y manejo de residuos" 5"Construcción" 6"Comercio" 7"Hoteles y restaurantes" 8"Transporte, almacenamiento y comunicaciones" 9"Servicios financieros y seguros" 10"Administración pública y defensa" 11"Servicios empresariales e inmobiliarios" 12"Educación" 13"Salud y trabajo social" 14"Otros servicios" 15"Servicio doméstico"
     label val rama_ci rama_ci
 	
-	  *****************
+      *****************
       ***spublico_ci***
       *****************
     gen spublico_ci=(indgen==100)
@@ -268,18 +268,13 @@ replace edus2c_ci=. if aedu_ci==. // NIU
 ***********
 *asiste_ci* // la variable school no está disponible para 1964 (si para 1973, 1985 y 1993). Dejo el código armado para el resto de los años
 ***********
-<<<<<<< HEAD
-*Nota: COL 1964 no tiene esta variable se genera en Missing	
-gen asiste_ci=.
-=======
-
+	
 gen asiste_ci=.
 	
 /*
 gen asiste_ci=(school==1) // 0 attended in the past (3) and never attended (4)
 replace asiste_ci=. if school==0 | school==9 // missing a los NIU & missing
 */
->>>>>>> 0f7dbc207790e6c63a7bfa7a0daa1773447ca7d8
 	
 *Other variables
 
@@ -290,9 +285,10 @@ replace asiste_ci=. if school==0 | school==9 // missing a los NIU & missing
 gen literacy=1 if lit==2 // literate
 replace literacy=0 if lit==1 // illiterate
 
-<<<<<<< HEAD
+
 ***********************************
-***    VARIABLES DE MIGRACIÓN.  ***	***********************************	
+***    VARIABLES DE MIGRACIÓN.  ***	
+***********************************	
 
       *******************
       ****migrante_ci****
@@ -305,9 +301,9 @@ replace literacy=0 if lit==1 // illiterate
 	gen migantiguo5_ci = (migyrs1 >= 5) & migrante_ci == 1
 	replace migantiguo5_ci = . if migantiguo5_ci == 0 & nativity != 2
 	
-	**********************
-	*** migrantelac_ci ***
-	**********************
+      **********************
+      *** migrantelac_ci ***
+      **********************
 	
 	gen migrantelac_ci= 1 if inlist(bplcountry, 21100, 23010, 22060, 23110, 22020, 22040, 23100, 22030, 23060, 23140, 22050, 23040, 23100, 29999, 23130, 23030, 21250, 21999, 22010, 22070, 22080, 22999)
 	replace migrantelac_ci = 0 if migrantelac_ci == . & nativity == 2
@@ -321,8 +317,6 @@ include "../Base/labels.do"
 
 order region_BID_c pais_c estrato_ci zona_c relacion_ci civil_ci idh_ch factor_ch idp_ci factor_ci edad_ci sexo_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch miembros_ci condocup_ci emp_ci desemp_ci pea_ci rama_ci spublico_ci migrante_ci migantiguo5_ci aguared_ch luz_ch bano_ch des1_ch piso_ch pared_ch techo_ch dorm_ch cuartos_ch cocina_ch refrig_ch auto_ch internet_ch cel_ch viviprop_ch viviprop_ch1 region_c categopri_ci discapacidad_ci ceguera_ci sordera_ci mudez_ci dismental_ci afroind_ci afroind_ch afroind_ano_c dis_ci dis_ch aedu_ci
 
-=======
->>>>>>> 0f7dbc207790e6c63a7bfa7a0daa1773447ca7d8
 compress
 
 save "`base_out'", replace 
