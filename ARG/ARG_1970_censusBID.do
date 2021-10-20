@@ -72,6 +72,86 @@ include "../Base/base.do"
 	  label define region_c 1"Ciudad de Buenos Aires" 2"Provincia de Buenos Aires" 3"Catamarca" 4"Córdoba" 5"Corrientes" 6"Chaco" 7"Chubut" 8"Entre Ríos" 9"Formosa" 10"Jujuy" 11"La Pampa" 12"La Rioja" 13"Mendoza" 14"Misiones" 15"Neuquén" 16"Río Negro" 17"Salta" 18"San Juan" 19"San Luis" 20"Santa Cruz" 21"Santa Fe" 22"Santiago del Estero" 23"Tucumán" 24"Tierra del Fuego" 99""
 
     label value region_c region_c
+
+    
+**********************************************
+***      VARIABLES DEL MERCADO LABORAL     ***
+**********************************************
+			
+
+     *******************
+     ****condocup_ci****
+     *******************
+	 *2010 no tiene variable empstat
+	 
+    gen condocup_ci=.
+    replace condocup_ci=1 if empstat==1
+    replace condocup_ci=2 if empstat==2
+    replace condocup_ci=3 if empstat==3
+    replace condocup_ci=. if empstat==9
+    replace condocup_ci=4 if empstat==0
+	
+	  ************
+      ***emp_ci***
+      ************
+    gen emp_ci=(condocup_ci==1)
+
+	
+      ****************
+      ***desemp_ci***
+      ****************
+    gen desemp_ci=(condocup_ci==2)
+	
+	
+	  *************
+      ***pea_ci***
+      *************
+    gen pea_ci=(emp_ci==1 | desemp_ci==1)
+	
+	
+     *************************
+     ****rama de actividad****
+     *************************
+	 *2010 no tiene variable indgen
+    gen rama_ci = .
+    replace rama_ci = 1 if indgen==10
+    replace rama_ci = 2 if indgen==20  
+    replace rama_ci = 3 if indgen==30   
+    replace rama_ci = 4 if indgen==40    
+    replace rama_ci = 5 if indgen==50    
+    replace rama_ci = 6 if indgen==60    
+    replace rama_ci = 7 if indgen==70    
+    replace rama_ci = 8 if indgen==80    
+    replace rama_ci = 9 if indgen==90
+    replace rama_ci = 10 if indgen==100  
+    replace rama_ci = 11 if indgen==111  
+    replace rama_ci = 12 if indgen==112
+    replace rama_ci = 13 if indgen==113 
+    replace rama_ci = 14 if indgen==114 
+    replace rama_ci = 15 if indgen==120 
+	
+	 *********************
+     ****categopri_ci****
+     *********************
+	 *OBSERVACIONES: El censo no distingue entre actividad principal o secundaria, asigno por default principal.	
+    gen categopri_ci=.
+	cap confirm variable classwkd
+	if (_rc==0) {
+    replace categopri_ci=0 if classwkd==400 | classwkd==999
+    replace categopri_ci=1 if classwkd==110
+    replace categopri_ci=2 if classwkd==120
+    replace categopri_ci=3 if classwkd==203 | classwkd==204 | classwkd==216 | classwkd==230 
+    replace categopri_ci=4 if classwkd==310
+    label var categopri_ci "categoría ocupacional de la actividad principal "
+    label define categopri_ci 0 "Otra clasificación" 1 "Patrón o empleador" 2 "Cuenta Propia o independiente" 3 "Empleado o asalariado" 4 "Trabajador no remunerado" 
+    label value categopri_ci categopri_ci	 
+	}
+	
+	  *****************
+      ***spublico_ci***
+      *****************
+    gen spublico_ci=(indgen==100)	
+
 	  
 *******************************************************
 ***           VARIABLES DE DIVERSIDAD               ***
