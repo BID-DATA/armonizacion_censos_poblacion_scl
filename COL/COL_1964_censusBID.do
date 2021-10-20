@@ -11,167 +11,68 @@ set more off
  
 *Population and Housing Censuses/Harmonized Censuses - IPUMS
 
-global ruta = "${censusFolder}"
-local PAIS COL
-local ANO "1964"
-
-local log_file = "$ruta\harmonized\\`PAIS'\\log\\`PAIS'_`ANO'_censusBID.log"
-local base_in  = "$ruta\census\\`PAIS'\\`ANO'\data_merge\\`PAIS'_`ANO'_IPUMS.dta"
-local base_out = "$ruta\harmonized\\`PAIS'\data_arm\\`PAIS'_`ANO'_censusBID.dta"
-                                                    
-capture log close
-log using "`log_file'", replace 
-
-
 /***************************************************************************
                  BASES DE DATOS DE CENSOS POBLACIONALES
 País: Colombia
-Año: 1964
+Año:
 Autores: 
 Última versión: 
-
 							SCL/LMK - IADB
 ****************************************************************************/
 ****************************************************************************
 
-use "`base_in'", clear
+local PAIS COL
+local ANO "1964"
 
-rename __000002 COL_1964
+**************************************
+** Setup code, load database,       **
+** and include all common variables **
+**************************************
+include "../Base/base.do"
+
+*****************************************************
+******* Variables specific for this census **********
+*****************************************************
 
 ****************
-* region_BID_c *
+ *** region_c ***
 ****************
-	
-gen region_BID_c=.
 
-label var region_BID_c "Regiones BID"
-label define region_BID_c 1 "Centroamérica_(CID)" 2 "Caribe_(CCB)" 3 "Andinos_(CAN)" 4 "Cono_Sur_(CSC)"
-label value region_BID_c region_BID_c
+gen region_c =.
+replace region_c=1 if geo1_co1964 ==5 /*Antioquia*/ 
+replace region_c=2 if geo1_co1964 ==8 /*Atlántico*/ 
+replace region_c=3 if geo1_co1964 ==11 /*Bogotá*/ 
+replace region_c=4 if geo1_co1964 ==13 /*Bolívar*/ 
+replace region_c=5 if geo1_co1964 ==15 /*Boyacá*/ 
+replace region_c=6 if geo1_co1964 ==17 /*Caldas*/ 
+replace region_c=7 if geo1_co1964 ==18 /*Caquetá*/ 
+replace region_c=8 if geo1_co1964 ==19 /*Cauca*/ 
+replace region_c=9 if geo1_co1964 ==20 /*Cesar*/ 
+replace region_c=10 if geo1_co1964 ==23 /*Córdoba*/ 
+replace region_c=11 if geo1_co1964 ==25 /*Cundinamarca*/ 
+replace region_c=12 if geo1_co1964 ==27 /*Chocó*/ 
+replace region_c=13 if geo1_co1964 ==41 /*Huila*/ 
+replace region_c=14 if geo1_co1964 ==44 /*La Guajira*/
+replace region_c=15 if geo1_co1964 ==47 /*Magdalena*/ 
+replace region_c=16 if geo1_co1964 ==50 /*Meta*/ 
+replace region_c=17 if geo1_co1964 ==52 /*Nariño*/ 
+replace region_c=18 if geo1_co1964 ==54/*Norte de Santander*/ 
+replace region_c=19 if geo1_co1964 ==63 /*Quindío*/ 
+replace region_c=20 if geo1_co1964 ==66 /*Risaralda*/ 
+replace region_c=21 if geo1_co1964 ==68 /*Santander*/ 
+replace region_c=22 if geo1_co1964 ==70 /*Sucre*/ 
+replace region_c=23 if geo1_co1964 ==73 /*Tolima*/ 
+replace region_c=24 if geo1_co1964 ==76 /*Valle*/ 
+replace region_c=25 if geo1_co1964 ==81 /*Arauca*/ 
+replace region_c=26 if geo1_co1964 ==85 /*Casanare*/ 
+replace region_c=27 if geo1_co1964 ==86 /*Putumayo*/ 
+replace region_c=28 if geo1_co1964 ==88 /*San Andrés*/ 
+replace region_c=29 if geo1_co1964 ==95 /*Amazonas, Guaviare, Vaupes, Vichada, Guania*/ 
 
+label define region_c 1"Antioquia" 2"Atlántico" 3"Bogotá" 4"Bolívar" 5"Boyacá" 6"Caldas" 7"Caquetá" 8"Cauca" 9"Cesár" 10"Córdoba" 11"Cundinamarca" 12"Chocó" 13"Huila" 14"La Guajira" 15"Magdalena" 16"Meta" 17"Nariño" 18"Norte de Santander" 19"Quindío" 20"Risaralda" 21"Santander" 22"Sucre" 23"Tolima" 24"Valle" 25"Arauca" 26"Casanare" 27"Putumayo" 28"San Andrés" 29"Amazonas, Guaviare, Vaupes, Vichada, Guania"	
+label value region_c region_c
 
-     ****************
-     *** region_c ***
-     ****************
-
-   gen region_c=.   
-   replace region_c=1 if geo1_co==170005			    /*Antioquia*/
-   replace region_c=2 if geo1_co==170008			    /*Atlántico*/
-   replace region_c=3 if geo1_co==170011			    /*Bogotá, Cundinamarca*/
-   replace region_c=4 if geo1_co==170013			    /*Bolivar, Sucre*/
-   replace region_c=5 if geo1_co==170015		     	/*Boyace, Casanare*/
-   replace region_c=6 if geo1_co==170018			    /*Caquetá*/
-   replace region_c=7 if geo1_co==170019			    /*Cauca*/
-   replace region_c=8 if geo1_co==170023			    /*Córdoba*/
-   replace region_c=9 if geo1_co==170027			    /*Chocó*/
-   replace region_c=10 if geo1_co==170041			    /*Huila*/
-   replace region_c=11 if geo1_co==170044		       	/*La Guajira*/
-   replace region_c=12 if geo1_co==170050			    /*Meta*/
-   replace region_c=13 if geo1_co==170052			    /*Nariño*/
-   replace region_c=14 if geo1_co==170054			    /*Cesar, Norte de Santander, Magdalena*/
-   replace region_c=15 if geo1_co==170066			    /*Caldas, Quindío, Risaralda*/
-   replace region_c=16 if geo1_co==170068			    /*Santander*/
-   replace region_c=17 if geo1_co==170073			    /*Tolima*/
-   replace region_c=18 if geo1_co==170076			    /*Valle del Cauca*/
-   replace region_c=19 if geo1_co==170081			    /*Arauca*/
-   replace region_c=20 if geo1_co==170086			    /*Putumayo*/
-   replace region_c=21 if geo1_co==170088			    /*San Andrés*/
-   replace region_c=22 if geo1_co==170095			    /*Amazonas, Guavire, Vaupés, Vichada, Guainía*/
-  *replace region_c=99 if geo1_co==170099			    /*Unknown*/
-
-
-	  label define region_c 1"Antioquia" 2"Atlántico" 3"Bogotá, Cundinamarca" 4"Bolivar, Sucre" 5"Boyace, Casanare" 6"Caquetá" 7"Cauca" 8"Córdoba" 9"Chocó" 10"Huila" 11"La Guajira" 12"Meta" 13"Nariño" 14"Cesar, Norte de Santander, Magdalena" 15"Caldas, Quindío, Risaralda" 16"Santander" 17"Tolima" 18"Valle del Cauca" 19"Arauca" 20"Putumayo" 21"San Andrés" 22"Amazonas, Guavire, Vaupés, Vichada, Guainía" 99""
-      label value region_c region_c
-      label var region_c "division politico-administrativa, departamento"
-
-    *********
-	*pais_c*
-	*********
-    gen str3 pais_c="COL"
-	
-	*********
-	*anio_c*
-	*********
-    gen int anio_c=year
-	
-	
-			****************************
-			*  VARIABLES DE DISENO     *
-			****************************
-	
-	
-	*******************************************
-	*Factor de expansion del hogar (factor_ch)*
-	*******************************************
-
-	gen factor_ch=hhwt
-	label var factor_ch "Factor de expansion del hogar"
-	
-
-	****************************************
-	*factor expansión individio (factor_ci)*
-	****************************************
-
-	gen factor_ci=perwt
-	label var factor_ci "Factor de expansion del individuo"
-	
-	
-	******************
-    *idh_ch (idhogar)*
-    ******************
-	
-    gen str13 idh_ch=string(serial)
-	
-	
-		    ****************************
-			***VARIABLES DEMOGRAFICAS***
-			****************************
-
-	*********
-	*sexo_ci*
-	*********
-	
-	capture gen sexo_ci=sex
-	drop if sexo_ci>2 | sexo_ci<1 
-	
-	*********
-	*edad_ci*
-	*********
-	
-	capture gen edad_ci=age
-	replace edad_ci=98 if edad_ci>=98 
-	
-	*************
-	*relacion_ci*
-	*************	
-	gen relacion_ci=1 if related==1000
-    replace relacion_ci=2 if related==2000
-    replace relacion_ci=3 if related==3000
-    replace relacion_ci=4 if related==4000 
-    replace relacion_ci=5 if related==5120 | related==5320 | related==5900
-    replace relacion_ci=6 if related==5210
-	label var relacion_ci "Relación de parentesco con el jefe de hogar"
-    label define relacion_ci 1 "Jefe" 2 "Conyuge" 3 "Hijo" 4 "Otros Parientes" 5 "Otros no Parientes" 6 "Servicio Domestico"
-    label values relacion_ci relacion_ci
-
-	
-	**************
-	*Estado Civil*
-	**************
-	*2010 no tiene variable marst
-	
-	recode marst (2=1 "Union formal o informal") (3=2 "Divorciado o separado") (4=3 "Viudo") (1=4 "Soltero") (else=.), gen(civil_ci) 
-	label variable civil_ci "Estado civil"
-	
-	
-    *********
-	*jefe_ci*
-	*********
-
-	gen jefe_ci=(relate==1)
-
-	
-
-			***********************************
+***********************************
 			***VARIABLES DEL MERCADO LABORAL***
 			***********************************
 			
@@ -251,9 +152,36 @@ label value region_BID_c region_BID_c
     gen spublico_ci=(indgen==100)	
 
 
+	***********************************
+	***    VARIABLES DE MIGRACIÓN.  ***
+	***********************************	
 
+      *******************
+      ****migrante_ci****
+      *******************
+	gen migrante_ci = (nativity == 2)
+	 
+      *******************
+      **migantiguo5_ci***
+      *******************
+	gen migantiguo5_ci = (migyrs1 >= 5) & migrante_ci == 1
+	replace migantiguo5_ci = . if migantiguo5_ci == 0 & nativity != 2
+	
+	**********************
+	*** migrantelac_ci ***
+	**********************
+	
+	gen migrantelac_ci= 1 if inlist(bplcountry, 21100, 23010, 22060, 23110, 22020, 22040, 23100, 22030, 23060, 23140, 22050, 23040, 23100, 29999, 23130, 23030, 21250, 21999, 22010, 22070, 22080, 22999)
+	replace migrantelac_ci = 0 if migrantelac_ci == . & nativity == 2
 
+	
+	*****************************
+** Include all labels of   **
+**  harmonized variables   **
+*****************************
+include "../Base/labels.do"
 
+order region_BID_c pais_c estrato_ci zona_c relacion_ci civil_ci idh_ch factor_ch idp_ci factor_ci edad_ci sexo_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch miembros_ci condocup_ci emp_ci desemp_ci pea_ci rama_ci spublico_ci migrante_ci migantiguo5_ci aguared_ch luz_ch bano_ch des1_ch piso_ch pared_ch techo_ch dorm_ch cuartos_ch cocina_ch refrig_ch auto_ch internet_ch cel_ch viviprop_ch viviprop_ch1 region_c categopri_ci discapacidad_ci ceguera_ci sordera_ci mudez_ci dismental_ci afroind_ci afroind_ch afroind_ano_c dis_ci dis_ch aedu_ci
 
 compress
 
