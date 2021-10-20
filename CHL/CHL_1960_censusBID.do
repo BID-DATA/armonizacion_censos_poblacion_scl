@@ -69,13 +69,10 @@ include "../Base/base.do"
       label value region_c region_c
       label var region_c "division politico-administrativa, provincia"
 
-
-
 	
 			***********************************
 			***VARIABLES DEL MERCADO LABORAL***
-			***********************************
-			
+			***********************************	
 
      *******************
      ****condocup_ci****

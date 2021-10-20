@@ -9,19 +9,6 @@ set more off
  * Los datos se obtienen de las carpetas que se encuentran en el servidor: ${censusFolder}
  * Se tiene acceso al servidor únicamente al interior del BID.
  *________________________________________________________________________________________________________________*
- 
-*Population and Housing Censuses/Harmonized Censuses - IPUMS
-
-global ruta = "${censusFolder}"
-local PAIS CRI
-local ANO "1963"
-
-local log_file = "$ruta\harmonized\\`PAIS'\\log\\`PAIS'_`ANO'_censusBID.log"
-local base_in  = "$ruta\census\\`PAIS'\\`ANO'\data_merge\\`PAIS'_`ANO'_IPUMS.dta"
-local base_out = "$ruta\harmonized\\`PAIS'\data_arm\\`PAIS'_`ANO'_censusBID.dta"
-                                                    
-capture log close
-log using "`log_file'", replace 
 
 
 /***************************************************************************
@@ -35,33 +22,21 @@ Autores:
 ****************************************************************************/
 ****************************************************************************
 
-use "`base_in'", clear
+*Population and Housing Censuses/Harmonized Censuses - IPUMS
 
+local PAIS CRI
+local ANO "1963"
 
-****************
-* region_BID_c *
-****************
-	
-gen region_BID_c=.
+**************************************
+** Setup code, load database,       **
+** and include all common variables **
+**************************************
 
-label var region_BID_c "Regiones BID"
-label define region_BID_c 1 "Centroamérica_(CID)" 2 "Caribe_(CCB)" 3 "Andinos_(CAN)" 4 "Cono_Sur_(CSC)"
-label value region_BID_c region_BID_c
+include "../Base/base.do"
 
-
-
-    *********
-	*pais_c*
-	*********
-    gen str3 pais_c="CRI"
-	
-    ****************************************
-    * Variables comunes a todos los países *
-    ****************************************
-    include "../Base/base.do"
-
-	
-
+*****************************************************
+******* Variables specific for this census **********
+*****************************************************
 
 			***********************************
 			***VARIABLES DEL MERCADO LABORAL***
@@ -169,23 +144,13 @@ label value region_BID_c region_BID_c
 	gen migrantelac_ci= 1 if inlist(bplcountry, 21100, 23010, 22060, 23110, 22040, 23100, 22030, 23060, 23140, 22050, 23050, 23040, 23100, 29999, 23130, 23030, 21250, 21999, 22010, 22070, 22080, 22999)
 	replace migrantelac_ci = 0 if migrantelac_ci == . & nativity == 2
 
-********************************
-*** Health indicators **********
-********************************
-	gen discapacidad_ci =.
-	label var discapacidad_ci "Discapacidad"
+*****************************
+** Include all labels of   **
+**  harmonized variables   **
+*****************************
+include "../Base/labels.do"
 
-	gen ceguera_ci=.
-	label var ceguera_ci "Ciego o con discpacidad visual"
-	
-	gen sordera_ci  =.
-	label var sordera_ci "Sordera o con discpacidad auditiva"
-
-	gen mudez_ci=.
-	label var mudez_ci "Mudo o con discpacidad de lenguaje"
-
-	gen dismental_ci=.
-	label var dismental_ci "Discapacidad mental"
+order region_BID_c pais_c estrato_ci zona_c relacion_ci civil_ci idh_ch factor_ch idp_ci factor_ci edad_ci sexo_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch miembros_ci condocup_ci emp_ci desemp_ci pea_ci rama_ci spublico_ci migrante_ci migantiguo5_ci aguared_ch luz_ch bano_ch des1_ch piso_ch pared_ch techo_ch dorm_ch cuartos_ch cocina_ch refrig_ch auto_ch internet_ch cel_ch viviprop_ch viviprop_ch1 region_c categopri_ci discapacidad_ci ceguera_ci sordera_ci mudez_ci dismental_ci afroind_ci afroind_ch afroind_ano_c dis_ci dis_ch aedu_ci
 
 compress
 

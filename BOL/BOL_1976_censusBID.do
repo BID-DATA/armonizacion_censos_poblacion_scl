@@ -126,34 +126,59 @@ include "../Base/base.do"
     label def rama_ci 1"Agricultura, pesca y forestal" 2"Minería y extracción" 3"Industrias manufactureras" 4"Electricidad, gas, agua y manejo de residuos" 5"Construcción" 6"Comercio" 7"Hoteles y restaurantes" 8"Transporte, almacenamiento y comunicaciones" 9"Servicios financieros y seguros" 10"Administración pública y defensa" 11"Servicios empresariales e inmobiliarios" 12"Educación" 13"Salud y trabajo social" 14"Otros servicios" 15"Servicio doméstico"
     label val rama_ci rama_ci
 	
-	
 	  *****************
       ***spublico_ci***
       *****************
     gen spublico_ci=(indgen==100)	
 
+*******************************************************
+***           VARIABLES DE DIVERSIDAD               ***
+*******************************************************
+* Cesar Lins & Nathalia Maya - Septiembre 2021	
 
+	***************
+	***afroind_ci***
+	***************
+**Pregunta: 
 
-	***********************************
-	***    VARIABLES DE MIGRACIÓN.  ***
-	***********************************
+gen afroind_ci=. 
 
-      *******************
-      ****migrante_ci****
-      *******************
-	gen migrante_ci = (nativity == 2)
-	 
-      *******************
-      **migantiguo5_ci***
-      *******************
-	gen migantiguo5_ci = (mig1_5_bo == 68097)
-	
-	**********************
-	*** migrantelac_ci ***
-	**********************
-	
-	gen migrantelac_ci= 1 if inlist(bplcountry, 21100, 23010, 22060, 23110, 22020, 22040, 23050, 23100, 22030, 23060, 23140, 22050, 23040, 23100, 29999, 23130, 23030, 21250, 21999, 22010, 22070, 22080, 22999)
-	replace migrantelac_ci = 0 if migrantelac_ci == . & nativity == 2
+	***************
+	***afroind_ch***
+	***************
+gen afroind_jefe=.
+gen afroind_ch  =.
+
+drop afroind_jefe 
+
+	*******************
+	***afroind_ano_c***
+	*******************
+gen afroind_ano_c=.
+
+********************
+*** discapacid
+********************
+gen dis_ci=.
+gen dis_ch=.
+
+*******************************************************
+***           VARIABLES DE INGRESO                  ***
+*******************************************************
+/*Argentina no tiene vars de ingreso pero se incluyen las 
+variables de ingreso por hogar porque no están en el do Base*/	
+
+    ***********
+	**ylm_ch*
+	***********
+   
+   by idh_ch, sort: egen ylm_ch=sum(ylm_ci) if miembros_ci==1, missing
+   
+    ***********
+	**ynlm_ch*
+	***********
+   by idh_ch, sort: egen ynlm_ch=sum(ynlm_ci) if miembros_ci==1, missing
+
 
 ************************
 * VARIABLES EDUCATIVAS *
@@ -260,6 +285,27 @@ gen edupre_ci=.
 gen literacy=. if lit==0
 replace literacy=0 if lit==1
 replace literacy=1 if lit==2
+
+	***********************************
+	***    VARIABLES DE MIGRACIÓN.  ***
+	***********************************
+
+      *******************
+      ****migrante_ci****
+      *******************
+	gen migrante_ci = (nativity == 2)
+	 
+      *******************
+      **migantiguo5_ci***
+      *******************
+	gen migantiguo5_ci = (mig1_5_bo == 68097)
+	
+	**********************
+	*** migrantelac_ci ***
+	**********************
+	
+	gen migrantelac_ci= 1 if inlist(bplcountry, 21100, 23010, 22060, 23110, 22020, 22040, 23050, 23100, 22030, 23060, 23140, 22050, 23040, 23100, 29999, 23130, 23030, 21250, 21999, 22010, 22070, 22080, 22999)
+	replace migrantelac_ci = 0 if migrantelac_ci == . & nativity == 2
 
 compress
 
