@@ -2,7 +2,6 @@
 clear
 set more off
 *________________________________________________________________________________________________________________*
-
  * Activar si es necesario (dejar desactivado para evitar sobreescribir la base y dejar la posibilidad de 
  * utilizar un loop)
  * Los datos se obtienen de las carpetas que se encuentran en el servidor: ${censusFolder}
@@ -10,8 +9,6 @@ set more off
  *________________________________________________________________________________________________________________*
  
 *Population and Housing Censuses/Harmonized Censuses - IPUMS
-
-
 /***************************************************************************
                  BASES DE DATOS DE CENSOS POBLACIONALES
 País: Brasil
@@ -70,7 +67,118 @@ include "../Base/base.do"
  replace region_c=27 if geo1_br2000 ==53 /*Distrito Federal*/
 
  label define region_c 1"Rondônia" 2"Acre" 3"Amazonas" 4"Roraima" 5"Pará" 6"Amapá" 7"Tocantins" 8"Maranhão" 9"Piauí" 10"Ceará" 11"Rio Grande do Norte" 12"Paraíba" 13"Pernambuco" 14"Alagoas" 15"Sergipe" 16"Bahia" 17"Minas Gerais" 18"Espírito Santo" 19"Rio de Janeiro" 20"São Paulo" 21"Paraná" 22"Santa Catarina" 23"Rio Grande do Sul" 24"Mato Grosso do Sul" 25"Mato Grosso" 26"Goiás" 27"Distrito Federal"
- 
+
+*******************************************************
+***           VARIABLES DE DIVERSIDAD               ***
+*******************************************************				
+* Cesar Lins & Nathalia Maya - Septiembre 2021	
+
+	***************
+	***afroind_ci***
+	***************
+**Pregunta: 
+
+gen afroind_ci=. 
+replace afroind_ci=1  if race == 30
+replace afroind_ci=2 if race == 20 | race == 51 
+replace afroind_ci=3 if race == 10 | race == 40 
+replace afroind_ci=. if race == 99
+
+	***************
+	***afroind_ch***
+	***************
+gen afroind_jefe= afroind_ci if relate==1
+egen afroind_ch  = min(afroind_jefe), by(serial) 
+
+drop afroind_jefe 
+
+	*******************
+	***afroind_ano_c***
+	*******************
+gen afroind_ano_c=1990
+
+********************
+*** discapacidad ***
+********************
+gen dis_ci=.
+gen dis_ch=.
+
+			***********************************
+			***VARIABLES DEL MERCADO LABORAL***
+			***********************************
+
+     *******************
+     ****condocup_ci****
+     *******************
+    gen condocup_ci=.
+    replace condocup_ci=1 if empstat==1
+    replace condocup_ci=2 if empstat==2
+    replace condocup_ci=3 if empstat==3
+    replace condocup_ci=4 if empstat==0
+    label var condocup_ci "Condicion de ocupación"
+    label define condocup_ci 1 "Ocupado" 2 "Desocupado" 3 "Inactivo" 4 "Menor de PET" 
+    label value condocup_ci condocup_ci
+	
+	  ************
+      ***emp_ci***
+      ************
+    gen emp_ci=(condocup_ci==1)
+
+      ****************
+      ***desemp_ci***
+      ****************
+    gen desemp_ci=(condocup_ci==2)
+	
+	  *************
+      ***pea_ci***
+      *************
+    gen pea_ci=(emp_ci==1 | desemp_ci==1)
+	
+     *********************
+     ****categopri_ci****
+     *********************
+	 *OBSERVACIONES: 
+    gen categopri_ci=.
+    replace categopri_ci=0 if classwkd==230 | classwkd==340
+    replace categopri_ci=1 if classwkd==110
+    replace categopri_ci=2 if classwkd==120 | classwkd==123
+    replace categopri_ci=3 if classwkd==200 | classwkd==209
+    replace categopri_ci=4 if classwkd==310
+    label var categopri_ci "categoría ocupacional de la actividad principal "
+    label define categopri_ci 0 "Otra clasificación" 1 "Patrón o empleador" 2 "Cuenta Propia o independiente" 3 "Empleado o asalariado" 4 "Trabajador no remunerado" 
+    label value categopri_ci categopri_ci	 
+
+     *************************
+     ****rama de actividad****
+     *************************
+    gen rama_ci = .
+    replace rama_ci = 1 if indgen==10
+    replace rama_ci = 2 if indgen==20  
+    replace rama_ci = 3 if indgen==30   
+    replace rama_ci = 4 if indgen==40    
+    replace rama_ci = 5 if indgen==50    
+    replace rama_ci = 6 if indgen==60    
+    replace rama_ci = 7 if indgen==70    
+    replace rama_ci = 8 if indgen==80    
+    replace rama_ci = 9 if indgen==90
+    replace rama_ci = 10 if indgen==100  
+    replace rama_ci = 11 if indgen==111  
+    replace rama_ci = 12 if indgen==112
+    replace rama_ci = 13 if indgen==113 
+    replace rama_ci = 14 if indgen==114 
+    replace rama_ci = 15 if indgen==120 
+	replace rama_ci = 16 if indgen==999
+    label var rama_ci "Rama de actividad"
+    label def rama_ci 1"Agricultura, pesca y forestal" 2"Minería y extracción" 3"Industrias manufactureras" 4"Electricidad, gas, agua y manejo de residuos" 5"Construcción" 6"Comercio" 7"Hoteles y restaurantes" 8"Transporte, almacenamiento y comunicaciones" 9"Servicios financieros y seguros" 10"Administración pública y defensa" 11"Servicios empresariales e inmobiliarios" 12"Educación" 13"Salud y trabajo social" 14"Otros servicios" 15"Servicio doméstico" 16"Otras ramas"
+    label val rama_ci rama_ci
+	
+	
+	  *****************
+      ***spublico_ci***
+      *****************
+    gen spublico_ci=(indgen==100)	
+	
+
 **********************************
 **** VARIABLES DE INGRESO ****
 **********************************
@@ -105,41 +213,6 @@ include "../Base/base.do"
    by idh_ch, sort: egen ynlm_ch=sum(ynlm_ci) if miembros_ci==1, missing
    
  
-*******************************************************
-***           VARIABLES DE DIVERSIDAD               ***
-*******************************************************				
-* Cesar Lins & Nathalia Maya - Septiembre 2021	
-
-	***************
-	***afroind_ci***
-	***************
-**Pregunta: 
-
-gen afroind_ci=. 
-replace afroind_ci=1  if race == 30
-replace afroind_ci=2 if race == 20 | race == 51 
-replace afroind_ci=3 if race == 10 | race == 40 
-replace afroind_ci=. if race == 99
-
-	***************
-	***afroind_ch***
-	***************
-gen afroind_jefe= afroind_ci if relate==1
-egen afroind_ch  = min(afroind_jefe), by(idh_ch) 
-
-drop afroind_jefe 
-
-	*******************
-	***afroind_ano_c***
-	*******************
-gen afroind_ano_c=1990
-
-********************
-*** discapacidad ***
-********************
-gen dis_ci=.
-gen dis_ch=.
-
 ***********************************
 ***    VARIABLES DE MIGRACIÓN.  ***
 ***********************************
@@ -148,6 +221,7 @@ gen dis_ch=.
 	gen migantiguo5_ci=.
 	
 	gen migrantelac_ci=.
+
 
 ****************************
 ***	VARIABLES EDUCATIVAS ***
@@ -178,61 +252,67 @@ replace aedu_ci=17 if yrschool==17
 replace aedu_ci=. if yrschool==98 | yrschool==99 | yrschool==95 // unknown/missing or NIU + 95=adult literacy (de acuerdo a los documentos de EDU primaria completa es 4 anos en BRA y según la base if yrschool==95, then edattaind==Some primary complete; however, we don't know how many).
 replace aedu_ci=. if educbr==3900 // secondary, grade unspecified
 
-label var aedu_ci "Años de educacion aprobados"
-
 **********
-*eduno_ci* // no ha completado ningún año de educación // Para esta variable no se puede usar aedu_ci porque aedu_ci=0 es none o pre-school
+*eduno_ci* // no ha completado ningún año de educación
 **********
 	
-gen eduno_ci=(aedu_ci==0 & educbr!=1200 & educbr!=1700 & educbr!=4130 & educbr!=2900) // none
+gen eduno_ci=(aedu_ci==0) // none
+replace eduno_ci=. if aedu_ci==.
 
 ***************
 ***edupre_ci***
 ***************
+
 gen byte edupre_ci=(educbr==1200) // pre-school
-label variable edupre_ci "Educacion preescolar"
+replace edupre_ci=. if aedu_ci==.
 	
 **********
 *edupi_ci* // no completó la educación primaria
 **********
 	
 gen edupi_ci=(aedu_ci>=1 & aedu_ci<=7 | educbr==1700 | educbr==2900) // 1 a 7 anos de educación + attending first grade + primary grade unspecified
+replace edupi_ci=. if aedu_ci==.
 
 ********** 
 *edupc_ci* // completó la educación primaria
 **********
 	
 gen edupc_ci=(aedu_ci==8) // 8 anos de educación
+replace edupc_ci=. if aedu_ci==.
 
 **********
 *edusi_ci* // no completó la educación secundaria
 **********
 	
 gen edusi_ci=(aedu_ci==9 | aedu_ci==10) // 9 y 10 anos de educación
+replace edusi_ci=. if aedu_ci==.
 
 **********
 *edusc_ci* // completó la educación secundaria
 **********
 	
 gen edusc_ci=(aedu_ci==11) // 11 anos de educación
+replace edusc_ci=. if aedu_ci==.
 
 **********
 *eduui_ci* // no completó la educación universitaria o terciaria
 **********
 	
 gen eduui_ci=(aedu_ci>=12 & aedu_ci<=14) // some college completed + anos 15 de educación que aparece como universitario completo pero no lo sería
+replace eduui_ci=. if aedu_ci==.
 
 **********
 *eduuc_ci* // completó la educación universitaria o terciaria
 **********
 	
 gen eduuc_ci=(aedu_ci==15 | aedu_ci==16 | aedu_ci==17) // 15 a 17 anos de educación
+replace eduuc_ci=. if aedu_ci==.
 
 ***********
 *edus1i_ci* // no completó el primer ciclo de la educación secundaria
 ***********
 
-gen byte edus1i_ci=.
+gen byte edus1c_ci=.
 
 ***********
 *edus1c_ci* // completó el primer ciclo de la educación secundaria
@@ -256,9 +336,8 @@ gen byte edus2c_ci=.
 **asiste_ci***
 **************
 
-gen asiste_ci=(school==1) // 0 includes NIU (0), attended in the past (3), never attended (4) and unknown/missing (9)
-replace asiste_ci=. if edattaind==0 // missing a los NIU & missing
-label var asiste_ci "Personas que actualmente asisten a un centro de enseñanza"
+gen asiste_ci=(school==1) // 0 includes attended in the past (3) and never attended (4)
+replace asiste_ci=. if school==0 | school==9 // missing a los NIU & missing
 	
 *Other variables
 
@@ -266,8 +345,8 @@ label var asiste_ci "Personas que actualmente asisten a un centro de enseñanza"
 * literacy *
 ************
 
-gen literacy=(lit==2) // 0 includes illiterate (1), NIU(0) and unknown/missing (9)
-replace literacy=. if edattaind==0 | edattaind==999 // missing a los NIU & missing
+gen literacy=1 if lit==2 // literate
+replace literacy=0 if lit==1 // illiterate
 
 *****************************
 ** Include all labels of   **
