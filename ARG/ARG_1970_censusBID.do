@@ -92,7 +92,7 @@ include "../Base/base.do"
     replace condocup_ci=. if empstat==0 /*NIU as missing*/
 	}
 	
-	  ************
+      ************
       ***emp_ci***
       ************
     gen emp_ci=.
@@ -116,7 +116,7 @@ include "../Base/base.do"
 		replace desemp_ci=0 if condocup_ci==3 /*0 cuando están inactivos*/
 	}
 	
-	  *************
+      *************
       ***pea_ci***
       *************
     gen pea_ci=.
@@ -148,7 +148,7 @@ include "../Base/base.do"
     replace rama_ci = 14 if indgen==114 
     replace rama_ci = 15 if indgen==120 
 	
-	 *********************
+     *********************
      ****categopri_ci****
      *********************
 	 *OBSERVACIONES: El censo no distingue entre actividad principal o secundaria, asigno por default principal.	
@@ -162,7 +162,7 @@ include "../Base/base.do"
     replace categopri_ci=4 if classwkd==310
 	}
 	
-	  *****************
+      *****************
       ***spublico_ci***
       *****************
     gen spublico_ci=.
@@ -170,7 +170,7 @@ include "../Base/base.do"
 	if (_rc==0){
 		replace spublico_ci=1 if indgen==100
 		replace spublico_ci=0 if emp_ci==1 & indgen!=100
-		replace spublico_ci=. if indgen == 998 | indgen == 999 | indgen === 000
+		replace spublico_ci=. if indgen == 998 | indgen == 999 | indgen == 000
 	}
 	  
 *******************************************************
