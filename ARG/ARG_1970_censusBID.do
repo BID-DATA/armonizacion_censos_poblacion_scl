@@ -83,20 +83,26 @@ include "../Base/base.do"
 	 *2010 no tiene variable empstat
 	 
     gen condocup_ci=.
+	cap confirm variable empstat
+	if (_rc==0){
     replace condocup_ci=1 if empstat==1
     replace condocup_ci=2 if empstat==2
     replace condocup_ci=3 if empstat==3
-    replace condocup_ci=. if empstat==9
-    replace condocup_ci=4 if empstat==0
+    replace condocup_ci=. if empstat==9 /*unkown/missing as missing*/ 
+    replace condocup_ci=. if empstat==0 /*NIU as missing*/
+	}
 	
 	  ************
       ***emp_ci***
       ************
     gen emp_ci=.
-	cap confirm variable condocup_ci
+	cap confirm variable empstat
 	if (_rc==0){
-		replace emp_ci=1 if condocup_ci==1
-		replace emp_ci=. if condocup_ci==99
+		replace emp_ci=0 if empstat==2
+		replace emp_ci=0 if empstat==3
+		replace emp_ci=1 if empstat==1
+		replace emp_ci=. if empstat==0 /*NIU as missing*/
+		replace emp_ci=. if empstat==9 /*unkown/missing as missing*/
 	}
 	
 	
@@ -106,8 +112,8 @@ include "../Base/base.do"
 	gen desemp_ci=.
 	cap confirm variable condocup_ci
 	if (_rc==0){
-		replace desemp_ci=1 if condocup_ci==2
-		replace desemp_ci=. if condocup_ci==99
+		replace desemp_ci=1 if condocup_ci==2 /*1 desempleados*/
+		replace desemp_ci=0 if condocup_ci==3 /*0 cuando están inactivos*/
 	}
 	
 	  *************
@@ -118,7 +124,7 @@ include "../Base/base.do"
 	if (_rc==0){
 		replace pea_ci=1 if condocup_ci==1
 		replace pea_ci=1 if condocup_ci==2
-		replace pea_ci=. if condocup_ci==99
+		replace pea_ci=0 if condocup_ci==3
 	}
 	
      *************************
@@ -163,7 +169,8 @@ include "../Base/base.do"
 	cap confirm variable indgen
 	if (_rc==0){
 		replace spublico_ci=1 if indgen==100
-		replace spublico_ci=. if indgen==99
+		replace spublico_ci=0 if emp_ci==1 & indgen!=100
+		replace spublico_ci=. if indgen == 998 | indgen == 999 | indgen === 000
 	}
 	  
 *******************************************************
