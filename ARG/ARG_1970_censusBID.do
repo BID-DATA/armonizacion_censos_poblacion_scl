@@ -310,27 +310,27 @@ replace edus1i_ci=. if edattaind==0 | edattaind==999 // missing a los NIU & miss
 	*edus1c_ci* // completó el primer ciclo de la educación secundaria
 	***********
 	
-gen byte edus1c_ci=(aedu_ci==9)
-replace edus1c_ci=. if edattaind==0 | edattaind==999 // missing a los NIU & missing
+	gen byte edus1c_ci=(aedu_ci==9)
+	replace edus1c_ci=. if edattaind==0 | edattaind==999 // missing a los NIU & missing
 
 	***********
 	*edus2i_ci* // no completó el segundo ciclo de la educación secundaria
 	***********
 
-gen byte edus2i_ci=.
+	gen byte edus2i_ci=.
 
 	***********
 	*edus2c_ci* // completó el segundo ciclo de la educación secundaria
 	***********
 
-gen byte edus2c_ci=.
+	gen byte edus2c_ci=.
 
 	***********
 	*asiste_ci*
 	***********
 	
-gen asiste_ci=(school==1) // 0 includes attended in the past (3) and never attended (4)
-replace asiste_ci=. if school==0 | school==9 // missing a los NIU & missing
+	gen asiste_ci=(school==1) // 0 includes attended in the past (3) and never attended (4)
+	replace asiste_ci=. if school==0 | school==9 // missing a los NIU & missing
 	
 *Other variables
 
@@ -338,8 +338,9 @@ replace asiste_ci=. if school==0 | school==9 // missing a los NIU & missing
 	* literacy *
 	************
 
-gen literacy=1 if lit==2 // literate
-replace literacy=0 if lit==1 // illiterate
+	gen literacy=. 
+	replace literacy=1 if lit==2 // literate
+	replace literacy=0 if lit==1 // illiterate
 
 *******************************************************
 ***           VARIABLES DE MIGRACIÓN              ***
@@ -348,7 +349,9 @@ replace literacy=0 if lit==1 // illiterate
       *******************
       ****migrante_ci****
       *******************
-	gen migrante_ci = (nativity == 2)
+	gen migrante_ci =.
+	replace migrante_ci = 1 if nativity == 2
+	replace migrante_ci = 0 if nativity == 1 
 
       *******************
       **migantiguo5_ci***
