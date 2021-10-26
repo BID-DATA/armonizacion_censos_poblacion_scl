@@ -162,27 +162,25 @@ include "../Base/base.do"
 	***************
 	***afroind_ci***
 	***************
-**Pregunta: 
 
-gen afroind_ci=. 
-gen afroind_ch  =.
+	gen afroind_ci=. 
+	gen afroind_ch  =.
 
 	***************
 	***afroind_ch***
 	***************
-gen afroind_jefe=.
+	gen afroind_jefe=.
 
 	*******************
 	***afroind_ano_c***
 	*******************
-gen afroind_ano_c=.
+	gen afroind_ano_c=.
 
-********************
-*** discapacidad ***
-********************
-gen dis_ci=.
-gen dis_ch=.
-
+	********************
+	*** discapacidad ***
+	********************
+	gen dis_ci=.
+	gen dis_ch=.
 	
 *******************************************************
 ***           VARIABLES DE INGRESO                  ***
@@ -205,97 +203,97 @@ variables de ingreso por hogar porque no están en el do Base*/
 *******************************************************
 ***           VARIABLES DE EDUCACIÓN               ***
 *******************************************************
-*********
-*aedu_ci* // años de educacion aprobados
-*********
+	*********
+	*aedu_ci* // años de educacion aprobados
+	*********
 *NOTA: Como terciario, universitario y posgrado tienen una duración variable se supone 
 *que terciario completo implica 3 años de educacion adicional a la secundaria, universitario 5 años adicionales y 
 *postgrado 7. Esto solo se basa en la modas de finalización de estos niveles. ESTO SE DEBE DISCUTIR 
 
-gen aedu_ci=yrschool
-replace aedu_ci=. if yrschool>=90 & yrschool<100 // categorias NIU; missing; + categorias nivel educativo pero pero sin años de escolaridad
+	gen aedu_ci=yrschool
+	replace aedu_ci=. if yrschool>=90 & yrschool<100 // categorias NIU; missing; + categorias nivel educativo pero pero sin años de escolaridad
 
 	**********
 	*eduno_ci* // no ha completado ningún año de educación // Para esta variable no se puede usar aedu_ci porque aedu_ci=0 es none o pre-school
 	**********
 
-gen eduno_ci=(aedu_ci==0) // never attended or pre-school
-replace eduno_ci=. if educar==0 | educar==999 // NIU & missing
+	gen eduno_ci=(aedu_ci==0) // never attended or pre-school
+	replace eduno_ci=. if educar==0 | educar==999 // NIU & missing
 	
 	**********
 	*edupi_ci* // no completó la educación primaria
 	**********
 	
-gen edupi_ci=(educar==130 | educar==210 | educar==220 | educar==230 | educar==240 | educar==250 | educar==280) // primary (zero years completed) + grade 1-5 + primary grade unknown
-replace edupi_ci=. if educar==0 | educar==999 // NIU & missing
+	gen edupi_ci=(educar==130 | educar==210 | educar==220 | educar==230 | educar==240 | educar==250 | educar==280) // primary (zero years completed) + grade 1-5 + primary grade unknown
+	replace edupi_ci=. if educar==0 | educar==999 // NIU & missing
 
 	********** 
 	*edupc_ci* // completó la educación primaria
 	**********
 	
-gen edupc_ci=(educar==260 | educar==270) // grade 6 + grade 7
-replace edupc_ci=. if educar==0 | educar==999 // NIU & missing
+	gen edupc_ci=(educar==260 | educar==270) // grade 6 + grade 7
+	replace edupc_ci=. if educar==0 | educar==999 // NIU & missing
 
 	**********
 	*edusi_ci* // no completó la educación secundaria
 	**********
 	
-gen edusi_ci=(aedu_ci>=8 & aedu_ci<=11) // 8 a 11 anos de educación
-replace edusi_ci=. if educar==0 | educar==999 // NIU & missing
+	gen edusi_ci=(aedu_ci>=8 & aedu_ci<=11) // 8 a 11 anos de educación
+	replace edusi_ci=. if educar==0 | educar==999 // NIU & missing
 
 	**********
 	*edusc_ci* // completó la educación secundaria
 	**********
 	
-gen edusc_ci=(aedu_ci==12 | aedu_ci==13) // 12 y 13 anos de educación
-replace edusc_ci=. if educar==0 | educar==999 // NIU & missing
+	gen edusc_ci=(aedu_ci==12 | aedu_ci==13) // 12 y 13 anos de educación
+	replace edusc_ci=. if educar==0 | educar==999 // NIU & missing
 
 	**********
 	*eduui_ci* // no completó la educación universitaria o terciaria
 	**********
 	
-gen eduui_ci=(aedu_ci>=14 & aedu_ci<=16) // 14 a 16 anos de educación
-replace eduui_ci=. if educar==0 | educar==999 // NIU & missing
+	gen eduui_ci=(aedu_ci>=14 & aedu_ci<=16) // 14 a 16 anos de educación
+	replace eduui_ci=. if educar==0 | educar==999 // NIU & missing
 
 	**********
 	*eduuc_ci* // completó la educación universitaria o terciaria
 	**********
 	
-gen eduuc_ci=(aedu_ci==17 | aedu_ci==18) // 17 y 18 anos de educación
-replace eduuc_ci=. if edattaind==0 | edattaind==999 // missing a los NIU & missing
+	gen eduuc_ci=(aedu_ci==17 | aedu_ci==18) // 17 y 18 anos de educación
+	replace eduuc_ci=. if edattaind==0 | edattaind==999 // missing a los NIU & missing
 
 	***********
 	*edus1i_ci* // no completó el primer ciclo de la educación secundaria
 	***********
 
-gen byte edus1i_ci=(aedu_ci==8)
-replace edus1i_ci=. if edattaind==0 | edattaind==999 // missing a los NIU & missing
+	gen byte edus1i_ci=(aedu_ci==8)
+	replace edus1i_ci=. if edattaind==0 | edattaind==999 // missing a los NIU & missing
 
 	***********
 	*edus1c_ci* // completó el primer ciclo de la educación secundaria
 	***********
 	
-gen byte edus1c_ci=(aedu_ci==9)
-replace edus1c_ci=. if edattaind==0 | edattaind==999 // missing a los NIU & missing
+	gen byte edus1c_ci=(aedu_ci==9)
+	replace edus1c_ci=. if edattaind==0 | edattaind==999 // missing a los NIU & missing
 
 	***********
 	*edus2i_ci* // no completó el segundo ciclo de la educación secundaria
 	***********
 
-gen byte edus2i_ci=.
+	gen byte edus2i_ci=.
 
 	***********
 	*edus2c_ci* // completó el segundo ciclo de la educación secundaria
 	***********
 
-gen byte edus2c_ci=.
+	gen byte edus2c_ci=.
 
 	***********
 	*asiste_ci*
 	***********
 	
-gen asiste_ci=(school==1) // 0 includes attended in the past (3) and never attended (4)
-replace asiste_ci=. if school==0 | school==9 // missing a los NIU & missing
+	gen asiste_ci=(school==1) // 0 includes attended in the past (3) and never attended (4)
+	replace asiste_ci=. if school==0 | school==9 // missing a los NIU & missing
 	
 *Other variables
 
@@ -303,8 +301,9 @@ replace asiste_ci=. if school==0 | school==9 // missing a los NIU & missing
 	* literacy *
 	************
 
-gen literacy=1 if lit==2 // literate
-replace literacy=0 if lit==1 // illiterate
+	gen literacy=. 
+	replace literacy=1 if lit==2 // literate
+	replace literacy=0 if lit==1 // illiterate
 
 *******************************************************
 ***           VARIABLES DE MIGRACIÓN              ***
@@ -313,8 +312,10 @@ replace literacy=0 if lit==1 // illiterate
       *******************
       ****migrante_ci****
       *******************
-	gen migrante_ci = (nativity == 2)
-
+	gen migrante_ci =.
+	replace migrante_ci = 1 if nativity == 2
+	replace migrante_ci = 0 if nativity == 1 
+	
       *******************
       **migantiguo5_ci***
       *******************
@@ -336,9 +337,9 @@ replace literacy=0 if lit==1 // illiterate
 	** Include all labels of   **
 	**  harmonized variables   **
 	*****************************
-include "../Base/labels.do"
+	include "../Base/labels.do"
 
-order region_BID_c pais_c estrato_ci zona_c relacion_ci civil_ci idh_ch factor_ch idp_ci factor_ci edad_ci sexo_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch miembros_ci condocup_ci emp_ci desemp_ci pea_ci rama_ci spublico_ci migrante_ci migantiguo5_ci aguared_ch luz_ch bano_ch des1_ch piso_ch pared_ch techo_ch dorm_ch cuartos_ch cocina_ch refrig_ch auto_ch internet_ch cel_ch viviprop_ch viviprop_ch1 region_c categopri_ci discapacidad_ci ceguera_ci sordera_ci mudez_ci dismental_ci afroind_ci afroind_ch afroind_ano_c dis_ci dis_ch aedu_ci
+	order region_BID_c pais_c estrato_ci zona_c relacion_ci civil_ci idh_ch factor_ch idp_ci factor_ci edad_ci sexo_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch miembros_ci condocup_ci emp_ci desemp_ci pea_ci rama_ci spublico_ci migrante_ci migantiguo5_ci aguared_ch luz_ch bano_ch des1_ch piso_ch pared_ch techo_ch dorm_ch cuartos_ch cocina_ch refrig_ch auto_ch internet_ch cel_ch viviprop_ch viviprop_ch1 region_c categopri_ci discapacidad_ci ceguera_ci sordera_ci mudez_ci dismental_ci afroind_ci afroind_ch afroind_ano_c dis_ci dis_ch aedu_ci
 
 compress
 
