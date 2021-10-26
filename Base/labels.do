@@ -216,7 +216,6 @@ label var edus1i_ci "1er ciclo de la secundaria incompleto"
 label var edus1c_ci "1er ciclo de la secundaria completo"
 label var edus2i_ci "2do ciclo de la secundaria incompleto"
 label var edus2c_ci "2do ciclo de la secundaria completo"
-label var edupre_ci "Educacion preescolar"
 label var literacy "Alfabetización"
 
 *====================================================================================================================================*
