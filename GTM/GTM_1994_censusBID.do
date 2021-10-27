@@ -14,65 +14,62 @@ set more off
 
 /***************************************************************************
                  BASES DE DATOS DE CENSOS POBLACIONALES
-País: Argentina
-Año: 1970
-Autores: 
-Última versión: 
+País: Guatemala
+Año: 2002
+Autores: Cesar Lins
+Última versión: Septiembre, 2021
 
 							SCL/LMK - IADB
 ****************************************************************************/
-****************************************************************************
 
-local PAIS ARG
-local ANO "1970"
+
+local PAIS GTM
+local ANO "1994"
 
 **************************************
 ** Setup code, load database,       **
 ** and include all common variables **
 **************************************
-
 include "../Base/base.do"
+
 
 *****************************************************
 ******* Variables specific for this census **********
 *****************************************************
 
- ****************
+****************
  *** region_c ***
  ****************
 
    gen region_c=.   
-   replace region_c=1 if geo1_ar==32002			    /*Ciudad de Buenos Aires*/
-   replace region_c=2 if geo1_ar==32006			    /*Provincia de Buenos Aires*/
-   replace region_c=3 if geo1_ar==32010			    /*Catamarca*/
-   replace region_c=4 if geo1_ar==32014			    /*Córdoba*/
-   replace region_c=5 if geo1_ar==32018		     	/*Corrientes*/
-   replace region_c=6 if geo1_ar==32022			    /*Chaco*/
-   replace region_c=7 if geo1_ar==32026			    /*Chubut*/
-   replace region_c=8 if geo1_ar==32030			    /*Entre Rí­os*/
-   replace region_c=9 if geo1_ar==32034			    /*Formosa*/
-   replace region_c=10 if geo1_ar==32038			/*Jujuy*/
-   replace region_c=11 if geo1_ar==32042			/*La Pampa*/
-   replace region_c=12 if geo1_ar==32046			/*La Rioja*/
-   replace region_c=13 if geo1_ar==32050			/*Mendoza*/
-   replace region_c=14 if geo1_ar==32054			/*Misiones*/
-   replace region_c=15 if geo1_ar==32058			/*Neuquén*/
-   replace region_c=16 if geo1_ar==32062			/*Rio Negro*/
-   replace region_c=17 if geo1_ar==32066			/*Salta*/
-   replace region_c=18 if geo1_ar==32070			/*San Juan*/
-   replace region_c=19 if geo1_ar==32074			/*San Luis*/
-   replace region_c=20 if geo1_ar==32078			/*Santa Cruz*/
-   replace region_c=21 if geo1_ar==32082			/*Santa Fe*/
-   replace region_c=22 if geo1_ar==32086			/*Santiago del Estero*/
-   replace region_c=23 if geo1_ar==32090			/*Tucumán*/
-   replace region_c=24 if geo1_ar==32094			/*Tierra del Fuego*/
-   replace region_c=99 if geo1_ar==32099			/*Unknown*/
-
-
-	  label define region_c 1"Ciudad de Buenos Aires" 2"Provincia de Buenos Aires" 3"Catamarca" 4"Córdoba" 5"Corrientes" 6"Chaco" 7"Chubut" 8"Entre Ríos" 9"Formosa" 10"Jujuy" 11"La Pampa" 12"La Rioja" 13"Mendoza" 14"Misiones" 15"Neuquén" 16"Río Negro" 17"Salta" 18"San Juan" 19"San Luis" 20"Santa Cruz" 21"Santa Fe" 22"Santiago del Estero" 23"Tucumán" 24"Tierra del Fuego" 99""
-
-    label value region_c region_c
- 
+	replace region_c=1 if geo1_gt==320001 /*Guatemala*/
+	replace region_c=2 if geo1_gt==320002 /*El Progreso*/
+	replace region_c=3 if geo1_gt==320003 /*Sacatepéquez*/
+	replace region_c=4 if geo1_gt==320004 /*Chimaltenango*/
+	replace region_c=5 if geo1_gt==320005 /*Escuintla*/
+	replace region_c=6 if geo1_gt==320006 /*Santa Rosa*/
+	replace region_c=7 if geo1_gt==320007 /*Sololá*/
+	replace region_c=8 if geo1_gt==320008 /*Totonicapán*/
+	replace region_c=9 if geo1_gt==320009 /*Quetzaltenango*/
+	replace region_c=10 if geo1_gt==320010 /*Suchitepéquez*/
+	replace region_c=11 if geo1_gt==320011 /*Retalhuleu*/
+	replace region_c=12 if geo1_gt==320012 /*San Marcos*/
+	replace region_c=13 if geo1_gt==320013 /*Huehuetenango*/
+	replace region_c=14 if geo1_gt==320014 /*Quiché*/
+	replace region_c=15 if geo1_gt==320015 /*Baja Verapaz*/
+	replace region_c=16 if geo1_gt==320016 /*Alta Verapaz*/
+	replace region_c=17 if geo1_gt==320017 /*Petén*/
+	replace region_c=18 if geo1_gt==320018 /*Izabal*/
+	replace region_c=19 if geo1_gt==320019 /*Zacapa*/
+	replace region_c=20 if geo1_gt==320020 /*Chiquimula*/
+	replace region_c=21 if geo1_gt==320021 /*Jalapa*/
+	replace region_c=22 if geo1_gt==320022 /*Jutiapa*/
+	replace region_c=23 if geo1_gt==320088 /*Waterbodies*/
+	
+	label define region_c 1 "Guatemala" 2 "El Progreso" 3 "Sacatepéquez" 4 "Chimaltenango" 5 "Escuintla" 6 "Santa Rosa" 7 "Sololá" 8 "Totonicapán" 9 "Quetzaltenango" 10 "Suchitepéquez" 11 "Retalhuleu" 12 "San Marcos" 13 "Huehuetenango" 14 "Quiché" 15 "Baja Verapaz" 16 "Alta Verapaz" 17 "Petén" 18 "	Izabal" 19 "Zacapa" 20 "Chiquimula" 21 "Jalapa" 22 "Jutiapa" 23 "Cuerpos de agua"
+	
+	 label value region_c region_c
+	 
 **********************************************
 ***      VARIABLES DEL MERCADO LABORAL     ***
 **********************************************	
@@ -155,10 +152,10 @@ include "../Base/base.do"
     gen categopri_ci=.
 	cap confirm variable classwkd
 	if (_rc==0) {
-    replace categopri_ci=0 if classwkd==400 | classwkd==999
+    replace categopri_ci=0 if classwkd==400 
     replace categopri_ci=1 if classwkd==110
     replace categopri_ci=2 if classwkd==120
-    replace categopri_ci=3 if classwkd==203 | classwkd==204 | classwkd==216 | classwkd==230 | classwkd == 210 | classwkd == 220
+    replace categopri_ci=3 if classwkd==210 | classwkd==220
     replace categopri_ci=4 if classwkd==310
 	}
 	
@@ -173,28 +170,35 @@ include "../Base/base.do"
 		replace spublico_ci=. if indgen == 998 | indgen == 999 | indgen == 000
 	}
 	  
+	
 *******************************************************
 ***           VARIABLES DE DIVERSIDAD               ***
-*******************************************************
+*******************************************************				
 * Cesar Lins & Nathalia Maya - Septiembre 2021	
 
 	***************
 	***afroind_ci***
 	***************
-**Pregunta: 
+	**Pregunta: 
 
 	gen afroind_ci=. 
-	gen afroind_ch  =.
-	
+	replace afroind_ci=1  if indig==1 /* Garifuna included here */
+	replace afroind_ci=3 if indig==2
+
+
 	***************
 	***afroind_ch***
 	***************
-	gen afroind_jefe=.
+	gen afroind_jefe= afroind_ci if relate==1
+	egen afroind_ch  = min(afroind_jefe), by(idh_ch) 
+
+	drop afroind_jefe 
 
 	*******************
 	***afroind_ano_c***
 	*******************
-	gen afroind_ano_c=.
+	gen afroind_ano_c=2002
+
 
 	********************
 	*** discapacidad ***
@@ -218,86 +222,74 @@ variables de ingreso por hogar porque no están en el do Base*/
 	**ynlm_ch*
 	***********
    by idh_ch, sort: egen ynlm_ch=sum(ynlm_ci) if miembros_ci==1, missing
-   
+
 *******************************************************
 ***           VARIABLES DE EDUCACIÓN               ***
-*******************************************************
-*********
-*aedu_ci* // años de educacion aprobados
-*********
-*NOTA: Como terciario, universitario y posgrado tienen una duración variable se supone 
-*que terciario completo implica 3 años de educacion adicional a la secundaria, universitario 5 años adicionales y 
-*postgrado 7. Esto solo se basa en la modas de finalización de estos niveles. ESTO SE DEBE DISCUTIR 
-
-gen aedu_ci=0 if yrschool==0 // none or pre-school
-replace aedu_ci=1 if yrschool==1
-replace aedu_ci=2 if yrschool==2
-replace aedu_ci=3 if yrschool==3
-replace aedu_ci=4 if yrschool==4
-replace aedu_ci=5 if yrschool==5
-replace aedu_ci=6 if yrschool==6
-replace aedu_ci=7 if yrschool==7
-replace aedu_ci=8 if yrschool==8
-replace aedu_ci=9 if yrschool==9
-replace aedu_ci=10 if yrschool==10
-replace aedu_ci=11 if yrschool==11
-replace aedu_ci=12 if yrschool==12
-replace aedu_ci=13 if yrschool==13
-replace aedu_ci=14 if yrschool==14
-replace aedu_ci=15 if yrschool==15
-replace aedu_ci=16 if yrschool==16
-replace aedu_ci=17 if yrschool==17
-replace aedu_ci=18 if yrschool==18 // 18 or more
-replace aedu_ci=. if yrschool==98 | yrschool==99 // unknown/missing or NIU
-
-
+*******************************************************   
+	*********
+	*aedu_ci* // 
+	*********
+	
+	gen aedu_ci = yrschool 
+	replace aedu=. if yrschool==98 | yrschool==99
+ 
 	**********
 	*eduno_ci* // no ha completado ningún año de educación
 	**********
-gen eduno_ci=(aedu_ci==0) // never attended or pre-school
-replace eduno_ci=. if educar==0 | educar==999 // NIU & missing
+	gen eduno_ci=(aedu_ci==0) // never attended or pre-school
+	replace eduno_ci=. if edattain==0 | edattain==999 // NIU & missing
 	
 	**********
 	*edupi_ci* // no completó la educación primaria
 	**********
 	
-gen edupi_ci=(educar==130 | educar==210 | educar==220 | educar==230 | educar==240 | educar==250 | educar==280) // primary (zero years completed) + grade 1-5 + primary grade unknown
-replace edupi_ci=. if educar==0 | educar==999 // NIU & missing
+	gen edupi_ci=.
+	replace edupi_ci=1 if edattain == 1
+	replace edupi_ci=0 if edattain == 2 | edattain == 3 | edattain == 4
+	replace edupi_ci=. if edattain==0 | edattain== 9 // NIU & missing
 
 	********** 
 	*edupc_ci* // completó la educación primaria
-	**********	
-
-	gen edupc_ci=(educar==260 | educar==270) // grade 6 + grade 7
-	replace edupc_ci=. if educar==0 | educar==999 // NIU & missing
+	**********
+	
+	gen edupc_ci=.
+	replace edupc_ci=1 if edattain == 2
+	replace edupc_ci=0 if edattain == 1 | edattain == 3 | edattain == 4
+	replace edupc_ci=. if edattain==0 | edattain==9 // NIU & missing
 
 	**********
 	*edusi_ci* // no completó la educación secundaria
 	**********
 	
 	gen edusi_ci=(aedu_ci>=8 & aedu_ci<=11) // 8 a 11 anos de educación
-	replace edusi_ci=. if educar==0 | educar==999 // NIU & missing
+	replace edusi_ci=. if edattain==0 |edattain==9 // NIU & missing
 
 	**********
 	*edusc_ci* // completó la educación secundaria
 	**********
 	
-	gen edusc_ci=(aedu_ci==12 | aedu_ci==13) // 12 y 13 anos de educación
-	replace edusc_ci=. if educar==0 | educar==999 // NIU & missing
-
+	gen edusc_ci=.
+	replace edusc_ci=1 if edattain == 3
+	replace edusc_ci=0 if edattain == 1 | edattain == 2 | edattain == 4
+	// 12 y 13 anos de educación
+	replace edusc_ci=. if edattain==0 | edattain==9 // NIU & missing
+	
 	**********
 	*eduui_ci* // no completó la educación universitaria o terciaria
 	**********
 	
 	gen eduui_ci=(aedu_ci>=14 & aedu_ci<=16) // 14 a 16 anos de educación
-	replace eduui_ci=. if educar==0 | educar==999 // NIU & missing
+	replace eduui_ci=. if edattain==0 | edattain==9 // NIU & missing
 
 	**********
 	*eduuc_ci* // completó la educación universitaria o terciaria
 	**********
 	
-	gen eduuc_ci=(aedu_ci==17 | aedu_ci==18) // 17 y 18 anos de educación
-	replace eduuc_ci=. if edattaind==0 | edattaind==999 // missing a los NIU & missing
+	gen eduuc_ci=.
+	replace eduuc_ci=1 if edattain == 4
+	replace eduuc_ci=0 if edattain == 1 | edattain == 2 | edattain ==3  
+	// 12 y 13 anos de educación
+	replace edusc_ci=. if edattain==0 | edattain==9 // NIU & missing
 
 	***********
 	*edus1i_ci* // no completó el primer ciclo de la educación secundaria
@@ -341,7 +333,7 @@ replace edupi_ci=. if educar==0 | educar==999 // NIU & missing
 	gen literacy=. 
 	replace literacy=1 if lit==2 // literate
 	replace literacy=0 if lit==1 // illiterate
-
+	
 *******************************************************
 ***           VARIABLES DE MIGRACIÓN              ***
 *******************************************************
@@ -367,19 +359,14 @@ replace edupi_ci=. if educar==0 | educar==999 // NIU & missing
 	*** migrantelac_ci ***
 	**********************
 
-	**********************
-	*** migrantelac_ci ***
-	**********************
-
 	gen migrantelac_ci = .
 	replace migrantelac_ci= 1 if inlist(bplcountry, 21100, 23010, 22060, 23110, 22040, 23100, 22030, 23060, 23140, 22050, 23050, 23040, 23100, 29999, 23130, 23020, 22020, 21250, 21999, 22010, 22070, 22080, 22999) & migrante_ci == 1
 	replace migrantelac_ci = 0 if migrantelac_ci == . & migrante_ci == 1
-
-	*****************************
-	** Include all labels of   **
-	**  harmonized variables   **
-	*****************************
-
+	
+*****************************
+** Include all labels of   **
+**  harmonized variables   **
+*****************************
 include "../Base/labels.do"
 
 order region_BID_c pais_c estrato_ci zona_c relacion_ci civil_ci idh_ch factor_ch idp_ci factor_ci edad_ci sexo_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch miembros_ci condocup_ci emp_ci desemp_ci pea_ci rama_ci spublico_ci migrante_ci migantiguo5_ci aguared_ch luz_ch bano_ch des1_ch piso_ch pared_ch techo_ch dorm_ch cuartos_ch cocina_ch refrig_ch auto_ch internet_ch cel_ch viviprop_ch viviprop_ch1 region_c categopri_ci discapacidad_ci ceguera_ci sordera_ci mudez_ci dismental_ci afroind_ci afroind_ch afroind_ano_c dis_ci dis_ch aedu_ci
@@ -388,3 +375,4 @@ compress
 
 save "`base_out'", replace 
 log close
+

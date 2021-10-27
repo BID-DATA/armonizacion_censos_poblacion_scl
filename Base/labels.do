@@ -201,29 +201,22 @@ label var pensionsub_ci "=1: recibe pension subsidiada / no contributiva"
 *                                                          VARIABLES DE EDUCACION                                             *
 *====================================================================================================================================*
 label var aedu_ci "Anios de educacion aprobados"
-/*
-label var eduno_ci "Sin educacion"
+    label def aedu_ci 0"Cero o preescolar" 1"1 año" 2"2 años" 3"3 años" 4"4 años" 5"5 años" 6"6 años" 7"7 años" 8"8 años" 9"9 años" 10"10 años" 11"11 años" 12"12 años" 13"13 años" 14"14 años" 15"15 años" 16"16 años" 17"17 años" 18"18 años o más"  
+    label val aedu_ci aedu_ci	
+
+label var asiste_ci "Personas que actualmente asisten a centros de enseñanza"
+label var eduno_ci "Cero anios de educacion"
 label var edupi_ci "Primaria incompleta"
-label var edupc_ci "Primaria completa"	
-label var edusi_ci "Secundaria incompleta"	
-label var edusc_ci "Secundaria completa"	
-label var eduui_ci "Superior incompleto"	
-label var eduuc_ci "Superior completo"
+label var edupc_ci "Primaria completa"
+label var edusi_ci "Secundaria incompleta"
+label var edusc_ci "Secundaria completa"
+label var eduui_ci "Universitaria incompleta"
+label var eduuc_ci "Universitaria completa o mas"
 label var edus1i_ci "1er ciclo de la secundaria incompleto"
 label var edus1c_ci "1er ciclo de la secundaria completo"
 label var edus2i_ci "2do ciclo de la secundaria incompleto"
 label var edus2c_ci "2do ciclo de la secundaria completo"
-label var edupre_ci "Educacion preescolar"
-label var eduac_ci "Superior universitario vs superior no universitario"	
-label var asiste_ci "=1 si asiste actualmente a la escuela"
-label var tecnica_ci "=1: formacion terciaria tecnica"
-								
-label var pqnoasis_ci "Razones para no asistir a la escuela-variable original de cada pais"
-label var pqnoasis1_ci "Razones para no asistir a la escuela-variable armonizada"
-label var repite_ci "Ha repetido al menos un grado"
-label var repiteult_ci "Ha repetido el último grado"
-label var edupub_ci "Asiste a un centro de ensenanza público"
-*/
+label var literacy "Alfabetización"
 
 *====================================================================================================================================*
 * VARIABLES DE INFRAESTRUCTURA DEL HOGAR                       *
