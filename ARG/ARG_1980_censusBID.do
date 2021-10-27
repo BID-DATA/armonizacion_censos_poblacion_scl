@@ -156,7 +156,7 @@ include "../Base/base.do"
     gen categopri_ci=.
 	cap confirm variable classwkd
 	if (_rc==0) {
-    replace categopri_ci=0 if classwkd==400 | classwkd==999
+    replace categopri_ci=0 if classwkd==400 
     replace categopri_ci=1 if classwkd==110
     replace categopri_ci=2 if classwkd==120
     replace categopri_ci=3 if classwkd==203 | classwkd==204 | classwkd==216 | classwkd==230 | classwkd == 210
