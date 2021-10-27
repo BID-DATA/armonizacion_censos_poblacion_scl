@@ -158,7 +158,7 @@ include "../Base/base.do"
     replace categopri_ci=0 if classwkd==400 | classwkd==999
     replace categopri_ci=1 if classwkd==110
     replace categopri_ci=2 if classwkd==120
-    replace categopri_ci=3 if classwkd==203 | classwkd==204 | classwkd==216 | classwkd==230 
+    replace categopri_ci=3 if classwkd==203 | classwkd==204 | classwkd==216 | classwkd==230 | classwkd == 210
     replace categopri_ci=4 if classwkd==310
 	}
 	
@@ -183,24 +183,24 @@ include "../Base/base.do"
 	***************
 **Pregunta: 
 
-gen afroind_ci=. 
-gen afroind_ch  =.
-
+	gen afroind_ci=. 
+	gen afroind_ch  =.
+	
 	***************
 	***afroind_ch***
 	***************
-gen afroind_jefe=.
+	gen afroind_jefe=.
 
 	*******************
 	***afroind_ano_c***
 	*******************
-gen afroind_ano_c=.
+	gen afroind_ano_c=.
 
-********************
-*** discapacidad ***
-********************
-gen dis_ci=.
-gen dis_ch=.
+	********************
+	*** discapacidad ***
+	********************
+	gen dis_ci=.
+	gen dis_ch=.
 
 *******************************************************
 ***           VARIABLES DE INGRESO                  ***
@@ -266,45 +266,45 @@ replace edupi_ci=. if educar==0 | educar==999 // NIU & missing
 
 	********** 
 	*edupc_ci* // completó la educación primaria
-	**********
-	
-gen edupc_ci=(educar==260 | educar==270) // grade 6 + grade 7
-replace edupc_ci=. if educar==0 | educar==999 // NIU & missing
+	**********	
+
+	gen edupc_ci=(educar==260 | educar==270) // grade 6 + grade 7
+	replace edupc_ci=. if educar==0 | educar==999 // NIU & missing
 
 	**********
 	*edusi_ci* // no completó la educación secundaria
 	**********
 	
-gen edusi_ci=(aedu_ci>=8 & aedu_ci<=11) // 8 a 11 anos de educación
-replace edusi_ci=. if educar==0 | educar==999 // NIU & missing
+	gen edusi_ci=(aedu_ci>=8 & aedu_ci<=11) // 8 a 11 anos de educación
+	replace edusi_ci=. if educar==0 | educar==999 // NIU & missing
 
 	**********
 	*edusc_ci* // completó la educación secundaria
 	**********
 	
-gen edusc_ci=(aedu_ci==12 | aedu_ci==13) // 12 y 13 anos de educación
-replace edusc_ci=. if educar==0 | educar==999 // NIU & missing
+	gen edusc_ci=(aedu_ci==12 | aedu_ci==13) // 12 y 13 anos de educación
+	replace edusc_ci=. if educar==0 | educar==999 // NIU & missing
 
 	**********
 	*eduui_ci* // no completó la educación universitaria o terciaria
 	**********
 	
-gen eduui_ci=(aedu_ci>=14 & aedu_ci<=16) // 14 a 16 anos de educación
-replace eduui_ci=. if educar==0 | educar==999 // NIU & missing
+	gen eduui_ci=(aedu_ci>=14 & aedu_ci<=16) // 14 a 16 anos de educación
+	replace eduui_ci=. if educar==0 | educar==999 // NIU & missing
 
 	**********
 	*eduuc_ci* // completó la educación universitaria o terciaria
 	**********
 	
-gen eduuc_ci=(aedu_ci==17 | aedu_ci==18) // 17 y 18 anos de educación
-replace eduuc_ci=. if edattaind==0 | edattaind==999 // missing a los NIU & missing
+	gen eduuc_ci=(aedu_ci==17 | aedu_ci==18) // 17 y 18 anos de educación
+	replace eduuc_ci=. if edattaind==0 | edattaind==999 // missing a los NIU & missing
 
 	***********
 	*edus1i_ci* // no completó el primer ciclo de la educación secundaria
 	***********
 
-gen byte edus1i_ci=(aedu_ci==8)
-replace edus1i_ci=. if edattaind==0 | edattaind==999 // missing a los NIU & missing
+	gen byte edus1i_ci=(aedu_ci==8)
+	replace edus1i_ci=. if edattaind==0 | edattaind==999 // missing a los NIU & missing
 
 	***********
 	*edus1c_ci* // completó el primer ciclo de la educación secundaria
@@ -367,8 +367,13 @@ replace edus1i_ci=. if edattaind==0 | edattaind==999 // missing a los NIU & miss
 	*** migrantelac_ci ***
 	**********************
 
-	gen migrantelac_ci= 1 if inlist(bplcountry, 21100, 23010, 22060, 23110, 22040, 23100, 22030, 23060, 23140, 22050, 23050, 23040, 23100, 29999, 23130, 23020, 22020, 21250, 21999, 22010, 22070, 22080, 22999)
-	replace migrantelac_ci = 0 if migrantelac_ci == . & nativity == 2
+	**********************
+	*** migrantelac_ci ***
+	**********************
+
+	gen migrantelac_ci = .
+	replace migrantelac_ci= 1 if inlist(bplcountry, 21100, 23010, 22060, 23110, 22040, 23100, 22030, 23060, 23140, 22050, 23050, 23040, 23100, 29999, 23130, 23020, 22020, 21250, 21999, 22010, 22070, 22080, 22999) & migrante_ci == 1
+	replace migrantelac_ci = 0 if migrantelac_ci == . & migrante_ci == 1
 
 	*****************************
 	** Include all labels of   **
