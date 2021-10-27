@@ -110,7 +110,7 @@ include "../Base/base.do"
 	cap confirm variable condocup_ci
 	if (_rc==0){
 		replace desemp_ci=1 if condocup_ci==2 /*1 desempleados*/
-		replace desemp_ci=0 if condocup_ci==3 /*0 cuando están inactivos*/
+		replace desemp_ci=0 if condocup_ci==3 | condocup_ci==1 /*0 cuando están inactivos o empleados*/
 	}
 	
       *************
