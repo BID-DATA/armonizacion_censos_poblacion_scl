@@ -136,7 +136,7 @@ include "../Base/base.do"
     replace categopri_ci=0 if classwkd==400 | classwkd==999
     replace categopri_ci=1 if classwkd==110
     replace categopri_ci=2 if classwkd==120
-    replace categopri_ci=3 if classwkd==203 | classwkd==204 | classwkd==216 | classwkd==230 
+    replace categopri_ci=3 if classwkd==203 | classwkd==204 | classwkd==216 | classwkd==230 | classwkd == 210 | classwkd == 220
     replace categopri_ci=4 if classwkd==310 
 	}
 	
@@ -321,8 +321,9 @@ variables de ingreso por hogar porque no están en el do Base*/
 	*** migrantelac_ci ***
 	**********************
 
-	gen migrantelac_ci= 1 if inlist(bplcountry, 21100, 23010, 22060, 23110, 22040, 23100, 22030, 23060, 23140, 22050, 23050, 23040, 23100, 29999, 23130, 23020, 22020, 21250, 21999, 22010, 22070, 22080, 22999)
-	replace migrantelac_ci = 0 if migrantelac_ci == . & nativity == 2
+	gen migrantelac_ci = .
+	replace migrantelac_ci= 1 if inlist(bplcountry, 21100, 23010, 22060, 23110, 22040, 23100, 22030, 23060, 23140, 22050, 23050, 23040, 23100, 29999, 23130, 23020, 22020, 21250, 21999, 22010, 22070, 22080, 22999) & migrante_ci == 1
+	replace migrantelac_ci = 0 if migrantelac_ci == . & migrante_ci == 1
 
 	*****************************
 	** Include all labels of   **
