@@ -113,7 +113,7 @@ include "../Base/base.do"
 	cap confirm variable condocup_ci
 	if (_rc==0){
 		replace desemp_ci=1 if condocup_ci==2 /*1 desempleados*/
-		replace desemp_ci=0 if condocup_ci==3 /*0 cuando están inactivos*/
+		replace desemp_ci=0 if condocup_ci==3 | condocup_ci==1 /*0 cuando están inactivos o empleados*/
 	}
 	
       *************
@@ -158,7 +158,7 @@ include "../Base/base.do"
     replace categopri_ci=0 if classwkd==400 | classwkd==999
     replace categopri_ci=1 if classwkd==110
     replace categopri_ci=2 if classwkd==120
-    replace categopri_ci=3 if classwkd==203 | classwkd==204 | classwkd==216 | classwkd==230 | classwkd == 210
+    replace categopri_ci=3 if classwkd==203 | classwkd==204 | classwkd==216 | classwkd==230 | classwkd == 210 | classwkd == 220
     replace categopri_ci=4 if classwkd==310
 	}
 	
