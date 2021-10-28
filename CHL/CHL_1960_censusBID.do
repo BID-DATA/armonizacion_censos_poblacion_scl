@@ -70,90 +70,6 @@ include "../Base/base.do"
       label var region_c "division politico-administrativa, provincia"
 
 	
-			***********************************
-			***VARIABLES DEL MERCADO LABORAL***
-			***********************************	
-
-     *******************
-     ****condocup_ci****
-     *******************
-	 
-    gen condocup_ci=.
-    replace condocup_ci=1 if empstat==1
-    replace condocup_ci=2 if empstat==2
-    replace condocup_ci=3 if empstat==3
-    replace condocup_ci=. if empstat==9
-    replace condocup_ci=4 if empstat==0
-    label var condocup_ci "Condicion de ocupación"
-    label define condocup_ci 1 "Ocupado" 2 "Desocupado" 3 "Inactivo" 4 "Menor de PET" 
-    label value condocup_ci condocup_ci
-	
-	
-	  ************
-      ***emp_ci***
-      ************
-    gen emp_ci=(condocup_ci==1)
-
-	
-      ****************
-      ***desemp_ci***
-      ****************
-    gen desemp_ci=(condocup_ci==2)
-	
-	
-	  *************
-      ***pea_ci***
-      *************
-    gen pea_ci=(emp_ci==1 | desemp_ci==1)
-	
-	
-     *********************
-     ****categopri_ci****
-     *********************
-	 *OBSERVACIONES: El censo no distingue entre actividad principal o secundaria, asigno por default principal.	
-    gen categopri_ci=.
-    replace categopri_ci=0 if classwkd==400 | classwkd==999
-    replace categopri_ci=1 if classwkd==110
-    replace categopri_ci=2 if classwkd==120
-    replace categopri_ci=3 if classwkd==203 | classwkd==204 | classwkd==216 | classwkd==230 
-    replace categopri_ci=4 if classwkd==310
-    label var categopri_ci "categoría ocupacional de la actividad principal "
-    label define categopri_ci 0 "Otra clasificación" 1 "Patrón o empleador" 2 "Cuenta Propia o independiente" 3 "Empleado o asalariado" 4 "Trabajador no remunerado" 
-    label value categopri_ci categopri_ci	 
-
-
-     *************************
-     ****rama de actividad****
-     *************************
-    gen rama_ci = .
-    replace rama_ci = 1 if indgen==10
-    replace rama_ci = 2 if indgen==20  
-    replace rama_ci = 3 if indgen==30   
-    replace rama_ci = 4 if indgen==40    
-    replace rama_ci = 5 if indgen==50    
-    replace rama_ci = 6 if indgen==60    
-    replace rama_ci = 7 if indgen==70    
-    replace rama_ci = 8 if indgen==80    
-    replace rama_ci = 9 if indgen==90
-    replace rama_ci = 10 if indgen==100  
-    replace rama_ci = 11 if indgen==111  
-    replace rama_ci = 12 if indgen==112
-    replace rama_ci = 13 if indgen==113 
-    replace rama_ci = 14 if indgen==114 
-    replace rama_ci = 15 if indgen==120 
-    label var rama_ci "Rama de actividad"
-    label def rama_ci 1"Agricultura, pesca y forestal" 2"Minería y extracción" 3"Industrias manufactureras" 4"Electricidad, gas, agua y manejo de residuos" 5"Construcción" 6"Comercio" 7"Hoteles y restaurantes" 8"Transporte, almacenamiento y comunicaciones" 9"Servicios financieros y seguros" 10"Administración pública y defensa" 11"Servicios empresariales e inmobiliarios" 12"Educación" 13"Salud y trabajo social" 14"Otros servicios" 15"Servicio doméstico"
-    label val rama_ci rama_ci
-	
-	
-	  *****************
-      ***spublico_ci***
-      *****************
-    gen spublico_ci=(indgen==100)	
-
-
-
-
 ************************
 * VARIABLES EDUCATIVAS *
 ************************
@@ -297,6 +213,36 @@ gen afroind_ano_c=.
 gen dis_ci=.
 gen dis_ch=.
 
+
+
+*******************************************************
+***           VARIABLES DE INGRESO                  ***
+*******************************************************
+	
+    ***********
+	**ylm_ci**
+	***********
+	
+	*gen ylm_ci=.
+	
+    ***********
+	**ynlm_ci**
+	***********
+ 
+	*gen ynlm_ci=.
+
+    ***********
+	**ylm_ch**
+	***********
+   
+   gen ylm_ch=.
+   
+    ***********
+	**ynlm_ch**
+	***********
+   gen ynlm_ch=.
+   
+   
 *****************************
 ** Include all labels of   **
 **  harmonized variables   **
