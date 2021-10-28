@@ -127,13 +127,13 @@ variables de ingreso por hogar porque no están en el do Base*/
 	*aedu_ci* // 
 	*********
 	gen aedu_ci = yrschool 
-	replace aedu=. if yrschool==98 | yrschool==99
+	replace aedu_ci=. if yrschool>=90 & yrschool<100 
  
 	**********
 	*eduno_ci* // no ha completado ningún año de educación
 	**********
 	gen eduno_ci=(aedu_ci==0) // never attended or pre-school
-	replace eduno_ci=. if edattain==0 | edattain==999 // NIU & missing
+	replace eduno_ci=. if edattaind==0 | edattaind==999 // NIU & missing
 	
 	**********
 	*edupre_ci* // preescolar
@@ -146,6 +146,7 @@ variables de ingreso por hogar porque no están en el do Base*/
 	**********
 	gen edupi_ci=(aedu_ci>0 & aedu_ci<6) //
 	replace edupi_ci=. if educgt==0 | educgt==999 // NIU & missing
+	replace edupi_ci = 1 if yrschool == 91 // some primary
 
 	********** 
 	*edupc_ci* // completó la educación primaria
@@ -158,6 +159,7 @@ variables de ingreso por hogar porque no están en el do Base*/
 	**********
 	gen edusi_ci=(aedu_ci>=7 & aedu_ci<=11) // 7 a 11 anos de educación
 	replace edusi_ci=. if edattain==0 |edattain==9 // NIU & missing
+	replace edusi_ci = 1 if yrschool == 92 | yrschool ==93 //some technical after primary or some secondary
 
 	**********
 	*edusc_ci* // completó la educación secundaria
@@ -170,6 +172,7 @@ variables de ingreso por hogar porque no están en el do Base*/
 	**********
 	gen eduui_ci=(aedu_ci>=14 & aedu_ci<=16 & edattain != 4) // 14 a 16 anos de educación y no univ completa
 	replace eduui_ci=. if edattain==0 | edattain==9 // NIU & missing
+	replace eduui_ci = 1 if yrschool == 94 // some terciary
 
 	**********
 	*eduuc_ci* // completó la educación universitaria o terciaria
@@ -178,7 +181,7 @@ variables de ingreso por hogar porque no están en el do Base*/
 	replace eduuc_ci=1 if edattain == 4
 	replace eduuc_ci=0 if edattain == 1 | edattain == 2 | edattain ==3  
 	// 12 y 13 anos de educación
-	replace edusc_ci=. if edattain==0 | edattain==9 // NIU & missing
+	replace eduuc_ci=. if edattain==0 | edattain==9 // NIU & missing
 
 	***********
 	*edus1i_ci* // no completó el primer ciclo de la educación secundaria
@@ -213,7 +216,6 @@ variables de ingreso por hogar porque no están en el do Base*/
 	************
 	* literacy *
 	************
-
 	gen literacy=. 
 	replace literacy=1 if lit==2 // literate
 	replace literacy=0 if lit==1 // illiterate
