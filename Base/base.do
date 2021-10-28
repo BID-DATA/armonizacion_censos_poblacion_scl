@@ -262,7 +262,7 @@ use "`base_in'", clear
 	cap confirm variable toilet
 	if (_rc==0) {
 	replace bano_ch= 1 if toilet==20 | toilet==21 | toilet==22 | toilet==23
-	replace bano_ch= 0 if toilet==10
+	replace bano_ch= 0 if toilet==10 | toilet==11
  	replace bano_ch=. if toilet==99
 
 	*********
@@ -293,7 +293,7 @@ use "`base_in'", clear
 	gen banomejorado_ch=.
  	cap confirm variable sewage
 	if (_rc==0) {
-	replace banomejorado_ch=1 if sewage == 11 | sewage == 12 
+	replace banomejorado_ch=1 if sewage >= 10 & sewage <= 12
 	replace banomejorado_ch=0 if sewage == 20
 	replace piso_ch=. if sewage == 99
 	}
@@ -313,13 +313,12 @@ use "`base_in'", clear
 	**********
 	*techo_ch*
 	**********
-*Modificación SGR Julio 2019
 	gen techo_ch=.
 	cap confirm variable roof
 	if (_rc==0) {
-	replace techo_ch=1  if roof>=10 & roof<20
-    replace techo_ch=0  if roof>=20 & roof<80
-	replace techo_ch=2  if roof==80
+    replace techo_ch=0  if roof == 90
+	replace techo_ch=1 if roof>=10 & roof<70
+	replace techo_ch=2 if roof>=70 & roof<=80
 	}
 	
 	**********
@@ -328,10 +327,10 @@ use "`base_in'", clear
 	gen resid_ch=.
 	cap confirm variable trash
 	if (_rc==0) {
-	replace resid_ch=0  if trash == 11 | trash == 12
+	replace resid_ch=0  if trash >= 10 | trash <= 14
     replace resid_ch=1  if trash == 21 |trash == 22 | trash == 23
-	replace resid_ch=2  if trash == 24 |trash == 25 
-	replace resid_ch=3  if trash == 39
+	replace resid_ch=2  if trash >= 24 & trash <= 34
+	replace resid_ch=3  if trash>= 35 & trash <= 39
 	replace resid_ch=.  if trash == 99
 	}
 	
@@ -362,7 +361,7 @@ use "`base_in'", clear
 	cap confirm variable kitchen
 	if (_rc==0) {
 	replace cocina_ch= 1 if kitchen>=20 & kitchen<=28
-	replace cocina_ch = 0 if kitchen == 10
+	replace cocina_ch = 0  if kitchen >= 10 & kitchen<=13
 	replace cocina_ch=. if kitchen==99
 	}
 	
@@ -374,7 +373,7 @@ use "`base_in'", clear
 	if (_rc==0) {
 	replace telef_ch=0 if phone == 1	
 	replace telef_ch=1 if phone == 2
-	replace telef_ch=. if phone == 9
+	replace telef_ch=. if phone == 9 | phone==0
 	}
 
 	***********
@@ -419,7 +418,7 @@ use "`base_in'", clear
 	if (_rc==0) {
 	replace internet_ch=0 if internet == 1
 	replace internet_ch=1 if internet == 2
-	replace internet_ch=. if internet == 9
+	replace internet_ch=. if internet == 9 
 	}
 	
 	********
@@ -430,7 +429,7 @@ use "`base_in'", clear
 	if (_rc==0) {
 	replace cel_ch=0 if cell == 1	
 	replace cel_ch=1 if cell == 2
-	replace cel_ch=. if cell == 9
+	replace cel_ch=. if cell == 9 | cell==0
 	}
 
 	*************
@@ -549,6 +548,7 @@ use "`base_in'", clear
 		replace spublico_ci=0 if emp_ci==1 & indgen!=100
 		replace spublico_ci=. if indgen == 998 | indgen == 999 | indgen == 000
 	}
+	
 **********************************
 **** VARIABLES DE INGRESO ****
 ***********************************
