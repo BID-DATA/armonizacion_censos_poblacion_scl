@@ -73,107 +73,6 @@ include "../Base/base.do"
 
     label value region_c region_c
 	
-**********************************************
-***      VARIABLES DEL MERCADO LABORAL     ***
-**********************************************	
-
-     *******************
-     ****condocup_ci****
-     *******************
-	 *2010 no tiene variable empstat
-	 
-    gen condocup_ci=.
-	cap confirm variable empstat
-	if (_rc==0){
-    replace condocup_ci=1 if empstat==1
-    replace condocup_ci=2 if empstat==2
-    replace condocup_ci=3 if empstat==3
-    replace condocup_ci=. if empstat==9 /*unkown/missing as missing*/ 
-    replace condocup_ci=. if empstat==0 /*NIU as missing*/
-	}
-	
-	  ************
-      ***emp_ci***
-      ************
-    gen emp_ci=.
-	cap confirm variable empstat
-	if (_rc==0){
-		replace emp_ci=0 if empstat==2
-		replace emp_ci=0 if empstat==3
-		replace emp_ci=1 if empstat==1
-		replace emp_ci=. if empstat==0 /*NIU as missing*/
-		replace emp_ci=. if empstat==9 /*unkown/missing as missing*/
-	}
-	
-	
-      ****************
-      ***desemp_ci***
-      ****************	
-	gen desemp_ci=.
-	cap confirm variable condocup_ci
-	if (_rc==0){
-		replace desemp_ci=1 if condocup_ci==2 /*1 desempleados*/
-		replace desemp_ci=0 if condocup_ci==3 | condocup_ci==1 /*0 cuando están inactivos o empleados*/
-	}
-	
-      *************
-      ***pea_ci***
-      *************
-    gen pea_ci=.
-	cap confirm variable condocup_ci
-	if (_rc==0){
-		replace pea_ci=1 if condocup_ci==1
-		replace pea_ci=1 if condocup_ci==2
-		replace pea_ci=0 if condocup_ci==3
-	}
-	
-	
-     *************************
-     ****rama de actividad****
-     *************************
-	 *2010 no tiene variable indgen
-    gen rama_ci = .
-    replace rama_ci = 1 if indgen==10
-    replace rama_ci = 2 if indgen==20  
-    replace rama_ci = 3 if indgen==30   
-    replace rama_ci = 4 if indgen==40    
-    replace rama_ci = 5 if indgen==50    
-    replace rama_ci = 6 if indgen==60    
-    replace rama_ci = 7 if indgen==70    
-    replace rama_ci = 8 if indgen==80    
-    replace rama_ci = 9 if indgen==90
-    replace rama_ci = 10 if indgen==100  
-    replace rama_ci = 11 if indgen==111  
-    replace rama_ci = 12 if indgen==112
-    replace rama_ci = 13 if indgen==113 
-    replace rama_ci = 14 if indgen==114 
-    replace rama_ci = 15 if indgen==120 
-	
-	 *********************
-     ****categopri_ci****
-     *********************
-	 *OBSERVACIONES: El censo no distingue entre actividad principal o secundaria, asigno por default principal.	
-    gen categopri_ci=.
-	cap confirm variable classwkd
-	if (_rc==0) {
-    replace categopri_ci=0 if classwkd==400 
-    replace categopri_ci=1 if classwkd==110
-    replace categopri_ci=2 if classwkd==120
-    replace categopri_ci=3 if classwkd==203 | classwkd==204 | classwkd==216 | classwkd==230 | classwkd == 210
-    replace categopri_ci=4 if classwkd==310	 
-	}
-	
-	  *****************
-      ***spublico_ci***
-      *****************
-    gen spublico_ci=.
-	cap confirm variable indgen
-	if (_rc==0){
-		replace spublico_ci=1 if indgen==100
-		replace spublico_ci=0 if emp_ci==1 & indgen!=100
-		replace spublico_ci=. if indgen == 998 | indgen == 999 | indgen == 000
-	}	
-	
 *******************************************************
 ***           VARIABLES DE DIVERSIDAD               ***
 *******************************************************
@@ -241,6 +140,12 @@ variables de ingreso por hogar porque no están en el do Base*/
 
 	gen eduno_ci=(aedu_ci==0) // never attended or pre-school
 	replace eduno_ci=. if educar==0 | educar==999 // NIU & missing
+	
+	**********
+	*edupre_ci* // preescolar
+	**********
+	gen edupre_ci=(educar==120) // pre-school
+	replace edupre_ci=. if educar==0 | educar==999 // NIU & missing
 	
 	**********
 	*edupi_ci* // no completó la educación primaria
@@ -326,35 +231,6 @@ variables de ingreso por hogar porque no están en el do Base*/
 	gen literacy=. 
 	replace literacy=1 if lit==2 // literate
 	replace literacy=0 if lit==1 // illiterate
-
-*******************************************************
-***           VARIABLES DE MIGRACIÓN              ***
-*******************************************************
-
-      *******************
-      ****migrante_ci****
-      *******************
-	gen migrante_ci =.
-	replace migrante_ci = 1 if nativity == 2
-	replace migrante_ci = 0 if nativity == 1 
-
-     *******************
-     **migantiguo5_ci***
-     *******************
-	gen migantiguo5_ci =.
-	cap confirm migyrs1 
-	if (_rc==0) {
-	gen migantiguo5_ci = (migyrs1 >= 5) & migrante_ci == 1
-	}
-	replace migantiguo5_ci = . if migantiguo5_ci == 0 & nativity != 2
-
-	**********************
-	*** migrantelac_ci ***
-	**********************
-
-	gen migrantelac_ci = .
-	replace migrantelac_ci= 1 if inlist(bplcountry, 21100, 23010, 22060, 23110, 22040, 23100, 22030, 23060, 23140, 22050, 23050, 23040, 23100, 29999, 23130, 23020, 22020, 21250, 21999, 22010, 22070, 22080, 22999) & migrante_ci == 1
-	replace migrantelac_ci = 0 if migrantelac_ci == . & migrante_ci == 1
 
 	*****************************
 	** Include all labels of   **

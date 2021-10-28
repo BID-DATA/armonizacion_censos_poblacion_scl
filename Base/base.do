@@ -518,7 +518,9 @@ use "`base_in'", clear
      ****rama de actividad****
      *************************
 	 *2010 no tiene variable indgen
-    gen rama_ci = .
+    gen rama_ci = . 
+	cap confirm variable indgen 
+	if (_rc==0) {
     replace rama_ci = 1 if indgen==10
     replace rama_ci = 2 if indgen==20  
     replace rama_ci = 3 if indgen==30   
@@ -534,6 +536,7 @@ use "`base_in'", clear
     replace rama_ci = 13 if indgen==113 
     replace rama_ci = 14 if indgen==114 
     replace rama_ci = 15 if indgen==120 
+	}
 	
      *********************
      ****categopri_ci****
