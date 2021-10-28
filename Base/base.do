@@ -133,7 +133,7 @@ use "`base_in'", clear
 	*2010 no tiene variable marst
 	cap confirm variable marst
 	if (_rc==0) {
-	recode marst (2=1 "Union formal o informal") (3=2 "Divorciado o separado") (4=3 "Viudo") (1=4 "Soltero") (else=.), gen(civil_ci) 
+	recode marst (2=1 "Union formal o informal") (3=2 "Divorciado o separado") (4=3 "Viudo") (1=4 "Soltero") (else=.),gen(civil_ci) 
 	}
 	
     *********
@@ -458,6 +458,107 @@ use "`base_in'", clear
 	*replace viviprop_ch1=3 if 
 	replace viviprop_ch1=. if ownership==9
 	}
+	
+	
+**********************************************
+***      VARIABLES DEL MERCADO LABORAL     ***
+**********************************************	
+
+     *******************
+     ****condocup_ci****
+     *******************
+	 *2010 no tiene variable empstat
+	 
+    gen condocup_ci=.
+	cap confirm variable empstat
+	if (_rc==0){
+    replace condocup_ci=1 if empstat==1
+    replace condocup_ci=2 if empstat==2
+    replace condocup_ci=3 if empstat==3
+    replace condocup_ci=. if empstat==9 /*unkown/missing as missing*/ 
+    replace condocup_ci=. if empstat==0 /*NIU as missing*/
+	}
+	
+      ************
+      ***emp_ci***
+      ************
+    gen emp_ci=.
+	cap confirm variable empstat
+	if (_rc==0){
+		replace emp_ci=0 if empstat==2
+		replace emp_ci=0 if empstat==3
+		replace emp_ci=1 if empstat==1
+		replace emp_ci=. if empstat==0 /*NIU as missing*/
+		replace emp_ci=. if empstat==9 /*unkown/missing as missing*/
+	}
+	
+	
+      ****************
+      ***desemp_ci***
+      ****************	
+	gen desemp_ci=.
+	cap confirm variable condocup_ci
+	if (_rc==0){
+		replace desemp_ci=1 if condocup_ci==2 /*1 desempleados*/
+		replace desemp_ci=0 if condocup_ci==3 | condocup_ci==1 /*0 cuando están inactivos o empleados*/
+	}
+	
+      *************
+      ***pea_ci***
+      *************
+    gen pea_ci=.
+	cap confirm variable condocup_ci
+	if (_rc==0){
+		replace pea_ci=1 if condocup_ci==1
+		replace pea_ci=1 if condocup_ci==2
+		replace pea_ci=0 if condocup_ci==3
+	}
+	
+     *************************
+     ****rama de actividad****
+     *************************
+	 *2010 no tiene variable indgen
+    gen rama_ci = .
+    replace rama_ci = 1 if indgen==10
+    replace rama_ci = 2 if indgen==20  
+    replace rama_ci = 3 if indgen==30   
+    replace rama_ci = 4 if indgen==40    
+    replace rama_ci = 5 if indgen==50    
+    replace rama_ci = 6 if indgen==60    
+    replace rama_ci = 7 if indgen==70    
+    replace rama_ci = 8 if indgen==80    
+    replace rama_ci = 9 if indgen==90
+    replace rama_ci = 10 if indgen==100  
+    replace rama_ci = 11 if indgen==111  
+    replace rama_ci = 12 if indgen==112
+    replace rama_ci = 13 if indgen==113 
+    replace rama_ci = 14 if indgen==114 
+    replace rama_ci = 15 if indgen==120 
+	
+     *********************
+     ****categopri_ci****
+     *********************
+	 *OBSERVACIONES: El censo no distingue entre actividad principal o secundaria, asigno por default principal.	
+    gen categopri_ci=.
+	cap confirm variable classwkd
+	if (_rc==0) {
+    replace categopri_ci=0 if classwkd==400 | classwkd == 150 | classwkd == 130
+    replace categopri_ci=1 if classwkd==110 | classwkd == 111
+    replace categopri_ci=2 if classwkd>=120 & classwkd<= 126 | classwkd == 141 | classwkd == 100 | classwkd == 101 | classwkd == 102 | classwkd == 199
+    replace categopri_ci=3 if classwkd>=200 & classwkd <300 | classwkd == 142
+    replace categopri_ci=4 if classwkd>=300 & classwkd <400
+	}
+	
+      *****************
+      ***spublico_ci***
+      *****************
+    gen spublico_ci=.
+	cap confirm variable indgen
+	if (_rc==0){
+		replace spublico_ci=1 if indgen==100
+		replace spublico_ci=0 if emp_ci==1 & indgen!=100
+		replace spublico_ci=. if indgen == 998 | indgen == 999 | indgen == 000
+	}
 **********************************
 **** VARIABLES DE INGRESO ****
 ***********************************
@@ -467,20 +568,87 @@ use "`base_in'", clear
  
    gen ynlm_ci=.
 
+*******************************************************
+***           VARIABLES DE MIGRACIÓN              ***
+*******************************************************
+
+      *******************
+      ****migrante_ci****
+      *******************
+	gen migrante_ci =.
+	replace migrante_ci = 1 if nativity == 2
+	replace migrante_ci = 0 if nativity == 1 
+
+   
+	*******************
+    **migantiguo5_ci***
+    *******************
+	gen migantiguo5_ci =.
+	cap confirm variable migrate5
+	if(_rc==0){
+	replace migantiguo5_ci = 1 if inlist(migrate5, 10, 11, 12, 20) & migrante_ci == 1
+	replace migantiguo5_ci = 0 if (migrate5 == 30 & migrante_ci == 1)
+	}
+	
+	**********************
+	*** migrantelac_ci ***
+	**********************
+
+	gen migrantelac_ci = .
+	replace migrantelac_ci= 1 if inlist(bplcountry, 21100, 23010, 22060, 23110, 22040, 23100, 22030, 23060, 23140, 22050, 23050, 23040, 23100, 29999, 23130, 23020, 22020, 21250, 21999, 22010, 22070, 22080, 22999) & migrante_ci == 1
+	replace migrantelac_ci = 0 if migrantelac_ci == . & migrante_ci == 1   
    
 ********************************
 *** Health indicators **********
 ********************************
+	
+	*****************
+	*discapacidad_ci*
+	*****************
 	gen discapacidad_ci =.
+	cap confirm variable disabled
+	if (_rc==0) {
+	replace discapacidad_ci=1 if disabled == 1
+	replace discapacidad_ci=0 if disabled == 2
+	}
 	
+	*****************
+	   *ceguera_ci*
+	*****************
+	gen ceguera_ci =.
+	cap confirm variable disblnd
+	if (_rc==0) {
+	replace ceguera_ci=1 if disblnd == 1
+	replace ceguera_ci=0 if disblnd == 2
+	}
 
-	gen ceguera_ci=.
-	
-	
-	gen sordera_ci  =.
-	
+	*****************
+	   *sordera_ci*
+	*****************
+	gen sordera_ci =.
+	cap confirm variable disdeaf
+	if (_rc==0) {
+	replace sordera_ci=1 if disdeaf == 1
+	replace sordera_ci=0 if disdeaf == 2
+	}
 
-	gen mudez_ci=.
+	*****************
+	   *mudez_ci*
+	*****************
+	gen mudez_ci =.
+	cap confirm variable dismute
+	if (_rc==0) {
+	replace mudez_ci=1 if dismute == 1
+	replace mudez_ci=0 if dismute == 2
+	}
 	
+	*****************
+	   *dismental_ci*
+	*****************
+	gen dismental_ci =.
+	cap confirm variable dismntl
+	if (_rc==0) {
+	replace dismental_ci=1 if dismntl == 1
+	replace dismental_ci=0 if dismntl == 2
+	}
 
-	gen dismental_ci=.
