@@ -121,12 +121,13 @@ use "`base_in'", clear
 	*relacion_ci*
 	*************	
 	gen relacion_ci=1 if related==1000
-    replace relacion_ci=2 if related==2000
-    replace relacion_ci=3 if related==3000
-    replace relacion_ci=4 if related==4100 | related==4200 | related==4900
-    replace relacion_ci=5 if related==5310 | related==5600 | related==5900
-    replace relacion_ci=6 if related==5210
-	replace relacion_ci=9 if related==9999
+    replace relacion_ci=2 if related>=2000 & related<3000
+    replace relacion_ci=3 if related>=3000 & related <4000
+    replace relacion_ci=4 if related>=4000 & related <5000
+    replace relacion_ci=5 if (related>=5000 & related <5200) | (related>5210 & related <=6000) | related == 5900
+    replace relacion_ci=6 if related==5210 
+	replace relacion_ci=. if related==9999
+	
 	**************
 	*Estado Civil*
 	**************
@@ -139,48 +140,41 @@ use "`base_in'", clear
     *********
 	*jefe_ci*
 	*********
-
 	gen jefe_ci=(relate==1)
+	replace jefe_ci=. if related == 9999
 	
 
 	**************
 	*nconyuges_ch*
 	**************
-
 	by idh_ch, sort: egen nconyuges_ch=sum(relacion_ci==2)
 
 
 	***********
 	*nhijos_ch*
 	***********
-	
 	by idh_ch, sort: egen nhijos_ch=sum(relacion_ci==3) 
 
 	**************
 	*notropari_ch*
 	**************
-
 	by idh_ch, sort: egen notropari_ch=sum(relacion_ci==4)
 	
 	****************
 	*notronopari_ch*
 	****************
-	
 	by idh_ch, sort: egen notronopari_ch=sum(relacion_ci==5)
 	
 	************
 	*nempdom_ch*
 	************
-
 	*NOTA: se utiliza la variable related la cual tiene más desagregación en cuanto a la relación con el jefe de hogar
 	tab related, nol
-	
 	by idh_ch, sort: egen nempdom_ch=sum(related==5210) if relacion_ci==6	  
 	
 	*************
 	*clasehog_ch*
 	*************
-
 	gen byte clasehog_ch=0
 		**** unipersonal
 	replace clasehog_ch=1 if nhijos_ch==0 & nconyuges_ch==0 & notropari_ch==0 & notronopari_ch==0
@@ -198,43 +192,36 @@ use "`base_in'", clear
 	**************
 	*nmiembros_ch*
 	**************
-
 	by idh_ch, sort: egen byte nmiembros_ch=sum(relacion_ci>0 & relacion_ci<9)
 
 	*************
 	*nmayor21_ch*
 	*************
-
 	by idh_ch, sort: egen byte nmayor21_ch=sum((relacion_ci>0 & relacion_ci<9) & (edad_ci>=21 & edad_ci<=98))
 
 	*************
 	*nmenor21_ch*
 	*************
-
 	by idh_ch, sort: egen byte nmenor21_ch=sum((relacion_ci>0 & relacion_ci<9) & (edad_ci<21))
 
 	*************
 	*nmayor65_ch*
 	*************
-
 	by idh_ch, sort: egen byte nmayor65_ch=sum((relacion_ci>0 & relacion_ci<9) & (edad_ci>=65 & edad_ci!=.))
 
 	************
 	*nmenor6_ch*
 	************
-
 	by idh_ch, sort: egen byte nmenor6_ch=sum((relacion_ci>0 & relacion_ci<9) & (edad_ci<6))
 
 	************
 	*nmenor1_ch*
 	************
-
 	by idh_ch, sort: egen byte nmenor1_ch=sum((relacion_ci>0 & relacion_ci<9) & (edad_ci<1))
 
 	************
 	*miembros_ci
 	************
-	
 	gen miembros_ci=(relacion_ci>=1 & relacion_ci<9) 
 	tab persons
 	tab miembros_ci	
