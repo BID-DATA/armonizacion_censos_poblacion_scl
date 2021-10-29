@@ -76,13 +76,11 @@ include "../Base/base.do"
 *******************************************************
 ***           VARIABLES DE DIVERSIDAD               ***
 *******************************************************
-* Cesar Lins & Nathalia Maya - Septiembre 2021	
+* Argentina no tiene estás variables se generan vacias	
 
 	***************
 	***afroind_ci***
 	***************
-**Pregunta: 
-
 	gen afroind_ci=. 
 	gen afroind_ch  =.
 
@@ -130,14 +128,12 @@ variables de ingreso por hogar porque no están en el do Base*/
 *NOTA: Como terciario, universitario y posgrado tienen una duración variable se supone 
 *que terciario completo implica 3 años de educacion adicional a la secundaria, universitario 5 años adicionales y 
 *postgrado 7. Esto solo se basa en la modas de finalización de estos niveles. ESTO SE DEBE DISCUTIR 
-
 	gen aedu_ci=yrschool
 	replace aedu_ci=. if yrschool>=90 & yrschool<100 // categorias NIU; missing; + categorias nivel educativo pero pero sin años de escolaridad
 
 	**********
 	*eduno_ci* // no ha completado ningún año de educación // Para esta variable no se puede usar aedu_ci porque aedu_ci=0 es none o pre-school
 	**********
-
 	gen eduno_ci=(aedu_ci==0) // never attended or pre-school
 	replace eduno_ci=. if educar==0 | educar==999 // NIU & missing
 	
@@ -150,75 +146,66 @@ variables de ingreso por hogar porque no están en el do Base*/
 	**********
 	*edupi_ci* // no completó la educación primaria
 	**********
-	
 	gen edupi_ci=(educar==130 | educar==210 | educar==220 | educar==230 | educar==240 | educar==250 | educar==280) // primary (zero years completed) + grade 1-5 + primary grade unknown
 	replace edupi_ci=. if educar==0 | educar==999 // NIU & missing
 
 	********** 
 	*edupc_ci* // completó la educación primaria
 	**********
-	
 	gen edupc_ci=(educar==260 | educar==270) // grade 6 + grade 7
 	replace edupc_ci=. if educar==0 | educar==999 // NIU & missing
 
 	**********
 	*edusi_ci* // no completó la educación secundaria
 	**********
-	
 	gen edusi_ci=(aedu_ci>=8 & aedu_ci<=11) // 8 a 11 anos de educación
 	replace edusi_ci=. if educar==0 | educar==999 // NIU & missing
 
 	**********
 	*edusc_ci* // completó la educación secundaria
 	**********
-	
 	gen edusc_ci=(aedu_ci==12 | aedu_ci==13) // 12 y 13 anos de educación
 	replace edusc_ci=. if educar==0 | educar==999 // NIU & missing
 
 	**********
 	*eduui_ci* // no completó la educación universitaria o terciaria
 	**********
-	
 	gen eduui_ci=(aedu_ci>=14 & aedu_ci<=16) // 14 a 16 anos de educación
 	replace eduui_ci=. if educar==0 | educar==999 // NIU & missing
-
+	
 	**********
 	*eduuc_ci* // completó la educación universitaria o terciaria
 	**********
-	
 	gen eduuc_ci=(aedu_ci==17 | aedu_ci==18) // 17 y 18 anos de educación
 	replace eduuc_ci=. if edattaind==0 | edattaind==999 // missing a los NIU & missing
 
 	***********
 	*edus1i_ci* // no completó el primer ciclo de la educación secundaria
 	***********
-
-	gen byte edus1i_ci=(aedu_ci==8)
+	gen byte edus1i_ci=(aedu_ci>6 & aedu_ci<9)
 	replace edus1i_ci=. if edattaind==0 | edattaind==999 // missing a los NIU & missing
 
 	***********
 	*edus1c_ci* // completó el primer ciclo de la educación secundaria
 	***********
-	
 	gen byte edus1c_ci=(aedu_ci==9)
 	replace edus1c_ci=. if edattaind==0 | edattaind==999 // missing a los NIU & missing
 
-	***********
+	**********
 	*edus2i_ci* // no completó el segundo ciclo de la educación secundaria
 	***********
-
-	gen byte edus2i_ci=.
+	gen byte edus2i_ci=(aedu_ci>9 & aedu_ci<12)
+	replace edus2i_ci=. if edattaind==0 | edattaind==999 // missing a los NIU & missing
 
 	***********
 	*edus2c_ci* // completó el segundo ciclo de la educación secundaria
 	***********
-
-	gen byte edus2c_ci=.
-
+	gen byte edus2c_ci=(aedu_ci==12)
+	replace edus2c_ci=. if edattaind==0 | edattaind==999 
+	
 	***********
 	*asiste_ci*
 	***********
-	
 	gen asiste_ci=(school==1) // 0 includes attended in the past (3) and never attended (4)
 	replace asiste_ci=. if school==0 | school==9 // missing a los NIU & missing
 	
@@ -227,7 +214,6 @@ variables de ingreso por hogar porque no están en el do Base*/
 	************
 	* literacy *
 	************
-
 	gen literacy=. 
 	replace literacy=1 if lit==2 // literate
 	replace literacy=0 if lit==1 // illiterate
