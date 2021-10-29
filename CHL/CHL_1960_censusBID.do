@@ -70,233 +70,169 @@ include "../Base/base.do"
       label var region_c "division politico-administrativa, provincia"
 
 	
-			***********************************
-			***VARIABLES DEL MERCADO LABORAL***
-			***********************************	
+	************************
+	* VARIABLES EDUCATIVAS *
+	************************
 
-     *******************
-     ****condocup_ci****
-     *******************
-	 
-    gen condocup_ci=.
-    replace condocup_ci=1 if empstat==1
-    replace condocup_ci=2 if empstat==2
-    replace condocup_ci=3 if empstat==3
-    replace condocup_ci=. if empstat==9
-    replace condocup_ci=4 if empstat==0
-    label var condocup_ci "Condicion de ocupación"
-    label define condocup_ci 1 "Ocupado" 2 "Desocupado" 3 "Inactivo" 4 "Menor de PET" 
-    label value condocup_ci condocup_ci
+	*********
+	*aedu_ci* // 
+	*********
+	gen aedu_ci = yrschool 
+	replace aedu_ci=. if yrschool>=90 & yrschool<100 
+ 
+	**********
+	*eduno_ci* // no ha completado ningún año de educación
+	**********
+	gen eduno_ci=(aedu_ci==0) // never attended or pre-school
+	replace eduno_ci=. if edattaind==0 | edattaind==999 // NIU & missing
 	
+	**********
+	*edupre_ci* // preescolar
+	**********
+	gen edupre_ci=(educcl==110) // pre-school
+	replace edupre_ci=. if educcl==0 | educcl==999 // NIU & missing
 	
-	  ************
-      ***emp_ci***
-      ************
-    gen emp_ci=(condocup_ci==1)
+	**********
+	*edupi_ci* // no completó la educación primaria
+	**********
+	gen edupi_ci=(aedu_ci>0 & aedu_ci<6) //
+	replace edupi_ci=. if educcl==0 | educcl==999 // NIU & missing
+	replace edupi_ci = 1 if yrschool == 91 // some primary
 
+	********** 
+	*edupc_ci* // completó la educación primaria
+	**********
+	gen edupc_ci=(aedu_ci==6) 
+	replace edupc_ci=. if edattain==0 | edattain==9 // NIU & missing
+
+	**********
+	*edusi_ci* // no completó la educación secundaria
+	**********
+	gen edusi_ci=(aedu_ci>=7 & aedu_ci<=11) // 7 a 11 anos de educación
+	replace edusi_ci=. if edattain==0 |edattain==9 // NIU & missing
+	replace edusi_ci = 1 if yrschool == 92 | yrschool ==93 //some technical after primary or some secondary
+
+	**********
+	*edusc_ci* // completó la educación secundaria
+	**********
+	gen edusc_ci=(aedu_ci==12) // 7 a 11 anos de educación
+	replace edusc_ci=. if edattain==0 |edattain==9 // NIU & missing
 	
-      ****************
-      ***desemp_ci***
-      ****************
-    gen desemp_ci=(condocup_ci==2)
-	
-	
-	  *************
-      ***pea_ci***
-      *************
-    gen pea_ci=(emp_ci==1 | desemp_ci==1)
-	
-	
-     *********************
-     ****categopri_ci****
-     *********************
-	 *OBSERVACIONES: El censo no distingue entre actividad principal o secundaria, asigno por default principal.	
-    gen categopri_ci=.
-    replace categopri_ci=0 if classwkd==400 | classwkd==999
-    replace categopri_ci=1 if classwkd==110
-    replace categopri_ci=2 if classwkd==120
-    replace categopri_ci=3 if classwkd==203 | classwkd==204 | classwkd==216 | classwkd==230 
-    replace categopri_ci=4 if classwkd==310
-    label var categopri_ci "categoría ocupacional de la actividad principal "
-    label define categopri_ci 0 "Otra clasificación" 1 "Patrón o empleador" 2 "Cuenta Propia o independiente" 3 "Empleado o asalariado" 4 "Trabajador no remunerado" 
-    label value categopri_ci categopri_ci	 
+	**********
+	*eduui_ci* // no completó la educación universitaria o terciaria
+	**********
+	gen eduui_ci=(aedu_ci>=14 & aedu_ci<=16 & edattain != 4) // 14 a 16 anos de educación
+	replace eduui_ci=. if edattain==0 | edattain==9 // NIU & missing
+	replace eduui_ci = 1 if yrschool == 94 // some terciary
+
+	**********
+	*eduuc_ci* // completó la educación universitaria o terciaria
+	**********
+	gen eduuc_ci=.
+	replace eduuc_ci=1 if edattain == 4
+	replace eduuc_ci=0 if edattain == 1 | edattain == 2 | edattain ==3  
+	// cualquier otro nivel de educación
+	replace eduuc_ci=. if edattain==0 | edattain==9 // NIU & missing
+
+	***********
+	*edus1i_ci* // no completó el primer ciclo de la educación secundaria
+	***********
+	gen byte edus1i_ci=(aedu_ci>6 & aedu_ci<9)
+	replace edus1i_ci=. if edattaind==0 | edattaind==999 // missing a los NIU & missing
+
+	***********
+	*edus1c_ci* // completó el primer ciclo de la educación secundaria
+	***********
+	gen byte edus1c_ci=(aedu_ci==9)
+	replace edus1c_ci=. if edattaind==0 | edattaind==999 // missing a los NIU & missing
+
+	***********
+	*edus2i_ci* // no completó el segundo ciclo de la educación secundaria
+	***********
+	gen byte edus2i_ci=(aedu_ci>9 & aedu_ci<12)
+	replace edus2i_ci=. if edattaind==0 | edattaind==999 // missing a los NIU & missing
+
+	***********
+	*edus2c_ci* // completó el segundo ciclo de la educación secundaria
+	***********
+	gen byte edus2c_ci=(aedu_ci==12)
+	replace edus2c_ci=. if edattaind==0 | edattaind==999 // missing a los NIU & missing
+
+	***********
+	*asiste_ci*
+	***********
+	gen asiste_ci=(school==1) // 0 includes attended in the past (3) and never attended (4)
+	replace asiste_ci=. if school==0 | school==9 // missing a los NIU & missing
+
+	************
+	* literacy *
+	************
+	gen literacy=. 
+	replace literacy=1 if lit==2 // literate
+	replace literacy=0 if lit==1 // illiterate
+		  
+		  
+	*******************************************************
+	***           VARIABLES DE DIVERSIDAD               ***
+	*******************************************************
+	* Cesar Lins & Nathalia Maya - Septiembre 2021	
+
+		***************
+		***afroind_ci***
+		***************
+	**Pregunta: 
+
+	gen afroind_ci=. 
+
+		***************
+		***afroind_ch***
+		***************
+	gen afroind_jefe=.
+	gen afroind_ch  =.
+
+	drop afroind_jefe 
+
+		*******************
+		***afroind_ano_c***
+		*******************
+	gen afroind_ano_c=.
+
+	********************
+	*** discapacid
+	********************
+	gen dis_ci=.
+	gen dis_ch=.
 
 
-     *************************
-     ****rama de actividad****
-     *************************
-    gen rama_ci = .
-    replace rama_ci = 1 if indgen==10
-    replace rama_ci = 2 if indgen==20  
-    replace rama_ci = 3 if indgen==30   
-    replace rama_ci = 4 if indgen==40    
-    replace rama_ci = 5 if indgen==50    
-    replace rama_ci = 6 if indgen==60    
-    replace rama_ci = 7 if indgen==70    
-    replace rama_ci = 8 if indgen==80    
-    replace rama_ci = 9 if indgen==90
-    replace rama_ci = 10 if indgen==100  
-    replace rama_ci = 11 if indgen==111  
-    replace rama_ci = 12 if indgen==112
-    replace rama_ci = 13 if indgen==113 
-    replace rama_ci = 14 if indgen==114 
-    replace rama_ci = 15 if indgen==120 
-    label var rama_ci "Rama de actividad"
-    label def rama_ci 1"Agricultura, pesca y forestal" 2"Minería y extracción" 3"Industrias manufactureras" 4"Electricidad, gas, agua y manejo de residuos" 5"Construcción" 6"Comercio" 7"Hoteles y restaurantes" 8"Transporte, almacenamiento y comunicaciones" 9"Servicios financieros y seguros" 10"Administración pública y defensa" 11"Servicios empresariales e inmobiliarios" 12"Educación" 13"Salud y trabajo social" 14"Otros servicios" 15"Servicio doméstico"
-    label val rama_ci rama_ci
-	
-	
-	  *****************
-      ***spublico_ci***
-      *****************
-    gen spublico_ci=(indgen==100)	
 
-
-
-
-************************
-* VARIABLES EDUCATIVAS *
-************************
-
-****************
-* asiste_ci    * 
-**************** 
-gen asiste_ci=1 if school==1
-replace asiste_ci=. if school==0 // not in universe as missing 
-replace asiste_ci=. if school==9 // Unknown/missing as missing
-replace asiste_ci=0 if school==2
-
-****************
-* aedu_ci      * 
-**************** 
-
-gen aedu_ci=yrschool
-replace aedu_ci=. if aedu_ci==98
-replace aedu_ci=. if aedu_ci==99
-
-**************
-***eduno_ci***
-**************
-gen byte eduno_ci=0
-replace eduno_ci=1 if aedu_ci==0
-replace eduno_ci=. if aedu_ci==.
-
-**************
-***edupi_ci***
-**************
-gen byte edupi_ci=0
-replace edupi_ci=1 if aedu_ci>0 & aedu_ci<6
-replace edupi_ci=. if aedu_ci==.
-
-**************
-***edupc_ci***
-**************
-gen byte edupc_ci=0
-replace edupc_ci=1 if aedu_ci==6
-replace edupc_ci=. if aedu_ci==.
-
-**************
-***edusi_ci***
-**************
-gen byte edusi_ci=0
-replace edusi_ci=1 if aedu_ci>6 & aedu_ci<12
-replace edusi_ci=. if aedu_ci==.
-
-**************
-***edusc_ci***
-**************
-gen byte edusc_ci=0
-replace edusc_ci=1 if aedu_ci==12
-replace edusc_ci=. if aedu_ci==.
-
-**************
-***eduui_ci***
-**************
-gen byte eduui_ci=0
-replace eduui_ci=1 if aedu_ci>12 & aedu_ci<17
-replace eduui_ci=. if aedu_ci==.
-
-***************
-***eduuc_ci****
-***************
-gen byte eduuc_ci=0
-replace eduuc_ci=1 if aedu_ci>=17
-replace eduuc_ci=. if aedu_ci==.
-
-***************
-***edus1i_ci***
-***************
-gen byte edus1i_ci=0
-replace edus1i_ci=1 if aedu_ci>6 & aedu_ci<9
-replace edus1i_ci=. if aedu_ci==.
-
-***************
-***edus1c_ci***
-***************
-gen byte edus1c_ci=0
-replace edus1c_ci=1 if aedu_ci==9 
-replace edus1c_ci=. if aedu_ci==.
-
-***************
-***edus2i_ci***
-***************
-gen byte edus2i_ci=0
-replace edus2i_ci=1 if aedu_ci>9 & aedu_ci<12
-replace edus2i_ci=. if aedu_ci==.
-
-***************
-***edus2c_ci***
-***************
-gen byte edus2c_ci=0
-replace edus2c_ci=1 if aedu_ci==12
-replace edus2c_ci=. if aedu_ci==.
-
-***************
-***edupre_ci***
-***************
-gen edupre_ci=.
-
-** Other variables 
-***************
-***literacy***
-***************
-gen literacy=. if lit==0
-replace literacy=. if lit==9
-replace literacy=0 if lit==1
-replace literacy=1 if lit==2
-	  
-	  
 *******************************************************
-***           VARIABLES DE DIVERSIDAD               ***
+***           VARIABLES DE INGRESO                  ***
 *******************************************************
-* Cesar Lins & Nathalia Maya - Septiembre 2021	
+	
+    ***********
+	**ylm_ci**
+	***********
+	
+	*gen ylm_ci=.
+	
+    ***********
+	**ynlm_ci**
+	***********
+ 
+	*gen ynlm_ci=.
 
-	***************
-	***afroind_ci***
-	***************
-**Pregunta: 
-
-gen afroind_ci=. 
-
-	***************
-	***afroind_ch***
-	***************
-gen afroind_jefe=.
-gen afroind_ch  =.
-
-drop afroind_jefe 
-
-	*******************
-	***afroind_ano_c***
-	*******************
-gen afroind_ano_c=.
-
-********************
-*** discapacid
-********************
-gen dis_ci=.
-gen dis_ch=.
-
+    ***********
+	**ylm_ch**
+	***********
+   
+   gen ylm_ch=.
+   
+    ***********
+	**ynlm_ch**
+	***********
+   gen ynlm_ch=.
+   
+   
 *****************************
 ** Include all labels of   **
 **  harmonized variables   **
