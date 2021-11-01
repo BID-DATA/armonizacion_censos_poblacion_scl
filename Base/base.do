@@ -46,11 +46,14 @@ use "`base_in'", clear
 		if `"`PAIS'"'=="BLZ" | `"`PAIS'"'=="CRI" | `"`PAIS'"'=="SLV" | `"`PAIS'"'=="GTM" | `"`PAIS'"'=="HTI" | `"`PAIS'"'=="HON" | `"`PAIS'"'=="PAN" | `"`PAIS'"'=="MEX" | `"`PAIS'"'=="DOM" | `"`PAIS'"'=="NIC" local reg_bid 1
 		
 	gen region_BID_c=`reg_bid'
-
+	
+	*\eliminar _00000*\
+	capture drop __00000
+	
 	*********
 	*pais_c*
 	*********
-    rename __00000 pais_c
+    gen pais_c="`PAIS'"
 	
 	*********
 	*anio_c*
@@ -453,7 +456,6 @@ use "`base_in'", clear
      *******************
      ****condocup_ci****
      *******************
-	 *2010 no tiene variable empstat
 	 
     gen condocup_ci=.
 	cap confirm variable empstat
