@@ -147,7 +147,6 @@ gen dis_ch=.
 *******************************************************
 
 	replace ylm_ci=.
-	replace ylm_ci=. if incearn==99999998 | incearn==99999999
  
 	replace ynlm_ci=.
 
@@ -201,7 +200,7 @@ replace eduno_ci=. if aedu_ci==.
 **************
 gen byte edupi_ci=0
 replace edupi_ci=1 if aedu_ci>0 & aedu_ci<6
-replace edusi_ci=1 if yrschool==91 // Some primary 
+replace edupi_ci=1 if yrschool==91 // Some primary 
 replace edupi_ci=. if aedu_ci==.
 
 **************

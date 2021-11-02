@@ -135,9 +135,13 @@ use "`base_in'", clear
 	*Estado Civil*
 	**************
 	*2010 no tiene variable marst
+	gen civil_ci=.
 	cap confirm variable marst
 	if (_rc==0) {
-	recode marst (2=1 "Union formal o informal") (3=2 "Divorciado o separado") (4=3 "Viudo") (1=4 "Soltero") (else=.),gen(civil_ci) 
+	    replace civil_ci=2 if marst==1
+		replace civil_ci=3 if marst==2
+		replace civil_ci=4 if marst==3
+		replace civil_ci=1 if marst==4
 	}
 	
     *********
@@ -568,8 +572,11 @@ use "`base_in'", clear
       ****migrante_ci****
       *******************
 	gen migrante_ci =.
+	cap confirm variable nativity
+	if(_rc==0){
 	replace migrante_ci = 1 if nativity == 2
 	replace migrante_ci = 0 if nativity == 1 
+	}
 
    
 	*******************

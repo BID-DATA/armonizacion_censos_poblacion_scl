@@ -37,6 +37,81 @@ include "../Base/base.do"
 ******* Variables specific for this census **********
 *****************************************************
 
+
+****************
+ *** region_c ***
+****************
+
+gen region_c =.
+replace region_c=1 if geo1_mx2015==1 //
+replace region_c=2 if geo1_mx2015==2 //
+replace region_c=3 if geo1_mx2015==3 //
+replace region_c=4 if geo1_mx2015==4 //
+replace region_c=5 if geo1_mx2015==5 //
+replace region_c=6 if geo1_mx2015==6 //
+replace region_c=7 if geo1_mx2015==7 //
+replace region_c=8 if geo1_mx2015==8 //
+replace region_c=9 if geo1_mx2015==9 //
+replace region_c=10 if geo1_mx2015==10 //
+replace region_c=11 if geo1_mx2015==11 //
+replace region_c=12 if geo1_mx2015==12 //
+replace region_c=13 if geo1_mx2015==13 //
+replace region_c=14 if geo1_mx2015==14 //
+replace region_c=15 if geo1_mx2015==15 //
+replace region_c=16 if geo1_mx2015==16 //
+replace region_c=17 if geo1_mx2015==17 //
+replace region_c=18 if geo1_mx2015==18 //
+replace region_c=19 if geo1_mx2015==19 //
+replace region_c=20 if geo1_mx2015==20 //
+replace region_c=21 if geo1_mx2015==21 //
+replace region_c=22 if geo1_mx2015==22 //
+replace region_c=23 if geo1_mx2015==23 //
+replace region_c=24 if geo1_mx2015==24 //
+replace region_c=25 if geo1_mx2015==25 //
+replace region_c=26 if geo1_mx2015==26 //
+replace region_c=27 if geo1_mx2015==27 //
+replace region_c=28 if geo1_mx2015==28 //
+replace region_c=29 if geo1_mx2015==29 //
+replace region_c=30 if geo1_mx2015==30 //
+replace region_c=31 if geo1_mx2015==31 //
+replace region_c=32 if geo1_mx2015==32 //
+
+label define region_c ///
+1 "Aguascalientes" ///
+2 "Baja California" ///
+3 "Baja California Sur" ///
+4 "Campeche" ///
+5 "Coahuila de Zaragoza" ///
+6 "Colima" ///
+7 "Chiapas" ///
+8 "Chihuahua" ///
+9 "Distrito Federal" ///
+10 "Durango" ///
+11 "Guanajuato" ///
+12 "Guerrero" ///
+13 "Hidalgo" ///
+14 "Jalisco" ///
+15 "México" ///
+16 "Michoacán de Ocampo" ///
+17 "Morelos" ///
+18 "Nayarit" ///
+19 "Nuevo León" ///
+20 "Oaxaca" ///
+21 "Puebla" ///
+22 "Querétaro" ///
+23 "Quintana Roo" ///
+24 "San Luis Potosí" ///
+25 "Sinaloa" ///
+26 "Sonora" ///
+27 "Tabasco" ///
+28 "Tamaulipas" ///
+29 "Tlaxcala" ///
+30 "Veracruz de Ignacio de la Llave" ///
+31 "Yucatán" ///
+32 "Zacatecas" 
+label value region_c region_c
+label var region_c "division politico-administrativa, estados"
+
 *******************************************************
 ***           VARIABLES DE DIVERSIDAD               ***
 *******************************************************				
@@ -56,7 +131,7 @@ replace afroind_ci=3 if indig == 2
 	***afroind_ch***
 	***************
 gen afroind_jefe= afroind_ci if relate==1
-egen afroind_ch  = min(afroind_jefe), by(serial) 
+egen afroind_ch  = min(afroind_jefe), by(idh_ch) 
 
 drop afroind_jefe 
 
@@ -132,7 +207,7 @@ replace eduno_ci=. if aedu_ci==.
 gen byte edupi_ci=0
 replace edupi_ci=1 if aedu_ci>0 & aedu_ci<6
 replace edupi_ci=. if aedu_ci==.
-replace edusi_ci=1 if yrschool==91 // Some primary 
+replace edupi_ci=1 if yrschool==91 // Some primary 
 
 
 **************
@@ -156,8 +231,8 @@ replace edusi_ci=. if yrschool==90| yrschool==98| yrschool==99 // Se asignan com
 **************
 gen byte edusc_ci=0
 replace edusc_ci=1 if aedu_ci==12
-replace edusi_ci=. if aedu_ci==.
-replace edusi_ci=1 if yrschool==94 // Some tertiary
+replace edusc_ci=. if aedu_ci==.
+replace edusc_ci=1 if yrschool==94 // Some tertiary
 
 **************
 ***eduui_ci***
@@ -186,7 +261,7 @@ replace edus1i_ci=. if aedu_ci==.
 ***************
 gen byte edus1c_ci=0
 replace edus1c_ci=1 if aedu_ci==9 
-replace edusi_ci=1 if yrschool==94 // Some tertiary
+replace edus1c_ci=1 if yrschool==94 // Some tertiary
 replace edus1c_ci=. if aedu_ci==.
 
 ***************
@@ -201,7 +276,7 @@ replace edus2i_ci=. if aedu_ci==.
 ***************
 gen byte edus2c_ci=0
 replace edus2c_ci=1 if aedu_ci==12
-replace edusi_ci=1 if yrschool==94 // Some tertiary
+replace edus2c_ci=1 if yrschool==94 // Some tertiary
 replace edus2c_ci=. if aedu_ci==.
 
 ***************

@@ -42,38 +42,38 @@ include "../Base/base.do"
 ****************
 
 gen region_c =.
-replace region_c=1 if geo1_mx1970==1 //
-replace region_c=2 if geo1_mx1970==2 //
-replace region_c=3 if geo1_mx1970==3 //
-replace region_c=4 if geo1_mx1970==4 //
-replace region_c=5 if geo1_mx1970==5 //
-replace region_c=6 if geo1_mx1970==6 //
-replace region_c=7 if geo1_mx1970==7 //
-replace region_c=8 if geo1_mx1970==8 //
-replace region_c=9 if geo1_mx1970==9 //
-replace region_c=10 if geo1_mx1970==10 //
-replace region_c=11 if geo1_mx1970==11 //
-replace region_c=12 if geo1_mx1970==12 //
-replace region_c=13 if geo1_mx1970==13 //
-replace region_c=14 if geo1_mx1970==14 //
-replace region_c=15 if geo1_mx1970==15 //
-replace region_c=16 if geo1_mx1970==16 //
-replace region_c=17 if geo1_mx1970==17 //
-replace region_c=18 if geo1_mx1970==18 //
-replace region_c=19 if geo1_mx1970==19 //
-replace region_c=20 if geo1_mx1970==20 //
-replace region_c=21 if geo1_mx1970==21 //
-replace region_c=22 if geo1_mx1970==22 //
-replace region_c=23 if geo1_mx1970==23 //
-replace region_c=24 if geo1_mx1970==24 //
-replace region_c=25 if geo1_mx1970==25 //
-replace region_c=26 if geo1_mx1970==26 //
-replace region_c=27 if geo1_mx1970==27 //
-replace region_c=28 if geo1_mx1970==28 //
-replace region_c=29 if geo1_mx1970==29 //
-replace region_c=30 if geo1_mx1970==30 //
-replace region_c=31 if geo1_mx1970==31 //
-replace region_c=32 if geo1_mx1970==32 //
+replace region_c=1 if geo1_mx2000==1 //
+replace region_c=2 if geo1_mx2000==2 //
+replace region_c=3 if geo1_mx2000==3 //
+replace region_c=4 if geo1_mx2000==4 //
+replace region_c=5 if geo1_mx2000==5 //
+replace region_c=6 if geo1_mx2000==6 //
+replace region_c=7 if geo1_mx2000==7 //
+replace region_c=8 if geo1_mx2000==8 //
+replace region_c=9 if geo1_mx2000==9 //
+replace region_c=10 if geo1_mx2000==10 //
+replace region_c=11 if geo1_mx2000==11 //
+replace region_c=12 if geo1_mx2000==12 //
+replace region_c=13 if geo1_mx2000==13 //
+replace region_c=14 if geo1_mx2000==14 //
+replace region_c=15 if geo1_mx2000==15 //
+replace region_c=16 if geo1_mx2000==16 //
+replace region_c=17 if geo1_mx2000==17 //
+replace region_c=18 if geo1_mx2000==18 //
+replace region_c=19 if geo1_mx2000==19 //
+replace region_c=20 if geo1_mx2000==20 //
+replace region_c=21 if geo1_mx2000==21 //
+replace region_c=22 if geo1_mx2000==22 //
+replace region_c=23 if geo1_mx2000==23 //
+replace region_c=24 if geo1_mx2000==24 //
+replace region_c=25 if geo1_mx2000==25 //
+replace region_c=26 if geo1_mx2000==26 //
+replace region_c=27 if geo1_mx2000==27 //
+replace region_c=28 if geo1_mx2000==28 //
+replace region_c=29 if geo1_mx2000==29 //
+replace region_c=30 if geo1_mx2000==30 //
+replace region_c=31 if geo1_mx2000==31 //
+replace region_c=32 if geo1_mx2000==32 //
 
 label define region_c ///
 1 "Aguascalientes" ///
@@ -150,22 +150,18 @@ gen dis_ch=.
 	replace ylm_ci=. if incearn==99999998 | incearn==99999999
 	
 	tempvar well
-	gen `well'=incwell
-	replace `well'=. if incwell==99999998 | incwell==99999999
+	gen `well'=incwel
+	replace `well'=. if incwel==99999998 | incwel==99999999
 	
 	tempvar ret
-	gen `ret'=incwell
+	gen `ret'=incret
 	replace `ret'=. if incret==99999998 | incret==99999999
 	
 	tempvar fmab
-	gen `fmab'=incwell
-	replace `fmab'=. if infmab==99999998 | incfmab==99999999
+	gen `fmab'=incfmab
+	replace `fmab'=. if incfmab==99999998 | incfmab==99999999
 	
-	tempvar fmic
-	gen `fmic'=incwell
-	replace `fmic'=. if infmic==99999998 | incfmic==99999999
-	
-	replace ynlm_ci=`well'+`ret'+`fmab'+`fmic'
+	replace ynlm_ci=`well'+`ret'+`fmab'
 
 
     ***********
@@ -218,7 +214,7 @@ replace eduno_ci=. if aedu_ci==.
 **************
 gen byte edupi_ci=0
 replace edupi_ci=1 if aedu_ci>0 & aedu_ci<6
-replace edusi_ci=1 if yrschool==91 // Some primary 
+replace edupi_ci=1 if yrschool==91 // Some primary 
 replace edupi_ci=. if aedu_ci==.
 
 **************
@@ -242,7 +238,7 @@ replace edusi_ci=. if yrschool==90| yrschool==98| yrschool==99 // Se asignan com
 **************
 gen byte edusc_ci=0
 replace edusc_ci=1 if aedu_ci==12
-replace edusi_ci=1 if yrschool==94 // Some tertiary
+replace edusc_ci=1 if yrschool==94 // Some tertiary
 replace edusc_ci=. if aedu_ci==.
 
 **************
@@ -272,7 +268,7 @@ replace edus1i_ci=. if aedu_ci==.
 ***************
 gen byte edus1c_ci=0
 replace edus1c_ci=1 if aedu_ci==9 
-replace edusi_ci=1 if yrschool==94 // Some tertiary
+replace edus1c_ci=1 if yrschool==94 // Some tertiary
 replace edus1c_ci=. if aedu_ci==.
 
 ***************
@@ -287,7 +283,7 @@ replace edus2i_ci=. if aedu_ci==.
 ***************
 gen byte edus2c_ci=0
 replace edus2c_ci=1 if aedu_ci==12
-replace edusi_ci=1 if yrschool==94 // Some tertiary
+replace edus2c_ci=1 if yrschool==94 // Some tertiary
 replace edus2c_ci=. if aedu_ci==.
 
 ***************
