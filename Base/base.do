@@ -567,10 +567,13 @@ use "`base_in'", clear
       *******************
       ****migrante_ci****
       *******************
+	
 	gen migrante_ci =.
+	cap confirm variable nativity 
+	if(_rc==0){
 	replace migrante_ci = 1 if nativity == 2
 	replace migrante_ci = 0 if nativity == 1 
-
+	}
    
 	*******************
     **migantiguo5_ci***
