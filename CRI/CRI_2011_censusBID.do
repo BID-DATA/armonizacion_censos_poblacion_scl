@@ -1,4 +1,3 @@
-
 * (Versión Stata 12)
 clear
 set more off
@@ -9,30 +8,30 @@ set more off
  * Los datos se obtienen de las carpetas que se encuentran en el servidor: ${censusFolder}
  * Se tiene acceso al servidor únicamente al interior del BID.
  *________________________________________________________________________________________________________________*
+ 
+*Population and Housing Censuses/Harmonized Censuses - IPUMS
 
 
 /***************************************************************************
                  BASES DE DATOS DE CENSOS POBLACIONALES
 País: Costa Rica
-Año:
-Autores: 
-Última versión: 
+Año: 2000
+Autores: Cesar Lins
+Última versión: Septiembre, 2021
 
 							SCL/LMK - IADB
 ****************************************************************************/
-****************************************************************************
 
-*Population and Housing Censuses/Harmonized Censuses - IPUMS
 
 local PAIS CRI
-local ANO "1963"
+local ANO "2011"
 
 **************************************
 ** Setup code, load database,       **
 ** and include all common variables **
 **************************************
-
 include "../Base/base.do"
+
 
 *****************************************************
 ******* Variables specific for this census **********
@@ -42,13 +41,13 @@ include "../Base/base.do"
     *** region_c ***
     ****************
 	gen region_c=.   
-	replace region_c=1 if geo1_cr1963==1	/*San Jose*/
-	replace region_c=2 if geo1_cr1963==2	/*Alajuela*/
-	replace region_c=3 if geo1_cr1963==3	/*Cartago*/
-	replace region_c=4 if geo1_cr1963==4	/*Heredia*/
-	replace region_c=5 if geo1_cr1963==5	/*Guanacaste*/
-	replace region_c=6 if geo1_cr1963==6	/*Puntarenas*/
-	replace region_c=7 if geo1_cr1963==7	/*Limon*/
+	replace region_c=1 if geo1_cr2011==1	/*San Jose*/
+	replace region_c=2 if geo1_cr2011==2	/*Alajuela*/
+	replace region_c=3 if geo1_cr2011==3	/*Cartago*/
+	replace region_c=4 if geo1_cr2011==4	/*Heredia*/
+	replace region_c=5 if geo1_cr2011==5	/*Guanacaste*/
+	replace region_c=6 if geo1_cr2011==6	/*Puntarenas*/
+	replace region_c=7 if geo1_cr2011==7	/*Limon*/
 
 	label define region_c 1"San Jose" 2"Alajuela" 3"Cartago" 4"Heredia" 5"Guanacaste" 6"Puntarenas" 7"Limon" 
 	label value region_c region_c
@@ -155,40 +154,44 @@ include "../Base/base.do"
 	gen literacy=. 
 	replace literacy=1 if lit==2 // literate
 	replace literacy=0 if lit==1 // illiterate
-		  
+
 	*******************************************************
 	***           VARIABLES DE DIVERSIDAD               ***
-	*******************************************************
+	*******************************************************				
 	* Cesar Lins & Nathalia Maya - Septiembre 2021	
 
-	***************
-	***afroind_ci**
-	***************
+		***************
+		***afroind_ci***
+		***************
 	**Pregunta: 
 
 	gen afroind_ci=. 
+	replace afroind_ci=1  if race == 30
+	replace afroind_ci=2 if race == 20
+	replace afroind_ci=3 if race == 10 | race == 40 
+	replace afroind_ci=. if race == 99
 
-	***************
-	***afroind_ch**
-	***************
-	gen afroind_jefe=.
-	gen afroind_ch  =.
+
+		***************
+		***afroind_ch***
+		***************
+	gen afroind_jefe= afroind_ci if relate==1
+	egen afroind_ch  = min(afroind_jefe), by(idh_ch) 
 
 	drop afroind_jefe 
 
-	*******************
-	***afroind_ano_c***
-	*******************
-	gen afroind_ano_c=.
+		*******************
+		***afroind_ano_c***
+		*******************
+	gen afroind_ano_c=2000
 
-	********************
-	*** discapacid
-	********************
+
+		********************
+		*** discapacidad ***
+		********************
 	gen dis_ci=.
 	gen dis_ch=.
-
-
-
+	
 *******************************************************
 ***           VARIABLES DE INGRESO                  ***
 *******************************************************
@@ -216,13 +219,13 @@ include "../Base/base.do"
 	***********
    gen ynlm_ch=.
 
+
 *****************************
 ** Include all labels of   **
 **  harmonized variables   **
 *****************************
 include "../Base/labels.do"
 
-order region_BID_c pais_c estrato_ci zona_c relacion_ci civil_ci idh_ch factor_ch idp_ci factor_ci edad_ci sexo_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch miembros_ci condocup_ci emp_ci desemp_ci pea_ci rama_ci spublico_ci migrante_ci migantiguo5_ci aguared_ch luz_ch bano_ch des1_ch piso_ch pared_ch techo_ch dorm_ch cuartos_ch cocina_ch refrig_ch auto_ch internet_ch cel_ch viviprop_ch viviprop_ch1 region_c categopri_ci discapacidad_ci ceguera_ci sordera_ci mudez_ci dismental_ci afroind_ci afroind_ch afroind_ano_c dis_ci dis_ch aedu_ci
 
 compress
 
