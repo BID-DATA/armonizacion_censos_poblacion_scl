@@ -176,7 +176,7 @@ include "../Base/base.do"
 		***afroind_ch***
 		***************
 	gen afroind_jefe= afroind_ci if relate==1
-	egen afroind_ch  = min(afroind_jefe), by(serial) 
+	egen afroind_ch  = min(afroind_jefe), by(idh_ch) 
 
 	drop afroind_jefe 
 
