@@ -25,7 +25,7 @@ Autores:
 *Population and Housing Censuses/Harmonized Censuses - IPUMS
 
 local PAIS CRI
-local ANO "1963"
+local ANO "1973"
 
 **************************************
 ** Setup code, load database,       **
@@ -42,13 +42,13 @@ include "../Base/base.do"
     *** region_c ***
     ****************
 	gen region_c=.   
-	replace region_c=1 if geo1_cr1963==1	/*San Jose*/
-	replace region_c=2 if geo1_cr1963==2	/*Alajuela*/
-	replace region_c=3 if geo1_cr1963==3	/*Cartago*/
-	replace region_c=4 if geo1_cr1963==4	/*Heredia*/
-	replace region_c=5 if geo1_cr1963==5	/*Guanacaste*/
-	replace region_c=6 if geo1_cr1963==6	/*Puntarenas*/
-	replace region_c=7 if geo1_cr1963==7	/*Limon*/
+	replace region_c=1 if geo1_cr1973==1	/*San Jose*/
+	replace region_c=2 if geo1_cr1973==2	/*Alajuela*/
+	replace region_c=3 if geo1_cr1973==3	/*Cartago*/
+	replace region_c=4 if geo1_cr1973==4	/*Heredia*/
+	replace region_c=5 if geo1_cr1973==5	/*Guanacaste*/
+	replace region_c=6 if geo1_cr1973==6	/*Puntarenas*/
+	replace region_c=7 if geo1_cr1973==7	/*Limon*/
 
 	label define region_c 1"San Jose" 2"Alajuela" 3"Cartago" 4"Heredia" 5"Guanacaste" 6"Puntarenas" 7"Limon" 
 	label value region_c region_c
