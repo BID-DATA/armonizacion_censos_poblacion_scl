@@ -132,6 +132,7 @@ label var spublico_ci "=1: Personas que trabajan en el sector público"
 	label var ylm_ci "Ingreso laboral monetario total individual"
 	label var ynlm_ci "Ingreso no laboral monetario total individual"
 	label var ylm_ch "Ingreso laboral monetario del hogar"
+	label var ynlm_ch "Ingreso no laboral monetario del hogar"
 /*	
 label var durades_ci "Duracion del desempleo en meses"
 	
@@ -206,6 +207,7 @@ label var aedu_ci "Anios de educacion aprobados"
 
 label var asiste_ci "Personas que actualmente asisten a centros de enseñanza"
 label var eduno_ci "Cero anios de educacion"
+label var edupre_ci "Personas con preescolar como maximo nivel educativo alcanzado"
 label var edupi_ci "Primaria incompleta"
 label var edupc_ci "Primaria completa"
 label var edusi_ci "Secundaria incompleta"

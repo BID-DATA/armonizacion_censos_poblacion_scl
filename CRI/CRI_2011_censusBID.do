@@ -14,8 +14,8 @@ set more off
 
 /***************************************************************************
                  BASES DE DATOS DE CENSOS POBLACIONALES
-País: Guatemala
-Año: 2002
+País: Costa Rica
+Año: 2000
 Autores: Cesar Lins
 Última versión: Septiembre, 2021
 
@@ -23,8 +23,8 @@ Autores: Cesar Lins
 ****************************************************************************/
 
 
-local PAIS GTM
-local ANO "1973"
+local PAIS CRI
+local ANO "2011"
 
 **************************************
 ** Setup code, load database,       **
@@ -37,94 +37,27 @@ include "../Base/base.do"
 ******* Variables specific for this census **********
 *****************************************************
 
-****************
- *** region_c ***
- ****************
+	****************
+    *** region_c ***
+    ****************
+	gen region_c=.   
+	replace region_c=1 if geo1_cr2011==1	/*San Jose*/
+	replace region_c=2 if geo1_cr2011==2	/*Alajuela*/
+	replace region_c=3 if geo1_cr2011==3	/*Cartago*/
+	replace region_c=4 if geo1_cr2011==4	/*Heredia*/
+	replace region_c=5 if geo1_cr2011==5	/*Guanacaste*/
+	replace region_c=6 if geo1_cr2011==6	/*Puntarenas*/
+	replace region_c=7 if geo1_cr2011==7	/*Limon*/
 
-   gen region_c=.   
-	replace region_c=1 if geo1_gt==320001 /*Guatemala*/
-	replace region_c=2 if geo1_gt==320002 /*El Progreso*/
-	replace region_c=3 if geo1_gt==320003 /*Sacatepéquez*/
-	replace region_c=4 if geo1_gt==320004 /*Chimaltenango*/
-	replace region_c=5 if geo1_gt==320005 /*Escuintla*/
-	replace region_c=6 if geo1_gt==320006 /*Santa Rosa*/
-	replace region_c=7 if geo1_gt==320007 /*Sololá*/
-	replace region_c=8 if geo1_gt==320008 /*Totonicapán*/
-	replace region_c=9 if geo1_gt==320009 /*Quetzaltenango*/
-	replace region_c=10 if geo1_gt==320010 /*Suchitepéquez*/
-	replace region_c=11 if geo1_gt==320011 /*Retalhuleu*/
-	replace region_c=12 if geo1_gt==320012 /*San Marcos*/
-	replace region_c=13 if geo1_gt==320013 /*Huehuetenango*/
-	replace region_c=14 if geo1_gt==320014 /*Quiché*/
-	replace region_c=15 if geo1_gt==320015 /*Baja Verapaz*/
-	replace region_c=16 if geo1_gt==320016 /*Alta Verapaz*/
-	replace region_c=17 if geo1_gt==320017 /*Petén*/
-	replace region_c=18 if geo1_gt==320018 /*Izabal*/
-	replace region_c=19 if geo1_gt==320019 /*Zacapa*/
-	replace region_c=20 if geo1_gt==320020 /*Chiquimula*/
-	replace region_c=21 if geo1_gt==320021 /*Jalapa*/
-	replace region_c=22 if geo1_gt==320022 /*Jutiapa*/
-	replace region_c=23 if geo1_gt==320088 /*Waterbodies*/
+	label define region_c 1"San Jose" 2"Alajuela" 3"Cartago" 4"Heredia" 5"Guanacaste" 6"Puntarenas" 7"Limon" 
+	label value region_c region_c
+	label var region_c "division politico-administrativa, provincia"
+
 	
-	label define region_c 1 "Guatemala" 2 "El Progreso" 3 "Sacatepéquez" 4 "Chimaltenango" 5 "Escuintla" 6 "Santa Rosa" 7 "Sololá" 8 "Totonicapán" 9 "Quetzaltenango" 10 "Suchitepéquez" 11 "Retalhuleu" 12 "San Marcos" 13 "Huehuetenango" 14 "Quiché" 15 "Baja Verapaz" 16 "Alta Verapaz" 17 "Petén" 18 "	Izabal" 19 "Zacapa" 20 "Chiquimula" 21 "Jalapa" 22 "Jutiapa" 23 "Cuerpos de agua"
-	
-	 label value region_c region_c
-	  
-*******************************************************
-***           VARIABLES DE DIVERSIDAD               ***
-*******************************************************				
-* Cesar Lins & Nathalia Maya - Septiembre 2021	
+	************************
+	* VARIABLES EDUCATIVAS *
+	************************
 
-	***************
-	***afroind_ci***
-	***************
-	**Pregunta: 
-
-	gen afroind_ci=. 
-	replace afroind_ci=1  if indig==1 /* Garifuna included here */
-	replace afroind_ci=3 if indig==2
-
-
-	***************
-	***afroind_ch***
-	***************
-	gen afroind_jefe= afroind_ci if relate==1
-	egen afroind_ch  = min(afroind_jefe), by(idh_ch) 
-
-	drop afroind_jefe 
-
-	*******************
-	***afroind_ano_c***
-	*******************
-	gen afroind_ano_c=1964
-
-
-	********************
-	*** discapacidad ***
-	********************
-	gen dis_ci=.
-	gen dis_ch=.
-
-*******************************************************
-***           VARIABLES DE INGRESO                  ***
-*******************************************************
-/*Argentina no tiene vars de ingreso pero se incluyen las 
-variables de ingreso por hogar porque no están en el do Base*/	
-
-    ***********
-	**ylm_ch*
-	***********
-   
-   by idh_ch, sort: egen ylm_ch=sum(ylm_ci) if miembros_ci==1, missing
-   
-    ***********
-	**ynlm_ch*
-	***********
-   by idh_ch, sort: egen ynlm_ch=sum(ynlm_ci) if miembros_ci==1, missing
-
-*******************************************************
-***           VARIABLES DE EDUCACIÓN               ***
-*******************************************************   
 	*********
 	*aedu_ci* // 
 	*********
@@ -140,14 +73,14 @@ variables de ingreso por hogar porque no están en el do Base*/
 	**********
 	*edupre_ci* // preescolar
 	**********
-	gen edupre_ci=(educgt==110) // pre-school
-	replace edupre_ci=. if educgt==0 | educgt==999 // NIU & missing
+	gen edupre_ci=(educcr==110) // pre-school
+	replace edupre_ci=. if educcr==0 | educcr==999 // NIU & missing
 	
 	**********
 	*edupi_ci* // no completó la educación primaria
 	**********
 	gen edupi_ci=(aedu_ci>0 & aedu_ci<6) //
-	replace edupi_ci=. if educgt==0 | educgt==999 // NIU & missing
+	replace edupi_ci=. if educcr==0 | educcr==999 // NIU & missing
 	replace edupi_ci = 1 if yrschool == 91 // some primary
 
 	********** 
@@ -166,13 +99,13 @@ variables de ingreso por hogar porque no están en el do Base*/
 	**********
 	*edusc_ci* // completó la educación secundaria
 	**********
-	gen edusc_ci=(aedu_ci==12) // 7 a 11 anos de educación
+	gen edusc_ci=(aedu_ci==12) // 12 anos de educación
 	replace edusc_ci=. if edattain==0 |edattain==9 // NIU & missing
 	
 	**********
 	*eduui_ci* // no completó la educación universitaria o terciaria
 	**********
-	gen eduui_ci=(aedu_ci>=14 & aedu_ci<=16 & edattain != 4) // 14 a 16 anos de educación y no completo universidad
+	gen eduui_ci=(aedu_ci>=14 & aedu_ci<=16 & edattain != 4) // 14 a 16 anos de educación y no univ completa
 	replace eduui_ci=. if edattain==0 | edattain==9 // NIU & missing
 	replace eduui_ci = 1 if yrschool == 94 // some terciary
 
@@ -208,7 +141,7 @@ variables de ingreso por hogar porque no están en el do Base*/
 	***********
 	gen byte edus2c_ci=(aedu_ci==12)
 	replace edus2c_ci=. if edattaind==0 | edattaind==999 // missing a los NIU & missing
-
+	
 	***********
 	*asiste_ci*
 	***********
@@ -221,14 +154,78 @@ variables de ingreso por hogar porque no están en el do Base*/
 	gen literacy=. 
 	replace literacy=1 if lit==2 // literate
 	replace literacy=0 if lit==1 // illiterate
+
+	*******************************************************
+	***           VARIABLES DE DIVERSIDAD               ***
+	*******************************************************				
+	* Cesar Lins & Nathalia Maya - Septiembre 2021	
+
+		***************
+		***afroind_ci***
+		***************
+	**Pregunta: 
+
+	gen afroind_ci=. 
+	replace afroind_ci=1  if race == 30
+	replace afroind_ci=2 if race == 20
+	replace afroind_ci=3 if race == 10 | race == 40 
+	replace afroind_ci=. if race == 99
+
+
+		***************
+		***afroind_ch***
+		***************
+	gen afroind_jefe= afroind_ci if relate==1
+	egen afroind_ch  = min(afroind_jefe), by(idh_ch) 
+
+	drop afroind_jefe 
+
+		*******************
+		***afroind_ano_c***
+		*******************
+	gen afroind_ano_c=2000
+
+
+		********************
+		*** discapacidad ***
+		********************
+	gen dis_ci=.
+	gen dis_ch=.
 	
+*******************************************************
+***           VARIABLES DE INGRESO                  ***
+*******************************************************
+	
+    ***********
+	**ylm_ci**
+	***********
+	
+	*gen ylm_ci=.
+	
+    ***********
+	**ynlm_ci**
+	***********
+ 
+	*gen ynlm_ci=.
+
+    ***********
+	**ylm_ch**
+	***********
+   
+   gen ylm_ch=.
+   
+    ***********
+	**ynlm_ch**
+	***********
+   gen ynlm_ch=.
+
+
 *****************************
 ** Include all labels of   **
 **  harmonized variables   **
 *****************************
 include "../Base/labels.do"
 
-order region_BID_c pais_c estrato_ci zona_c relacion_ci civil_ci idh_ch factor_ch idp_ci factor_ci edad_ci sexo_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch miembros_ci condocup_ci emp_ci desemp_ci pea_ci rama_ci spublico_ci migrante_ci migantiguo5_ci aguared_ch luz_ch bano_ch des1_ch piso_ch pared_ch techo_ch dorm_ch cuartos_ch cocina_ch refrig_ch auto_ch internet_ch cel_ch viviprop_ch viviprop_ch1 region_c categopri_ci discapacidad_ci ceguera_ci sordera_ci mudez_ci dismental_ci afroind_ci afroind_ch afroind_ano_c dis_ci dis_ch aedu_ci
 
 compress
 

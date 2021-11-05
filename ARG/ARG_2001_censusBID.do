@@ -73,106 +73,6 @@ include "../Base/base.do"
 
     label value region_c region_c
 	
-	**********************************************
-	***      VARIABLES DEL MERCADO LABORAL     ***
-	**********************************************	
-
-     *******************
-     ****condocup_ci****
-     *******************
-	 *2010 no tiene variable empstat
-	 
-    gen condocup_ci=.
-	cap confirm variable empstat
-	if (_rc==0){
-    replace condocup_ci=1 if empstat==1
-    replace condocup_ci=2 if empstat==2
-    replace condocup_ci=3 if empstat==3
-    replace condocup_ci=. if empstat==9 /*unkown/missing as missing*/ 
-    replace condocup_ci=. if empstat==0 /*NIU as missing*/
-	}
-	
-      ************
-      ***emp_ci***
-      ************
-    gen emp_ci=.
-	cap confirm variable empstat
-	if (_rc==0){
-		replace emp_ci=0 if empstat==2
-		replace emp_ci=0 if empstat==3
-		replace emp_ci=1 if empstat==1
-		replace emp_ci=. if empstat==0 /*NIU as missing*/
-		replace emp_ci=. if empstat==9 /*unkown/missing as missing*/
-	}
-	
-	
-      ****************
-      ***desemp_ci***
-      ****************	
-	gen desemp_ci=.
-	cap confirm variable condocup_ci
-	if (_rc==0){
-		replace desemp_ci=1 if condocup_ci==2 /*1 desempleados*/
-		replace desemp_ci=0 if condocup_ci==3 | condocup_ci==1 /*0 cuando están inactivos o empleados*/
-	}
-	
-      *************
-      ***pea_ci***
-      *************
-    gen pea_ci=.
-	cap confirm variable condocup_ci
-	if (_rc==0){
-		replace pea_ci=1 if condocup_ci==1
-		replace pea_ci=1 if condocup_ci==2
-		replace pea_ci=0 if condocup_ci==3
-	}
-	
-     *************************
-     ****rama de actividad****
-     *************************
-	 *2010 no tiene variable indgen
-    gen rama_ci = .
-    replace rama_ci = 1 if indgen==10
-    replace rama_ci = 2 if indgen==20  
-    replace rama_ci = 3 if indgen==30   
-    replace rama_ci = 4 if indgen==40    
-    replace rama_ci = 5 if indgen==50    
-    replace rama_ci = 6 if indgen==60    
-    replace rama_ci = 7 if indgen==70    
-    replace rama_ci = 8 if indgen==80    
-    replace rama_ci = 9 if indgen==90
-    replace rama_ci = 10 if indgen==100  
-    replace rama_ci = 11 if indgen==111  
-    replace rama_ci = 12 if indgen==112
-    replace rama_ci = 13 if indgen==113 
-    replace rama_ci = 14 if indgen==114 
-    replace rama_ci = 15 if indgen==120 
-	
-	 *********************
-     ****categopri_ci****
-     *********************
-	 *OBSERVACIONES: El censo no distingue entre actividad principal o secundaria, asigno por default principal.	
-    gen categopri_ci=.
-	cap confirm variable classwkd
-	if (_rc==0) {
-    replace categopri_ci=0 if classwkd==400 | classwkd==999
-    replace categopri_ci=1 if classwkd==110
-    replace categopri_ci=2 if classwkd==120
-    replace categopri_ci=3 if classwkd==203 | classwkd==204 | classwkd==216 | classwkd==230 | classwkd == 210 | classwkd == 220
-    replace categopri_ci=4 if classwkd==310 
-	}
-	
-	  *****************
-      ***spublico_ci***
-      *****************
-    gen spublico_ci=.
-	cap confirm variable indgen
-	if (_rc==0){
-		replace spublico_ci=1 if indgen==100
-		replace spublico_ci=0 if emp_ci==1 & indgen!=100
-		replace spublico_ci=. if indgen == 998 | indgen == 999 | indgen == 000
-	}
-	
 *******************************************************
 ***           VARIABLES DE DIVERSIDAD               ***
 *******************************************************
@@ -229,129 +129,111 @@ variables de ingreso por hogar porque no están en el do Base*/
 *que terciario completo implica 3 años de educacion adicional a la secundaria, universitario 5 años adicionales y 
 *postgrado 7. Esto solo se basa en la modas de finalización de estos niveles. ESTO SE DEBE DISCUTIR 
 
-	gen aedu_ci=yrschool
-	replace aedu_ci=. if yrschool>=90 & yrschool<100 // categorias NIU; missing; + categorias nivel educativo pero pero sin años de escolaridad
+		gen aedu_ci=0 if yrschool==0 // none or pre-school
+	replace aedu_ci=1 if yrschool==1
+	replace aedu_ci=2 if yrschool==2
+	replace aedu_ci=3 if yrschool==3
+	replace aedu_ci=4 if yrschool==4
+	replace aedu_ci=5 if yrschool==5
+	replace aedu_ci=6 if yrschool==6
+	replace aedu_ci=7 if yrschool==7
+	replace aedu_ci=8 if yrschool==8
+	replace aedu_ci=9 if yrschool==9
+	replace aedu_ci=10 if yrschool==10
+	replace aedu_ci=11 if yrschool==11
+	replace aedu_ci=12 if yrschool==12
+	replace aedu_ci=13 if yrschool==13
+	replace aedu_ci=14 if yrschool==14
+	replace aedu_ci=15 if yrschool==15
+	replace aedu_ci=16 if yrschool==16
+	replace aedu_ci=17 if yrschool==17
+	replace aedu_ci=18 if yrschool==18 // 18 or more
+	replace aedu_ci=. if yrschool==98 | yrschool==99 // unknown/missing or NIU
 
 	**********
-	*eduno_ci* // no ha completado ningún año de educación // Para esta variable no se puede usar aedu_ci porque aedu_ci=0 es none o pre-school
+	*eduno_ci* // no ha completado ningún año de educación
 	**********
-
 	gen eduno_ci=(aedu_ci==0) // never attended or pre-school
 	replace eduno_ci=. if educar==0 | educar==999 // NIU & missing
+
+	**********
+	*edupre_ci* // preescolar
+	**********
+	gen edupre_ci=(educar==120) // pre-school
+	replace edupre_ci=. if educar==0 | educar==999 // NIU & missing
 	
 	**********
 	*edupi_ci* // no completó la educación primaria
 	**********
-	
 	gen edupi_ci=(educar==130 | educar==210 | educar==220 | educar==230 | educar==240 | educar==250 | educar==280) // primary (zero years completed) + grade 1-5 + primary grade unknown
 	replace edupi_ci=. if educar==0 | educar==999 // NIU & missing
 
 	********** 
 	*edupc_ci* // completó la educación primaria
 	**********
-	
 	gen edupc_ci=(educar==260 | educar==270) // grade 6 + grade 7
 	replace edupc_ci=. if educar==0 | educar==999 // NIU & missing
 
 	**********
 	*edusi_ci* // no completó la educación secundaria
 	**********
-	
 	gen edusi_ci=(aedu_ci>=8 & aedu_ci<=11) // 8 a 11 anos de educación
 	replace edusi_ci=. if educar==0 | educar==999 // NIU & missing
 
 	**********
 	*edusc_ci* // completó la educación secundaria
 	**********
-	
 	gen edusc_ci=(aedu_ci==12 | aedu_ci==13) // 12 y 13 anos de educación
 	replace edusc_ci=. if educar==0 | educar==999 // NIU & missing
 
 	**********
 	*eduui_ci* // no completó la educación universitaria o terciaria
 	**********
-	
 	gen eduui_ci=(aedu_ci>=14 & aedu_ci<=16) // 14 a 16 anos de educación
 	replace eduui_ci=. if educar==0 | educar==999 // NIU & missing
 
 	**********
 	*eduuc_ci* // completó la educación universitaria o terciaria
 	**********
-	
 	gen eduuc_ci=(aedu_ci==17 | aedu_ci==18) // 17 y 18 anos de educación
 	replace eduuc_ci=. if edattaind==0 | edattaind==999 // missing a los NIU & missing
 
 	***********
 	*edus1i_ci* // no completó el primer ciclo de la educación secundaria
 	***********
-
-	gen byte edus1i_ci=(aedu_ci==8)
+	gen byte edus1i_ci=(aedu_ci>6 & aedu_ci<9)
 	replace edus1i_ci=. if edattaind==0 | edattaind==999 // missing a los NIU & missing
 
 	***********
 	*edus1c_ci* // completó el primer ciclo de la educación secundaria
 	***********
-	
 	gen byte edus1c_ci=(aedu_ci==9)
 	replace edus1c_ci=. if edattaind==0 | edattaind==999 // missing a los NIU & missing
 
 	***********
 	*edus2i_ci* // no completó el segundo ciclo de la educación secundaria
 	***********
-
-	gen byte edus2i_ci=.
+	gen byte edus2i_ci=(aedu_ci>9 & aedu_ci<12)
+	replace edus2i_ci=. if edattaind==0 | edattaind==999 // missing a los NIU & missing
 
 	***********
 	*edus2c_ci* // completó el segundo ciclo de la educación secundaria
 	***********
-
-	gen byte edus2c_ci=.
-
+	gen byte edus2c_ci=(aedu_ci==12)
+	replace edus2c_ci=. if edattaind==0 | edattaind==999 
+	
 	***********
 	*asiste_ci*
 	***********
-	
 	gen asiste_ci=(school==1) // 0 includes attended in the past (3) and never attended (4)
 	replace asiste_ci=. if school==0 | school==9 // missing a los NIU & missing
-	
-*Other variables
 
 	************
 	* literacy *
 	************
-
 	gen literacy=. 
 	replace literacy=1 if lit==2 // literate
 	replace literacy=0 if lit==1 // illiterate
-
-*******************************************************
-***           VARIABLES DE MIGRACIÓN              ***
-*******************************************************
-
-      *******************
-      ****migrante_ci****
-      *******************
-	gen migrante_ci =.
-	replace migrante_ci = 1 if nativity == 2
-	replace migrante_ci = 0 if nativity == 1 
-
-      *******************
-      **migantiguo5_ci***
-      *******************
-	gen migantiguo5_ci =.
-	cap confirm migyrs1 
-	if (_rc==0) {
-	gen migantiguo5_ci = (migyrs1 >= 5) & migrante_ci == 1
-	}
-	replace migantiguo5_ci = . if migantiguo5_ci == 0 & nativity != 2
-	
-	**********************
-	*** migrantelac_ci ***
-	**********************
-
-	gen migrantelac_ci = .
-	replace migrantelac_ci= 1 if inlist(bplcountry, 21100, 23010, 22060, 23110, 22040, 23100, 22030, 23060, 23140, 22050, 23050, 23040, 23100, 29999, 23130, 23020, 22020, 21250, 21999, 22010, 22070, 22080, 22999) & migrante_ci == 1
-	replace migrantelac_ci = 0 if migrantelac_ci == . & migrante_ci == 1
 
 	*****************************
 	** Include all labels of   **
