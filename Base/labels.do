@@ -207,7 +207,7 @@ label var aedu_ci "Anios de educacion aprobados"
 
 label var asiste_ci "Personas que actualmente asisten a centros de enseñanza"
 label var eduno_ci "Cero anios de educacion"
-label var edupre_ci "Preescolar"
+label var edupre_ci "Personas con preescolar como maximo nivel educativo alcanzado"
 label var edupi_ci "Primaria incompleta"
 label var edupc_ci "Primaria completa"
 label var edusi_ci "Secundaria incompleta"
