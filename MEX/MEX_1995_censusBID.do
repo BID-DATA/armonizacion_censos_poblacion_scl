@@ -151,15 +151,15 @@ gen dis_ch=.
 	
 	tempvar well
 	gen `well'=incwel
-	replace `well'=. if incwel==99999998 | incwel==99999999
+	replace `well'=. if incwel==999998 | incwel==999999
 	
 	tempvar ret
 	gen `ret'=incret
-	replace `ret'=. if incret==99999998 | incret==99999999
+	replace `ret'=. if incret==999998 | incret==999999
 	
 	tempvar fmab
 	gen `fmab'=incfmab
-	replace `fmab'=. if incfmab==99999998 | incfmab==99999999
+	replace `fmab'=. if incfmab==999998 | incfmab==999999
 	
 	replace ynlm_ci=`well'+`ret'+`fmab'
 

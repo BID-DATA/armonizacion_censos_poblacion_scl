@@ -120,27 +120,30 @@ label var region_c "division politico-administrativa, estados"
 	***************
 	***afroind_ci***
 	***************
-**Pregunta: 
-
-gen afroind_ci=. 
+	gen afroind_ci=. 
+	replace afroind_ci=1  if indig==1 
+	replace afroind_ci=3 if indig==2
 
 
 	***************
 	***afroind_ch***
 	***************
-gen afroind_ch  = .
+	gen afroind_jefe= afroind_ci if relate==1
+	egen afroind_ch  = min(afroind_jefe), by(idh_ch) 
+	
+	drop afroind_jefe 
 
 	*******************
 	***afroind_ano_c***
 	*******************
-gen afroind_ano_c=.
+	gen afroind_ano_c=2000
 
 
-********************
-*** discapacidad ***
-********************
-gen dis_ci=.
-gen dis_ch=.
+	********************
+	*** discapacidad ***
+	********************
+	gen dis_ci=.
+	gen dis_ch=.
 
 ******************************************************
 ***           VARIABLES DE INGRESO                  ***
@@ -151,17 +154,21 @@ gen dis_ch=.
 	
 	tempvar well
 	gen `well'=incwel
-	replace `well'=. if incwel==99999998 | incwel==99999999
+	replace `well'=. if incwel==999998 | incwel==999999
 	
 	tempvar ret
 	gen `ret'=incret
-	replace `ret'=. if incret==99999998 | incret==99999999
+	replace `ret'=. if incret==999998 | incret==999999
 	
 	tempvar fmab
 	gen `fmab'=incfmab
-	replace `fmab'=. if incfmab==99999998 | incfmab==99999999
+	replace `fmab'=. if incfmab==999998 | incfmab==999999
 	
-	replace ynlm_ci=`well'+`ret'+`fmab'
+	tempvar fmic
+	gen `fmic'=incfmic
+	replace `fmic'=. if incfmic==999998 | incfmic==999999
+	
+	replace ynlm_ci=`well'+`ret'+`fmab'+ `fmic'
 
 
     ***********
