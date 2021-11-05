@@ -115,7 +115,7 @@ variables de ingreso por hogar porque no están en el do Base*/
    cap confirm variable inctot
    if (_rc==0) {
    replace ylm_ci = inctot
-   replace ylm_ci =. if inctot==99999999 | inctot==99999998
+   replace ylm_ci =. if inctot==9999999 | inctot==9999998
    }
 
     ***********
@@ -214,7 +214,7 @@ replace eduui_ci=. if aedu_ci==. // NIU
 *eduuc_ci* // completó la educación universitaria o terciaria
 **********
 	
-gen eduuc_ci=(aedu_ci>=15 & aedu_ci<=17) // 15 a 17 anos de educación
+gen eduuc_ci=(aedu_ci>=15) // 15 a 17 anos de educación
 replace eduuc_ci=. if aedu_ci==. // NIU
 
 ***********

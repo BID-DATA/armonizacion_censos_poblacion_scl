@@ -204,7 +204,7 @@ replace eduui_ci=. if aedu_ci==. // NIU
 *eduuc_ci* // completó la educación universitaria o terciaria
 **********
 	
-gen eduuc_ci=(aedu_ci>=15 & aedu_ci<=17) // 15 a 17 anos de educación
+gen eduuc_ci=(aedu_ci>=15) // 15 a 17 anos de educación
 replace eduuc_ci=. if aedu_ci==. // NIU
 
 ***********
