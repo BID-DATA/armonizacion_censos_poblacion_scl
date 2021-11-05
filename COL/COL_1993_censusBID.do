@@ -15,7 +15,7 @@ set more off
 /***************************************************************************
                  BASES DE DATOS DE CENSOS POBLACIONALES
 País: Colombia
-Año: 1964
+Año: 1993
 Autores: 
 Última versión: 
 
@@ -24,13 +24,12 @@ Autores:
 ****************************************************************************
 
 local PAIS COL
-local ANO "1964"
+local ANO "1993"
 
 **************************************
 ** Setup code, load database,       **
 ** and include all common variables **
 **************************************
-
 include "../Base/base.do"
 
 *****************************************************
@@ -42,38 +41,39 @@ include "../Base/base.do"
 ****************
 
 gen region_c =.
-replace region_c=1 if geo1_co1964 ==5 /*Antioquia*/ 
-replace region_c=2 if geo1_co1964 ==8 /*Atlántico*/ 
-replace region_c=3 if geo1_co1964 ==11 /*Bogotá*/ 
-replace region_c=4 if geo1_co1964 ==13 /*Bolívar*/ 
-replace region_c=5 if geo1_co1964 ==15 /*Boyacá*/ 
-replace region_c=6 if geo1_co1964 ==17 /*Caldas*/ 
-replace region_c=7 if geo1_co1964 ==18 /*Caquetá*/ 
-replace region_c=8 if geo1_co1964 ==19 /*Cauca*/ 
-replace region_c=9 if geo1_co1964 ==20 /*Cesar*/ 
-replace region_c=10 if geo1_co1964 ==23 /*Córdoba*/ 
-replace region_c=11 if geo1_co1964 ==25 /*Cundinamarca*/ 
-replace region_c=12 if geo1_co1964 ==27 /*Chocó*/ 
-replace region_c=13 if geo1_co1964 ==41 /*Huila*/ 
-replace region_c=14 if geo1_co1964 ==44 /*La Guajira*/
-replace region_c=15 if geo1_co1964 ==47 /*Magdalena*/ 
-replace region_c=16 if geo1_co1964 ==50 /*Meta*/ 
-replace region_c=17 if geo1_co1964 ==52 /*Nariño*/ 
-replace region_c=18 if geo1_co1964 ==54/*Norte de Santander*/ 
-replace region_c=19 if geo1_co1964 ==63 /*Quindío*/ 
-replace region_c=20 if geo1_co1964 ==66 /*Risaralda*/ 
-replace region_c=21 if geo1_co1964 ==68 /*Santander*/ 
-replace region_c=22 if geo1_co1964 ==70 /*Sucre*/ 
-replace region_c=23 if geo1_co1964 ==73 /*Tolima*/ 
-replace region_c=24 if geo1_co1964 ==76 /*Valle*/ 
-replace region_c=25 if geo1_co1964 ==81 /*Arauca*/ 
-replace region_c=26 if geo1_co1964 ==85 /*Casanare*/ 
-replace region_c=27 if geo1_co1964 ==86 /*Putumayo*/ 
-replace region_c=28 if geo1_co1964 ==88 /*San Andrés*/ 
-replace region_c=29 if geo1_co1964 ==95 /*Amazonas, Guaviare, Vaupes, Vichada, Guania*/ 
+replace region_c=1 if geo1_co1993 ==5 /*Antioquia*/ 
+replace region_c=2 if geo1_co1993 ==8 /*Atlántico*/ 
+replace region_c=3 if geo1_co1993 ==11 /*Bogotá*/ 
+replace region_c=4 if geo1_co1993 ==13 /*Bolívar*/ 
+replace region_c=5 if geo1_co1993 ==15 /*Boyacá*/ 
+replace region_c=6 if geo1_co1993 ==17 /*Caldas*/ 
+replace region_c=7 if geo1_co1993 ==18 /*Caquetá*/ 
+replace region_c=8 if geo1_co1993 ==19 /*Cauca*/ 
+replace region_c=9 if geo1_co1993 ==20 /*Cesar*/ 
+replace region_c=10 if geo1_co1993 ==23 /*Córdoba*/ 
+replace region_c=11 if geo1_co1993 ==25 /*Cundinamarca*/ 
+replace region_c=12 if geo1_co1993 ==27 /*Chocó*/ 
+replace region_c=13 if geo1_co1993 ==41 /*Huila*/ 
+replace region_c=14 if geo1_co1993 ==44 /*La Guajira*/
+replace region_c=15 if geo1_co1993 ==47 /*Magdalena*/ 
+replace region_c=16 if geo1_co1993 ==50 /*Meta*/ 
+replace region_c=17 if geo1_co1993 ==52 /*Nariño*/ 
+replace region_c=18 if geo1_co1993 ==54/*Norte de Santander*/ 
+replace region_c=19 if geo1_co1993 ==63 /*Quindío*/ 
+replace region_c=20 if geo1_co1993 ==66 /*Risaralda*/ 
+replace region_c=21 if geo1_co1993 ==68 /*Santander*/ 
+replace region_c=22 if geo1_co1993 ==70 /*Sucre*/ 
+replace region_c=23 if geo1_co1993 ==73 /*Tolima*/ 
+replace region_c=24 if geo1_co1993 ==76 /*Valle*/ 
+replace region_c=25 if geo1_co1993 ==81 /*Arauca*/ 
+replace region_c=26 if geo1_co1993 ==85 /*Casanare*/ 
+replace region_c=27 if geo1_co1993 ==86 /*Putumayo*/ 
+replace region_c=28 if geo1_co1993 ==88 /*San Andrés*/ 
+replace region_c=29 if geo1_co1993 ==95 /*Amazonas, Guaviare, Vaupes, Vichada, Guania*/ 
 
 label define region_c 1"Antioquia" 2"Atlántico" 3"Bogotá" 4"Bolívar" 5"Boyacá" 6"Caldas" 7"Caquetá" 8"Cauca" 9"Cesár" 10"Córdoba" 11"Cundinamarca" 12"Chocó" 13"Huila" 14"La Guajira" 15"Magdalena" 16"Meta" 17"Nariño" 18"Norte de Santander" 19"Quindío" 20"Risaralda" 21"Santander" 22"Sucre" 23"Tolima" 24"Valle" 25"Arauca" 26"Casanare" 27"Putumayo" 28"San Andrés" 29"Amazonas, Guaviare, Vaupes, Vichada, Guania"	
 label value region_c region_c
+
 
 *******************************************************
 ***           VARIABLES DE DIVERSIDAD               ***
@@ -106,7 +106,7 @@ label value region_c region_c
 *******************************************************
 ***           VARIABLES DE INGRESO                  ***
 *******************************************************
-/*Colombia no tiene vars de ingreso, pero se incluyen las 
+/*COL no tiene vars de ingreso, pero se incluyen las 
 variables de ingreso por hogar porque no están en el do Base*/	
 
     ***********
@@ -120,9 +120,11 @@ variables de ingreso por hogar porque no están en el do Base*/
 	***********
    by idh_ch, sort: egen ynlm_ch=sum(ynlm_ci) if miembros_ci==1, missing
 
+
 ****************************
 ***VARIABLES DE EDUCACION***
 ****************************
+
 *********
 *aedu_ci* // años de educacion aprobados
 *********
@@ -204,7 +206,7 @@ replace eduui_ci=. if aedu_ci==. // NIU
 *eduuc_ci* // completó la educación universitaria o terciaria
 **********
 	
-gen eduuc_ci=(aedu_ci>=15) // 15 a 17 anos de educación
+gen eduuc_ci=(aedu_ci>=15) // más de 15 de educación
 replace eduuc_ci=. if aedu_ci==. // NIU
 
 ***********
@@ -238,13 +240,10 @@ replace edus2c_ci=. if aedu_ci==. // NIU
 ***********
 *asiste_ci* // la variable school no está disponible para 1964 (si para 1973, 1985 y 1993). Dejo el código armado para el resto de los años
 ***********
-	
-gen asiste_ci=.
-	
-/*
+
 gen asiste_ci=(school==1) // 0 attended in the past (3) and never attended (4)
 replace asiste_ci=. if school==0 | school==9 // missing a los NIU & missing
-*/
+
 	
 *Other variables
 
