@@ -72,6 +72,7 @@ include "../Base/base.do"
 	  label define region_c 1"Ciudad de Buenos Aires" 2"Provincia de Buenos Aires" 3"Catamarca" 4"Córdoba" 5"Corrientes" 6"Chaco" 7"Chubut" 8"Entre Ríos" 9"Formosa" 10"Jujuy" 11"La Pampa" 12"La Rioja" 13"Mendoza" 14"Misiones" 15"Neuquén" 16"Río Negro" 17"Salta" 18"San Juan" 19"San Luis" 20"Santa Cruz" 21"Santa Fe" 22"Santiago del Estero" 23"Tucumán" 24"Tierra del Fuego" 99""
 
     label value region_c region_c
+	label var region_c "division politico-administrativa, provincias"
 	
 *******************************************************
 ***           VARIABLES DE DIVERSIDAD               ***
@@ -82,12 +83,11 @@ include "../Base/base.do"
 	***afroind_ci***
 	***************
 	gen afroind_ci=. 
-	gen afroind_ch  =.
 
 	***************
 	***afroind_ch***
 	***************
-	gen afroind_jefe=.
+    gen afroind_ch=.
 
 	*******************
 	***afroind_ano_c***
@@ -117,99 +117,98 @@ variables de ingreso por hogar porque no están en el do Base*/
 	***********
    by idh_ch, sort: egen ynlm_ch=sum(ynlm_ci) if miembros_ci==1, missing
 	  
-
-
 *******************************************************
 ***           VARIABLES DE EDUCACIÓN               ***
 *******************************************************
+
+*NOTA: Como terciario, universitario y posgrado tienen una duración variable se supone 
+*que terciario completo implica 3 años de educacion adicional a la secundaria, universitario 5 años adicionales y 
+*postgrado 7. Esto solo se basa en la modas de finalización de estos niveles. ESTO SE DEBE DISCUTIR 
 	*********
 	*aedu_ci* // años de educacion aprobados
 	*********
-*NOTA: Como terciario, universitario y posgrado tienen una duración variable se supone 
-*que terciario completo implica 3 años de educacion adicional a la secundaria, universitario 5 años adicionales y 
-*postgrado 7. Esto solo se basa en la modas de finalización de estos niveles. ESTO SE DEBE DISCUTIR 
 	gen aedu_ci=yrschool
-	replace aedu_ci=. if yrschool>=90 & yrschool<100 // categorias NIU; missing; + categorias nivel educativo pero pero sin años de escolaridad
+	replace aedu_ci=. if aedu_ci==98
+	replace aedu_ci=. if aedu_ci==99
+	replace aedu_ci=. if yrschool==90 // unknown/missing or NIU
 
 	**********
-	*eduno_ci* // no ha completado ningún año de educación // Para esta variable no se puede usar aedu_ci porque aedu_ci=0 es none o pre-school
+	*eduno_ci* // no ha completado ningún año de educación
 	**********
 	gen eduno_ci=(aedu_ci==0) // never attended or pre-school
-	replace eduno_ci=. if educar==0 | educar==999 // NIU & missing
-	
+	replace eduno_ci=. if aedu_ci==. // NIU & missing
+
 	**********
 	*edupre_ci* // preescolar
 	**********
 	gen edupre_ci=(educar==120) // pre-school
-	replace edupre_ci=. if educar==0 | educar==999 // NIU & missing
+	replace edupre_ci=. if aedu_ci==. // NIU & missing
 	
 	**********
 	*edupi_ci* // no completó la educación primaria
 	**********
-	gen edupi_ci=(educar==130 | educar==210 | educar==220 | educar==230 | educar==240 | educar==250 | educar==280) // primary (zero years completed) + grade 1-5 + primary grade unknown
-	replace edupi_ci=. if educar==0 | educar==999 // NIU & missing
+	gen edupi_ci=(aedu_ci>0 & aedu_ci<6) // primary (zero years completed) + grade 1-5 + primary grade unknown
+	replace edupi_ci=. if aedu_ci==. // NIU & missing
 
 	********** 
 	*edupc_ci* // completó la educación primaria
 	**********
-	gen edupc_ci=(educar==260 | educar==270) // grade 6 + grade 7
-	replace edupc_ci=. if educar==0 | educar==999 // NIU & missing
+	gen edupc_ci=(aedu_ci ==6) // grade 6 
+	replace edupc_ci=. if aedu_ci==. // NIU & missing
 
 	**********
 	*edusi_ci* // no completó la educación secundaria
 	**********
-	gen edusi_ci=(aedu_ci>=8 & aedu_ci<=11) // 8 a 11 anos de educación
-	replace edusi_ci=. if educar==0 | educar==999 // NIU & missing
+	gen edusi_ci=(aedu_ci>=7 & aedu_ci<=11) // 7 a 11
+	replace edusi_ci=. if aedu_ci==. // NIU & missing
 
 	**********
 	*edusc_ci* // completó la educación secundaria
 	**********
-	gen edusc_ci=(aedu_ci==12 | aedu_ci==13) // 12 y 13 anos de educación
-	replace edusc_ci=. if educar==0 | educar==999 // NIU & missing
+	gen edusc_ci=(aedu_ci==12) // 12 
+	replace edusc_ci=.  if aedu_ci==. // NIU & missing
 
 	**********
 	*eduui_ci* // no completó la educación universitaria o terciaria
 	**********
-	gen eduui_ci=(aedu_ci>=14 & aedu_ci<=16) // 14 a 16 anos de educación
-	replace eduui_ci=. if educar==0 | educar==999 // NIU & missing
-	
+	gen eduui_ci=(aedu_ci>=13 & aedu_ci<=16) // 13 a 16 anos de educación
+	replace eduui_ci=.  if aedu_ci==. // NIU & missing
+
 	**********
 	*eduuc_ci* // completó la educación universitaria o terciaria
 	**********
-	gen eduuc_ci=(aedu_ci==17 | aedu_ci==18) // 17 y 18 anos de educación
-	replace eduuc_ci=. if edattaind==0 | edattaind==999 // missing a los NIU & missing
+	gen eduuc_ci=(aedu_ci>=17) //más de 17
+	replace eduuc_ci=. if aedu_ci==. // missing a los NIU & missing
 
 	***********
 	*edus1i_ci* // no completó el primer ciclo de la educación secundaria
 	***********
 	gen byte edus1i_ci=(aedu_ci>6 & aedu_ci<9)
-	replace edus1i_ci=. if edattaind==0 | edattaind==999 // missing a los NIU & missing
+	replace edus1i_ci=. if aedu_ci==. // missing a los NIU & missing
 
 	***********
 	*edus1c_ci* // completó el primer ciclo de la educación secundaria
 	***********
 	gen byte edus1c_ci=(aedu_ci==9)
-	replace edus1c_ci=. if edattaind==0 | edattaind==999 // missing a los NIU & missing
+	replace edus1c_ci=. if aedu_ci==. // missing a los NIU & missing
 
-	**********
+	***********
 	*edus2i_ci* // no completó el segundo ciclo de la educación secundaria
 	***********
 	gen byte edus2i_ci=(aedu_ci>9 & aedu_ci<12)
-	replace edus2i_ci=. if edattaind==0 | edattaind==999 // missing a los NIU & missing
+	replace edus2i_ci=. if aedu_ci==. // missing a los NIU & missing
 
 	***********
 	*edus2c_ci* // completó el segundo ciclo de la educación secundaria
 	***********
 	gen byte edus2c_ci=(aedu_ci==12)
-	replace edus2c_ci=. if edattaind==0 | edattaind==999 
+	replace edus2c_ci=. if aedu_ci==. 
 	
 	***********
 	*asiste_ci*
 	***********
 	gen asiste_ci=(school==1) // 0 includes attended in the past (3) and never attended (4)
 	replace asiste_ci=. if school==0 | school==9 // missing a los NIU & missing
-	
-*Other variables
 
 	************
 	* literacy *
