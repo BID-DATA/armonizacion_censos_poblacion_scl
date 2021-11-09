@@ -130,14 +130,14 @@ include "../Base/base.do"
 	**********
 	*edusi_ci* // no completó la educación secundaria
 	**********
-	gen edusi_ci=(aedu_ci>=7 & aedu_ci<=11) // 7 a 11 anos de educación
+	gen edusi_ci=(aedu_ci>=7 & aedu_ci<12) // 7 a 11 anos de educación
 	replace edusi_ci=. if edattain==0 |edattain==9 // NIU & missing
 	replace edusi_ci = 1 if yrschool == 92 | yrschool ==93 //some technical after primary or some secondary
 
 	**********
 	*edusc_ci* // completó la educación secundaria
 	**********
-	gen edusc_ci=(aedu_ci==12) // 7 a 11 anos de educación
+	gen edusc_ci=(aedu_ci==12) // 12 anos de educación
 	replace edusc_ci=. if edattain==0 |edattain==9 // NIU & missing
 	
 	**********
@@ -159,13 +159,13 @@ include "../Base/base.do"
 	***********
 	*edus1i_ci* // no completó el primer ciclo de la educación secundaria
 	***********
-	gen byte edus1i_ci=(aedu_ci>6 & aedu_ci<9)
+	gen byte edus1i_ci=(aedu_ci>6 & aedu_ci<8)
 	replace edus1i_ci=. if edattaind==0 | edattaind==999 // missing a los NIU & missing
 
 	***********
 	*edus1c_ci* // completó el primer ciclo de la educación secundaria
 	***********
-	gen byte edus1c_ci=(aedu_ci==9)
+	gen byte edus1c_ci=(aedu_ci==8)
 	replace edus1c_ci=. if edattaind==0 | edattaind==999 // missing a los NIU & missing
 
 	***********
