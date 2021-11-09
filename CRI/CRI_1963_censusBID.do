@@ -93,20 +93,20 @@ include "../Base/base.do"
 	**********
 	*edusi_ci* // no completó la educación secundaria
 	**********
-	gen edusi_ci=(aedu_ci>=7 & aedu_ci<=11) // 7 a 11 anos de educación
+	gen edusi_ci=(aedu_ci>=7 & aedu_ci<=10) // 7 a 10 anos de educación
 	replace edusi_ci=. if edattain==0 |edattain==9 // NIU & missing
 	replace edusi_ci = 1 if yrschool == 92 | yrschool ==93 //some technical after primary or some secondary
 
 	**********
 	*edusc_ci* // completó la educación secundaria
 	**********
-	gen edusc_ci=(aedu_ci==12) // 12 anos de educación
+	gen edusc_ci=(aedu_ci==11) // 11 anos de educación
 	replace edusc_ci=. if edattain==0 |edattain==9 // NIU & missing
 	
 	**********
 	*eduui_ci* // no completó la educación universitaria o terciaria
 	**********
-	gen eduui_ci=(aedu_ci>=14 & aedu_ci<=16 & edattain != 4) // 14 a 16 anos de educación y no univ completa
+	gen eduui_ci=(aedu_ci>=12 & aedu_ci<=15 & edattain != 4) // 14 a 16 anos de educación y no univ completa
 	replace eduui_ci=. if edattain==0 | edattain==9 // NIU & missing
 	replace eduui_ci = 1 if yrschool == 94 // some terciary
 
@@ -114,7 +114,7 @@ include "../Base/base.do"
 	*eduuc_ci* // completó la educación universitaria o terciaria
 	**********
 	gen eduuc_ci=.
-	replace eduuc_ci=1 if edattain == 4
+	replace eduuc_ci=1 if edattain == 4 | aedu_ci>=15
 	replace eduuc_ci=0 if edattain == 1 | edattain == 2 | edattain ==3  
 	// 12 y 13 anos de educación
 	replace eduuc_ci=. if edattain==0 | edattain==9 // NIU & missing
@@ -134,13 +134,13 @@ include "../Base/base.do"
 	***********
 	*edus2i_ci* // no completó el segundo ciclo de la educación secundaria
 	***********
-	gen byte edus2i_ci=(aedu_ci>9 & aedu_ci<12)
+	gen byte edus2i_ci=(aedu_ci>9 & aedu_ci<11)
 	replace edus2i_ci=. if edattaind==0 | edattaind==999 // missing a los NIU & missing
 
 	***********
 	*edus2c_ci* // completó el segundo ciclo de la educación secundaria
 	***********
-	gen byte edus2c_ci=(aedu_ci==12)
+	gen byte edus2c_ci=(aedu_ci==11)
 	replace edus2c_ci=. if edattaind==0 | edattaind==999 // missing a los NIU & missing
 	
 	***********
