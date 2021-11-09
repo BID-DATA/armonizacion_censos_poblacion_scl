@@ -586,6 +586,11 @@ use "`base_in'", clear
 	replace migantiguo5_ci = 1 if inlist(migrate5, 10, 11, 12, 20) & migrante_ci == 1
 	replace migantiguo5_ci = 0 if (migrate5 == 30 & migrante_ci == 1)
 	}
+	cap confirm variable migyrs1
+	if(_rc==0){
+	replace migantiguo5_ci = 1 if migyrs1 >= 5 & migrante_ci == 1
+	replace migantiguo5_ci = 0 if migyrs1 < 5 & migrante_ci == 1 
+	}
 	
 	**********************
 	*** migrantelac_ci ***
