@@ -85,7 +85,7 @@ drop afroind_jefe
 	*******************
 	***afroind_ano_c***
 	*******************
-gen afroind_ano_c=.
+gen afroind_ano_c=2001
 
 ********************
 *** discapacid
@@ -122,7 +122,7 @@ variables de ingreso por hogar porque no están en el do Base*/
 	gen aedu_ci=yrschool
 	replace aedu_ci=. if aedu_ci==98
 	replace aedu_ci=. if aedu_ci==99
-	replace aedu_ci=. if yrschool==90 // unknown/missing or NIU
+	replace aedu_ci=. if yrschool>=90 & yrschool<100 // unknown/missing or NIU
 
 	**********
 	*eduno_ci* // no ha completado ningún año de educación
@@ -133,7 +133,7 @@ variables de ingreso por hogar porque no están en el do Base*/
 	**********
 	*edupre_ci* // preescolar
 	**********
-	gen edupre_ci=(educec==120) // pre-school
+	gen edupre_ci=(educec==1010) // pre-school
 	replace edupre_ci=. if aedu_ci==. // NIU & missing
 	
 	**********
@@ -141,6 +141,7 @@ variables de ingreso por hogar porque no están en el do Base*/
 	**********
 	gen edupi_ci=(aedu_ci>0 & aedu_ci<6) // primary (zero years completed) + grade 1-5 + primary grade unknown
 	replace edupi_ci=. if aedu_ci==. // NIU & missing
+	replace edupi_ci=1 if yrschool==91
 
 	********** 
 	*edupc_ci* // completó la educación primaria
@@ -153,6 +154,7 @@ variables de ingreso por hogar porque no están en el do Base*/
 	**********
 	gen edusi_ci=(aedu_ci>=7 & aedu_ci<=11) // 7 a 11
 	replace edusi_ci=. if aedu_ci==. // NIU & missing
+	replace edusi_ci=1 if yrschool==93
 
 	**********
 	*edusc_ci* // completó la educación secundaria
@@ -165,11 +167,12 @@ variables de ingreso por hogar porque no están en el do Base*/
 	**********
 	gen eduui_ci=(aedu_ci>=13 & aedu_ci<=16) // 13 a 16 anos de educación
 	replace eduui_ci=.  if aedu_ci==. // NIU & missing
+	replace  eduui_ci=1 if yrschool==94
 
 	**********
 	*eduuc_ci* // completó la educación universitaria o terciaria
 	**********
-	gen eduuc_ci=(aedu_ci>=17) //más de 17
+	gen eduuc_ci=(aedu_ci>=16) //más de 16
 	replace eduuc_ci=. if aedu_ci==. // missing a los NIU & missing
 
 	***********
