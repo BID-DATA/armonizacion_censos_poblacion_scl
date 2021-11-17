@@ -14,24 +14,24 @@ set more off
 
 /***************************************************************************
                  BASES DE DATOS DE CENSOS POBLACIONALES
-País: Argentina
-Año: 1970
-Autores: 
-Última versión: 
+País: Ecuador
+Año: 1982
+Autores: Cesar Lins
+Última versión: Noviembre, 2021
 
 							SCL/LMK - IADB
 ****************************************************************************/
-****************************************************************************
 
-local PAIS ARG
-local ANO "2001"
+
+local PAIS ECU
+local ANO "1982"
 
 **************************************
 ** Setup code, load database,       **
 ** and include all common variables **
 **************************************
-
 include "../Base/base.do"
+
 
 *****************************************************
 ******* Variables specific for this census **********
@@ -42,70 +42,63 @@ include "../Base/base.do"
  ****************
 
    gen region_c=.   
-   replace region_c=1 if geo1_ar==32002			    /*Ciudad de Buenos Aires*/
-   replace region_c=2 if geo1_ar==32006			    /*Provincia de Buenos Aires*/
-   replace region_c=3 if geo1_ar==32010			    /*Catamarca*/
-   replace region_c=4 if geo1_ar==32014			    /*Córdoba*/
-   replace region_c=5 if geo1_ar==32018		     	/*Corrientes*/
-   replace region_c=6 if geo1_ar==32022			    /*Chaco*/
-   replace region_c=7 if geo1_ar==32026			    /*Chubut*/
-   replace region_c=8 if geo1_ar==32030			    /*Entre Rí­os*/
-   replace region_c=9 if geo1_ar==32034			    /*Formosa*/
-   replace region_c=10 if geo1_ar==32038			/*Jujuy*/
-   replace region_c=11 if geo1_ar==32042			/*La Pampa*/
-   replace region_c=12 if geo1_ar==32046			/*La Rioja*/
-   replace region_c=13 if geo1_ar==32050			/*Mendoza*/
-   replace region_c=14 if geo1_ar==32054			/*Misiones*/
-   replace region_c=15 if geo1_ar==32058			/*Neuquén*/
-   replace region_c=16 if geo1_ar==32062			/*Rio Negro*/
-   replace region_c=17 if geo1_ar==32066			/*Salta*/
-   replace region_c=18 if geo1_ar==32070			/*San Juan*/
-   replace region_c=19 if geo1_ar==32074			/*San Luis*/
-   replace region_c=20 if geo1_ar==32078			/*Santa Cruz*/
-   replace region_c=21 if geo1_ar==32082			/*Santa Fe*/
-   replace region_c=22 if geo1_ar==32086			/*Santiago del Estero*/
-   replace region_c=23 if geo1_ar==32090			/*Tucumán*/
-   replace region_c=24 if geo1_ar==32094			/*Tierra del Fuego*/
-   replace region_c=99 if geo1_ar==32099			/*Unknown*/
+   replace region_c=1 if geo1_ec==218001			    /*Azuay*/
+   replace region_c=2 if geo1_ec==218002			    /*Bolivar*/
+   replace region_c=3 if geo1_ec==218004			    /*Carchi*/
+   replace region_c=4 if geo1_ec==218005			    /*Cotopaxi*/
+   replace region_c=5 if geo1_ec==218006		     	/*Chimborazo*/
+   replace region_c=6 if geo1_ec==218007			    /*El Oro*/
+   replace region_c=7 if geo1_ec==218009			    /*Cañar, Esmeraldas, Guayas, Manabi, Manga del Cura*/
+   replace region_c=8 if geo1_ec==218010			    /*Imbabura, Las Golondrinas*/
+   replace region_c=9 if geo1_ec==218011			    /*Loja*/
+   replace region_c=10 if geo1_ec==218014			/*Morona Santiago*/
+   replace region_c=11 if geo1_ec==218016			/*Pastaza*/
+   replace region_c=12 if geo1_ec==218018			/*Tungurahua*/
+   replace region_c=13 if geo1_ec==218019			/*Zamora Chinchipe*/
+   replace region_c=14 if geo1_ec==218021			/*Napo, Orellana, Sucumbios*/
+   replace region_c=99 if geo1_ec==218099			/*Unknown*/
 
-
-	  label define region_c 1"Ciudad de Buenos Aires" 2"Provincia de Buenos Aires" 3"Catamarca" 4"Córdoba" 5"Corrientes" 6"Chaco" 7"Chubut" 8"Entre Ríos" 9"Formosa" 10"Jujuy" 11"La Pampa" 12"La Rioja" 13"Mendoza" 14"Misiones" 15"Neuquén" 16"Río Negro" 17"Salta" 18"San Juan" 19"San Luis" 20"Santa Cruz" 21"Santa Fe" 22"Santiago del Estero" 23"Tucumán" 24"Tierra del Fuego" 99""
-
+	label define region_c 1"Azuay" 2"Bolivar" 3"Carchi" 4"Cotopaxi" 5"Chimborazo" 6"El Oro" 7"Cañar, Esmeraldas, Guayas, Manabi, Manga del Cura" 8"Imbabura, Las Golondrinas" 9"Loja" 10"Morona Santiago" 11"Pastaza" 12"Tungurahua" 13"Zamora Chinchipe" 14"Napo, Orellana, Sucumbios" 99 ""
     label value region_c region_c
 	label var region_c "division politico-administrativa, provincias"
 	
 *******************************************************
 ***           VARIABLES DE DIVERSIDAD               ***
-*******************************************************
+*******************************************************				
 * Cesar Lins & Nathalia Maya - Septiembre 2021	
 
 	***************
 	***afroind_ci***
 	***************
+**Pregunta: 
 
-	gen afroind_ci=. 
+gen afroind_ci=. 
 
 	***************
 	***afroind_ch***
 	***************
-	gen afroind_ch=.
+gen afroind_jefe=.
+gen afroind_ch  =.
+
+drop afroind_jefe 
 
 	*******************
 	***afroind_ano_c***
 	*******************
-	gen afroind_ano_c=.
+gen afroind_ano_c=2001
 
-	********************
-	*** discapacidad ***
-	********************
-	gen dis_ci=.
-	gen dis_ch=.
+********************
+*** discapacid
+********************
+gen dis_ci=.
+gen dis_ch=.
 
-	
+
+
 *******************************************************
 ***           VARIABLES DE INGRESO                  ***
 *******************************************************
-/*Argentina no tiene vars de ingreso pero se incluyen las 
+/*Argentina no tiene vars de ingreso, pero se incluyen las 
 variables de ingreso por hogar porque no están en el do Base*/	
 
     ***********
@@ -117,22 +110,19 @@ variables de ingreso por hogar porque no están en el do Base*/
     ***********
 	**ynlm_ch*
 	***********
-   by idh_ch, sort: egen ynlm_ch=sum(ynlm_ci) if miembros_ci==1, missing 
-
+   by idh_ch, sort: egen ynlm_ch=sum(ynlm_ci) if miembros_ci==1, missing
+   
 *******************************************************
 ***           VARIABLES DE EDUCACIÓN               ***
 *******************************************************
 
-*NOTA: Como terciario, universitario y posgrado tienen una duración variable se supone 
-*que terciario completo implica 3 años de educacion adicional a la secundaria, universitario 5 años adicionales y 
-*postgrado 7. Esto solo se basa en la modas de finalización de estos niveles. ESTO SE DEBE DISCUTIR 
 	*********
 	*aedu_ci* // años de educacion aprobados
 	*********
 	gen aedu_ci=yrschool
 	replace aedu_ci=. if aedu_ci==98
 	replace aedu_ci=. if aedu_ci==99
-	replace aedu_ci=. if yrschool==90 // unknown/missing or NIU
+	replace aedu_ci=. if yrschool>=90 & yrschool<100 // unknown/missing or NIU
 
 	**********
 	*eduno_ci* // no ha completado ningún año de educación
@@ -143,7 +133,7 @@ variables de ingreso por hogar porque no están en el do Base*/
 	**********
 	*edupre_ci* // preescolar
 	**********
-	gen edupre_ci=(educar==120) // pre-school
+	gen edupre_ci=(educec==1010) // pre-school
 	replace edupre_ci=. if aedu_ci==. // NIU & missing
 	
 	**********
@@ -151,6 +141,7 @@ variables de ingreso por hogar porque no están en el do Base*/
 	**********
 	gen edupi_ci=(aedu_ci>0 & aedu_ci<6) // primary (zero years completed) + grade 1-5 + primary grade unknown
 	replace edupi_ci=. if aedu_ci==. // NIU & missing
+	replace edupi_ci=1 if yrschool==91
 
 	********** 
 	*edupc_ci* // completó la educación primaria
@@ -163,6 +154,7 @@ variables de ingreso por hogar porque no están en el do Base*/
 	**********
 	gen edusi_ci=(aedu_ci>=7 & aedu_ci<=11) // 7 a 11
 	replace edusi_ci=. if aedu_ci==. // NIU & missing
+	replace edusi_ci=1 if yrschool==93
 
 	**********
 	*edusc_ci* // completó la educación secundaria
@@ -175,11 +167,12 @@ variables de ingreso por hogar porque no están en el do Base*/
 	**********
 	gen eduui_ci=(aedu_ci>=13 & aedu_ci<=16) // 13 a 16 anos de educación
 	replace eduui_ci=.  if aedu_ci==. // NIU & missing
-
+	replace  eduui_ci=1 if yrschool==94
+	
 	**********
 	*eduuc_ci* // completó la educación universitaria o terciaria
 	**********
-	gen eduuc_ci=(aedu_ci>=17) //más de 17
+	gen eduuc_ci=(aedu_ci>=16) //más de 16
 	replace eduuc_ci=. if aedu_ci==. // missing a los NIU & missing
 
 	***********
@@ -219,15 +212,16 @@ variables de ingreso por hogar porque no están en el do Base*/
 	replace literacy=1 if lit==2 // literate
 	replace literacy=0 if lit==1 // illiterate
 
-	*****************************
-	** Include all labels of   **
-	**  harmonized variables   **
-	*****************************
+
+*****************************
+** Include all labels of   **
+**  harmonized variables   **
+*****************************
 include "../Base/labels.do"
 
-order region_BID_c pais_c estrato_ci zona_c relacion_ci civil_ci idh_ch factor_ch idp_ci factor_ci edad_ci sexo_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch miembros_ci condocup_ci emp_ci desemp_ci pea_ci rama_ci spublico_ci migrante_ci migantiguo5_ci aguared_ch luz_ch bano_ch des1_ch piso_ch pared_ch techo_ch dorm_ch cuartos_ch cocina_ch refrig_ch auto_ch internet_ch cel_ch viviprop_ch viviprop_ch1 region_c categopri_ci discapacidad_ci ceguera_ci sordera_ci mudez_ci dismental_ci afroind_ci afroind_ch afroind_ano_c dis_ci dis_ch aedu_ci
 
 compress
 
 save "`base_out'", replace 
 log close
+

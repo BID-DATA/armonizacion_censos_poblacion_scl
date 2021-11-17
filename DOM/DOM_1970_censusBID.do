@@ -1,3 +1,4 @@
+
 * (Versión Stata 12)
 clear
 set more off
@@ -13,16 +14,16 @@ set more off
 
 /***************************************************************************
                  BASES DE DATOS DE CENSOS POBLACIONALES
-País: Chile
-Año: 1982
+País:  República Dominicana
+Año: 1970
 Autores: 
 Última versión: 
 
 							SCL/LMK - IADB
 ****************************************************************************/
 ****************************************************************************
-local PAIS CHL
-local ANO "1982"
+local PAIS DOM
+local ANO "1970"
 
 **************************************
 ** Setup code, load database,       **
@@ -34,64 +35,40 @@ include "../Base/base.do"
      ****************
      *** region_c ***
      ****************
-   * Clasificación válida para 1960, 1970 y 1982.
+
    gen region_c=.   
-   replace region_c=1 if geo1_cl==152011			    /*Iquique*/
-   replace region_c=2 if geo1_cl==152012			    /*Arica, Parinacota*/
-   replace region_c=3 if geo1_cl==152021			    /*Antofagasta*/
-   replace region_c=4 if geo1_cl==152022			    /*El Loa*/
-   replace region_c=5 if geo1_cl==152023		     	/*Tocopilla*/
-   replace region_c=6 if geo1_cl==152031			    /*Copiapo*/
-   replace region_c=7 if geo1_cl==152032			    /*Chanaral*/
-   replace region_c=8 if geo1_cl==152033			    /*Huasco*/
-   replace region_c=9 if geo1_cl==152041			    /*Elqui*/
-   replace region_c=10 if geo1_cl==152042			/*Choapa*/
-   replace region_c=11 if geo1_cl==152043			/*Limari*/
-   replace region_c=12 if geo1_cl==152051			/*Valparaíso, Isla de Pascua*/
-   replace region_c=13 if geo1_cl==152053			/*Los Andes*/
-   replace region_c=14 if geo1_cl==152054			/*Petorca*/
-   replace region_c=15 if geo1_cl==152055			/*Quillota*/
-   replace region_c=16 if geo1_cl==152056			/*San Antonio*/
-   replace region_c=17 if geo1_cl==152057			/*San Felipe de Aconcagua*/
-   replace region_c=18 if geo1_cl==152061			/*Cachapoal*/
-   replace region_c=19 if geo1_cl==152062			/*Cardenal Caro*/
-   replace region_c=20 if geo1_cl==152063			/*Colchagua*/
-   replace region_c=21 if geo1_cl==152071			/*Talca*/
-   replace region_c=22 if geo1_cl==152072			/*Cauquenes*/
-   replace region_c=23 if geo1_cl==152073			/*Curico*/
-   replace region_c=24 if geo1_cl==152074			/*Linares*/
-   replace region_c=25 if geo1_cl==152081			/*Concepcion*/
-   replace region_c=26 if geo1_cl==152082			/*Arauco*/
-   replace region_c=27 if geo1_cl==152083			/*Bio Bio*/
-   replace region_c=28 if geo1_cl==152084			/*Nuble*/
-   replace region_c=29 if geo1_cl==152091			/*Cautin*/
-   replace region_c=30 if geo1_cl==152092			/*Malleco*/
-   replace region_c=31 if geo1_cl==152101			/*Llanquihue*/
-   replace region_c=32 if geo1_cl==152102			/*Chiloe*/
-   replace region_c=33 if geo1_cl==152103			/*Osorno*/
-   replace region_c=34 if geo1_cl==152105			/*Valdivia*/
-   replace region_c=35 if geo1_cl==152111			/*Coihaique*/
-   replace region_c=36 if geo1_cl==152112			/*Aisen, General Carrera, Palena*/
-   replace region_c=37 if geo1_cl==152121			/*Magallanes, Tierra del Fuego, Antartica Chilena*/
-   replace region_c=38 if geo1_cl==152124			/*Ma. Esperanza, Capitan Prat*/
-   replace region_c=39 if geo1_cl==152131			/*Santiago*/
-   replace region_c=40 if geo1_cl==152132			/*Cordillera*/
-   replace region_c=41 if geo1_cl==152133			/*Chacabuco*/
-   replace region_c=42 if geo1_cl==152134			/*Maipo*/
-   replace region_c=43 if geo1_cl==152135			/*Melipilla*/
-   replace region_c=44 if geo1_cl==152136			/*Talagante*/
-   replace region_c=45 if geo1_cl==152888			/*Waterbodies*/
-   
+   replace region_c=1 if geo1_do==214001			/*Distrito Nacional, Santo Domingo*/
+   replace region_c=2 if geo1_do==214002			/*Azua*/
+   replace region_c=3 if geo1_do==214003			/*Baoruco, Barahona, Independencia*/
+   replace region_c=4 if geo1_do==214005			/*Dajabón*/
+   replace region_c=5 if geo1_do==214006		    /*Duarte*/
+   replace region_c=6 if geo1_do==214007			/*Elías Piña*/
+   replace region_c=7 if geo1_do==214008			/*El Seibo, Hato Mayor*/
+   replace region_c=8 if geo1_do==214009			/*Espaillat*/
+   replace region_c=9 if geo1_do==214011			/*La Altagracia, La Romana*/
+   replace region_c=10 if geo1_do==214013			/*Monseñor Nouel, La Vega*/
+   replace region_c=11 if geo1_do==214014			/*María Trinidad Sánchez*/
+   replace region_c=12 if geo1_do==214015			/*Monte Cristi*/
+   replace region_c=13 if geo1_do==214016			/*Pedernales*/
+   replace region_c=14 if geo1_do==214017			/*San José de Ocoa, Peravia*/
+   replace region_c=15 if geo1_do==214018			/*Puerto Plata, Santiago*/
+   replace region_c=16 if geo1_do==214019			/*Hermanas Mirabal*/
+   replace region_c=17 if geo1_do==214020			/*Samaná*/
+   replace region_c=18 if geo1_do==214021			/*San Cristóbal, Monte Plata*/
+   replace region_c=19 if geo1_do==214022			/*San Juan*/
+   replace region_c=20 if geo1_do==214023			/*San Pedro De Macorís*/
+   replace region_c=21 if geo1_do==214024			/*Sánchez Ramírez*/
+   replace region_c=22 if geo1_do==214026			/*Santiago Rodríguez*/
+   replace region_c=23 if geo1_do==214027			/*Valverde*/
+   replace region_c=24 if geo1_do==214088			/*Lake Enriquilla*/
 
 
-	  label define region_c 1"Iquique" 2"Arica, Parinacota" 3"Antofagasta" 4"El Loa" 5"Tocopilla" 6"Copiapo" 7"Chanaral" 8"Huasco" 9"Elqui" 10"Choapa" 11"Limari" 12"Valparaíso, Isla de Pascua" 13"Los Andes" 14"Petorca" 15"Quillota" 16"San Antonio" 17"San Felipe de Aconcagua" 18"Cachapoal" 19"Cardenal Caro" 20"Colchagua" 21"Talca" 22"Cauquenes" 23"Curico" 24"Linares" 25"Concepcion" 26"Arauco" 27 "Bio Bio" 28"Nuble" 29"Cautin" 30"Malleco" 31"Llanquihue" 32"Chiloe" 33"Osorno" 34"Valdivia" 35"Coihaique" 36"Aisen, General Carrera, Palena" 37"Magallanes, Tierra del Fuego, Antartica Chilena" 38"Ma. Esperanza, Capitan Prat" 39"Santiago" 40"Cordillera" 41"Chacabuco" 42"Maipo" 43"Melipilla" 44"Talagante" 45"Waterbodies" 
+	  label define region_c 1"Distrito Nacional, Santo Domingo" 2"Azua" 3"Baoruco, Barahona, Independencia" 4"Dajabón" 5"Duarte" 6"Elías Piña" 7"El Seibo, Hato Mayor" 8"Espaillat" 9"La Altagracia, La Romana" 10"Monseñor Nouel, La Vega" 11"María Trinidad Sánchez" 12"Monte Cristi" 13"Pedernales" 14"San José de Ocoa, Peravia" 15"Puerto Plata, Santiago" 16"Hermanas Mirabal" 17"Samaná" 18"San Cristóbal, Monte Plata" 19"San Juan" 20"San Pedro De Macorís" 21"Sánchez Ramírez" 22"Santiago Rodríguez" 23"Valverde" 24"Lake Enriquilla"
 
       label value region_c region_c
-      label var region_c "division politico-administrativa, provincia" 
+      label var region_c "division politico-administrativa, provincia"
 
-* Enlace regiones: https://international.ipums.org/international-action/variables/GEO1_CL#codes_section
-
-
+	
 	************************
 	* VARIABLES EDUCATIVAS *
 	************************
@@ -100,85 +77,85 @@ include "../Base/base.do"
 	*aedu_ci* // 
 	*********
 	gen aedu_ci = yrschool 
-	replace aedu_ci=. if yrschool>=90 & yrschool<100 
+	replace aedu_ci=. if yrschool>=90 & yrschool<100
  
 	**********
 	*eduno_ci* // no ha completado ningún año de educación
 	**********
 	gen eduno_ci=(aedu_ci==0) // never attended or pre-school
-	replace eduno_ci=. if aedu_ci==. // NIU & missing
+	replace eduno_ci=. if edattaind==0 | edattaind==999 // NIU & missing
 	
 	**********
 	*edupre_ci* // preescolar
 	**********
-	gen edupre_ci=(educcl==100) // pre-school
-	replace edupre_ci=. if aedu_ci==. // NIU & missing
+	gen edupre_ci=(educdo==200) // pre-school
+	replace edupre_ci=. if educdo==0 | educdo==999 // NIU & missing
 	
 	**********
 	*edupi_ci* // no completó la educación primaria
 	**********
 	gen edupi_ci=(aedu_ci>0 & aedu_ci<6) //
-	replace edupi_ci=. if aedu_ci==. // NIU & missing
+	replace edupi_ci=. if educdo==0 | educdo==999 // NIU & missing
 	replace edupi_ci = 1 if yrschool == 91 // some primary
 
 	********** 
 	*edupc_ci* // completó la educación primaria
 	**********
-	gen edupc_ci=(aedu_ci==6) 
-	replace edupc_ci=. if aedu_ci==. // NIU & missing
+	gen edupc_ci=(aedu_ci==6)
+	replace edupc_ci=. if edattain==0 | edattain==9 // NIU & missing
 
 	**********
 	*edusi_ci* // no completó la educación secundaria
 	**********
-	gen edusi_ci=(aedu_ci>=7 & aedu_ci<12) // 7 a 11 anos de educación
-	replace edusi_ci=. if aedu_ci==. // NIU & missing
+	gen edusi_ci=(aedu_ci>=7 & aedu_ci<=11) // 7 a 11 anos de educación
+	replace edusi_ci=. if edattain==0 |edattain==9 // NIU & missing
 	replace edusi_ci = 1 if yrschool == 92 | yrschool ==93 //some technical after primary or some secondary
 
 	**********
 	*edusc_ci* // completó la educación secundaria
 	**********
-	gen edusc_ci=(aedu_ci==12) // 12 anos de educación
-	replace edusc_ci=. if aedu_ci==. // NIU & missing
+	gen edusc_ci=(aedu_ci==12) // 7 a 11 anos de educación
+	replace edusc_ci=. if edattain==0 |edattain==9 // NIU & missing
 	
 	**********
 	*eduui_ci* // no completó la educación universitaria o terciaria
 	**********
 	gen eduui_ci=(aedu_ci>=13 & aedu_ci<=16 & edattain != 4) // 14 a 16 anos de educación
-	replace eduui_ci=. if aedu_ci ==. // NIU & missing
+	replace eduui_ci=. if edattain==0 | edattain==9 // NIU & missing
 	replace eduui_ci = 1 if yrschool == 94 // some terciary
 
 	**********
 	*eduuc_ci* // completó la educación universitaria o terciaria
 	**********
 	gen eduuc_ci=.
-	replace eduuc_ci=1 if aedu_ci>=17
+	replace eduuc_ci=1 if edattain == 4
 	replace eduuc_ci=0 if edattain == 1 | edattain == 2 | edattain ==3  
 	// cualquier otro nivel de educación
-	replace eduuc_ci=. if aedu_ci==. // NIU & missing
+	replace eduuc_ci=. if edattain==0 | edattain==9 // NIU & missing
 
 	***********
 	*edus1i_ci* // no completó el primer ciclo de la educación secundaria
 	***********
 	gen byte edus1i_ci=(aedu_ci>6 & aedu_ci<8)
-	replace edus1i_ci=. if aedu_ci==. // missing a los NIU & missing
+	replace edus1i_ci=. if edattaind==0 | edattaind==999 // missing a los NIU & missing
 
 	***********
 	*edus1c_ci* // completó el primer ciclo de la educación secundaria
 	***********
 	gen byte edus1c_ci=(aedu_ci==8)
-	replace edus1c_ci=. if aedu_ci==. // missing a los NIU & missing
+	replace edus1c_ci=. if edattaind==0 | edattaind==999 // missing a los NIU & missing
 
 	***********
 	*edus2i_ci* // no completó el segundo ciclo de la educación secundaria
 	***********
 	gen byte edus2i_ci=(aedu_ci>8 & aedu_ci<12)
-	replace edus2i_ci=. if aedu_ci==. // missing a los NIU & missing
+	replace edus2i_ci=. if edattaind==0 | edattaind==999 // missing a los NIU & missing
 
 	***********
 	*edus2c_ci* // completó el segundo ciclo de la educación secundaria
 	***********
 	gen byte edus2c_ci=(aedu_ci==12)
-	replace edus2c_ci=. if aedu_ci==. // missing a los NIU & missing
+	replace edus2c_ci=. if edattaind==0 | edattaind==999 // missing a los NIU & missing
 
 	***********
 	*asiste_ci*
@@ -192,7 +169,8 @@ include "../Base/base.do"
 	gen literacy=. 
 	replace literacy=1 if lit==2 // literate
 	replace literacy=0 if lit==1 // illiterate
-	
+		  
+		  
 	*******************************************************
 	***           VARIABLES DE DIVERSIDAD               ***
 	*******************************************************
@@ -224,6 +202,8 @@ include "../Base/base.do"
 	gen dis_ci=.
 	gen dis_ch=.
 
+
+
 *******************************************************
 ***           VARIABLES DE INGRESO                  ***
 *******************************************************
@@ -244,13 +224,14 @@ include "../Base/base.do"
 	**ylm_ch**
 	***********
    
-	gen ylm_ch=.
+   gen ylm_ch=.
    
     ***********
 	**ynlm_ch**
 	***********
-	gen ynlm_ch=.
-	
+   gen ynlm_ch=.
+   
+   
 *****************************
 ** Include all labels of   **
 **  harmonized variables   **

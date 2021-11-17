@@ -23,8 +23,8 @@ Autores:
 ****************************************************************************/
 ****************************************************************************
 
-local PAIS ARG
-local ANO "2001"
+local PAIS SLV
+local ANO "1992"
 
 **************************************
 ** Setup code, load database,       **
@@ -42,37 +42,27 @@ include "../Base/base.do"
  ****************
 
    gen region_c=.   
-   replace region_c=1 if geo1_ar==32002			    /*Ciudad de Buenos Aires*/
-   replace region_c=2 if geo1_ar==32006			    /*Provincia de Buenos Aires*/
-   replace region_c=3 if geo1_ar==32010			    /*Catamarca*/
-   replace region_c=4 if geo1_ar==32014			    /*Córdoba*/
-   replace region_c=5 if geo1_ar==32018		     	/*Corrientes*/
-   replace region_c=6 if geo1_ar==32022			    /*Chaco*/
-   replace region_c=7 if geo1_ar==32026			    /*Chubut*/
-   replace region_c=8 if geo1_ar==32030			    /*Entre Rí­os*/
-   replace region_c=9 if geo1_ar==32034			    /*Formosa*/
-   replace region_c=10 if geo1_ar==32038			/*Jujuy*/
-   replace region_c=11 if geo1_ar==32042			/*La Pampa*/
-   replace region_c=12 if geo1_ar==32046			/*La Rioja*/
-   replace region_c=13 if geo1_ar==32050			/*Mendoza*/
-   replace region_c=14 if geo1_ar==32054			/*Misiones*/
-   replace region_c=15 if geo1_ar==32058			/*Neuquén*/
-   replace region_c=16 if geo1_ar==32062			/*Rio Negro*/
-   replace region_c=17 if geo1_ar==32066			/*Salta*/
-   replace region_c=18 if geo1_ar==32070			/*San Juan*/
-   replace region_c=19 if geo1_ar==32074			/*San Luis*/
-   replace region_c=20 if geo1_ar==32078			/*Santa Cruz*/
-   replace region_c=21 if geo1_ar==32082			/*Santa Fe*/
-   replace region_c=22 if geo1_ar==32086			/*Santiago del Estero*/
-   replace region_c=23 if geo1_ar==32090			/*Tucumán*/
-   replace region_c=24 if geo1_ar==32094			/*Tierra del Fuego*/
-   replace region_c=99 if geo1_ar==32099			/*Unknown*/
+   replace region_c=1 if geo1_sv==222001				    /*Ahuachapán*/
+   replace region_c=2 if geo1_sv==222002		    /*Santa Ana*/
+   replace region_c=3 if geo1_sv==222003			    /*Sonsonate*/
+   replace region_c=4 if geo1_sv==222004			    /*Chalatenango*/
+   replace region_c=5 if geo1_sv==222005			    /*La Libertad*/
+   replace region_c=6 if geo1_sv==222006			    /*San Salvador*/
+   replace region_c=7 if geo1_sv==222007			    /*Cuscatlán*/
+   replace region_c=8 if geo1_sv==222008			    /*La Paz*/
+   replace region_c=9 if geo1_sv==222009			    /*Cabañas*/
+   replace region_c=10 if geo1_sv==222010			    /*San Vicente*/
+   replace region_c=11 if geo1_sv==222011			    /*Usulután*/
+   replace region_c=12 if geo1_sv==222012			    /*San Miguel*/
+   replace region_c=13 if geo1_sv==222013			    /*Morazán*/
+   replace region_c=14 if geo1_sv==222014			    /*La Unión*/
 
-
-	  label define region_c 1"Ciudad de Buenos Aires" 2"Provincia de Buenos Aires" 3"Catamarca" 4"Córdoba" 5"Corrientes" 6"Chaco" 7"Chubut" 8"Entre Ríos" 9"Formosa" 10"Jujuy" 11"La Pampa" 12"La Rioja" 13"Mendoza" 14"Misiones" 15"Neuquén" 16"Río Negro" 17"Salta" 18"San Juan" 19"San Luis" 20"Santa Cruz" 21"Santa Fe" 22"Santiago del Estero" 23"Tucumán" 24"Tierra del Fuego" 99""
+   label define region_c 1"Ahuachapán" 2"Santa Ana" 3"Sonsonate" 4 "Chalatenango" ///
+   5 "La Libertad" 6 "San Salvador" 7 "Cuscatlán" 8 "La Paz" 9 "Cabañas" 10 "San Vicente" ///
+   11 "Usulután" 12 "San Miguel" 13 "Morazán" 14 "La Unión"
 
     label value region_c region_c
-	label var region_c "division politico-administrativa, provincias"
+	label var region_c "division politico-administrativa, estados"
 	
 *******************************************************
 ***           VARIABLES DE DIVERSIDAD               ***
@@ -82,18 +72,18 @@ include "../Base/base.do"
 	***************
 	***afroind_ci***
 	***************
-
 	gen afroind_ci=. 
 
 	***************
 	***afroind_ch***
 	***************
-	gen afroind_ch=.
+	gen afroind_ch  = .
 
 	*******************
 	***afroind_ano_c***
 	*******************
-	gen afroind_ano_c=.
+	gen afroind_ano_c=2007
+
 
 	********************
 	*** discapacidad ***
@@ -105,7 +95,7 @@ include "../Base/base.do"
 *******************************************************
 ***           VARIABLES DE INGRESO                  ***
 *******************************************************
-/*Argentina no tiene vars de ingreso pero se incluyen las 
+/*El Salvador no tiene vars de ingreso pero se incluyen las 
 variables de ingreso por hogar porque no están en el do Base*/	
 
     ***********
@@ -122,89 +112,97 @@ variables de ingreso por hogar porque no están en el do Base*/
 *******************************************************
 ***           VARIABLES DE EDUCACIÓN               ***
 *******************************************************
-
-*NOTA: Como terciario, universitario y posgrado tienen una duración variable se supone 
-*que terciario completo implica 3 años de educacion adicional a la secundaria, universitario 5 años adicionales y 
-*postgrado 7. Esto solo se basa en la modas de finalización de estos niveles. ESTO SE DEBE DISCUTIR 
 	*********
 	*aedu_ci* // años de educacion aprobados
 	*********
+*NOTA: Como terciario, universitario y posgrado tienen una duración variable se supone 
+*que terciario completo implica 3 años de educacion adicional a la secundaria, universitario 5 años adicionales y 
+*postgrado 7. Esto solo se basa en la modas de finalización de estos niveles. ESTO SE DEBE DISCUTIR 
+
 	gen aedu_ci=yrschool
 	replace aedu_ci=. if aedu_ci==98
 	replace aedu_ci=. if aedu_ci==99
-	replace aedu_ci=. if yrschool==90 // unknown/missing or NIU
+	replace aedu_ci=. if yrschool>=90 & yrschool<100 
 
 	**********
 	*eduno_ci* // no ha completado ningún año de educación
 	**********
-	gen eduno_ci=(aedu_ci==0) // never attended or pre-school
-	replace eduno_ci=. if aedu_ci==. // NIU & missing
+	gen byte eduno_ci=0
+	replace eduno_ci=1 if aedu_ci==0
+	replace eduno_ci=. if aedu_ci==.
 
 	**********
 	*edupre_ci* // preescolar
 	**********
-	gen edupre_ci=(educar==120) // pre-school
-	replace edupre_ci=. if aedu_ci==. // NIU & missing
+	gen edupre_ci=(educsv>=110 & educsv<=114) // pre-school
+	replace edupre_ci=. if educsv==0 | educsv==999 // NIU & missing
 	
 	**********
 	*edupi_ci* // no completó la educación primaria
 	**********
-	gen edupi_ci=(aedu_ci>0 & aedu_ci<6) // primary (zero years completed) + grade 1-5 + primary grade unknown
-	replace edupi_ci=. if aedu_ci==. // NIU & missing
+	gen byte edupi_ci=0
+	replace edupi_ci=1 if aedu_ci>0 & aedu_ci<6
+	replace edupi_ci=1 if yrschool==91 // Some primary 
+	replace edupi_ci=. if aedu_ci==.
 
 	********** 
 	*edupc_ci* // completó la educación primaria
 	**********
-	gen edupc_ci=(aedu_ci ==6) // grade 6 
-	replace edupc_ci=. if aedu_ci==. // NIU & missing
+	gen byte edupc_ci=0
+	replace edupc_ci=1 if aedu_ci==6
+	replace edupc_ci=. if aedu_ci==.
 
 	**********
 	*edusi_ci* // no completó la educación secundaria
 	**********
-	gen edusi_ci=(aedu_ci>=7 & aedu_ci<=11) // 7 a 11
-	replace edusi_ci=. if aedu_ci==. // NIU & missing
-
+	gen byte edusi_ci=0
+	replace edusi_ci=1 if aedu_ci>6 & aedu_ci<12
+	replace edusi_ci=1 if yrschool==92 | yrschool==93 // Some techinical after primary and some secondary
+	replace edusi_ci=. if aedu_ci==.
+	replace edusi_ci=. if yrschool==90| yrschool==98| yrschool==99 // Se asignan como missing NIU and missing (no asi las otras)
+	
 	**********
 	*edusc_ci* // completó la educación secundaria
 	**********
 	gen edusc_ci=(aedu_ci==12) // 12 
-	replace edusc_ci=.  if aedu_ci==. // NIU & missing
+	replace edusc_ci=. if aedu_ci==.
 
 	**********
 	*eduui_ci* // no completó la educación universitaria o terciaria
 	**********
-	gen eduui_ci=(aedu_ci>=13 & aedu_ci<=16) // 13 a 16 anos de educación
-	replace eduui_ci=.  if aedu_ci==. // NIU & missing
+	gen eduui_ci=(aedu_ci>=14 & aedu_ci<16)
+	replace eduui_ci=. if aedu_ci==.
 
 	**********
 	*eduuc_ci* // completó la educación universitaria o terciaria
 	**********
-	gen eduuc_ci=(aedu_ci>=17) //más de 17
-	replace eduuc_ci=. if aedu_ci==. // missing a los NIU & missing
-
+	gen eduuc_ci=(aedu_ci>=16) // 
+	replace eduuc_ci=. if aedu_ci==.
+	
 	***********
 	*edus1i_ci* // no completó el primer ciclo de la educación secundaria
 	***********
 	gen byte edus1i_ci=(aedu_ci>6 & aedu_ci<9)
-	replace edus1i_ci=. if aedu_ci==. // missing a los NIU & missing
+	replace edus1i_ci=. if aedu_ci==.
 
 	***********
 	*edus1c_ci* // completó el primer ciclo de la educación secundaria
 	***********
 	gen byte edus1c_ci=(aedu_ci==9)
-	replace edus1c_ci=. if aedu_ci==. // missing a los NIU & missing
-
+	replace edus1c_ci=. if aedu_ci==.
+	
 	***********
 	*edus2i_ci* // no completó el segundo ciclo de la educación secundaria
 	***********
 	gen byte edus2i_ci=(aedu_ci>9 & aedu_ci<12)
-	replace edus2i_ci=. if aedu_ci==. // missing a los NIU & missing
+	replace edus2i_ci=. if aedu_ci==.
 
 	***********
 	*edus2c_ci* // completó el segundo ciclo de la educación secundaria
 	***********
 	gen byte edus2c_ci=(aedu_ci==12)
-	replace edus2c_ci=. if aedu_ci==. 
+	replace edus2c_ci=1 if yrschool==94 // Some tertiary
+	replace edus2c_ci=. if aedu_ci==.
 	
 	***********
 	*asiste_ci*
