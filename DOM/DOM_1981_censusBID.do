@@ -15,7 +15,7 @@ set more off
 /***************************************************************************
                  BASES DE DATOS DE CENSOS POBLACIONALES
 País:  República Dominicana
-Año: 1960
+Año: 1981
 Autores: 
 Última versión: 
 
@@ -23,7 +23,7 @@ Autores:
 ****************************************************************************/
 ****************************************************************************
 local PAIS DOM
-local ANO "1960"
+local ANO "1981"
 
 **************************************
 ** Setup code, load database,       **
@@ -88,8 +88,8 @@ include "../Base/base.do"
 	**********
 	*edupre_ci* // preescolar
 	**********
-	gen edupre_ci=. // pre-school
-	*replace edupre_ci=. if educdo==0 | educdo==999 // NIU & missing
+	gen edupre_ci=(educdo == 204 | educdo == 205) // pre-school
+	replace edupre_ci=. if educdo==0 | educdo==999 // NIU & missing
 	
 	**********
 	*edupi_ci* // no completó la educación primaria
@@ -107,14 +107,14 @@ include "../Base/base.do"
 	**********
 	*edusi_ci* // no completó la educación secundaria
 	**********
-	gen edusi_ci=(aedu_ci>=6 & aedu_ci<=11) // 7 a 11 anos de educación
+	gen edusi_ci=(aedu_ci>=7 & aedu_ci<=11) // 7 a 11 anos de educación
 	replace edusi_ci=. if edattain==0 |edattain==9 // NIU & missing
 	replace edusi_ci = 1 if yrschool == 92 | yrschool ==93 //some technical after primary or some secondary
 
 	**********
 	*edusc_ci* // completó la educación secundaria
 	**********
-	gen edusc_ci=(aedu_ci==12) // 7 a 12 anos de educación
+	gen edusc_ci=(aedu_ci==12) // 7 a 11 anos de educación
 	replace edusc_ci=. if edattain==0 |edattain==9 // NIU & missing
 	
 	**********
@@ -132,7 +132,7 @@ include "../Base/base.do"
 	replace eduuc_ci=0 if edattain == 1 | edattain == 2 | edattain ==3  
 	// cualquier otro nivel de educación
 	replace eduuc_ci=. if edattain==0 | edattain==9 // NIU & missing
-	
+
 	***********
 	*edus1i_ci* // no completó el primer ciclo de la educación secundaria
 	***********
