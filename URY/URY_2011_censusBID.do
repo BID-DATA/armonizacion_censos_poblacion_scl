@@ -59,18 +59,25 @@ label define region_c ///
           18 "Tacuarembó" ///
           19 "Treinta y Tres" 
 label values region_c region_c
+
 *******************************
 
 *** Ingreso ******************
 * Uruguay no tiene ninguna
 * variable de ingreso en IPUMS
+* ingreso por hogar se genera vacia
 ******************************
 
-***** Education **************
-* Use educuy. No está yrschool
-******************************
-*La variable de educuy solo reporta los ciclos completos. Algunas variables 
-*no se pueden calcular. Se crean con missings.
+	***********
+	**ylm_ch*
+	***********
+    gen ylm_ch=.
+   
+    ***********
+	**ynlm_ch*
+	***********
+    gen ynlm_ch=.
+
 
 *********
 *aedu_ci* // años de educacion aprobados
@@ -80,7 +87,6 @@ gen aedu_ci=.
 **************
 ***eduno_ci***
 **************
-
 
 gen eduno_ci=(educuy==100 | educuy==200)
 replace eduno_ci=. if educuy==0 | educuy==998
@@ -220,6 +226,7 @@ gen dis_ch=.
 *****************************
 include "../Base/labels.do"
 
+order region_BID_c pais_c estrato_ci zona_c relacion_ci civil_ci idh_ch factor_ch idp_ci factor_ci edad_ci sexo_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch miembros_ci condocup_ci emp_ci desemp_ci pea_ci rama_ci spublico_ci migrante_ci migantiguo5_ci aguared_ch luz_ch bano_ch des1_ch piso_ch pared_ch techo_ch dorm_ch cuartos_ch cocina_ch refrig_ch auto_ch internet_ch cel_ch viviprop_ch viviprop_ch1 region_c categopri_ci discapacidad_ci ceguera_ci sordera_ci mudez_ci dismental_ci afroind_ci afroind_ch afroind_ano_c dis_ci dis_ch aedu_ci
 
 compress
 

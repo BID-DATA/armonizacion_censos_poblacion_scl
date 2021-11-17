@@ -64,7 +64,18 @@ label values region_c region_c
 *** Ingreso ******************
 * Uruguay no tiene ninguna
 * variable de ingreso en IPUMS
+* ingreso por hogar se genera vacia
 ******************************
+
+	***********
+	**ylm_ch*
+	***********
+    gen ylm_ch=.
+   
+    ***********
+	**ynlm_ch*
+	***********
+    gen ynlm_ch=.
 
 ***** Education **************
 ******************************
@@ -116,6 +127,7 @@ gen edupre_ci=.
 **************
 gen edupi_ci=(aedu_ci>=1 & aedu_ci<=5) // 1-5 anos de educación
 replace edupi_ci=. if aedu_ci==. // NIU
+replace edupi_ci=1 if yrschool==91 // Some primary 
 
 **************
 ***edupc_ci*** // completó la educación primaria
@@ -130,6 +142,7 @@ replace edupc_ci=. if aedu_ci==. // NIU
 	
 gen edusi_ci=(aedu_ci>=7 & aedu_ci<=11) // 7 a 11 anos de educación 
 replace edusi_ci=. if aedu_ci==. // NIU
+replace edusi_ci=1 if yrschool==92 | yrschool==93 // Some techinical after primary and some secondary
 
 
 **********
@@ -146,6 +159,7 @@ replace edusc_ci=. if aedu_ci==. // NIU
 	
 gen eduui_ci=(aedu_ci>=13 & aedu_ci<=15) // 13 a 15 anos de educación
 replace eduui_ci=. if aedu_ci==. // NIU
+replace edusc_ci=1 if yrschool==94 // some tertiary
 
 
 **********
@@ -174,7 +188,7 @@ replace edus1c_ci=. if aedu_ci==. // NIU
 *edus2i_ci* // no completó el segundo ciclo de la educación secundaria
 ***********
 
-gen byte edus2i_ci=(aedu_ci==10 & aedu_ci==11)
+gen byte edus2i_ci=(aedu_ci==10 | aedu_ci==11)
 replace edus2i_ci=. if aedu_ci==. // NIU
 
 ***********
@@ -221,7 +235,7 @@ gen afroind_ch  = .
 	*******************
 	***afroind_ano_c***
 	*******************
-gen afroind_ano_c=.
+gen afroind_ano_c=2006
 
 
 ********************
@@ -238,6 +252,7 @@ gen dis_ch=.
 *****************************
 include "../Base/labels.do"
 
+order region_BID_c pais_c estrato_ci zona_c relacion_ci civil_ci idh_ch factor_ch idp_ci factor_ci edad_ci sexo_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch miembros_ci condocup_ci emp_ci desemp_ci pea_ci rama_ci spublico_ci migrante_ci migantiguo5_ci aguared_ch luz_ch bano_ch des1_ch piso_ch pared_ch techo_ch dorm_ch cuartos_ch cocina_ch refrig_ch auto_ch internet_ch cel_ch viviprop_ch viviprop_ch1 region_c categopri_ci discapacidad_ci ceguera_ci sordera_ci mudez_ci dismental_ci afroind_ci afroind_ch afroind_ano_c dis_ci dis_ch aedu_ci
 
 compress
 
