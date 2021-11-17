@@ -89,7 +89,7 @@ include "../Base/base.do"
 	*edupre_ci* // preescolar
 	**********
 	gen edupre_ci=(educdo==200) // pre-school
-	*replace edupre_ci=. if educdo==0 | educdo==999 // NIU & missing
+	replace edupre_ci=. if educdo==0 | educdo==999 // NIU & missing
 	
 	**********
 	*edupi_ci* // no completó la educación primaria

@@ -216,28 +216,22 @@ include "../Base/base.do"
 ***           VARIABLES DE INGRESO                  ***
 *******************************************************
 	
-    ***********
-	**ylm_ci**
-	***********
-	
-	*gen ylm_ci=.
-	
-    ***********
-	**ynlm_ci**
-	***********
+    replace ylm_ci=inctot  //no necesariamente es laboral pero se contruye así en este caso
+	replace ylm_ci=. if inctot==9999998 | inctot==9999999 
  
-	*gen ynlm_ci=.
+	replace ynlm_ci=.
+
 
     ***********
-	**ylm_ch**
+	**ylm_ch*
 	***********
    
-   gen ylm_ch=.
+   by idh_ch, sort: egen ylm_ch=sum(ylm_ci) if miembros_ci==1, missing
    
-    ***********
-	**ynlm_ch**
 	***********
-   gen ynlm_ch=.
+	**ynlm_ch*
+	***********
+   by idh_ch, sort: egen ynlm_ch=sum(ynlm_ci) if miembros_ci==1, missing
    
    
 *****************************

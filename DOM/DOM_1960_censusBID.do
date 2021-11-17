@@ -132,7 +132,7 @@ include "../Base/base.do"
 	replace eduuc_ci=0 if edattain == 1 | edattain == 2 | edattain ==3  
 	// cualquier otro nivel de educación
 	replace eduuc_ci=. if edattain==0 | edattain==9 // NIU & missing
-
+	
 	***********
 	*edus1i_ci* // no completó el primer ciclo de la educación secundaria
 	***********
