@@ -43,7 +43,7 @@ use "`base_in'", clear
 		if `"`PAIS'"'=="BHS" | `"`PAIS'"'=="GUY" | `"`PAIS'"'=="JAM" | `"`PAIS'"'=="SUR" | `"`PAIS'"'=="BRB" | `"`PAIS'"'=="TTO" local reg_bid 2
 	
 	*CID
-		if `"`PAIS'"'=="BLZ" | `"`PAIS'"'=="CRI" | `"`PAIS'"'=="SLV" | `"`PAIS'"'=="GTM" | `"`PAIS'"'=="HTI" | `"`PAIS'"'=="HON" | `"`PAIS'"'=="PAN" | `"`PAIS'"'=="MEX" | `"`PAIS'"'=="DOM" | `"`PAIS'"'=="NIC" local reg_bid 1
+		if `"`PAIS'"'=="BLZ" | `"`PAIS'"'=="CRI" | `"`PAIS'"'=="SLV" | `"`PAIS'"'=="GTM" | `"`PAIS'"'=="HTI" | `"`PAIS'"'=="HND" | `"`PAIS'"'=="PAN" | `"`PAIS'"'=="MEX" | `"`PAIS'"'=="DOM" | `"`PAIS'"'=="NIC" local reg_bid 1
 		
 	gen region_BID_c=`reg_bid'
 	

@@ -37,6 +37,24 @@ include "../Base/base.do"
 ******* Variables specific for this census **********
 *****************************************************
 
+ ****************
+ *** region_c ***
+ ****************
+
+   gen region_c=.   
+   replace region_c=1 if geo1_pa==591002		/*Cocle*/
+   replace region_c=2 if geo1_pa==591003		/*Colón, Comarca Kuna Yala (San Blas)*/
+   replace region_c=3 if geo1_pa==591004		/*Bocas de Toro, Chiriqui, Comarca Ngabe-Bugle*/
+   replace region_c=4 if geo1_pa==591005		/*Comarca Embera, Darien*/
+   replace region_c=5 if geo1_pa==591006		/*Herrera*/
+   replace region_c=6 if geo1_pa==591007		/*Los Santos*/
+   replace region_c=7 if geo1_pa==591008		/*Panama*/
+
+	label define region_c 1"Cocle" 2"Colon, Comarca Kuna Yala (San Blas)" 3"Bocas de Toro, Chiriqui, Comarca Ngabe-Bugle" 4"Comarca Embera, Darien" 5"Herrera" 6"Los Santos" 7"Panama" 
+    label value region_c region_c
+	label var region_c "division politico-administrativa, provincias"
+	
+	
 *******************************************************
 ***           VARIABLES DE DIVERSIDAD               ***
 *******************************************************				
@@ -57,7 +75,7 @@ gen etnia_ci=.
 	***afroind_ch***
 	***************
 gen afroind_jefe= afroind_ci if relate==1
-egen afroind_ch  = min(afroind_jefe), by(serial) 
+egen afroind_ch  = min(afroind_jefe), by(idh_ch) 
 
 drop afroind_jefe 
 
@@ -71,6 +89,131 @@ gen afroind_ano_c=2000
 ********************
 gen dis_ci=.
 gen dis_ch=.
+
+
+*******************************************************
+***           VARIABLES DE INGRESO                  ***
+*******************************************************
+
+    ***********
+	*ylm_ci*
+	***********
+   cap confirm variable incearn
+   if (_rc==0) {
+   replace ylm_ci = incearn
+   replace ylm_ci =. if incearn==99999999 | incearn==99999998
+   }
+
+    ***********
+	**ylm_ch*
+	***********
+   
+   by idh_ch, sort: egen ylm_ch=sum(ylm_ci) if miembros_ci==1, missing
+   
+    ***********
+	**ynlm_ch*
+	***********
+   by idh_ch, sort: egen ynlm_ch=sum(ynlm_ci) if miembros_ci==1, missing
+   
+*******************************************************
+***           VARIABLES DE EDUCACIÓN               ***
+*******************************************************
+
+	*********
+	*aedu_ci* // años de educacion aprobados
+	*********
+	gen aedu_ci=yrschool
+	replace aedu_ci=. if aedu_ci==98
+	replace aedu_ci=. if aedu_ci==99
+	replace aedu_ci=. if yrschool>=90 & yrschool<100 // unknown/missing or NIU
+
+	**********
+	*eduno_ci* // no ha completado ningún año de educación
+	**********
+	gen eduno_ci=(aedu_ci==0) // never attended or pre-school
+	replace eduno_ci=. if aedu_ci==. // NIU & missing
+
+	**********
+	*edupre_ci* // preescolar
+	**********
+	gen edupre_ci=(educpa==1010) // pre-school
+	replace edupre_ci=. if aedu_ci==. // NIU & missing
+	
+	**********
+	*edupi_ci* // no completó la educación primaria
+	**********
+	gen edupi_ci=(aedu_ci>0 & aedu_ci<6) // primary (zero years completed) + grade 1-5 + primary grade unknown
+	replace edupi_ci=. if aedu_ci==. // NIU & missing
+	replace edupi_ci=1 if yrschool==91
+
+	********** 
+	*edupc_ci* // completó la educación primaria
+	**********
+	gen edupc_ci=(aedu_ci ==6) // grade 6 
+	replace edupc_ci=. if aedu_ci==. // NIU & missing
+
+	**********
+	*edusi_ci* // no completó la educación secundaria
+	**********
+	gen edusi_ci=(aedu_ci>=7 & aedu_ci<=11) // 7 a 11
+	replace edusi_ci=. if aedu_ci==. // NIU & missing
+	replace edusi_ci=1 if yrschool==93
+
+	**********
+	*edusc_ci* // completó la educación secundaria
+	**********
+	gen edusc_ci=(aedu_ci==12) // 12 
+	replace edusc_ci=.  if aedu_ci==. // NIU & missing
+
+	**********
+	*eduui_ci* // no completó la educación universitaria o terciaria
+	**********
+	gen eduui_ci=(aedu_ci>=13 & aedu_ci<=16) // 13 a 16 anos de educación
+	replace eduui_ci=.  if aedu_ci==. // NIU & missing
+	replace  eduui_ci=1 if yrschool==94
+
+	**********
+	*eduuc_ci* // completó la educación universitaria o terciaria
+	**********
+	gen eduuc_ci=(aedu_ci>=16) //más de 16
+	replace eduuc_ci=. if aedu_ci==. // missing a los NIU & missing
+
+	***********
+	*edus1i_ci* // no completó el primer ciclo de la educación secundaria
+	***********
+	gen byte edus1i_ci=(aedu_ci>6 & aedu_ci<9)
+	replace edus1i_ci=. if aedu_ci==. // missing a los NIU & missing
+
+	***********
+	*edus1c_ci* // completó el primer ciclo de la educación secundaria
+	***********
+	gen byte edus1c_ci=(aedu_ci==9)
+	replace edus1c_ci=. if aedu_ci==. // missing a los NIU & missing
+
+	***********
+	*edus2i_ci* // no completó el segundo ciclo de la educación secundaria
+	***********
+	gen byte edus2i_ci=(aedu_ci>9 & aedu_ci<12)
+	replace edus2i_ci=. if aedu_ci==. // missing a los NIU & missing
+
+	***********
+	*edus2c_ci* // completó el segundo ciclo de la educación secundaria
+	***********
+	gen byte edus2c_ci=(aedu_ci==12)
+	replace edus2c_ci=. if aedu_ci==. 
+
+	***********
+	*asiste_ci*
+	***********
+	gen asiste_ci=(school==1) // 0 includes attended in the past (3) and never attended (4)
+	replace asiste_ci=. if school==0 | school==9 // missing a los NIU & missing
+    
+	************
+	* literacy *
+	************
+	gen literacy=. 
+	replace literacy=1 if lit==2 // literate
+	replace literacy=0 if lit==1 // illiterate
 
 
 *****************************
