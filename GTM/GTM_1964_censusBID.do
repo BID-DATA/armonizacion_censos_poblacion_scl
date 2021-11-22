@@ -108,7 +108,7 @@ include "../Base/base.do"
 *******************************************************
 ***           VARIABLES DE INGRESO                  ***
 *******************************************************
-/*Argentina no tiene vars de ingreso pero se incluyen las 
+/*Guatemala no tiene vars de ingreso pero se incluyen las 
 variables de ingreso por hogar porque no están en el do Base*/	
 
     ***********
@@ -159,14 +159,14 @@ variables de ingreso por hogar porque no están en el do Base*/
 	**********
 	*edusi_ci* // no completó la educación secundaria
 	**********
-	gen edusi_ci=(aedu_ci>=7 & aedu_ci<=11) // 7 a 11 anos de educación
+	gen edusi_ci=(aedu_ci>=7 & aedu_ci<11) // 7 a 11 anos de educación
 	replace edusi_ci=. if edattain==0 |edattain==9 // NIU & missing
 	replace edusi_ci = 1 if yrschool == 92 | yrschool ==93 //some technical after primary or some secondary
 
 	**********
 	*edusc_ci* // completó la educación secundaria
 	**********
-	gen edusc_ci=(aedu_ci==12) // 7 a 11 anos de educación
+	gen edusc_ci=(aedu_ci>=11 & aedu_ci <14)
 	replace edusc_ci=. if edattain==0 |edattain==9 // NIU & missing
 	
 	**********
@@ -200,13 +200,13 @@ variables de ingreso por hogar porque no están en el do Base*/
 	***********
 	*edus2i_ci* // no completó el segundo ciclo de la educación secundaria
 	***********
-	gen byte edus2i_ci=(aedu_ci>9 & aedu_ci<12)
+	gen byte edus2i_ci=(aedu_ci>9 & aedu_ci<11)
 	replace edus2i_ci=. if edattaind==0 | edattaind==999 // missing a los NIU & missing
 
 	***********
 	*edus2c_ci* // completó el segundo ciclo de la educación secundaria
 	***********
-	gen byte edus2c_ci=(aedu_ci==12)
+	gen byte edus2c_ci=(aedu_ci>=11 & aedu_ci <14)
 	replace edus2c_ci=. if edattaind==0 | edattaind==999 // missing a los NIU & missing
 
 	***********
