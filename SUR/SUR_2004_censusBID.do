@@ -67,8 +67,6 @@ gen afroind_ci=.
 replace afroind_ci=1  if indig==1 
 replace afroind_ci=3 if indig==2 
 
-gen etnia_ci=.
-
 	***************
 	***afroind_ch***
 	***************
@@ -80,7 +78,7 @@ drop afroind_jefe
 	*******************
 	***afroind_ano_c***
 	*******************
-gen afroind_ano_c=2000
+gen afroind_ano_c=2004
 
 ********************
 *** discapacidad ***
@@ -107,7 +105,7 @@ gen dis_ch=.
 *******************************************************
 ***           VARIABLES DE EDUCACIÓN               ***
 *******************************************************
-   * La falta de esta variable genera problemas en el calculo de la mayoria de indicadores de educacion
+   * SUR no tiene años, se generan las categorías a partir de educsr
     gen yrschool=.
 	
 	*********
@@ -121,77 +119,68 @@ gen dis_ch=.
 	**********
 	*eduno_ci* // no ha completado ningún año de educación
 	**********
-	gen eduno_ci=(aedu_ci==0) // never attended or pre-school
-	replace eduno_ci=. if aedu_ci==. // NIU & missing
+	gen eduno_ci=(educsr==01 | educsr == 01) // never attended or pre-school
+	replace eduno_ci=. if educsr==99 // NIU & missing
 
 	**********
 	*edupre_ci* // preescolar
 	**********
-	gen edupre_ci=(educsr==1010) // pre-school
-	replace edupre_ci=. if aedu_ci==. // NIU & missing
+	gen edupre_ci=(educsr==03) // pre-school
+	replace edupre_ci=. if educsr==99 // NIU & missing
 	
 	**********
 	*edupi_ci* // no completó la educación primaria
 	**********
-	gen edupi_ci=(aedu_ci>0 & aedu_ci<6) // primary (zero years completed) + grade 1-5 + primary grade unknown
-	replace edupi_ci=. if aedu_ci==. // NIU & missing
-	replace edupi_ci=1 if yrschool==91
+	gen edupi_ci=.
 
 	********** 
 	*edupc_ci* // completó la educación primaria
 	**********
-	gen edupc_ci=(aedu_ci ==6) // grade 6 
-	replace edupc_ci=. if aedu_ci==. // NIU & missing
+	gen edupc_ci=(educsr ==10) // primary
+	replace edupc_ci=. if educsr==99 // NIU & missing
 
 	**********
 	*edusi_ci* // no completó la educación secundaria
 	**********
-	gen edusi_ci=(aedu_ci>=7 & aedu_ci<=11) // 7 a 11
-	replace edusi_ci=. if aedu_ci==. // NIU & missing
-	replace edusi_ci=1 if yrschool==93
+	gen edusi_ci=.
 
 	**********
 	*edusc_ci* // completó la educación secundaria
 	**********
-	gen edusc_ci=(aedu_ci==12) // 12 
-	replace edusc_ci=.  if aedu_ci==. // NIU & missing
+	gen edusc_ci=(educsr ==31 | educsr ==32) // senior secondary
+	replace edusc_ci=.  if educsr ==99 // NIU & missing
 
 	**********
 	*eduui_ci* // no completó la educación universitaria o terciaria
 	**********
-	gen eduui_ci=(aedu_ci>=13 & aedu_ci<=16) // 13 a 16 anos de educación
-	replace eduui_ci=.  if aedu_ci==. // NIU & missing
-	replace  eduui_ci=1 if yrschool==94
+	gen eduui_ci=.
 
 	**********
 	*eduuc_ci* // completó la educación universitaria o terciaria
 	**********
-	gen eduuc_ci=(aedu_ci>=16) //más de 16
-	replace eduuc_ci=. if aedu_ci==. // missing a los NIU & missing
+	gen eduuc_ci=(educsr ==52) //más de 16
+	replace eduuc_ci=. if educsr ==99  // missing a los NIU & missing
 
 	***********
 	*edus1i_ci* // no completó el primer ciclo de la educación secundaria
 	***********
-	gen byte edus1i_ci=(aedu_ci>6 & aedu_ci<9)
-	replace edus1i_ci=. if aedu_ci==. // missing a los NIU & missing
+	gen edus1i_ci=.
 
 	***********
 	*edus1c_ci* // completó el primer ciclo de la educación secundaria
 	***********
-	gen byte edus1c_ci=(aedu_ci==9)
-	replace edus1c_ci=. if aedu_ci==. // missing a los NIU & missing
+	gen byte edus1c_ci=(educsr ==20)
+	replace edus1c_ci=. if educsr ==99 // missing a los NIU & missing
 
 	***********
 	*edus2i_ci* // no completó el segundo ciclo de la educación secundaria
 	***********
-	gen byte edus2i_ci=(aedu_ci>9 & aedu_ci<12)
-	replace edus2i_ci=. if aedu_ci==. // missing a los NIU & missing
-
+	gen edus2i_ci=.
 	***********
 	*edus2c_ci* // completó el segundo ciclo de la educación secundaria
 	***********
-	gen byte edus2c_ci=(aedu_ci==12)
-	replace edus2c_ci=. if aedu_ci==. 
+	gen byte edus2c_ci=(educsr ==31 | educsr ==32)
+	replace edus2c_ci=. if educsr ==99 
 	
 	***********
 	*asiste_ci*
@@ -206,13 +195,14 @@ gen dis_ch=.
 	replace literacy=1 if lit==2 // literate
 	replace literacy=0 if lit==1 // illiterate
 
-
 *****************************
 ** Include all labels of   **
 **  harmonized variables   **
 *****************************
-include "../Base/labels.do"
 
+order region_BID_c region_c pais_c anio_c idh_ch idp_ci factor_ch factor_ci estrato_ci zona_c sexo_ci edad_ci relacion_ci civil_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch miembros_ci afroind_ci afroind_ch afroind_ano_c dis_ci dis_ch condocup_ci emp_ci desemp_ci pea_ci rama_ci categopri_ci spublico_ci ylm_ci ynlm_ci ylm_ch ynlm_ch aedu_ci eduno_ci edupre_ci edupi_ci  edupc_ci  edusi_ci edusc_ci  eduui_ci eduuc_ci edus1i_ci edus1c_ci edus2i_ci edus2c_ci asiste_ci literacy aguared_ch luz_ch bano_ch des1_ch piso_ch banomejorado_ch pared_ch techo_ch resid_ch dorm_ch cuartos_ch cocina_ch telef_ch refrig_ch auto_ch compu_ch internet_ch cel_ch viviprop_ch migrante_ci migrantelac_ci migantiguo5_ci discapacidad_ci  ceguera_ci sordera_ci mudez_ci dismental_ci
+
+include "../Base/labels.do"
 
 compress
 

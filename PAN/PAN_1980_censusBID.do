@@ -77,8 +77,7 @@ drop afroind_jefe
 	*******************
 	***afroind_ano_c***
 	*******************
-gen afroind_ano_c=2001
-
+gen afroind_ano_c=1990
 ********************
 *** discapacid
 ********************
@@ -90,7 +89,15 @@ gen dis_ch=.
 *******************************************************
 ***           VARIABLES DE INGRESO                  ***
 *******************************************************
-
+	
+	***********
+	*ylm_ci*
+	***********
+   cap confirm variable inctot
+   if (_rc==0) {
+   replace ylm_ci = inctot
+   replace ylm_ci =. if inctot==9999998 | inctot==9999999
+   }
     ***********
 	**ylm_ch*
 	***********
@@ -123,7 +130,7 @@ gen dis_ch=.
 	**********
 	*edupre_ci* // preescolar
 	**********
-	gen edupre_ci=(educpa==1010) // pre-school
+	gen edupre_ci=(educpa==03) // pre-school
 	replace edupre_ci=. if aedu_ci==. // NIU & missing
 	
 	**********
@@ -162,7 +169,7 @@ gen dis_ch=.
 	**********
 	*eduuc_ci* // completó la educación universitaria o terciaria
 	**********
-	gen eduuc_ci=(aedu_ci>=16) //más de 16
+	gen eduuc_ci=(aedu_ci>=17) //más de 16
 	replace eduuc_ci=. if aedu_ci==. // missing a los NIU & missing
 
 	***********
@@ -207,6 +214,10 @@ gen dis_ch=.
 ** Include all labels of   **
 **  harmonized variables   **
 *****************************
+
+order region_BID_c region_c pais_c anio_c idh_ch idp_ci factor_ch factor_ci estrato_ci zona_c sexo_ci edad_ci relacion_ci civil_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch miembros_ci afroind_ci afroind_ch afroind_ano_c dis_ci dis_ch condocup_ci emp_ci desemp_ci pea_ci rama_ci categopri_ci spublico_ci ylm_ci ynlm_ci ylm_ch ynlm_ch aedu_ci eduno_ci edupre_ci edupi_ci  edupc_ci  edusi_ci edusc_ci  eduui_ci eduuc_ci edus1i_ci edus1c_ci edus2i_ci edus2c_ci asiste_ci literacy aguared_ch luz_ch bano_ch des1_ch piso_ch banomejorado_ch pared_ch techo_ch resid_ch dorm_ch cuartos_ch cocina_ch telef_ch refrig_ch auto_ch compu_ch internet_ch cel_ch viviprop_ch migrante_ci migrantelac_ci migantiguo5_ci discapacidad_ci  ceguera_ci sordera_ci mudez_ci dismental_ci
+
+
 include "../Base/labels.do"
 
 
