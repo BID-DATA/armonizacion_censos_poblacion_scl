@@ -111,7 +111,7 @@ use "`base_in'", clear
 	*sexo_c*
 	*********
 	rename sex sexo_ci
-	drop if sexo_ci>2 | sexo_ci<1  /* sex=9 corresponde a "unknown" */
+	replace sexo_ci = . if sexo_ci == 9
 	
 	*********
 	*edad_c*
