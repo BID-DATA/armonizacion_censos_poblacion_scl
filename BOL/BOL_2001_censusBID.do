@@ -12,7 +12,7 @@ set more off
 *Population and Housing Censuses/Harmonized Censuses - IPUMS
 
 local PAIS BOL
-local ANO "1976"
+local ANO "2001"
 
 
 /***************************************************************************
@@ -51,6 +51,7 @@ include "../Base/base.do"
    label value region_c region_c 
 
 	
+
 *******************************************************
 ***           VARIABLES DE DIVERSIDAD               ***
 *******************************************************
@@ -62,19 +63,23 @@ include "../Base/base.do"
 **Pregunta: 
 
 gen afroind_ci=. 
+replace afroind_ci=1  if indig == 1 
+replace afroind_ci=3 if indig == 2
+replace afroind_ci=. if indig == 0 //NIU
+
 
 	***************
 	***afroind_ch***
 	***************
-gen afroind_jefe=.
-gen afroind_ch  =.
+gen afroind_jefe= afroind_ci if relate==1
+egen afroind_ch  = min(afroind_jefe), by(idh_ch) 
 
 drop afroind_jefe 
 
 	*******************
 	***afroind_ano_c***
 	*******************
-gen afroind_ano_c=.
+gen afroind_ano_c=2001
 
 ********************
 *** discapacid
@@ -173,7 +178,6 @@ gen byte eduuc_ci=0
 replace eduuc_ci=1 if aedu_ci==17| aedu_ci==18
 replace eduuc_ci=. if yrschool==90| yrschool==98| yrschool==99 // Se asignan como missing NIU and missing (no asi las otras)
 
-
 ***************
 ***edus1i_ci***
 ***************
@@ -199,9 +203,10 @@ gen edus2c_ci=aedu_ci==(aedu_ci==12)
 replace edus2c_ci=. if aedu_ci==. // NIU
 
 ***************
-***edupre_ci*** *No hay referencias de esta categoria en educbo
+***edupre_ci***
 ***************
-gen edupre_ci=.
+gen edupre_ci=(educbo==120) // pre-school
+replace edupre_ci=. if aedu_ci==. // NIU & missing
 
 ** Other variables 
 ***************
