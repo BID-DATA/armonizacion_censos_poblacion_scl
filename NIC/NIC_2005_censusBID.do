@@ -39,7 +39,33 @@ include "../Base/base.do"
 *** region_c ***
 ****************
 gen region_c=.
+replace region_c=1 if geo1_ni==558005 // Nueva Segovia, Jinotega
+replace region_c=2 if geo1_ni==558020 // Madriz
+replace region_c=3 if geo1_ni==558025 // Esteli, Leon
+replace region_c=4 if geo1_ni==558030 // Chinandega
+replace region_c=5 if geo1_ni==558040 // Matagalpa, Atlantico Norte, Atlantico Sur, Zelaya
+replace region_c=6 if geo1_ni==558050 // Boaco
+replace region_c=7 if geo1_ni==558055 // Managua, Masaya
+replace region_c=8 if geo1_ni==558065 // Chontales
+replace region_c=9 if geo1_ni==558070 // Granada
+replace region_c=10 if geo1_ni==558075 // Carazo
+replace region_c=11 if geo1_ni==558080 // Rivas
+replace region_c=12 if geo1_ni==558085 // Rio San Juan
 
+label define region_c //
+	1 "Nueva Segovia, Jinotega"
+	2 "Madriz"
+	3 "Esteli. Leon"
+	4 "Chinandega"
+	5 "Matagalpa, Atlantico Norte, Atlantico Sur, Zelaya"
+	6 "Boaco"
+	7 "Managua, Masaya"
+	8 "Chontales"
+	9 "Granada"
+	10 "Carazo"
+	11 "Rivas"
+	12 "Rio San Juan"
+	
 ***************************************************
 ***           VARIABLES DE DIVERSIDAD           ***
 ***************************************************				
