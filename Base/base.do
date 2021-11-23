@@ -43,7 +43,7 @@ use "`base_in'", clear
 		if `"`PAIS'"'=="BHS" | `"`PAIS'"'=="GUY" | `"`PAIS'"'=="JAM" | `"`PAIS'"'=="SUR" | `"`PAIS'"'=="BRB" | `"`PAIS'"'=="TTO" local reg_bid 2
 	
 	*CID
-		if `"`PAIS'"'=="BLZ" | `"`PAIS'"'=="CRI" | `"`PAIS'"'=="SLV" | `"`PAIS'"'=="GTM" | `"`PAIS'"'=="HTI" | `"`PAIS'"'=="HON" | `"`PAIS'"'=="PAN" | `"`PAIS'"'=="MEX" | `"`PAIS'"'=="DOM" | `"`PAIS'"'=="NIC" local reg_bid 1
+		if `"`PAIS'"'=="BLZ" | `"`PAIS'"'=="CRI" | `"`PAIS'"'=="SLV" | `"`PAIS'"'=="GTM" | `"`PAIS'"'=="HTI" | `"`PAIS'"'=="HND" | `"`PAIS'"'=="PAN" | `"`PAIS'"'=="MEX" | `"`PAIS'"'=="DOM" | `"`PAIS'"'=="NIC" local reg_bid 1
 		
 	gen region_BID_c=`reg_bid'
 	
@@ -111,7 +111,7 @@ use "`base_in'", clear
 	*sexo_c*
 	*********
 	rename sex sexo_ci
-	drop if sexo_ci>2 | sexo_ci<1  /* sex=9 corresponde a "unknown" */
+	replace sexo_ci = . if sexo_ci == 9
 	
 	*********
 	*edad_c*

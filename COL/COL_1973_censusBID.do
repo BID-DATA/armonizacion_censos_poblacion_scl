@@ -109,15 +109,6 @@ label value region_c region_c
 /*Colombia no tiene vars de ingreso, pero se incluyen las 
 variables de ingreso por hogar porque no están en el do Base*/	
 
-     ***********
-	  *ylm_ci*
-	 ***********
-   cap confirm variable inctot
-   if (_rc==0) {
-   replace ylm_ci = inctot
-   replace ylm_ci =. if inctot==9999999 | inctot==9999998
-   }
-
     ***********
 	**ylm_ch*
 	***********
