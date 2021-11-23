@@ -12,7 +12,7 @@ set more off
 *Population and Housing Censuses/Harmonized Censuses - IPUMS
 
 local PAIS BOL
-local ANO "1976"
+local ANO "1992"
 
 
 /***************************************************************************
@@ -172,7 +172,6 @@ replace eduui_ci=. if yrschool==90| yrschool==98| yrschool==99 // Se asignan com
 gen byte eduuc_ci=0
 replace eduuc_ci=1 if aedu_ci==17| aedu_ci==18
 replace eduuc_ci=. if yrschool==90| yrschool==98| yrschool==99 // Se asignan como missing NIU and missing (no asi las otras)
-
 
 ***************
 ***edus1i_ci***
