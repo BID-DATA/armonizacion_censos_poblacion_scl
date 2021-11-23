@@ -85,6 +85,10 @@ include "../Base/base.do"
 	* VARIABLES EDUCATIVAS *
 	************************
 
+	************************
+	* VARIABLES EDUCATIVAS *
+	************************
+
 	*********
 	*aedu_ci* // 
 	*********
@@ -100,8 +104,7 @@ include "../Base/base.do"
 	**********
 	*edupre_ci* // preescolar
 	**********
-	gen edupre_ci=(educpy==100) // pre-school
-	replace edupre_ci=. if aedu_ci==. // NIU & missing
+	gen edupre_ci=.
 	
 	**********
 	*edupi_ci* // no completó la educación primaria
@@ -119,20 +122,20 @@ include "../Base/base.do"
 	**********
 	*edusi_ci* // no completó la educación secundaria
 	**********
-	gen edusi_ci=(aedu_ci>=7 & aedu_ci<=10) // 7 a 10 anos de educación
+	gen edusi_ci=(aedu_ci>=7 & aedu_ci<=11) // 7 a 11 anos de educación
 	replace edusi_ci=. if aedu_ci==. // NIU & missing
 	replace edusi_ci = 1 if yrschool == 92 | yrschool ==93 //some technical after primary or some secondary
 
 	**********
 	*edusc_ci* // completó la educación secundaria
 	**********
-	gen edusc_ci=(aedu_ci==11) // 11 anos de educación
+	gen edusc_ci=(aedu_ci==12) // 12 anos de educación
 	replace edusc_ci=. if aedu_ci==. // NIU & missing
 	
 	**********
 	*eduui_ci* // no completó la educación universitaria o terciaria
 	**********
-	gen eduui_ci=(aedu_ci>=12 & aedu_ci<15) // 14 a 16 anos de educación
+	gen eduui_ci=(aedu_ci>=13 & aedu_ci<17) // 13 a 17 anos de educación
 	replace eduui_ci=. if aedu_ci==. // NIU & missing
 	replace eduui_ci = 1 if yrschool == 94 // some terciary
 
@@ -140,7 +143,7 @@ include "../Base/base.do"
 	*eduuc_ci* // completó la educación universitaria o terciaria
 	**********
 	gen eduuc_ci=.
-	replace eduuc_ci=(aedu_ci>=15) // más de 15
+	replace eduuc_ci=(aedu_ci>=17) // más de 16
 	replace eduuc_ci=. if aedu_ci==. // NIU & missing
 
 	***********
@@ -158,13 +161,13 @@ include "../Base/base.do"
 	***********
 	*edus2i_ci* // no completó el segundo ciclo de la educación secundaria
 	***********
-	gen byte edus2i_ci=(aedu_ci>9 & aedu_ci<11)
+	gen byte edus2i_ci=(aedu_ci>9 & aedu_ci<12)
 	replace edus2i_ci=. if aedu_ci==. // missing a los NIU & missing
 
 	***********
 	*edus2c_ci* // completó el segundo ciclo de la educación secundaria
 	***********
-	gen byte edus2c_ci=(aedu_ci==11)
+	gen byte edus2c_ci=(aedu_ci==12)
 	replace edus2c_ci=. if aedu_ci==. // missing a los NIU & missing
 	
 	***********
@@ -179,7 +182,8 @@ include "../Base/base.do"
 	gen literacy=. 
 	replace literacy=1 if lit==2 // literate
 	replace literacy=0 if lit==1 // illiterate
-
+	
+	
 	*******************************************************
 	***           VARIABLES DE DIVERSIDAD               ***
 	*******************************************************				
