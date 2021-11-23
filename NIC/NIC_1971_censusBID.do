@@ -54,19 +54,19 @@ replace region_c=10 if geo1_ni==558075 // Carazo
 replace region_c=11 if geo1_ni==558080 // Rivas
 replace region_c=12 if geo1_ni==558085 // Rio San Juan
 
-label define region_c //
-	1 "Nueva Segovia, Jinotega"
-	2 "Madriz"
-	3 "Esteli. Leon"
-	4 "Chinandega"
-	5 "Matagalpa, Atlantico Norte, Atlantico Sur, Zelaya"
-	6 "Boaco"
-	7 "Managua, Masaya"
-	8 "Chontales"
-	9 "Granada"
-	10 "Carazo"
-	11 "Rivas"
-	12 "Rio San Juan"
+label define region_c ///
+	1 "Nueva Segovia, Jinotega" ///
+	2 "Madriz" ///
+	3 "Esteli. Leon" ///
+	4 "Chinandega" ///
+	5 "Matagalpa, Atlantico Norte, Atlantico Sur, Zelaya" ///
+	6 "Boaco" ///
+	7 "Managua, Masaya" ///
+	8 "Chontales" ///
+	9 "Granada" ///
+	10 "Carazo" ///
+	11 "Rivas" ///
+	12 "Rio San Juan" ///
 
 *******************************************************
 ***           VARIABLES DE DIVERSIDAD               ***
@@ -85,7 +85,7 @@ gen afroind_ch=.
 *******************
 ***afroind_ano_c***
 *******************
-gen afroind_ano_c=.
+gen afroind_ano_c=2005
 
 ********************
 *** discapacidad ***
@@ -97,9 +97,7 @@ gen dis_ch=.
 *******************************************************
 ***           VARIABLES DE INGRESO                  ***
 *******************************************************
-gen ylm_ci=.
- 
-gen ynlm_ci=.
+* NIC no tiene variables de ingreso se genera por hogar vacia
    
 gen ylm_ch=.
 
@@ -116,6 +114,7 @@ replace asiste_ci=0 if school==2
 replace asiste_ci=. if school==0 // NIU
 replace asiste_ci=. if school==9 // Unknown/missing 
 
+
 *********
 *aedu_ci* // años de educacion aprobados
 *********
@@ -126,6 +125,7 @@ replace asiste_ci=. if school==9 // Unknown/missing
 gen aedu_ci=yrschool
 replace aedu_ci=. if aedu_ci==98 // Unknown/missing
 replace aedu_ci=. if aedu_ci==99 // NIU
+replace aedu_ci=. if yrschool>=90 & yrschool<100 
 	
 **************
 ***eduno_ci*** // ningún nivel de instrucción
@@ -140,6 +140,7 @@ replace eduno_ci=. if aedu_ci==.
 gen byte edupi_ci=0
 replace edupi_ci=1 if aedu_ci>0 & aedu_ci<6
 replace edupi_ci=. if aedu_ci==.
+replace edupi_ci = 1 if yrschool == 91 // some primary
 
 **************
 ***edupc_ci*** // primaria completa
@@ -154,6 +155,7 @@ replace edupc_ci=. if aedu_ci==.
 gen byte edusi_ci=0
 replace edusi_ci=1 if aedu_ci>6 & aedu_ci<11
 replace edusi_ci=. if aedu_ci==.
+replace edusi_ci = 1 if yrschool ==93 // some secondary
 
 **************
 ***edusc_ci*** // secundaria completa
@@ -168,6 +170,7 @@ replace edusc_ci=. if aedu_ci==.
 gen byte eduui_ci=0
 replace eduui_ci=1 if aedu_ci>11 & aedu_ci<16
 replace edusi_ci=. if aedu_ci==.
+replace eduui_ci = 1 if yrschool == 94 // some terciary
 
 ***************
 ***eduuc_ci**** // terciaria/universitaria completa
@@ -207,7 +210,9 @@ replace edus2c_ci=. if aedu_ci==.
 ***************
 ***edupre_ci*** // preescolar
 ***************
-gen edupre_ci=.
+gen edupre_ci=(educni==121 | educni==123 | educni == 123) // pre-school
+replace edupre_ci=. if educni==0 | educni==999 // NIU & missing
+replace edupre_ci= . if aedu_ci==.
 
 ***************
 ***literacy***
