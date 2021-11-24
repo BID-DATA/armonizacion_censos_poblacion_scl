@@ -90,8 +90,7 @@ include "../Base/base.do"
 	**********
 	*edusi_ci* // no completó la educación secundaria
 	**********
-	*gen edusi_ci=(aedu_ci>=7 & aedu_ci<=11) // 7 a 11 anos de educación
-	*replace edusi_ci=. if edattain==0 |edattain==9 // NIU & missing
+	gen edusi_ci=.
 
 	**********
 	*edusc_ci* // completó la educación secundaria
@@ -114,27 +113,23 @@ include "../Base/base.do"
 	***********
 	*edus1i_ci* // no completó el primer ciclo de la educación secundaria
 	***********
-	*gen byte edus1i_ci=(aedu_ci>6 & aedu_ci<8)
-	*replace edus1i_ci=. if edattaind==0 | edattaind==999 // missing a los NIU & missing
+	gen byte edus1i_ci=.
 
 	***********
 	*edus1c_ci* // completó el primer ciclo de la educación secundaria
 	***********
-	*gen byte edus1c_ci=(aedu_ci==8)
-	*replace edus1c_ci=. if edattaind==0 | edattaind==999 // missing a los NIU & missing
+	gen byte edus1c_ci=.
 
 	***********
 	*edus2i_ci* // no completó el segundo ciclo de la educación secundaria
 	***********
-	*gen byte edus2i_ci=(aedu_ci>8 & aedu_ci<12)
-	*replace edus2i_ci=. if edattaind==0 | edattaind==999 // missing a los NIU & missing
+	gen byte edus2i_ci=.
 
 	***********
 	*edus2c_ci* // completó el segundo ciclo de la educación secundaria
 	***********
-	*gen byte edus2c_ci=(aedu_ci==12)
-	*replace edus2c_ci=. if edattaind==0 | edattaind==999 // missing a los NIU & missing
-
+	gen byte edus2c_ci=.
+	
 	***********
 	*asiste_ci*
 	***********
@@ -159,20 +154,29 @@ include "../Base/base.do"
 		***************
 	**Pregunta: 
 
-	gen afroind_ci=. 
+	gen afroind_ci=.
+	replace afroind_ci = 1 if ethnictt == 4
+	replace afroind_ci = 2 if ethnictt == 1
+	replace afroind_ci = 3 if ethnictt == 2
+	replace afroind_ci = 3 if ethnictt == 3
+	replace afroind_ci = 3 if ethnictt == 5
+	replace afroind_ci = 3 if ethnictt == 6
+	replace afroind_ci = 3 if ethnictt == 8
+	replace afroind_ci = 3 if ethnictt == 9
+	replace afroind_ci = 3 if ethnictt == 97
 
 		***************
 		***afroind_ch***
 		***************
-	gen afroind_jefe=.
-	gen afroind_ch  =.
-
+	gen afroind_jefe= afroind_ci if relate==1
+	egen afroind_ch  = min(afroind_jefe), by(idh_ch) 
+	
 	drop afroind_jefe 
-
+	
 		*******************
 		***afroind_ano_c***
 		*******************
-	gen afroind_ano_c=.
+	gen afroind_ano_c=1970
 
 	********************
 	*** discapacid
@@ -189,10 +193,10 @@ include "../Base/base.do"
      ***********
 	  *ylm_ci*
 	 ***********
-   cap confirm variable incearn
+   cap confirm variable inctot
    if (_rc==0) {
-   replace ylm_ci = incearn
-   replace ylm_ci =. if incearn==99999999 | incearn==99999998
+   replace ylm_ci = inctot
+   replace ylm_ci =. if inctot==9999998 | inctot==9999999
    }
 
 	 *********
