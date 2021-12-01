@@ -128,7 +128,7 @@ drop afroind_jefe
 	*******************
 	***afroind_ano_c***
 	*******************
-gen afroind_ano_c=1990
+gen afroind_ano_c=1960
 
 ********************
 *** discapacidad ***
