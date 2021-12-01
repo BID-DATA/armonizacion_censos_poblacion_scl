@@ -250,32 +250,6 @@ gen dis_ci=.
 gen dis_ch=. 
 
 
-			***********************************
-			***** VARIABLES DE MIGRACIÓN ******
-			**********************************
-
-      *******************
-      ****migrante_ci****
-      *******************
-	gen migrante_ci = (nativity == 2)
-	replace migrante_ci = . if (nativity ==0 | nativity==9)
-	*label var migrante_ci "=1 si es migrante"
-
-      *******************
-      **migantiguo5_ci***
-      *******************
-	gen migantiguo5_ci = .
-	replace migantiguo5_ci = 1 if migrate5>0 & migrate5<30
-	replace migantiguo5_ci = 0 if migrante_ci==1 & migantiguo5_ci!=1
-	*label var migantiguo5_ci "=1 si es migrante antiguo (5 anos o mas)"
-
-	**********************
-	*** migrantelac_ci ***
-	**********************
-	gen migrantelac_ci= (bplcountry > 20000 & bplcountry < 24000)
-	replace migrantelac_ci=. if bplcountry==0 | bplcountry==99999
-	*label var migrantelac_ci "=1 si es migrante proveniente de un pais LAC"
-
 
 
 *****************************
