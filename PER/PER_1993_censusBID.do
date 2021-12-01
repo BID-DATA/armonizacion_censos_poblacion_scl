@@ -71,114 +71,101 @@ label define region_c ///
 *** Ingreso ******************
 * Peru no tinene ninguna
 * variable de ingreso en IPUMS
+* se generan únicamrnte las de hog
 ******************************
+gen ylm_ch =.
+gen ynlm_ch=.
+
 
 ***** Education **************
 * Use educpe
 ******************************
-gen byte aedu_ci=.
-replace aedu_ci=0  if educpe==100 | educpe==110 // Sin nivel o preescolar
-replace aedu_ci=educpe-200  if educpe>200 & educpe<300 //primary 201--206 (6 years)
-replace aedu_ci=6 + educpe-300  if educpe>300 & educpe<400 //secondary 301--306 (6 years)
-replace aedu_ci=13 if educpe==611 | educpe==621 //tertiary incomplete
-replace aedu_ci=14 if educpe==612 //non-universitary complete
-replace aedu_ci=16 if educpe==622 //universitary complete
+gen aedu_ci = yrschool 
+replace aedu_ci=. if yrschool>=90 & yrschool<100 
 
 **************
 ***eduno_ci***
 **************
-
-gen byte eduno_ci=.
-replace eduno_ci=0 if aedu_ci!=. & aedu_ci>0
-replace eduno_ci=1 if aedu_ci==0
+gen eduno_ci=(aedu_ci==0) // never attended or pre-school
+replace eduno_ci=. if aedu_ci==. // NIU & missing
 
 
 **************
 ***edupi_ci***
 **************
 
-gen byte edupi_ci=.
-replace edupi_ci=1 if aedu_ci!=. & aedu_ci>0 & aedu_ci<6
-replace edupi_ci=0 if aedu_ci!=. & edupi_ci!=1
+gen edupi_ci=(aedu_ci>0 & aedu_ci<6) //
+replace edupi_ci=. if aedu_ci==. // NIU & missing
+replace edupi_ci = 1 if yrschool == 91 // some primary
 
 
 **************
 ***edupc_ci***
 **************
 
-gen byte edupc_ci=.
-replace edupc_ci=1 if aedu_ci!=. & aedu_ci>=6
-replace edupc_ci=0 if aedu_ci!=. & edupc_ci!=1
+gen edupc_ci=(aedu_ci==6) 
+replace edupc_ci=. if aedu_ci==. // NIU & missing
 
 
 **************
 ***edusi_ci***
 **************
 
-gen byte edusi_ci=.
-replace edusi_ci=1 if aedu_ci!=. & aedu_ci>6 & aedu_ci<12
-replace edusi_ci=0 if aedu_ci!=. & edusi_ci!=1
-
+gen edusi_ci=(aedu_ci>=7 & aedu_ci<11) // 7 a 10 anos de educación
+replace edusi_ci=. if aedu_ci==. // NIU & missing
+replace edusi_ci = 1 if yrschool == 92 | yrschool ==93 //some technical after primary or some secondary
 
 **************
 ***edusc_ci***
 **************
 
-gen byte edusc_ci=.
-replace edusc_ci=1 if aedu_ci!=. & aedu_ci>=12
-replace edusc_ci=0 if aedu_ci!=. & edusc_ci!=1
+gen edusc_ci=(aedu_ci==11) // 11 anos de educación
+replace edusc_ci=. if aedu_ci==. // NIU & missing
 
 ***************
 ***edus1i_ci***
 ***************
 
-gen byte edus1i_ci=.
-replace edus1i_ci=1 if edusi_ci==1 & aedu_ci<=8
-replace edus1i_ci=0 if aedu_ci!=. & edus1i_ci!=1
-*label variable edus1i_ci "1er ciclo de la secundaria incompleto"
+gen byte edus1i_ci=(aedu_ci>6 & aedu_ci<9)
+replace edus1i_ci=. if aedu_ci==. // missing a los NIU & missing
+
 
 ***************
 ***edus1c_ci***
 ***************
 
-gen byte edus1c_ci=.
-replace edus1c_ci=1 if edusi_ci==1 & aedu_ci==9
-replace edus1c_ci=0 if aedu_ci!=. & edus1c_ci!=1
-*label variable edus1c_ci "1er ciclo de la secundaria completo"
+gen byte edus1c_ci=(aedu_ci==9)
+replace edus1c_ci=. if aedu_ci==. // missing a los NIU & missing
 
 ***************
 ***edus2i_ci***
 ***************
 
-gen byte edus2i_ci=.
-replace edus2i_ci=1 if edusi_ci==1 & aedu_ci==10
-replace edus2i_ci=0 if aedu_ci!=. & edus2i_ci!=1
-*label variable edus2i_ci "2do ciclo de la secundaria incompleto"
+gen byte edus2i_ci=(aedu_ci>9 & aedu_ci<11)
+replace edus2i_ci=. if aedu_ci==. // missing a los NIU & missing
 
 ***************
 ***edus2c_ci***
 ***************
 
-gen byte edus2c_ci=(edusc_ci==1)
-replace edus2c_ci=. if aedu_ci==.
-*label variable edus2c_ci "2do ciclo de la secundaria completo"
+gen byte edus2c_ci=(aedu_ci==11)
+replace edus2c_ci=. if aedu_ci==. // missing a los NIU & missing
 
 **************
 ***eduui_ci***
 **************
 
-gen byte eduui_ci=(educpe==611)
-replace eduui_ci=. if aedu_ci==.
-*label variable eduui_ci "Universitaria incompleta"
+gen eduui_ci=(aedu_ci>=12 & aedu_ci<16 & edattain != 4) // 12 a 15 anos de educación
+replace eduui_ci=. if aedu_ci ==. // NIU & missing
+replace eduui_ci = 1 if yrschool == 94 // some terciary
 
 ***************
 ***eduuc_ci***
 ***************
 
-gen byte eduuc_ci=(educpe==621 | educpe==622)
-replace eduuc_ci=. if aedu_ci==.
-*label variable eduuc_ci "Universitaria incompleta o mas"
-
+gen eduuc_ci=(aedu_ci>=16)
+replace eduuc_ci=1 if edattain == 4
+replace eduuc_ci=. if aedu_ci==. // NIU & missing
 
 ***************
 ***edupre_ci***
@@ -189,26 +176,6 @@ replace edupre_ci=. if aedu_ci==.
 *label variable edupre_ci "Educacion preescolar"
 
 
-**************
-***eduac_ci***
-**************
-gen byte eduac_ci=.
-replace eduac_ci=1 if eduuc_ci==1
-replace eduac_ci=0 if (educpe==611 | educpe==612)
-label variable eduac_ci "Superior universitario vs superior no universitario"
-
-****************
-* tecnica_ci  **
-****************
-gen tecnica_ci=(eduac_ci==0)
-replace tecnica_ci=. if aedu_ci==.
-
-****************
-***asispre_ci***
-****************
-gen asispre_ci=.
-*la var asispre_ci "Asiste a educacion prescolar"
-
 ***************
 ***asiste_ci***
 ***************
@@ -216,6 +183,14 @@ gen asiste_ci=.
 replace asiste_ci=1 if school==1
 replace asiste_ci=0 if school==2
 *label variable asiste_ci "Asiste actualmente a la escuela"
+
+***************
+***literacy***
+***************
+gen literacy=. if lit==0
+replace literacy=. if lit==9
+replace literacy=0 if lit==1
+replace literacy=1 if lit==2
 
 *******************************************************
 ***           VARIABLES DE DIVERSIDAD               ***
