@@ -180,7 +180,7 @@ gen dis_ch=.
 	**********
 	*eduui_ci* // no completó la educación universitaria o terciaria
 	**********
-	gen eduui_ci=(aedu_ci>=12 & aedu_ci<17) // 13 a 16 anos de educación
+	gen eduui_ci=(aedu_ci>=12 & aedu_ci<16) // 13 a 16 anos de educación
 	replace eduui_ci=.  if aedu_ci==. // NIU & missing
 	replace eduui_ci=1 if yrschool==94
 	replace eduui_ci=. if yrschool==90| yrschool==98| yrschool==99
