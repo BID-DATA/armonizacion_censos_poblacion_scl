@@ -155,7 +155,6 @@ replace asiste_ci=. if school==0 | school==9 | school==. // missing a los NIU & 
 gen aedu_ci=yrschool
 replace aedu_ci=. if yrschool>=90 
 // unknown/missing or NIU + other (we don't know how many years).
-replace aedu_ci=. if educbr==3900 // secondary, grade unspecified
 
 **********
 *eduno_ci* // no ha completado ningún año de educación
@@ -171,7 +170,7 @@ gen byte edupre_ci=. // pre-school
 **********
 *edupi_ci* // no completó la educación primaria
 **********	
-gen edupi_ci=(aedu_ci>=1 & aedu_ci<=4 | educbr==1700 | educbr==2900) // 1 a 4 anos de educación + attending first grade + primary grade unspecified
+gen edupi_ci=(aedu_ci>=1 & aedu_ci<=4) // 1 a 4 anos de educación 
 replace edupi_ci=. if aedu_ci==.
 
 ********** 
