@@ -29,7 +29,6 @@ Autores:
 ** Setup code, load database,       **
 ** and include all common variables **
 **************************************
-
 include "../Base/base.do"
 
 ****************
@@ -50,27 +49,56 @@ include "../Base/base.do"
    
    label define region_c 1 "Chuqisaca" 2 "La paz" 3 "Cochabamba" 4 "Oruro" 5 "Potosá" 6 "Tarija" 7 "Santa Cruz" 8 "Beni" 9 "Pando", add modify 
    label value region_c region_c 
-	
-	***********************************
-	***    VARIABLES DE MIGRACIÓN.  ***
-	***********************************
 
-      *******************
-      ****migrante_ci****
-      *******************
-	gen migrante_ci = (nativity == 2)
-	 
-      *******************
-      **migantiguo5_ci***
-      *******************
-	gen migantiguo5_ci = (mig1_5_bo == 68097)
 	
-	**********************
-	*** migrantelac_ci ***
-	**********************
-	
-	gen migrantelac_ci= 1 if inlist(bplcountry, 21100, 23010, 22060, 23110, 22020, 22040, 23050, 23100, 22030, 23060, 23140, 22050, 23040, 23100, 29999, 23130, 23030, 21250, 21999, 22010, 22070, 22080, 22999)
-	replace migrantelac_ci = 0 if migrantelac_ci == . & nativity == 2
+*******************************************************
+***           VARIABLES DE DIVERSIDAD               ***
+*******************************************************
+* Cesar Lins & Nathalia Maya - Septiembre 2021	
+
+	***************
+	***afroind_ci***
+	***************
+**Pregunta: 
+
+gen afroind_ci=. 
+
+	***************
+	***afroind_ch***
+	***************
+gen afroind_jefe=.
+gen afroind_ch  =.
+
+drop afroind_jefe 
+
+	*******************
+	***afroind_ano_c***
+	*******************
+gen afroind_ano_c=2001
+
+********************
+*** discapacid
+********************
+gen dis_ci=.
+gen dis_ch=.
+
+*******************************************************
+***           VARIABLES DE INGRESO                  ***
+*******************************************************
+/*BOL no tiene vars de ingreso pero se incluyen las 
+variables de ingreso por hogar porque no están en el do Base*/	
+
+    ***********
+	**ylm_ch*
+	***********
+   
+   by idh_ch, sort: egen ylm_ch=sum(ylm_ci) if miembros_ci==1, missing
+   
+    ***********
+	**ynlm_ch*
+	***********
+   by idh_ch, sort: egen ynlm_ch=sum(ynlm_ci) if miembros_ci==1, missing
+
 
 ************************
 * VARIABLES EDUCATIVAS *
@@ -145,28 +173,33 @@ gen byte eduuc_ci=0
 replace eduuc_ci=1 if aedu_ci==17| aedu_ci==18
 replace eduuc_ci=. if yrschool==90| yrschool==98| yrschool==99 // Se asignan como missing NIU and missing (no asi las otras)
 
+
 ***************
 ***edus1i_ci***
 ***************
-gen edus1i_ci=.
+gen edus1i_ci=(aedu_ci==7)
+replace edus1i_ci=. if aedu_ci==. // NIU
 
 ***************
 ***edus1c_ci***
 ***************
-gen edus1c_ci=.
+gen edus1c_ci=(aedu_ci==8)
+replace edus1c_ci=. if aedu_ci==. // NIU
 
 ***************
 ***edus2i_ci***
 ***************
-gen edus2i_ci=.
+gen edus2i_ci=(aedu_ci>=9 & aedu_ci<12)
+replace edus2i_ci=. if aedu_ci==. // NIU
 
 ***************
 ***edus2c_ci***
 ***************
-gen edus2c_ci=.
+gen edus2c_ci=(aedu_ci==12)
+replace edus2c_ci=. if aedu_ci==. // NIU
 
 ***************
-***edupre_ci***
+***edupre_ci*** *No hay referencias de esta categoria en educbo
 ***************
 gen edupre_ci=.
 
@@ -177,6 +210,16 @@ gen edupre_ci=.
 gen literacy=. if lit==0
 replace literacy=0 if lit==1
 replace literacy=1 if lit==2
+
+*****
+
+order region_BID_c region_c pais_c anio_c idh_ch idp_ci factor_ch factor_ci estrato_ci zona_c sexo_ci edad_ci relacion_ci civil_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch miembros_ci afroind_ci afroind_ch afroind_ano_c dis_ci dis_ch condocup_ci emp_ci desemp_ci pea_ci rama_ci categopri_ci spublico_ci ylm_ci ynlm_ci ylm_ch ynlm_ch aedu_ci eduno_ci edupre_ci edupi_ci  edupc_ci  edusi_ci edusc_ci  eduui_ci eduuc_ci edus1i_ci edus1c_ci edus2i_ci edus2c_ci asiste_ci literacy aguared_ch luz_ch bano_ch des1_ch piso_ch banomejorado_ch pared_ch techo_ch resid_ch dorm_ch cuartos_ch cocina_ch telef_ch refrig_ch auto_ch compu_ch internet_ch cel_ch viviprop_ch migrante_ci migrantelac_ci migantiguo5_ci discapacidad_ci  ceguera_ci sordera_ci mudez_ci dismental_ci
+
+*****************************
+** Include all labels of   **
+**  harmonized variables   **
+*****************************
+include "../Base/labels.do"
 
 compress
 

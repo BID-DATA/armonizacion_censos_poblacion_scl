@@ -9,19 +9,6 @@ set more off
  * Los datos se obtienen de las carpetas que se encuentran en el servidor: ${censusFolder}
  * Se tiene acceso al servidor únicamente al interior del BID.
  *________________________________________________________________________________________________________________*
- 
-*Population and Housing Censuses/Harmonized Censuses - IPUMS
-
-global ruta = "${censusFolder}"
-local PAIS CRI
-local ANO "1963"
-
-local log_file = "$ruta\harmonized\\`PAIS'\\log\\`PAIS'_`ANO'_censusBID.log"
-local base_in  = "$ruta\census\\`PAIS'\\`ANO'\data_merge\\`PAIS'_`ANO'_IPUMS.dta"
-local base_out = "$ruta\harmonized\\`PAIS'\data_arm\\`PAIS'_`ANO'_censusBID.dta"
-                                                    
-capture log close
-log using "`log_file'", replace 
 
 
 /***************************************************************************
@@ -35,73 +22,205 @@ Autores:
 ****************************************************************************/
 ****************************************************************************
 
-use "`base_in'", clear
+*Population and Housing Censuses/Harmonized Censuses - IPUMS
 
+local PAIS CRI
+local ANO "1963"
 
-****************
-* region_BID_c *
-****************
+**************************************
+** Setup code, load database,       **
+** and include all common variables **
+**************************************
+
+include "../Base/base.do"
+
+*****************************************************
+******* Variables specific for this census **********
+*****************************************************
+
+	****************
+    *** region_c ***
+    ****************
+	gen region_c=.   
+	replace region_c=1 if geo1_cr1963==1	/*San Jose*/
+	replace region_c=2 if geo1_cr1963==2	/*Alajuela*/
+	replace region_c=3 if geo1_cr1963==3	/*Cartago*/
+	replace region_c=4 if geo1_cr1963==4	/*Heredia*/
+	replace region_c=5 if geo1_cr1963==5	/*Guanacaste*/
+	replace region_c=6 if geo1_cr1963==6	/*Puntarenas*/
+	replace region_c=7 if geo1_cr1963==7	/*Limon*/
+
+	label define region_c 1"San Jose" 2"Alajuela" 3"Cartago" 4"Heredia" 5"Guanacaste" 6"Puntarenas" 7"Limon" 
+	label value region_c region_c
+	label var region_c "division politico-administrativa, provincia"
+
 	
-gen region_BID_c=.
+	************************
+	* VARIABLES EDUCATIVAS *
+	************************
 
-label var region_BID_c "Regiones BID"
-label define region_BID_c 1 "Centroamérica_(CID)" 2 "Caribe_(CCB)" 3 "Andinos_(CAN)" 4 "Cono_Sur_(CSC)"
-label value region_BID_c region_BID_c
-
-
-
-    *********
-	*pais_c*
 	*********
-    gen str3 pais_c="CRI"
+	*aedu_ci* // 
+	*********
+	gen aedu_ci = yrschool 
+	replace aedu_ci=. if yrschool>=90 & yrschool<100 
+ 
+	**********
+	*eduno_ci* // no ha completado ningún año de educación
+	**********
+	gen eduno_ci=(aedu_ci==0) // never attended or pre-school
+	replace eduno_ci=. if aedu_ci==. // NIU & missing
 	
-    ****************************************
-    * Variables comunes a todos los países *
-    ****************************************
-    include "../Base/base.do"
-
+	**********
+	*edupre_ci* // preescolar
+	**********
+	gen edupre_ci=(educcr==100) // pre-school
+	replace edupre_ci=. if aedu_ci==. // NIU & missing
 	
+	**********
+	*edupi_ci* // no completó la educación primaria
+	**********
+	gen edupi_ci=(aedu_ci>0 & aedu_ci<6) //
+	replace edupi_ci=. if aedu_ci==. // NIU & missing
+	replace edupi_ci = 1 if yrschool == 91 // some primary
+
+	********** 
+	*edupc_ci* // completó la educación primaria
+	**********
+	gen edupc_ci=(aedu_ci==6) 
+	replace edupc_ci=. if aedu_ci==. // NIU & missing
+
+	**********
+	*edusi_ci* // no completó la educación secundaria
+	**********
+	gen edusi_ci=(aedu_ci>=7 & aedu_ci<=10) // 7 a 10 anos de educación
+	replace edusi_ci=. if aedu_ci==. // NIU & missing
+	replace edusi_ci = 1 if yrschool == 92 | yrschool ==93 //some technical after primary or some secondary
+
+	**********
+	*edusc_ci* // completó la educación secundaria
+	**********
+	gen edusc_ci=(aedu_ci==11) // 11 anos de educación
+	replace edusc_ci=. if aedu_ci==. // NIU & missing
 	
-	***********************************
-	***    VARIABLES DE MIGRACIÓN.  ***
-	***********************************
+	**********
+	*eduui_ci* // no completó la educación universitaria o terciaria
+	**********
+	gen eduui_ci=(aedu_ci>=12 & aedu_ci<15) // 14 a 16 anos de educación
+	replace eduui_ci=. if aedu_ci==. // NIU & missing
+	replace eduui_ci = 1 if yrschool == 94 // some terciary
 
+	**********
+	*eduuc_ci* // completó la educación universitaria o terciaria
+	**********
+	gen eduuc_ci=.
+	replace eduuc_ci=(aedu_ci>=15) // más de 15
+	replace eduuc_ci=. if aedu_ci==. // NIU & missing
 
-      *******************
-      ****migrante_ci****
-      *******************
-	gen migrante_ci = (nativity == 2)
+	***********
+	*edus1i_ci* // no completó el primer ciclo de la educación secundaria
+	***********
+	gen byte edus1i_ci=(aedu_ci>6 & aedu_ci<9)
+	replace edus1i_ci=. if aedu_ci==. // missing a los NIU & missing
 
-      *******************
-      **migantiguo5_ci***
-      *******************
-	gen migantiguo5_ci = (migyrs1 >= 5) & migrante_ci == 1
-	replace migantiguo5_ci = . if migantiguo5_ci == 0 & nativity != 2
+	***********
+	*edus1c_ci* // completó el primer ciclo de la educación secundaria
+	***********
+	gen byte edus1c_ci=(aedu_ci==9)
+	replace edus1c_ci=. if aedu_ci==. // missing a los NIU & missing
 
-	**********************
-	*** migrantelac_ci ***
-	**********************
+	***********
+	*edus2i_ci* // no completó el segundo ciclo de la educación secundaria
+	***********
+	gen byte edus2i_ci=(aedu_ci>9 & aedu_ci<11)
+	replace edus2i_ci=. if aedu_ci==. // missing a los NIU & missing
 
-	gen migrantelac_ci= 1 if inlist(bplcountry, 21100, 23010, 22060, 23110, 22040, 23100, 22030, 23060, 23140, 22050, 23050, 23040, 23100, 29999, 23130, 23030, 21250, 21999, 22010, 22070, 22080, 22999)
-	replace migrantelac_ci = 0 if migrantelac_ci == . & nativity == 2
-
-********************************
-*** Health indicators **********
-********************************
-	gen discapacidad_ci =.
-	label var discapacidad_ci "Discapacidad"
-
-	gen ceguera_ci=.
-	label var ceguera_ci "Ciego o con discpacidad visual"
+	***********
+	*edus2c_ci* // completó el segundo ciclo de la educación secundaria
+	***********
+	gen byte edus2c_ci=(aedu_ci==11)
+	replace edus2c_ci=. if aedu_ci==. // missing a los NIU & missing
 	
-	gen sordera_ci  =.
-	label var sordera_ci "Sordera o con discpacidad auditiva"
+	***********
+	*asiste_ci*
+	***********
+	gen asiste_ci=(school==1) // 0 includes attended in the past (3) and never attended (4)
+	replace asiste_ci=. if school==0 | school==9 // missing a los NIU & missing
 
-	gen mudez_ci=.
-	label var mudez_ci "Mudo o con discpacidad de lenguaje"
+	************
+	* literacy *
+	************
+	gen literacy=. 
+	replace literacy=1 if lit==2 // literate
+	replace literacy=0 if lit==1 // illiterate
+		  
+	*******************************************************
+	***           VARIABLES DE DIVERSIDAD               ***
+	*******************************************************
+	* Cesar Lins & Nathalia Maya - Septiembre 2021	
 
-	gen dismental_ci=.
-	label var dismental_ci "Discapacidad mental"
+	***************
+	***afroind_ci**
+	***************
+	**Pregunta: 
+
+	gen afroind_ci=. 
+
+	***************
+	***afroind_ch**
+	***************
+	gen afroind_jefe=.
+	gen afroind_ch  =.
+
+	drop afroind_jefe 
+
+	*******************
+	***afroind_ano_c***
+	*******************
+	gen afroind_ano_c=.
+
+	********************
+	*** discapacid
+	********************
+	gen dis_ci=.
+	gen dis_ch=.
+
+
+
+*******************************************************
+***           VARIABLES DE INGRESO                  ***
+*******************************************************
+	
+    ***********
+	**ylm_ci**
+	***********
+	
+	*gen ylm_ci=.
+	
+    ***********
+	**ynlm_ci**
+	***********
+ 
+	*gen ynlm_ci=.
+
+    ***********
+	**ylm_ch**
+	***********
+   
+   gen ylm_ch=.
+   
+    ***********
+	**ynlm_ch**
+	***********
+   gen ynlm_ch=.
+
+*****************************
+** Include all labels of   **
+**  harmonized variables   **
+*****************************
+include "../Base/labels.do"
+
+order region_BID_c pais_c estrato_ci zona_c relacion_ci civil_ci idh_ch factor_ch idp_ci factor_ci edad_ci sexo_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch miembros_ci condocup_ci emp_ci desemp_ci pea_ci rama_ci spublico_ci migrante_ci migantiguo5_ci aguared_ch luz_ch bano_ch des1_ch piso_ch pared_ch techo_ch dorm_ch cuartos_ch cocina_ch refrig_ch auto_ch internet_ch cel_ch viviprop_ch viviprop_ch1 region_c categopri_ci discapacidad_ci ceguera_ci sordera_ci mudez_ci dismental_ci afroind_ci afroind_ch afroind_ano_c dis_ci dis_ch aedu_ci
 
 compress
 
