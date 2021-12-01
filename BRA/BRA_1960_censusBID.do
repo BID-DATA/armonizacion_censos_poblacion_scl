@@ -35,33 +35,33 @@ include "../Base/base.do"
  ****************
  
  gen region_c=.
- replace region_c=1 if geo1_br1960 ==11  /*Rondônia*/
- replace region_c=2 if geo1_br1960 ==12  /*Acre*/
- replace region_c=3 if geo1_br1960 ==13 /*Amazonas*/
- replace region_c=4 if geo1_br1960 ==14 /*Roraima*/
- replace region_c=5 if geo1_br1960 ==15 /*Pará*/
- replace region_c=6 if geo1_br1960 ==16 /*Amapá*/
- replace region_c=7 if geo1_br1960 ==17 /*Tocantins*/
- replace region_c=8 if geo1_br1960 ==21 /*Maranhão*/
- replace region_c=9 if geo1_br1960 ==22 /*Piauí*/
- replace region_c=10 if geo1_br1960 ==23 /*Ceará*/
- replace region_c=11 if geo1_br1960 ==24 /*Rio Grande do Norte*/
- replace region_c=12 if geo1_br1960 ==25 /*Paraíba*/
- replace region_c=13 if geo1_br1960 ==26 /*Pernambuco*/
- replace region_c=14 if geo1_br1960 ==27 /*Alagoas*/
- replace region_c=15 if geo1_br1960 ==28 /*Sergipe*/
- replace region_c=16 if geo1_br1960 ==29 /*Bahia*/
- replace region_c=17 if geo1_br1960 ==31 /*Minas Gerais*/
- replace region_c=18 if geo1_br1960 ==32 /*Espírito Santo*/
- replace region_c=19 if geo1_br1960 ==33 /*Rio de Janeiro*/
- replace region_c=20 if geo1_br1960 ==35 /*São Paulo*/
- replace region_c=21 if geo1_br1960 ==41 /*Paraná*/
- replace region_c=22 if geo1_br1960 ==42 /*Santa Catarina*/
- replace region_c=23 if geo1_br1960 ==43 /*Rio Grande do Sul*/
- replace region_c=24 if geo1_br1960 ==50 /*Mato Grosso do Sul*/
- replace region_c=25 if geo1_br1960 ==51 /*Mato Grosso*/
- replace region_c=26 if geo1_br1960 ==52 /*Goiás*/
- replace region_c=27 if geo1_br1960 ==53 /*Distrito Federal*/
+ replace region_c=1 if geo1_br ==76011  /*Rondônia*/
+ replace region_c=2 if geo1_br ==76012  /*Acre*/
+ replace region_c=3 if geo1_br ==76013 /*Amazonas*/
+ replace region_c=4 if geo1_br ==76014 /*Roraima*/
+ replace region_c=5 if geo1_br ==76015 /*Pará*/
+ replace region_c=6 if geo1_br ==76016 /*Amapá*/
+ replace region_c=7 if geo1_br ==76017 /*Tocantins*/
+ replace region_c=8 if geo1_br ==76021 /*Maranhão*/
+ replace region_c=9 if geo1_br ==76022 /*Piauí*/
+ replace region_c=10 if geo1_br ==76023 /*Ceará*/
+ replace region_c=11 if geo1_br ==76024 /*Rio Grande do Norte*/
+ replace region_c=12 if geo1_br ==76025 /*Paraíba*/
+ replace region_c=13 if geo1_br ==76026 /*Pernambuco*/
+ replace region_c=14 if geo1_br ==76027 /*Alagoas*/
+ replace region_c=15 if geo1_br ==76028 /*Sergipe*/
+ replace region_c=16 if geo1_br ==76029 /*Bahia*/
+ replace region_c=17 if geo1_br ==76031 /*Minas Gerais*/
+ replace region_c=18 if geo1_br ==76032 /*Espírito Santo*/
+ replace region_c=19 if geo1_br ==76033 /*Rio de Janeiro*/
+ replace region_c=20 if geo1_br ==76035 /*São Paulo*/
+ replace region_c=21 if geo1_br ==76041 /*Paraná*/
+ replace region_c=22 if geo1_br ==76042 /*Santa Catarina*/
+ replace region_c=23 if geo1_br ==76043 /*Rio Grande do Sul*/
+ replace region_c=24 if geo1_br ==76050 /*Mato Grosso do Sul*/
+ replace region_c=25 if geo1_br ==76051 /*Mato Grosso*/
+ replace region_c=26 if geo1_br ==76052 /*Goiás*/
+ replace region_c=27 if geo1_br ==76053 /*Distrito Federal*/
 
  label define region_c 1"Rondônia" 2"Acre" 3"Amazonas" 4"Roraima" 5"Pará" 6"Amapá" 7"Tocantins" 8"Maranhão" 9"Piauí" 10"Ceará" 11"Rio Grande do Norte" 12"Paraíba" 13"Pernambuco" 14"Alagoas" 15"Sergipe" 16"Bahia" 17"Minas Gerais" 18"Espírito Santo" 19"Rio de Janeiro" 20"São Paulo" 21"Paraná" 22"Santa Catarina" 23"Rio Grande do Sul" 24"Mato Grosso do Sul" 25"Mato Grosso" 26"Goiás" 27"Distrito Federal"
 label values region_c region_c 
@@ -109,32 +109,24 @@ gen dis_ch=.
      ***********
 	  *ylm_ci*
 	 ***********
-   cap confirm variable incearn
-   if (_rc==0) {
-   replace ylm_ci = incearn
-   replace ylm_ci =. if incearn==99999999 | incearn==99999998
-   }
+   
+   replace ylm_ci =. 
 
 	 *********
 	 *ynlm_ci*
 	 *********
-   cap confirm variable incwel
-   if (_rc==0) {
-   replace ynlm_ci=incwel
-   replace ynlm_ci=. if incwel== 99999999 | incwel==99999998
-   } 
+   replace ynlm_ci=. 
+   
    
      ***********
 	  *ylm_ch*
 	 ***********
    
-   by idh_ch, sort: egen ylm_ch=sum(ylm_ci) if miembros_ci==1, missing
-   
+   gen ylm_ch=. 
     ***********
 	  *ynlm_ch*
 	 ***********
-   by idh_ch, sort: egen ynlm_ch=sum(ynlm_ci) if miembros_ci==1, missing
-   
+   gen ynlm_ch=.
  
 ****************************
 ***	VARIABLES EDUCATIVAS ***
