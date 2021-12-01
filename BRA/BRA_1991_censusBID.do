@@ -118,11 +118,7 @@ gen dis_ch=.
 	 *********
 	 *ynlm_ci*
 	 *********
-   cap confirm variable incwel
-   if (_rc==0) {
-   replace ynlm_ci=incwel
-   replace ynlm_ci=. if incwel== 99999999 | incwel==99999998
-   } 
+   replace ynlm_ci=.
    
      ***********
 	  *ylm_ch*
@@ -133,8 +129,8 @@ gen dis_ch=.
     ***********
 	  *ynlm_ch*
 	 ***********
-   by idh_ch, sort: egen ynlm_ch=sum(ynlm_ci) if miembros_ci==1, missing
-   
+   gen ynlm_ch=.
+  
  
 ****************************
 ***	VARIABLES EDUCATIVAS ***
