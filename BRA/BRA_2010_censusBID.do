@@ -213,8 +213,8 @@ replace eduuc_ci=. if aedu_ci==.
 *edus1i_ci* // no completó el primer ciclo de la educación secundaria
 ***********
 
-gen edus1c_ci=(aedu_ci>=6 & aedu_ci<=8) // De 6 a 8 anos de educación
-replace edus1c_ci=. if aedu_ci==.
+gen edus1i_ci=(aedu_ci>=6 & aedu_ci<=8) // De 6 a 8 anos de educación
+replace edus1i_ci=. if aedu_ci==.
 
 ***********
 *edus1c_ci* // completó el primer ciclo de la educación secundaria
