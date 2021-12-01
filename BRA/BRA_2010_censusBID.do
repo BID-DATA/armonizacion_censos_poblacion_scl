@@ -70,6 +70,7 @@ include "../Base/base.do"
  replace region_c=27 if geo1_br2010 ==53 /*Distrito Federal*/
 
  label define region_c 1"Rondônia" 2"Acre" 3"Amazonas" 4"Roraima" 5"Pará" 6"Amapá" 7"Tocantins" 8"Maranhão" 9"Piauí" 10"Ceará" 11"Rio Grande do Norte" 12"Paraíba" 13"Pernambuco" 14"Alagoas" 15"Sergipe" 16"Bahia" 17"Minas Gerais" 18"Espírito Santo" 19"Rio de Janeiro" 20"São Paulo" 21"Paraná" 22"Santa Catarina" 23"Rio Grande do Sul" 24"Mato Grosso do Sul" 25"Mato Grosso" 26"Goiás" 27"Distrito Federal"
+label values region_c region_c 
  
 **********************************
 **** VARIABLES DE INGRESO ****
@@ -138,6 +139,114 @@ gen afroind_ano_c=1990
 ********************
 gen dis_ci=.
 gen dis_ch=.
+
+****************************
+***	VARIABLES EDUCATIVAS ***
+****************************
+
+**************
+**asiste_ci***
+**************
+
+gen asiste_ci=(school==1) // 0 includes attended in the past (3) and never attended (4)
+replace asiste_ci=. if school==0 | school==9 | school==. // missing a los NIU & missing
+	
+*********
+*aedu_ci* // años de educacion aprobados
+*********
+gen aedu_ci=yrschool
+replace aedu_ci=. if yrschool>=90 
+// unknown/missing or NIU + other (we don't know how many years).
+
+**********
+*eduno_ci* // no ha completado ningún año de educación
+**********
+gen eduno_ci=(aedu_ci==0) // none
+replace eduno_ci=. if aedu_ci==.
+
+***************
+***edupre_ci***
+***************
+gen byte edupre_ci=. // pre-school
+	
+**********
+*edupi_ci* // no completó la educación primaria
+**********	
+gen edupi_ci=(aedu_ci>=1 & aedu_ci<=4) // 1 a 4 anos de educación 
+replace edupi_ci=. if aedu_ci==.
+
+********** 
+*edupc_ci* // completó la educación primaria
+**********
+	
+gen edupc_ci=(aedu_ci==5) // 5 anos de educación
+replace edupc_ci=. if aedu_ci==.
+
+**********
+*edusi_ci* // no completó la educación secundaria
+**********
+	
+gen edusi_ci=(aedu_ci>=6 & aedu_ci<=11) // De 6 a 11 anos de educación
+replace edusi_ci=. if aedu_ci==.
+
+**********
+*edusc_ci* // completó la educación secundaria
+**********	
+gen edusc_ci=(aedu_ci==12) // 12 anos de educación
+replace edusc_ci=. if aedu_ci==.
+
+**********
+*eduui_ci* // no completó la educación universitaria o terciaria
+**********
+	
+gen eduui_ci=(aedu_ci>=13 & aedu_ci<=15) // Entre 13 y 15 años 
+replace eduui_ci=. if aedu_ci==.
+
+**********
+*eduuc_ci* // completó la educación universitaria o terciaria
+**********
+	
+gen eduuc_ci=(aedu_ci>=16) // +15 anos de educación
+replace eduuc_ci=. if aedu_ci==.
+
+***********
+*edus1i_ci* // no completó el primer ciclo de la educación secundaria
+***********
+
+gen edus1c_ci=(aedu_ci>=6 & aedu_ci<=8) // De 6 a 8 anos de educación
+replace edus1c_ci=. if aedu_ci==.
+
+***********
+*edus1c_ci* // completó el primer ciclo de la educación secundaria
+***********
+
+gen edus1c_ci=(aedu_ci==9) // 9 anos de educación
+replace edus1c_ci=. if aedu_ci==.
+
+***********
+*edus2i_ci* // no completó el segundo ciclo de la educación secundaria
+***********
+
+gen edus2i_ci=(aedu_ci>=10 & aedu_ci<=11) // De 10 a 11 anos de educación
+replace edus2i_ci=. if aedu_ci==.
+
+***********
+*edus2c_ci* // completó el segundo ciclo de la educación secundaria
+***********
+
+gen edus2c_ci=(aedu_ci==12) // 12 anos de educación
+replace edus2c_ci=. if aedu_ci==.
+
+
+*Other variables
+
+************
+* literacy *
+************
+
+gen literacy=1 if lit==2 // literate
+replace literacy=0 if lit==1 // illiterate
+
 
 
 *****************************
