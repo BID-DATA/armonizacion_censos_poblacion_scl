@@ -12,7 +12,7 @@ set more off
 *Population and Housing Censuses/Harmonized Censuses - IPUMS
 
 local PAIS BOL
-local ANO "1976"
+local ANO "2012"
 
 
 /***************************************************************************
@@ -51,6 +51,7 @@ include "../Base/base.do"
    label value region_c region_c 
 
 	
+
 *******************************************************
 ***           VARIABLES DE DIVERSIDAD               ***
 *******************************************************
@@ -62,12 +63,17 @@ include "../Base/base.do"
 **Pregunta: 
 
 gen afroind_ci=. 
+replace afroind_ci=1 if indig == 1
+replace afroind_ci=2 if ethnicbo == 6
+replace afroind_ci=3 if indig == 2 & ethnicbo!=6
+replace afroind_ci=. if ethnicbo == 98 // Unknown
+
 
 	***************
 	***afroind_ch***
 	***************
-gen afroind_jefe=.
-gen afroind_ch  =.
+gen afroind_jefe= afroind_ci if relate==1
+egen afroind_ch  = min(afroind_jefe), by(idh_ch) 
 
 drop afroind_jefe 
 
@@ -85,7 +91,7 @@ gen dis_ch=.
 *******************************************************
 ***           VARIABLES DE INGRESO                  ***
 *******************************************************
-/*BOL no tiene vars de ingreso pero se incluyen las 
+/*Argentina no tiene vars de ingreso pero se incluyen las 
 variables de ingreso por hogar porque no están en el do Base*/	
 
     ***********
@@ -173,7 +179,6 @@ gen byte eduuc_ci=0
 replace eduuc_ci=1 if aedu_ci==17| aedu_ci==18
 replace eduuc_ci=. if yrschool==90| yrschool==98| yrschool==99 // Se asignan como missing NIU and missing (no asi las otras)
 
-
 ***************
 ***edus1i_ci***
 ***************
@@ -199,9 +204,10 @@ gen edus2c_ci=(aedu_ci==12)
 replace edus2c_ci=. if aedu_ci==. // NIU
 
 ***************
-***edupre_ci*** *No hay referencias de esta categoria en educbo
+***edupre_ci***
 ***************
-gen edupre_ci=.
+gen edupre_ci=(educbo==120) // pre-school
+replace edupre_ci=. if aedu_ci==. // NIU & missing
 
 ** Other variables 
 ***************
@@ -210,8 +216,6 @@ gen edupre_ci=.
 gen literacy=. if lit==0
 replace literacy=0 if lit==1
 replace literacy=1 if lit==2
-
-*****
 
 order region_BID_c region_c pais_c anio_c idh_ch idp_ci factor_ch factor_ci estrato_ci zona_c sexo_ci edad_ci relacion_ci civil_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch miembros_ci afroind_ci afroind_ch afroind_ano_c dis_ci dis_ch condocup_ci emp_ci desemp_ci pea_ci rama_ci categopri_ci spublico_ci ylm_ci ynlm_ci ylm_ch ynlm_ch aedu_ci eduno_ci edupre_ci edupi_ci  edupc_ci  edusi_ci edusc_ci  eduui_ci eduuc_ci edus1i_ci edus1c_ci edus2i_ci edus2c_ci asiste_ci literacy aguared_ch luz_ch bano_ch des1_ch piso_ch banomejorado_ch pared_ch techo_ch resid_ch dorm_ch cuartos_ch cocina_ch telef_ch refrig_ch auto_ch compu_ch internet_ch cel_ch viviprop_ch migrante_ci migrantelac_ci migantiguo5_ci discapacidad_ci  ceguera_ci sordera_ci mudez_ci dismental_ci
 

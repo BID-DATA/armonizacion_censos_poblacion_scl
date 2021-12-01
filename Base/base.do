@@ -566,9 +566,9 @@ use "`base_in'", clear
 ***           VARIABLES DE MIGRACIÓN              ***
 *******************************************************
 
-      *******************
-      ****migrante_ci****
-      *******************
+    *******************
+    ****migrante_ci****
+    *******************
 	
 	gen migrante_ci =.
 	cap confirm variable nativity 
@@ -584,12 +584,12 @@ use "`base_in'", clear
 	cap confirm variable migrate5
 	if(_rc==0){
 	replace migantiguo5_ci = 1 if inlist(migrate5, 10, 11, 12, 20) & migrante_ci == 1
-	replace migantiguo5_ci = 0 if (migrate5 == 30 & migrante_ci == 1)
+	replace migantiguo5_ci = 0 if (migrate5 == 30 & migrante_ci == 1) | migrante_ci == 0
 	}
 	cap confirm variable migyrs1
 	if(_rc==0){
 	replace migantiguo5_ci = 1 if migyrs1 >= 5 & migrante_ci == 1
-	replace migantiguo5_ci = 0 if migyrs1 < 5 & migrante_ci == 1 
+	replace migantiguo5_ci = 0 if (migyrs1 < 5 & migrante_ci == 1) | migrante_ci == 0
 	}
 	
 	**********************
@@ -600,7 +600,33 @@ use "`base_in'", clear
 	cap confirm variable bplcountry
 	if(_rc==0){
 	replace migrantelac_ci= 1 if inlist(bplcountry, 21050, 21080, 21100, 21130, 21140, 21180, 21250, 22010, 22020, 22030, 22040, 22050, 22060, 22070, 22080, 23010, 23020, 23030, 23040, 23050, 23060, 23090, 23100, 23110, 23120, 23130, 23140) & migrante_ci == 1
-	replace migrantelac_ci = 0 if migrantelac_ci == . & migrante_ci == 1
+	replace migrantelac_ci = 0 if migrantelac_ci == . & migrante_ci == 1 | migrante_ci == 0
+	}
+	
+	*******************
+    **migrantiguo5_ci**
+    *******************
+	gen migrantiguo5_ci =.
+	cap confirm variable migrate5
+	if(_rc==0){
+	replace migrantiguo5_ci = 1 if inlist(migrate5, 10, 11, 12, 20) & migrante_ci == 1
+	replace migrantiguo5_ci = 0 if (migrate5 == 30 & migrante_ci == 1)
+	}
+	cap confirm variable migyrs1
+	if(_rc==0){
+	replace migrantiguo5_ci = 1 if migyrs1 >= 5 & migrante_ci == 1
+	replace migrantiguo5_ci = 0 if (migyrs1 < 5 & migrante_ci == 1)
+	}
+	
+	**********************
+	****** miglac_ci *****
+	**********************
+
+	gen miglac_ci = .
+	cap confirm variable bplcountry
+	if(_rc==0){
+	replace miglac_ci= 1 if inlist(bplcountry, 21050, 21080, 21100, 21130, 21140, 21180, 21250, 22010, 22020, 22030, 22040, 22050, 22060, 22070, 22080, 23010, 23020, 23030, 23040, 23050, 23060, 23090, 23100, 23110, 23120, 23130, 23140) & migrante_ci == 1
+	replace miglac_ci = 0 if migrantelac_ci != 1 & migrante_ci == 1 
 	}
    
 ********************************
