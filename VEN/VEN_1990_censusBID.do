@@ -148,7 +148,7 @@ replace region_c=23 if geo1_ve1990==21	/*Zulia*/
 	**********
 	*eduui_ci* // no completó la educación universitaria o terciaria
 	**********
-	gen eduui_ci=(aedu_ci>=12 & aedu_ci<15) // 14 a 16 anos de educación
+	gen eduui_ci=(aedu_ci>=12 & aedu_ci<=15) // 14 a 16 anos de educación
 	replace eduui_ci=. if aedu_ci==. // NIU & missing
 	replace eduui_ci = 1 if yrschool == 94 // some terciary
 
@@ -156,7 +156,7 @@ replace region_c=23 if geo1_ve1990==21	/*Zulia*/
 	*eduuc_ci* // completó la educación universitaria o terciaria
 	**********
 	gen eduuc_ci=.
-	replace eduuc_ci=(aedu_ci>=15) // más de 15
+	replace eduuc_ci=(aedu_ci>15) // más de 15
 	replace eduuc_ci=. if aedu_ci==. // NIU & missing
 
 	***********
@@ -226,7 +226,7 @@ replace region_c=23 if geo1_ve1990==21	/*Zulia*/
 		*******************
 		***afroind_ano_c***
 		*******************
-	gen afroind_ano_c=2002
+	gen afroind_ano_c=.
 
 
 		********************
