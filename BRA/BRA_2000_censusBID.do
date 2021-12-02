@@ -89,7 +89,7 @@ replace afroind_ci=. if race == 99
 	***afroind_ch***
 	***************
 gen afroind_jefe= afroind_ci if relate==1
-egen afroind_ch  = min(afroind_jefe), by(serial) 
+egen afroind_ch  = min(afroind_jefe), by(idh_ch) 
 
 drop afroind_jefe 
 
@@ -161,7 +161,8 @@ replace eduno_ci=. if aedu_ci==.
 ***************
 ***edupre_ci***
 ***************
-gen byte edupre_ci=. // pre-school
+gen edupre_ci=(educbr==1200) // pre-school
+replace aedu_ci=. if aedu_ci==.
 	
 **********
 *edupi_ci* // no completó la educación primaria
