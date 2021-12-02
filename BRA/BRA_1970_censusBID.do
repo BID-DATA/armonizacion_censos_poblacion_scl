@@ -12,15 +12,12 @@ set more off
 /***************************************************************************
                  BASES DE DATOS DE CENSOS POBLACIONALES
 País: Brasil
-Año: 2000
-Autores: Cesar Lins
-Última versión: Septiembre, 2021
+Año: 1970
 
-							SCL/LMK - IADB
 ****************************************************************************/
 
 local PAIS BRA
-local ANO "2000"
+local ANO "1970"
 
 **************************************
 ** Setup code, load database,       **
@@ -36,6 +33,7 @@ include "../Base/base.do"
  ****************
  *** region_c ***
  ****************
+ *** geo1_br1970 no esta disponible (es la que se usa para los otros años), se toma geo1_br
  
  gen region_c=.
  replace region_c=1 if geo1_br ==76011  /*Rondônia*/
@@ -67,8 +65,8 @@ include "../Base/base.do"
  replace region_c=27 if geo1_br ==76053 /*Distrito Federal*/
 
  label define region_c 1"Rondônia" 2"Acre" 3"Amazonas" 4"Roraima" 5"Pará" 6"Amapá" 7"Tocantins" 8"Maranhão" 9"Piauí" 10"Ceará" 11"Rio Grande do Norte" 12"Paraíba" 13"Pernambuco" 14"Alagoas" 15"Sergipe" 16"Bahia" 17"Minas Gerais" 18"Espírito Santo" 19"Rio de Janeiro" 20"São Paulo" 21"Paraná" 22"Santa Catarina" 23"Rio Grande do Sul" 24"Mato Grosso do Sul" 25"Mato Grosso" 26"Goiás" 27"Distrito Federal"
-label values region_c region_c  
- 
+label values region_c region_c 
+
 *******************************************************
 ***           VARIABLES DE DIVERSIDAD               ***
 *******************************************************				
@@ -78,12 +76,8 @@ label values region_c region_c
 	***afroind_ci***
 	***************
 **Pregunta: 
-
+*** Race no disponible 
 gen afroind_ci=. 
-replace afroind_ci=1  if race == 30
-replace afroind_ci=2 if race == 20 | race == 51 
-replace afroind_ci=3 if race == 10 | race == 40 
-replace afroind_ci=. if race == 99
 
 	***************
 	***afroind_ch***
@@ -112,10 +106,10 @@ gen dis_ch=.
      ***********
 	  *ylm_ci*
 	 ***********
-   cap confirm variable incearn
+   cap confirm variable inctot
    if (_rc==0) {
-   replace ylm_ci = incearn
-   replace ylm_ci =. if incearn==99999999 | incearn==99999998
+   replace ylm_ci = inctot
+   replace ylm_ci =. if inctot==9999999 | inctot==9999998
    }
 
 	 *********
@@ -127,13 +121,13 @@ gen dis_ch=.
 	  *ylm_ch*
 	 ***********
    
-   by idh_ch, sort: egen ylm_ch=sum(ylm_ci) if miembros_ci==1, missing
-   
-    ***********
+    by idh_ch, sort: egen ylm_ch=sum(ylm_ci) if miembros_ci==1, missing
+	
+     ***********
 	  *ynlm_ch*
 	 ***********
-   gen ynlm_ch=.
-   
+  gen ynlm_ch=.
+ 
 ****************************
 ***	VARIABLES EDUCATIVAS ***
 ****************************
@@ -167,7 +161,7 @@ replace edupre_ci=. if aedu_ci==.
 **********
 *edupi_ci* // no completó la educación primaria
 **********	
-gen edupi_ci=(aedu_ci>=1 & aedu_ci<=4) // 1 a 4 anos de educación 
+gen edupi_ci=(aedu_ci>=1 & aedu_ci<=4 | yrschool==91) // 1 a 4 anos de educación + some primary
 replace edupi_ci=. if aedu_ci==.
 
 ********** 
@@ -181,7 +175,7 @@ replace edupc_ci=. if aedu_ci==.
 *edusi_ci* // no completó la educación secundaria
 **********
 	
-gen edusi_ci=(aedu_ci>=6 & aedu_ci<=11) // De 6 a 11 anos de educación
+gen edusi_ci=(aedu_ci>=6 & aedu_ci<=11 | yrschool==93) // De 6 a 11 anos de educación + some sencondary
 replace edusi_ci=. if aedu_ci==.
 
 **********
@@ -194,7 +188,7 @@ replace edusc_ci=. if aedu_ci==.
 *eduui_ci* // no completó la educación universitaria o terciaria
 **********
 	
-gen eduui_ci=(aedu_ci>=13 & aedu_ci<=15) // Entre 13 y 15 años 
+gen eduui_ci=(aedu_ci>=13 & aedu_ci<=15 | yrschool==94) // Entre 13 y 15 años + some tertiary
 replace eduui_ci=. if aedu_ci==.
 
 **********
@@ -241,7 +235,6 @@ replace edus2c_ci=. if aedu_ci==.
 
 gen literacy=1 if lit==2 // literate
 replace literacy=0 if lit==1 // illiterate
-
 
 *****************************
 ** Include all labels of   **
