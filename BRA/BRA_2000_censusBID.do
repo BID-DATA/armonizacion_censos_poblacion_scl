@@ -162,7 +162,7 @@ replace eduno_ci=. if aedu_ci==.
 ***edupre_ci***
 ***************
 gen edupre_ci=(educbr==1200) // pre-school
-replace aedu_ci=. if aedu_ci==.
+replace edupre_ci=. if aedu_ci==.
 	
 **********
 *edupi_ci* // no completó la educación primaria
