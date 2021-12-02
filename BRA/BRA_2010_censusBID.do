@@ -121,7 +121,7 @@ replace afroind_ci=. if race == 99
 	***afroind_ch***
 	***************
 gen afroind_jefe= afroind_ci if relate==1
-egen afroind_ch  = min(afroind_jefe), by(serial) 
+egen afroind_ch  = min(afroind_jefe), by(idh_ch) 
 
 drop afroind_jefe 
 
@@ -139,6 +139,7 @@ gen dis_ch=.
 ****************************
 ***	VARIABLES EDUCATIVAS ***
 ****************************
+* BRA 2010 no tiene vairables yrschool se contruye a partir de eddatain y educbr
 
 **************
 **asiste_ci***
@@ -150,88 +151,85 @@ replace asiste_ci=. if school==0 | school==9 | school==. // missing a los NIU & 
 *********
 *aedu_ci* // años de educacion aprobados
 *********
-gen aedu_ci=yrschool
-replace aedu_ci=. if yrschool>=90 
-// unknown/missing or NIU + other (we don't know how many years).
+gen aedu_ci=.
 
-**********
-*eduno_ci* // no ha completado ningún año de educación
-**********
-gen eduno_ci=(aedu_ci==0) // none
-replace eduno_ci=. if aedu_ci==.
+**************
+***eduno_ci***
+**************
+
+gen eduno_ci=(educbr==0000 | educbr==1100 | educbr==1200 | educbr==1300)
+replace eduno_ci=. if educbr==8000 | educbr==9000
 
 ***************
 ***edupre_ci***
 ***************
-gen byte edupre_ci=. // pre-school
+gen edupre_ci=(educbr==1200) // pre-school
+replace edupre_ci=. if educbr==8000 | educbr==9000
 	
 **********
 *edupi_ci* // no completó la educación primaria
 **********	
-gen edupi_ci=(aedu_ci>=1 & aedu_ci<=4) // 1 a 4 anos de educación 
-replace edupi_ci=. if aedu_ci==.
-
+gen edupi_ci=(educbr>=1700 & educbr<=2200) // primaria incompleta
+replace edupi_ci=. if educbr==8000 | educbr==9000
+	
 ********** 
 *edupc_ci* // completó la educación primaria
 **********
 	
-gen edupc_ci=(aedu_ci==5) // 5 anos de educación
-replace edupc_ci=. if aedu_ci==.
+gen edupc_ci=(educbr>=2200 & educbr<=2220) // primaria completa
+replace edupc_ci=. if educbr==8000 | educbr==9000
 
 **********
 *edusi_ci* // no completó la educación secundaria
 **********
 	
-gen edusi_ci=(aedu_ci>=6 & aedu_ci<=11) // De 6 a 11 anos de educación
-replace edusi_ci=. if aedu_ci==.
+gen edusi_ci=(educbr>=2230 & educbr<=3200) // más de primaria menos sec completa
+replace edusi_ci=. if educbr==8000 | educbr==9000
 
 **********
 *edusc_ci* // completó la educación secundaria
 **********	
-gen edusc_ci=(aedu_ci==12) // 12 anos de educación
-replace edusc_ci=. if aedu_ci==.
+gen edusc_ci=(educbr==3300) // completo sec
+replace edusc_ci=. if educbr==8000 | educbr==9000
 
 **********
 *eduui_ci* // no completó la educación universitaria o terciaria
 **********
 	
-gen eduui_ci=(aedu_ci>=13 & aedu_ci<=15) // Entre 13 y 15 años 
-replace eduui_ci=. if aedu_ci==.
+gen eduui_ci=(educbr==4180 & edattain!=4) // asistió pero no terminó 
+replace eduui_ci=. if educbr==8000 | educbr==9000
 
 **********
 *eduuc_ci* // completó la educación universitaria o terciaria
 **********
 	
-gen eduuc_ci=(aedu_ci>=16) // +15 anos de educación
-replace eduuc_ci=. if aedu_ci==.
+gen eduuc_ci=((educbr>=4190 & educbr<=4280) | edattain==4) // terminó
+replace eduuc_ci=. if educbr==8000 | educbr==9000
 
 ***********
 *edus1i_ci* // no completó el primer ciclo de la educación secundaria
 ***********
 
-gen edus1i_ci=(aedu_ci>=6 & aedu_ci<=8) // De 6 a 8 anos de educación
-replace edus1i_ci=. if aedu_ci==.
+gen edus1i_ci=.
 
 ***********
 *edus1c_ci* // completó el primer ciclo de la educación secundaria
 ***********
 
-gen edus1c_ci=(aedu_ci==9) // 9 anos de educación
-replace edus1c_ci=. if aedu_ci==.
+gen edus1c_ci=.
 
 ***********
 *edus2i_ci* // no completó el segundo ciclo de la educación secundaria
 ***********
 
-gen edus2i_ci=(aedu_ci>=10 & aedu_ci<=11) // De 10 a 11 anos de educación
-replace edus2i_ci=. if aedu_ci==.
+gen edus2i_ci=.
 
 ***********
 *edus2c_ci* // completó el segundo ciclo de la educación secundaria
 ***********
 
-gen edus2c_ci=(aedu_ci==12) // 12 anos de educación
-replace edus2c_ci=. if aedu_ci==.
+gen edus2c_ci=(educbr==3300) // completó secundaria
+replace edus2c_ci=.  if educbr==8000 | educbr==9000
 
 
 *Other variables
@@ -251,8 +249,7 @@ replace literacy=0 if lit==1 // illiterate
 *****************************
 include "../Base/labels.do"
 
-
 compress
 
-save "`base_out'", replace 
+save "`base_out'", replace  
 log close
