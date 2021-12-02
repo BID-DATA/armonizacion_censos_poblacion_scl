@@ -83,7 +83,7 @@ gen afroind_ci=.
 	***afroind_ch***
 	***************
 gen afroind_jefe= afroind_ci if relate==1
-egen afroind_ch  = min(afroind_jefe), by(serial) 
+egen afroind_ch  = min(afroind_jefe), by(idh_ch) 
 
 drop afroind_jefe 
 
@@ -106,7 +106,11 @@ gen dis_ch=.
      ***********
 	  *ylm_ci*
 	 ***********
-   replace ylm_ci =. 
+   cap confirm variable inctot
+   if (_rc==0) {
+   replace ylm_ci = inctot
+   replace ylm_ci =. if inctot==9999999 | inctot==9999998
+   }
 
 	 *********
 	 *ynlm_ci*
@@ -117,8 +121,9 @@ gen dis_ch=.
 	  *ylm_ch*
 	 ***********
    
-   gen ylm_ch=.
-    ***********
+    by idh_ch, sort: egen ylm_ch=sum(ylm_ci) if miembros_ci==1, missing
+	
+     ***********
 	  *ynlm_ch*
 	 ***********
   gen ynlm_ch=.
@@ -150,7 +155,8 @@ replace eduno_ci=. if aedu_ci==.
 ***************
 ***edupre_ci***
 ***************
-gen byte edupre_ci=. // pre-school
+gen edupre_ci=(educbr==1200) // pre-school
+replace edupre_ci=. if aedu_ci==.
 	
 **********
 *edupi_ci* // no completó la educación primaria
