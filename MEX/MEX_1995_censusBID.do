@@ -312,6 +312,11 @@ include "../Base/labels.do"
 
 compress
 
+cap drop __000000
+cap drop __000001
+cap drop __000003
+cap drop __000002
+
 save "`base_out'", replace 
 log close
 
