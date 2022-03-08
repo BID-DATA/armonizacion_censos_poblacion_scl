@@ -214,11 +214,26 @@ drop afroind_jefe
 	*******************
 gen afroind_ano_c=2006
 
-********************
-*** discapacidad ***
-********************
-gen dis_ci=.
-gen dis_ch=.
+************************
+*** Discapacidad (WG)***
+************************
+/* Identificación de si una persona reporta por lo menos alguna dificultad en una o más de las preguntas del Washington Group Questionnaire */
+
+
+gen dis_ci = 0
+recode dis_ci nonmiss=. if inlist(9,uy2011a_disdev,uy2011a_dishear,uy2011a_dismob,uy2011a_dissee) //
+recode dis_ci nonmiss=. if uy2011a_disdev>=. & uy2011a_dishear>=. & uy2011a_dismob>=. & uy2011a_dissee>=. //
+	foreach i in dev hear mob see {
+		forvalues j=2/4 {
+		replace dis_ci=1 if uy2011a_dis`i'==`j'
+		}
+		}
+
+/*Identificación de si un hogar tiene uno o más miembros que reportan por lo menos alguna dificultad en una o más de las preguntas del Washington Group Questionnaire */		
+
+egen dis_ch  = sum(dis_ci), by(idh_ch) 
+replace dis_ch=1 if dis_ch>=1 & dis_ch!=. 
+
 
 *****************************
 ** Include all labels of   **
