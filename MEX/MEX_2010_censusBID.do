@@ -139,11 +139,22 @@ label var region_c "division politico-administrativa, estados"
 	gen afroind_ano_c=2000
 
 
-	********************
-	*** discapacidad ***
-	********************
-	gen dis_ci=.
-	gen dis_ch=.
+************************
+*** Discapacidad (WG)***
+************************
+/* Identificación de si una persona reporta por lo menos alguna dificultad en una o más de las preguntas del Washington Group Questionnaire */
+
+gen dis_ci = 0
+recode dis_ci nonmiss=. if inlist(9,mx2010a_dissee,mx2010a_dishear,mx2010a_disspk,mx2010a_diswalk,mx2010a_dislrn,mx2010a_discare) //
+recode dis_ci nonmiss=. if mx2010a_dissee>=. & mx2010a_dishear>=. & mx2010a_disspk>=. & mx2010a_diswalk>=. & mx2010a_dislrn>=. & mx2010a_discare>=. //
+replace dis_ci=1 if mx2010a_dissee==1 | mx2010a_dishear==1 | mx2010a_disspk==1 | mx2010a_diswalk==1 | mx2010a_dislrn==1 | mx2010a_discare==1 
+
+
+/*Identificación de si un hogar tiene uno o más miembros que reportan por lo menos alguna dificultad en una o más de las preguntas del Washington Group Questionnaire */		
+
+egen dis_ch  = sum(dis_ci), by(idh_ch) 
+replace dis_ch=1 if dis_ch>=1 & dis_ch!=. 
+
 
 
 ******************************************************
