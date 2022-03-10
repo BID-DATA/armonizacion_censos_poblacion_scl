@@ -296,6 +296,12 @@ label var dismental_ci "Discapacidad mental"
 	
 	label var migrantelac_ci "=1 si es migrante proveniente de un pais LAC"
 	
+	label var migrantiguo5_ci "=1 si es migrante antiguo (5 anos o mas)(sobre población migrante)"
+	
+	label var miglac_ci "=1 si es migrante proveniente de un pais LAC(sobre población migrante)"
+	
+	
+	
 	
 * labels de variables
 
