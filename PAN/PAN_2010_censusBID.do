@@ -101,9 +101,9 @@ gen dis_ch=.
    cap confirm variable incearn
    if (_rc==0) {
    replace ylm_ci = incearn
-   replace ylm_ci =. if incearn==9999999 | incearn==9999998
+   replace ylm_ci =. if incearn==99999999 | incearn==99999998
    }
-   replace ylm_ci =. if inctot==9999999 | inctot==9999998
+   replace ylm_ci =. if inctot==99999 | inctot==99998
 
     ***********
 	**ylm_ch*

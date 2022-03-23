@@ -242,7 +242,11 @@ include "../Base/base.do"
 	**ylm_ci**
 	***********
 	
-	*gen ylm_ci=.
+	   cap confirm variable inctot
+   if (_rc==0) {
+   replace ylm_ci = inctot
+   replace ylm_ci =. if inctot==9999999 | inctot==9999998
+   }
 	
     ***********
 	**ynlm_ci**
@@ -254,7 +258,7 @@ include "../Base/base.do"
 	**ylm_ch**
 	***********
    
-   gen ylm_ch=.
+    by idh_ch, sort: egen ylm_ch=sum(ylm_ci) if miembros_ci==1, missing
    
     ***********
 	**ynlm_ch**
