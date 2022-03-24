@@ -106,22 +106,18 @@ gen ynlm_ch=.
 ****************************
 ***VARIABLES DE EDUCACION***
 ****************************
-****************
-* asiste_ci    * 
-**************** 
+
+***************
+***asiste_ci*** 
+*************** 
 gen asiste_ci=1 if school==1
 replace asiste_ci=0 if school==2
 replace asiste_ci=. if school==0 // NIU
 replace asiste_ci=. if school==9 // Unknown/missing 
 
-
-*********
-*aedu_ci* // años de educacion aprobados
-*********
-*NOTA: Como terciario, universitario y posgrado tienen una duración variable se supone 
-*que terciario completo implica 3 años de educacion adicional a la secundaria, universitario 5 años adicionales y 
-*postgrado 7. Esto solo se basa en la modas de finalización de estos niveles. 
-
+*************
+***aedu_ci*** // años de educacion aprobados
+*************
 gen aedu_ci=yrschool
 replace aedu_ci=. if aedu_ci==98 // Unknown/missing
 replace aedu_ci=. if aedu_ci==99 // NIU
@@ -155,7 +151,7 @@ replace edupc_ci=. if aedu_ci==.
 gen byte edusi_ci=0
 replace edusi_ci=1 if aedu_ci>6 & aedu_ci<11
 replace edusi_ci=. if aedu_ci==.
-replace edusi_ci = 1 if yrschool ==93 // some secondary
+replace edusi_ci = 1 if yrschool ==92 | yrschool ==93 // some secondary
 
 **************
 ***edusc_ci*** // secundaria completa
@@ -163,21 +159,6 @@ replace edusi_ci = 1 if yrschool ==93 // some secondary
 gen byte edusc_ci=0
 replace edusc_ci=1 if aedu_ci==11
 replace edusc_ci=. if aedu_ci==.
-
-**************
-***eduui_ci*** // terciaria/universitaria incompleta
-**************
-gen byte eduui_ci=0
-replace eduui_ci=1 if aedu_ci>11 & aedu_ci<16
-replace edusi_ci=. if aedu_ci==.
-replace eduui_ci = 1 if yrschool == 94 // some terciary
-
-***************
-***eduuc_ci**** // terciaria/universitaria completa
-***************
-gen byte eduuc_ci=0
-replace eduuc_ci=1 if aedu_ci>=16
-replace eduuc_ci=. if aedu_ci==.
 
 ***************
 ***edus1i_ci*** // primer ciclo de secundaria incompleto
@@ -214,9 +195,9 @@ gen edupre_ci=(educni==121 | educni==123 | educni == 123) // pre-school
 replace edupre_ci=. if educni==0 | educni==999 // NIU & missing
 replace edupre_ci= . if aedu_ci==.
 
-***************
+**************
 ***literacy***
-***************
+**************
 gen literacy=. if lit==0 // NIU
 replace literacy=. if lit==9 // Unknown/missing
 replace literacy=0 if lit==1
