@@ -116,31 +116,28 @@ replace dis_ch=1 if dis_ch>=1 & dis_ch!=.
 	***********
    by idh_ch, sort: egen ynlm_ch=sum(ynlm_ci) if miembros_ci==1, missing
    
-*******************************************************
+******************************************************
 ***           VARIABLES DE EDUCACIÓN               ***
-*******************************************************
-   * SUR no tiene años, se generan las categorías a partir de educsr
+******************************************************
+    * SUR no tiene años, se generan las categorías a partir de educsr
     gen yrschool=.
 	
 	*********
 	*aedu_ci* // años de educacion aprobados
 	*********
 	gen aedu_ci=yrschool
-	replace aedu_ci=. if aedu_ci==98
-	replace aedu_ci=. if aedu_ci==99
-	replace aedu_ci=. if yrschool>=90 & yrschool<100 // unknown/missing or NIU
 
 	**********
 	*eduno_ci* // no ha completado ningún año de educación
 	**********
-	gen eduno_ci=(educsr==01 | educsr == 01) // never attended or pre-school
-	replace eduno_ci=. if educsr==99 // NIU & missing
-
-	**********
+	gen eduno_ci=(educsr==1 | educsr==2) // never attended or pre-school
+	replace eduno_ci=. if educsr==0 | educsr==99 // NIU & unknown
+	
+	***********
 	*edupre_ci* // preescolar
-	**********
-	gen edupre_ci=(educsr==03) // pre-school
-	replace edupre_ci=. if educsr==99 // NIU & missing
+	***********
+	gen edupre_ci=(educsr==3) // pre-school
+	replace edupre_ci=. if educsr==0 | educsr==99 // NIU & unknown
 	
 	**********
 	*edupi_ci* // no completó la educación primaria
@@ -150,30 +147,20 @@ replace dis_ch=1 if dis_ch>=1 & dis_ch!=.
 	********** 
 	*edupc_ci* // completó la educación primaria
 	**********
-	gen edupc_ci=(educsr ==10) // primary
-	replace edupc_ci=. if educsr==99 // NIU & missing
+	gen edupc_ci=(educsr==10) // primary
+	replace edupc_ci=. if educsr==0 | educsr==99 // NIU & unknown
 
 	**********
 	*edusi_ci* // no completó la educación secundaria
 	**********
-	gen edusi_ci=.
+	gen edusi_ci=(educsr==20)
+	replace edusi_ci=. if educsr==0 | educsr==99 // NIU & unknown
 
 	**********
 	*edusc_ci* // completó la educación secundaria
 	**********
-	gen edusc_ci=(educsr ==31 | educsr ==32) // senior secondary
-	replace edusc_ci=.  if educsr ==99 // NIU & missing
-
-	**********
-	*eduui_ci* // no completó la educación universitaria o terciaria
-	**********
-	gen eduui_ci=.
-
-	**********
-	*eduuc_ci* // completó la educación universitaria o terciaria
-	**********
-	gen eduuc_ci=(educsr ==52) //más de 16
-	replace eduuc_ci=. if educsr ==99  // missing a los NIU & missing
+	gen edusc_ci=(educsr==31 | educsr==32) // senior secondary
+	replace edusc_ci=.  if educsr==0 | educsr==99 // NIU & unknown
 
 	***********
 	*edus1i_ci* // no completó el primer ciclo de la educación secundaria
@@ -183,18 +170,19 @@ replace dis_ch=1 if dis_ch>=1 & dis_ch!=.
 	***********
 	*edus1c_ci* // completó el primer ciclo de la educación secundaria
 	***********
-	gen byte edus1c_ci=(educsr ==20)
-	replace edus1c_ci=. if educsr ==99 // missing a los NIU & missing
+	gen byte edus1c_ci=(educsr==20)
+	replace edus1c_ci=. if educsr==0 | educsr==99 // NIU & unknown
 
 	***********
 	*edus2i_ci* // no completó el segundo ciclo de la educación secundaria
 	***********
 	gen edus2i_ci=.
+	
 	***********
 	*edus2c_ci* // completó el segundo ciclo de la educación secundaria
 	***********
 	gen byte edus2c_ci=(educsr ==31 | educsr ==32)
-	replace edus2c_ci=. if educsr ==99 
+	replace edus2c_ci=. if educsr==0 | educsr==99 // NIU & unknown
 	
 	***********
 	*asiste_ci*
@@ -202,13 +190,12 @@ replace dis_ch=1 if dis_ch>=1 & dis_ch!=.
 	gen asiste_ci=(school==1) // 0 includes attended in the past (3) and never attended (4)
 	replace asiste_ci=. if school==0 | school==9 // missing a los NIU & missing
 
-	************
-	* literacy *
-	************
+	**********
+	*literacy*
+	**********
 	gen literacy=. 
 	replace literacy=1 if lit==2 // literate
 	replace literacy=0 if lit==1 // illiterate
-
 
 *****************************
 ** Include all labels of   **

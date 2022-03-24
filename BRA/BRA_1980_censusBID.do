@@ -136,10 +136,9 @@ gen dis_ch=.
 ***	VARIABLES EDUCATIVAS ***
 ****************************
 
-**************
-**asiste_ci***
-**************
-
+***********
+*asiste_ci*
+***********
 gen asiste_ci=(school==1) // 0 includes attended in the past (3) and never attended (4)
 replace asiste_ci=. if school==0 | school==9 | school==. // missing a los NIU & missing
 	
@@ -156,9 +155,9 @@ replace aedu_ci=. if yrschool>=90
 gen eduno_ci=(aedu_ci==0) // none
 replace eduno_ci=. if aedu_ci==.
 
-***************
-***edupre_ci***
-***************
+***********
+*edupre_ci*
+***********
 gen edupre_ci=(educbr==1200) // pre-school
 replace edupre_ci=. if aedu_ci==.
 	
@@ -171,14 +170,12 @@ replace edupi_ci=. if aedu_ci==.
 ********** 
 *edupc_ci* // completó la educación primaria
 **********
-	
 gen edupc_ci=(aedu_ci==5) // 5 anos de educación
 replace edupc_ci=. if aedu_ci==.
 
 **********
 *edusi_ci* // no completó la educación secundaria
 **********
-	
 gen edusi_ci=(aedu_ci>=6 & aedu_ci<=11 | yrschool==93) // De 6 a 11 anos de educación + some sencondary
 replace edusi_ci=. if aedu_ci==.
 
@@ -188,55 +185,33 @@ replace edusi_ci=. if aedu_ci==.
 gen edusc_ci=(aedu_ci==12) // 12 anos de educación
 replace edusc_ci=. if aedu_ci==.
 
-**********
-*eduui_ci* // no completó la educación universitaria o terciaria
-**********
-	
-gen eduui_ci=(aedu_ci>=13 & aedu_ci<=15 | yrschool==94) // Entre 13 y 15 años + some tertiary
-replace eduui_ci=. if aedu_ci==.
-
-**********
-*eduuc_ci* // completó la educación universitaria o terciaria
-**********
-	
-gen eduuc_ci=(aedu_ci>=16) // +15 anos de educación
-replace eduuc_ci=. if aedu_ci==.
-
 ***********
 *edus1i_ci* // no completó el primer ciclo de la educación secundaria
 ***********
-
 gen edus1i_ci=(aedu_ci>=6 & aedu_ci<=8) // De 6 a 8 anos de educación
 replace edus1i_ci=. if aedu_ci==.
 
 ***********
 *edus1c_ci* // completó el primer ciclo de la educación secundaria
 ***********
-
 gen edus1c_ci=(aedu_ci==9) // 9 anos de educación
 replace edus1c_ci=. if aedu_ci==.
 
 ***********
 *edus2i_ci* // no completó el segundo ciclo de la educación secundaria
 ***********
-
 gen edus2i_ci=(aedu_ci>=10 & aedu_ci<=11) // De 10 a 11 anos de educación
 replace edus2i_ci=. if aedu_ci==.
 
 ***********
 *edus2c_ci* // completó el segundo ciclo de la educación secundaria
 ***********
-
 gen edus2c_ci=(aedu_ci==12) // 12 anos de educación
 replace edus2c_ci=. if aedu_ci==.
-
-
-*Other variables
 
 ************
 * literacy *
 ************
-
 gen literacy=1 if lit==2 // literate
 replace literacy=0 if lit==1 // illiterate
 

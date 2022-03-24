@@ -126,16 +126,12 @@ variables de ingreso por hogar porque no están en el do Base*/
 *********
 *aedu_ci* // años de educacion aprobados
 *********
-*NOTA: Como terciario, universitario y posgrado tienen una duración variable se supone 
-*que terciario completo implica 3 años de educacion adicional a la secundaria, universitario 5 años adicionales y 
-*postgrado 7. Esto solo se basa en la modas de finalización de estos niveles. ESTO SE DEBE DISCUTIR 
-
 gen aedu_ci=0 if yrschool==0 // none or pre-school
 replace aedu_ci=1 if yrschool==1
 replace aedu_ci=2 if yrschool==2
 replace aedu_ci=3 if yrschool==3
 replace aedu_ci=4 if yrschool==4
-replace aedu_ci=5 if yrschool==5 | yrschool==92 // 92=some technical after primary; primary son 5 anos y sabemos que al menos tienen 5 anos.
+replace aedu_ci=5 if yrschool==5
 replace aedu_ci=6 if yrschool==6
 replace aedu_ci=7 if yrschool==7
 replace aedu_ci=8 if yrschool==8
@@ -154,101 +150,74 @@ replace aedu_ci=. if yrschool==99 // NIU
 **********
 *eduno_ci* // no ha completado ningún año de educación
 **********
-	
 gen eduno_ci=(aedu_ci==0) // none (incluye preescolar)
 replace eduno_ci=. if aedu_ci==. // NIU
 
-***************
-***edupre_ci***
-***************
-
+***********
+*edupre_ci*
+***********
 gen byte edupre_ci=(educco==110) // pre-school
 replace edupre_ci=. if aedu_ci==. // NIU
 	
 **********
 *edupi_ci* // no completó la educación primaria
 **********
-	
 gen edupi_ci=(aedu_ci>=1 & aedu_ci<=4) // 1-4 anos de educación
+replace edupi_ci = 1 if yrschool == 91 // some primary
 replace edupi_ci=. if aedu_ci==. // NIU
 
 ********** 
 *edupc_ci* // completó la educación primaria
 **********
-	
 gen edupc_ci=(aedu_ci==5) // 5 anos de educación
 replace edupc_ci=. if aedu_ci==. // NIU
 
 **********
 *edusi_ci* // no completó la educación secundaria
 **********
-	
-gen edusi_ci=(aedu_ci>=6 & aedu_ci<=10 | educco==380) // 6 a 10 anos de educación + secundaria con anos no especificados
+gen edusi_ci=(aedu_ci>=6 & aedu_ci<=10)
+replace edusi_ci = 1 if yrschool == 92 | yrschool ==93 //some technical after primary or some secondary
 replace edusi_ci=. if aedu_ci==. // NIU
 
 **********
 *edusc_ci* // completó la educación secundaria
 **********
-	
 gen edusc_ci=(aedu_ci==11) // 11 anos de educación
 replace edusc_ci=. if aedu_ci==. // NIU
-
-**********
-*eduui_ci* // no completó la educación universitaria o terciaria
-**********
-	
-gen eduui_ci=(aedu_ci>=12 & aedu_ci<=14) // 12 a 14 anos de educación
-replace eduui_ci=. if aedu_ci==. // NIU
-
-**********
-*eduuc_ci* // completó la educación universitaria o terciaria
-**********
-	
-gen eduuc_ci=(aedu_ci>=15) // 15 a 17 anos de educación
-replace eduuc_ci=. if aedu_ci==. // NIU
 
 ***********
 *edus1i_ci* // no completó el primer ciclo de la educación secundaria
 ***********
-
 gen byte edus1i_ci=(aedu_ci>=6 & aedu_ci<9)
 replace edus1i_ci=. if aedu_ci==. // NIU
 
 ***********
 *edus1c_ci* // completó el primer ciclo de la educación secundaria
 ***********
-	
 gen byte edus1c_ci=(aedu_ci==9)
 replace edus1c_ci=. if aedu_ci==. // NIU
 
 ***********
 *edus2i_ci* // no completó el segundo ciclo de la educación secundaria
 ***********
-
 gen byte edus2i_ci=(aedu_ci==10)
 replace edus2i_ci=. if aedu_ci==. // NIU
 
 ***********
 *edus2c_ci* // completó el segundo ciclo de la educación secundaria
 ***********
-
 gen byte edus2c_ci=(aedu_ci==11)
 replace edus2c_ci=. if aedu_ci==. // NIU
 
 ***********
 *asiste_ci* // la variable school no está disponible para 1964 (si para 1973, 1985 y 1993). Dejo el código armado para el resto de los años
 ***********
-
 gen asiste_ci=(school==1) // 0 attended in the past (3) and never attended (4)
 replace asiste_ci=. if school==0 | school==9 // missing a los NIU & missing
-
-	
-*Other variables
 
 ************
 * literacy *
 ************
-
 gen literacy=1 if lit==2 // literate
 replace literacy=0 if lit==1 // illiterate
 

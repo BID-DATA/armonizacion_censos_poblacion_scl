@@ -110,34 +110,32 @@ variables de ingreso por hogar porque no están en el do Base*/
 * VARIABLES EDUCATIVAS *
 ************************
 
-****************
-* asiste_ci    * 
-**************** 
+***************
+***asiste_ci*** 
+***************
 gen asiste_ci=1 if school==1
 replace asiste_ci=. if school==0 // not in universe as missing 
 replace asiste_ci=. if school==9 // Unknown/missing as missing
 replace asiste_ci=0 if school==2
 
-****************
-* aedu_ci      * 
-**************** 
-
+*************
+***aedu_ci*** 
+************* 
 gen aedu_ci=yrschool
 replace aedu_ci=. if yrschool>=90 & yrschool<100 // categorias NIU; missing; + categorias nivel educativo pero pero sin años de escolaridad
 
 **************
-***eduno_ci***
+***eduno_ci*** // no ha completado ningún año de educación
 **************
 gen byte eduno_ci=0
 replace eduno_ci=1 if aedu_ci==0
 replace eduno_ci=. if yrschool==90| yrschool==98| yrschool==99 // Se asignan como missing NIU and missing (no asi las otras)
 
 **************
-***edupi_ci***
+***edupi_ci*** // no completó la educación primaria
 **************
 gen byte edupi_ci=0
 replace edupi_ci=1 if aedu_ci>0 & aedu_ci<5 // se pone menor a 5 porque hay cohortes que tiene completa con 5 
-replace edupi_ci=1 if aedu_ci==5 & edattain==1 // se incluyen los de 5 años e primaria incompleta 
 replace edupi_ci=1 if yrschool==91 // Some primary
 replace edupi_ci=. if yrschool==90| yrschool==98| yrschool==99 // Se asignan como missing NIU and missing (no asi las otras)
 
@@ -146,7 +144,6 @@ replace edupi_ci=. if yrschool==90| yrschool==98| yrschool==99 // Se asignan com
 **************
 gen byte edupc_ci=0
 replace edupc_ci=1 if aedu_ci==6
-replace edupc_ci=1 if aedu_ci==5 & edattain==2 // se incluyen los de 5 años con primaria completa 
 replace edupc_ci=. if yrschool==90| yrschool==98| yrschool==99 // Se asignan como missing NIU and missing (no asi las otras)
 
 **************
@@ -163,21 +160,6 @@ replace edusi_ci=. if yrschool==90| yrschool==98| yrschool==99 // Se asignan com
 gen byte edusc_ci=0
 replace edusc_ci=1 if aedu_ci==12
 replace edusc_ci=. if yrschool==90| yrschool==98| yrschool==99 // Se asignan como missing NIU and missing (no asi las otras)
-
-**************
-***eduui_ci***
-**************
-gen byte eduui_ci=0
-replace eduui_ci=1 if aedu_ci>12 & aedu_ci<17
-replace eduui_ci=1 if yrschool==94 // Some tertiary
-replace eduui_ci=. if yrschool==90| yrschool==98| yrschool==99 // Se asignan como missing NIU and missing (no asi las otras)
-
-***************
-***eduuc_ci****
-***************
-gen byte eduuc_ci=0
-replace eduuc_ci=1 if aedu_ci==17| aedu_ci==18
-replace eduuc_ci=. if yrschool==90| yrschool==98| yrschool==99 // Se asignan como missing NIU and missing (no asi las otras)
 
 ***************
 ***edus1i_ci***
@@ -209,10 +191,9 @@ replace edus2c_ci=. if aedu_ci==. // NIU
 gen edupre_ci=(educbo==120) // pre-school
 replace edupre_ci=. if aedu_ci==. // NIU & missing
 
-** Other variables 
-***************
+**************
 ***literacy***
-***************
+**************
 gen literacy=. if lit==0
 replace literacy=0 if lit==1
 replace literacy=1 if lit==2
