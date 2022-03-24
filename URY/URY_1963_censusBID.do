@@ -142,19 +142,6 @@ replace edusi_ci=1 if yrschool==92 | yrschool==93 // Some techinical after prima
 gen edusc_ci=(aedu_ci==12) // 12 anos de educación
 replace edusc_ci=. if aedu_ci==. // NIU
 
-**********
-*eduui_ci* // no completó la educación universitaria o terciaria
-**********	
-gen eduui_ci=(aedu_ci>=13 & aedu_ci<=15) // 13 a 15 anos de educación
-replace eduui_ci=. if aedu_ci==. // NIU
-replace edusc_ci=1 if yrschool==94 // some tertiary
-
-**********
-*eduuc_ci* // completó la educación universitaria o terciaria
-**********
-gen eduuc_ci=(aedu_ci>=16) // más de 16 de educación
-replace eduuc_ci=. if aedu_ci==. // NIU
-
 ***********
 *edus1i_ci* // no completó el primer ciclo de la educación secundaria
 ***********

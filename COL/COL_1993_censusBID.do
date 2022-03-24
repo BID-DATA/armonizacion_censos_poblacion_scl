@@ -187,18 +187,6 @@ replace edusi_ci=. if aedu_ci==. // NIU
 gen edusc_ci=(aedu_ci==11) // 11 anos de educación
 replace edusc_ci=. if aedu_ci==. // NIU
 
-**********
-*eduui_ci* // no completó la educación universitaria o terciaria
-**********
-gen eduui_ci=(aedu_ci>=12 & aedu_ci<=14) // 12 a 14 anos de educación
-replace eduui_ci=. if aedu_ci==. // NIU
-
-**********
-*eduuc_ci* // completó la educación universitaria o terciaria
-**********
-gen eduuc_ci=(aedu_ci>=15) // más de 15 de educación
-replace eduuc_ci=. if aedu_ci==. // NIU
-
 ***********
 *edus1i_ci* // no completó el primer ciclo de la educación secundaria
 ***********
