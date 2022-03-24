@@ -239,23 +239,20 @@ replace region_c=23 if geo1_ve1990==21	/*Zulia*/
 ***           VARIABLES DE INGRESO                  ***
 *******************************************************
 	
-    ***********
-	**ylm_ci**
-	***********
+   ******************************************************
+***           VARIABLES DE INGRESO                  ***
+*******************************************************
+
+	replace ylm_ci=incearn
+	replace ylm_ci=. if incearn==99999998 | incearn==99999999
 	
-	*gen ylm_ci=.
-	
-    ***********
-	**ynlm_ci**
-	***********
- 
-	*gen ynlm_ci=.
 
     ***********
-	**ylm_ch**
+	**ylm_ch*
 	***********
    
-   gen ylm_ch=.
+   by idh_ch, sort: egen ylm_ch=sum(ylm_ci) if miembros_ci==1, missing
+   
    
     ***********
 	**ynlm_ch**
