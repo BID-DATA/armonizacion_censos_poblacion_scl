@@ -18,7 +18,8 @@ capture log close
 capture log using "`log_file'", replace
 
 local hh_file "$ruta\\raw\\`PAIS'\\JAM2011 census housing data complete id all users.dta"
-local p_file "$ruta\\raw\\`PAIS'\\JAM population census _2011 _four digit private only.dta"
+local p_file "$ruta\\raw\\`PAIS'\\JAM2011 census population data complete id statin.dta"
+
 
 
 ** Crea el id de hogar y salva una copia para el merge

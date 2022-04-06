@@ -172,7 +172,7 @@ use "`base_in'", clear
 	*nempdom_ch*
 	************
 	*NOTA: se utiliza la variable related la cual tiene más desagregación en cuanto a la relación con el jefe de hogar
-	tab related, nol
+	* tab related, nol
 	by idh_ch, sort: egen nempdom_ch=sum(q1_3rela==12) if relacion_ci==6	  
 	
 	*************
@@ -226,8 +226,8 @@ use "`base_in'", clear
 	*miembros_ci
 	************
 	gen miembros_ci=(relacion_ci>=1 & relacion_ci<9) 
-	tab persons
-	tab miembros_ci	
+	* tab persons
+	* tab miembros_ci	
 
 **********************************
 **** VARIABLES DE LA VIVIENDA ****
@@ -585,7 +585,14 @@ recode dis_ci nonmiss=. if q1_7seei>=. & q1_7hear>=. & q1_7walk>=. & q1_7memo>=.
 egen dis_ch  = sum(dis_ci), by(idh_ch) 
 replace dis_ch=1 if dis_ch>=1 & dis_ch!=. 
 
-
+*************************
+*** discapacidad SPH ****
+*************************
+gen discapacidad_ci =.
+gen ceguera_ci =.
+gen sordera_ci =.
+gen mudez_ci =.
+gen dismental_ci =.
 
 ******************************************************
 ***           VARIABLES DE INGRESO                 ***
@@ -701,7 +708,7 @@ replace dis_ch=1 if dis_ch>=1 & dis_ch!=.
 
 include "../Base/labels.do"
 
-order region_BID_c region_c pais_c anio_c idh_ch idp_ci factor_ch factor_ci estrato_ci zona_c sexo_ci edad_ci relacion_ci civil_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch miembros_ci afroind_ci afroind_ch afroind_ano_c dis_ci dis_ch condocup_ci emp_ci desemp_ci pea_ci rama_ci categopri_ci spublico_ci ylm_ci ynlm_ci ylm_ch ynlm_ch aedu_ci eduno_ci edupre_ci edupi_ci  edupc_ci  edusi_ci edusc_ci  eduui_ci eduuc_ci edus1i_ci edus1c_ci edus2i_ci edus2c_ci asiste_ci literacy aguared_ch luz_ch bano_ch des1_ch piso_ch banomejorado_ch pared_ch techo_ch resid_ch dorm_ch cuartos_ch cocina_ch telef_ch refrig_ch auto_ch compu_ch internet_ch cel_ch viviprop_ch migrante_ci migrantelac_ci migantiguo5_ci discapacidad_ci  ceguera_ci sordera_ci mudez_ci dismental_ci
+order region_BID_c region_c pais_c anio_c idh_ch idp_ci factor_ch factor_ci estrato_ci zona_c sexo_ci edad_ci relacion_ci civil_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch miembros_ci afroind_ci afroind_ch afroind_ano_c dis_ci dis_ch condocup_ci emp_ci desemp_ci pea_ci rama_ci categopri_ci spublico_ci ylm_ci ynlm_ci ylm_ch ynlm_ch aedu_ci eduno_ci edupre_ci edupi_ci  edupc_ci  edusi_ci edusc_ci  eduui_ci eduuc_ci edus1i_ci edus1c_ci edus2i_ci edus2c_ci asiste_ci literacy aguared_ch luz_ch bano_ch des1_ch piso_ch banomejorado_ch pared_ch techo_ch resid_ch dorm_ch cuartos_ch cocina_ch telef_ch refrig_ch auto_ch compu_ch internet_ch cel_ch viviprop_ch migrante_ci migrantelac_ci migantiguo5_ci discapacidad_ci ceguera_ci sordera_ci mudez_ci dismental_ci
 
 compress
 
