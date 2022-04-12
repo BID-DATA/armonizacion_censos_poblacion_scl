@@ -112,33 +112,33 @@ use "`base_in'", clear
 	*********
 	*sexo_c*
 	*********
-	gen sexo_ci = q1_1sex
+	gen sexo_ci = q1_1
 	
 	*********
 	*edad_c*
 	*********
-	gen edad_ci = q1_2bage
+	gen edad_ci = q1_2b_ag
 
  	*************
 	*relacion_ci*
 	*************	
-	gen relacion_ci=1 if q1_3rela==1
-    replace relacion_ci=2 if q1_3rela==2 | q1_3rela==3
-    replace relacion_ci=3 if q1_3rela>=4 & q1_3rela<=6
-    replace relacion_ci=4 if q1_3rela>=7 & q1_3rela<=11
-    replace relacion_ci=6 if q1_3rela==12 
-	replace relacion_ci=. if q1_3rela==99
+	gen relacion_ci=1 if q1_3==1
+    replace relacion_ci=2 if q1_3==2 | q1_3==3
+    replace relacion_ci=3 if q1_3>=4 & q1_3<=6
+    replace relacion_ci=4 if q1_3>=7 & q1_3<=11
+    replace relacion_ci=6 if q1_3==12 
+	replace relacion_ci=. if q1_3==99
 	
 	**************
 	*Estado Civil*
 	**************
 	*2010 no tiene variable marst
 	gen civil_ci=.
-	replace civil_ci=1 if q1_6mari==4
-	replace civil_ci=2 if q1_6mari==1
-	replace civil_ci=3 if q1_6mari==2 | q1_6mari==5
-	replace civil_ci=4 if q1_6mari==3
-	replace civil_ci=. if q1_6mari==9
+	replace civil_ci=1 if q1_6==4
+	replace civil_ci=2 if q1_6==1
+	replace civil_ci=3 if q1_6==2 | q1_6==5
+	replace civil_ci=4 if q1_6==3
+	replace civil_ci=. if q1_6==9
 	
     *********
 	*jefe_ci*
@@ -173,7 +173,7 @@ use "`base_in'", clear
 	************
 	*NOTA: se utiliza la variable related la cual tiene más desagregación en cuanto a la relación con el jefe de hogar
 	* tab related, nol
-	by idh_ch, sort: egen nempdom_ch=sum(q1_3rela==12) if relacion_ci==6	  
+	by idh_ch, sort: egen nempdom_ch=sum(q1_3==12) if relacion_ci==6	  
 	
 	*************
 	*clasehog_ch*
@@ -465,7 +465,37 @@ use "`base_in'", clear
 **** VARIABLES DE INGRESO ****
 ***********************************
 
+	* This variable is categorical, so we replicate IPUMS methodology
+	*  of assigning the midpoint of the intervals
+	* Codes 1--7 are weekly salaries (multiply by 4.5)
+	* Codes 8--14 are Monthly salaries
+	* Codes 15--21 are Annual salaries (divide by 12)
    gen ylm_ci=.
+   * weekly
+   replace ylm_ci=(4070/2)*4.5 if q5_10==1
+   replace ylm_ci=((5999-4070)/2)*4.5 if q5_10==2
+   replace ylm_ci=((9999-6000)/2)*4.5 if q5_10==3
+   replace ylm_ci=((19999-10000)/2)*4.5 if q5_10==4
+   replace ylm_ci=((29999-20000)/2)*4.5 if q5_10==5
+   replace ylm_ci=((59999-30000)/2)*4.5 if q5_10==6
+   replace ylm_ci=60000*4.5 if q5_10==7
+   * monthly
+   replace ylm_ci=16280/2 if q5_10==8
+   replace ylm_ci=(23999-16280)/2 if q5_10==9
+   replace ylm_ci=(39999-24000)/2 if q5_10==10
+   replace ylm_ci=(79999-40000)/2 if q5_10==11
+   replace ylm_ci=(119999-80000)/2 if q5_10==12
+   replace ylm_ci=(239999-120000)/2 if q5_10==13
+   replace ylm_ci=240000 if q5_10==14
+   * annual
+   replace ylm_ci=(195360/2)/12 if q5_10==15
+   replace ylm_ci=((287999-195360)/2)/12 if q5_10==16
+   replace ylm_ci=((479999-288000)/2)/12 if q5_10==17
+   replace ylm_ci=((959999-480000)/2)/12 if q5_10==18
+   replace ylm_ci=((1439999-960000)/2)/12 if q5_10==19
+   replace ylm_ci=((2879999-1440000)/2)/12 if q5_10==20
+   replace ylm_ci=2880000/12 if q5_10==21
+   
  
    gen ynlm_ci=.
 
@@ -551,9 +581,9 @@ label value region_c region_c
 	***************
 
 gen afroind_ci=. 
-replace afroind_ci=2 if q1_4ethn == 1
-replace afroind_ci=3 if q1_4ethn != 1 
-replace afroind_ci=. if q1_4ethn==9 
+replace afroind_ci=2 if q1_4 == 1
+replace afroind_ci=3 if q1_4 != 1 
+replace afroind_ci=. if q1_4==9 
 
 
 	***************
@@ -573,6 +603,14 @@ gen afroind_ano_c=2001
 ********************
 *** discapacidad ***
 ********************
+
+gen dis_ci=.
+/*
+PROBLEM: these variables are in another dataset,
+but the id variables are inconsistent and do not
+uniquely identify the observations, making the merge
+impossible. Needs further investigation.
+
 gen dis_ci = 0
 recode dis_ci nonmiss=. if inlist(9,q1_7seei,q1_7hear,q1_7walk,q1_7memo,q1_7lift,q1_7self,q1_7comm) //
 recode dis_ci nonmiss=. if q1_7seei>=. & q1_7hear>=. & q1_7walk>=. & q1_7memo>=. & q1_7lift>=. & q1_7self>=. & q1_7comm>=. //
@@ -584,6 +622,8 @@ recode dis_ci nonmiss=. if q1_7seei>=. & q1_7hear>=. & q1_7walk>=. & q1_7memo>=.
 
 egen dis_ch  = sum(dis_ci), by(idh_ch) 
 replace dis_ch=1 if dis_ch>=1 & dis_ch!=. 
+*/
+
 
 *************************
 *** discapacidad SPH ****
@@ -693,7 +733,7 @@ gen dismental_ci =.
 	***********
 	*asiste_ci*
 	***********
-	gen asiste_ci=(q2_1atte==1)
+	gen asiste_ci=(q2_1==1)
 	replace asiste_ci=. if educ_att==9
 
 	************
