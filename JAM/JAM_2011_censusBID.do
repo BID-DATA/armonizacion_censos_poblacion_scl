@@ -388,11 +388,11 @@ use "`base_in'", clear
      *******************
 	 
     gen condocup_ci=.
-    replace condocup_ci=1 if q5_1work==1 | q5_2farm==1 | q5_3oddj==1 | q5_4othe==1 | q5_4othe==2
-    replace condocup_ci=2 if q5_1work==2 & q5_2farm==2 & q5_3oddj==2 & (q5_4othe==3 | q5_4othe==4)
-    replace condocup_ci=3 if q5_1work==2 & q5_2farm==2 & q5_3oddj==2 & q5_4othe>=5
-    replace condocup_ci=. if q5_1work==2 & q5_2farm==2 & q5_3oddj==2 & q5_4othe==99/*unkown/missing as missing*/ 
-    replace condocup_ci=. if q5_1work==. & q5_2farm==. & q5_3oddj==. & q5_4othe==. /*NIU as missing*/
+    replace condocup_ci=1 if q5_1==1 | q5_2==1 | q5_3==1 | q5_4==1 | q5_4==2
+    replace condocup_ci=2 if q5_1==2 & q5_2==2 & q5_3==2 & (q5_4==3 | q5_4==4)
+    replace condocup_ci=3 if q5_1==2 & q5_2==2 & q5_3==2 & q5_4>=5
+    replace condocup_ci=. if q5_1==2 & q5_2==2 & q5_3==2 & q5_4==99/*unkown/missing as missing*/ 
+    replace condocup_ci=. if q5_1==. & q5_2==. & q5_3==. & q5_4==. /*NIU as missing*/
 	
       ************
       ***emp_ci***
@@ -422,22 +422,22 @@ use "`base_in'", clear
      *************************
 	 *2010 no tiene variable indgen
     gen rama_ci = . 
-    replace rama_ci = 1 if q5_7indu==0
-    replace rama_ci = 2 if q5_7indu==1  
-    replace rama_ci = 3 if q5_7indu==2   
-    replace rama_ci = 4 if q5_7indu==3      
-    replace rama_ci = 5 if q5_7indu==4   
-    replace rama_ci = 6 if q5_7indu==5   
-    replace rama_ci = 7 if q5_7indu==6   
-    replace rama_ci = 8 if q5_7indu==7   
-    replace rama_ci = 9 if q5_7indu==8  
-    replace rama_ci = 10 if q5_7indu==10   
-    replace rama_ci = 11 if q5_7indu==9  
-    replace rama_ci = 12 if q5_7indu==11 
-    replace rama_ci = 13 if q5_7indu==12 
-    replace rama_ci = 14 if q5_7indu==13    
-    replace rama_ci = 15 if q5_7indu==14  
-    replace rama_ci = . if q5_7indu>14  
+    replace rama_ci = 1 if q5_7==0
+    replace rama_ci = 2 if q5_7==1  
+    replace rama_ci = 3 if q5_7==2   
+    replace rama_ci = 4 if q5_7==3      
+    replace rama_ci = 5 if q5_7==4   
+    replace rama_ci = 6 if q5_7==5   
+    replace rama_ci = 7 if q5_7==6   
+    replace rama_ci = 8 if q5_7==7   
+    replace rama_ci = 9 if q5_7==8  
+    replace rama_ci = 10 if q5_7==10   
+    replace rama_ci = 11 if q5_7==9  
+    replace rama_ci = 12 if q5_7==11 
+    replace rama_ci = 13 if q5_7==12 
+    replace rama_ci = 14 if q5_7==13    
+    replace rama_ci = 15 if q5_7==14  
+    replace rama_ci = . if q5_7>14  
 	
      *********************
      ****categopri_ci****
@@ -446,20 +446,20 @@ use "`base_in'", clear
 
 
 	gen categopri_ci=.
-    replace categopri_ci=0 if q5_8emps==7
-    replace categopri_ci=1 if q5_8emps==5
-    replace categopri_ci=2 if q5_8emps==6
-    replace categopri_ci=3 if q5_8emps==1 | q5_8emps==2 | q5_8emps==3
-    replace categopri_ci=4 if q5_8emps==4
-    replace categopri_ci=. if q5_8emps==9 | q5_8emps==9999 
+    replace categopri_ci=0 if q5_8==7
+    replace categopri_ci=1 if q5_8==5
+    replace categopri_ci=2 if q5_8==6
+    replace categopri_ci=3 if q5_8==1 | q5_8==2 | q5_8==3
+    replace categopri_ci=4 if q5_8==4
+    replace categopri_ci=. if q5_8==9 | q5_8==9999 
 	
 	
       *****************
       ***spublico_ci***
       *****************
     gen spublico_ci=.
-		replace spublico_ci=1 if q5_8emps==1
-		replace spublico_ci=0 if q5_8emps!=1
+		replace spublico_ci=1 if q5_8==1
+		replace spublico_ci=0 if q5_8!=1
 	
 **********************************
 **** VARIABLES DE INGRESO ****
@@ -504,42 +504,48 @@ use "`base_in'", clear
 *******************************************************
 
     *******************
-    ****migrante_ci****
-    *******************
-	
-	gen migrante_ci =.
-	replace migrante_ci = 1 if q4_3fore == 1
-	replace migrante_ci = 0 if q4_3fore == . 
-   
+	****migrante_ci****
 	*******************
-    **migantiguo5_ci***
-    *******************
+
+	gen migrante_ci =.
+	replace migrante_ci = 1 if q4_3a == 1
+	replace migrante_ci = 0 if q4_3a == .
+
+	*******************
+	**migantiguo5_ci***
+	*******************
 	gen migantiguo5_ci =.
-	replace migantiguo5_ci =(q4_4immi<=2006)
-	replace migantiguo5_ci =. if q4_4immi==9999
-	
+	replace migantiguo5_ci =(q4_4<=2006)
+	replace migantiguo5_ci =. if q4_4==9999
+
 	**********************
 	*** migrantelac_ci ***
 	**********************
 
+
+
 	gen migrantelac_ci = 0
-	replace migrantelac_ci= 1 if inlist(q4_3birt,5,13,29)
-	replace migrantelac_ci =. if q4_3birt==9999
-	
+	replace migrantelac_ci= 1 if inlist(q4_3a_2,5,13,29)
+	replace migrantelac_ci =. if q4_3a_2==9999
+
 	*******************
-    **migrantiguo5_ci**
-    *******************
-	gen migrantiguo5_ci = 1 if q4_4immi<=2006
-	replace migrantiguo5_ci = 0 if q4_4immi>2006
-	replace migrantiguo5_ci = . if q4_4immi==.
+	**migrantiguo5_ci**
+	*******************
+	gen migrantiguo5_ci = 1 if q4_4<=2006
+	replace migrantiguo5_ci = 0 if q4_4>2006
+	replace migrantiguo5_ci = . if q4_4==.
+
+
 
 	**********************
 	****** miglac_ci *****
 	**********************
 
-	gen miglac_ci= 1 if inlist(q4_3birt,5,13,29)
-	replace miglac_ci = 0 if  q4_3birt!=5 & q4_3birt!=13 & q4_3birt!=29
-    replace miglac_ci = . if  q4_3birt==.
+
+
+	gen miglac_ci= 1 if inlist(q4_3a_2,5,13,29)
+	replace miglac_ci = 0 if q4_3a_2!=5 & q4_3a_2!=13 & q4_3a_2!=29
+	replace miglac_ci = . if q4_3a_2==.
 
    
 
@@ -605,6 +611,7 @@ gen afroind_ano_c=2001
 ********************
 
 gen dis_ci=.
+gen dis_ch=.
 /*
 PROBLEM: these variables are in another dataset,
 but the id variables are inconsistent and do not
@@ -637,10 +644,6 @@ gen dismental_ci =.
 ******************************************************
 ***           VARIABLES DE INGRESO                 ***
 ******************************************************
-///ES CATEGORICA - REVISAR - En 2001 también es categórica y se genera la variable
-
-	replace ylm_ci=.
-
 
     ***********
 	**ylm_ch*
@@ -668,15 +671,11 @@ gen dismental_ci =.
 	*eduno_ci* // no ha completado ningún año de educación
 	**********
 
-	gen eduno_ci=(educ_att==1 |educ_att==2) // never attended or pre-school
-	replace eduno_ci=. if educ_att==9 // NIU & missing
-
+	gen eduno_ci=.
 	**********
 	*edupre_ci* // preescolar
 	**********
-	gen edupre_ci=(educ_att==2) // pre-school
-	replace edupre_ci=. if educ_att==9 // NIU & missing
-	
+	gen edupre_ci=.
 	**********
 	*edupi_ci* // no completó la educación primaria
 	**********
@@ -684,9 +683,7 @@ gen dismental_ci =.
 	********** 
 	*edupc_ci* // completó la educación primaria
 	**********
-	gen edupc_ci=(educ_att ==3) // 
-	replace edupc_ci=. if educ_att==9 // NIU & missing
-
+	gen edupc_ci=.
 	**********
 	*edusi_ci* // no completó la educación secundaria
 	**********
@@ -695,9 +692,7 @@ gen dismental_ci =.
 	**********
 	*edusc_ci* // completó la educación secundaria
 	**********
-	gen edusc_ci=(educ_att==4)
-	replace edusc_ci=.  if educ_att==9 // NIU & missing 
-	
+	gen edusc_ci=.
 
 	**********
 	*eduui_ci* // no completó la educación universitaria o terciaria
@@ -706,9 +701,7 @@ gen dismental_ci =.
 	**********
 	*eduuc_ci* // completó la educación universitaria o terciaria
 	**********
-	gen eduuc_ci=(educ_att==5 | educ_att==6) 
-	replace eduuc_ci=. if aedu_ci==. // missing a los NIU & missing
-
+	gen eduuc_ci=.
 	***********
 	*edus1i_ci* // no completó el primer ciclo de la educación secundaria
 	***********
@@ -727,14 +720,13 @@ gen dismental_ci =.
 	***********
 	*edus2c_ci* // completó el segundo ciclo de la educación secundaria
 	***********
-	gen byte edus2c_ci=(educ_att==4)
-	replace edus2c_ci=. if educ_att==9 
-	
+	gen byte edus2c_ci=.
 	***********
 	*asiste_ci*
 	***********
-	gen asiste_ci=(q2_1==1)
-	replace asiste_ci=. if educ_att==9
+	gen asiste_ci=.
+	replace asiste_ci=1 if q2_1==1
+	replace asiste_ci=0 if q2_1==2
 
 	************
 	* literacy *
