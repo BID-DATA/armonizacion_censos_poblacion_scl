@@ -117,7 +117,7 @@ use "`base_in'", clear
 	*********
 	*edad_c*
 	*********
-	gen edad_ci = q1_2bage
+	gen edad_ci = q1_2b_ag
 
  	*************
 	*relacion_ci*

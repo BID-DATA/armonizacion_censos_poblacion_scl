@@ -9,6 +9,7 @@ Autores: Nathalia Maya Scarpeta y Cesar Lins
  Script de merge
 ****************************************************************************/
 clear all
+local PAIS JAM
 
 global ruta = "${censusFolder}"
 global ruta_clean = "$ruta\\clean\\`PAIS'"
