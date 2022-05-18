@@ -277,16 +277,7 @@ label var viviprop_ch1 "Propiedad de la vivienda"
 	label def viviprop_ch 0"Alquilada" 1"Propia" 3"Ocupada_(propia_de_facto)", add modify
 	label val viviprop_ch viviprop_ch1
 	
-*/
-********************************
-*** Health indicators **********
-********************************
-label var discapacidad_ci "Discapacidad"
-label var ceguera_ci "Ciego o con discpacidad visual"
-label var sordera_ci "Sordera o con discpacidad auditiva"
-label var mudez_ci "Mudo o con discpacidad de lenguaje"
-label var dismental_ci "Discapacidad mental"
-
+	
 ***********************************
 ***    VARIABLES DE MIGRACIÓN.  ***
 ***********************************
