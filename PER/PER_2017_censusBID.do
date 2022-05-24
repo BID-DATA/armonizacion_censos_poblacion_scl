@@ -30,11 +30,11 @@ local ANO "2017"
 ** Setup code, load database,       **
 ** and include all common variables **
 **************************************
-globalruta ="${censusFolder}"
+global ruta ="${censusFolder}"
 
-local log_file ="$ruta\\clean\\`PAIS'\\log\\`PAIS'_`ANO'_censusBID.log"
-local base_in ="$ruta\\raw\\`PAIS'\\`PAIS'_`ANO'_IPUMS.dta"
-local base_out ="$ruta\\clean\\`PAIS'\\`PAIS'_`ANO'_censusBID.dta"
+local log_file ="$ruta//clean//`PAIS'//log//`PAIS'_`ANO'_censusBID.log"
+local base_in ="$ruta//raw//`PAIS'//`PAIS'_`ANO'_NOIPUMS.dta"
+local base_out ="$ruta//clean//`PAIS'//`PAIS'_`ANO'_censusBID.dta"
                                                     
 capture log close
 log using "`log_file'", replace
@@ -45,7 +45,7 @@ gen region_BID_c = 3
     *********
 	*pais_c*
 	*********
-gen pais_c = PER
+gen pais_c = "PER"
 
     *********
 	*anio_c*
@@ -65,19 +65,19 @@ rename id_pob_imp_f idp_ci
     ***********
 	* estrato *
 	***********
-rename  estrato estrato_ci
+gen estrato_ci=.
 
     ***************************
 	* Zona urbana (1) o rural (0)
 	***************************
-gen zonca_c=.
+gen zona_c=.
 replace zona_c=1 if encarea==1
-replace zona=0 if encarea==2
+replace zona_c=0 if encarea==2
 	
 	****************************************
 	*factor expansión individio (factor_ci)*
 	****************************************
-gen factor_ci=.
+gen factor_ci=rk_final
 	
 	*******************************************
 	*Factor de expansion del hogar (factor_ch)*
@@ -196,7 +196,6 @@ replace civil_ci=4 if c5_p24==4
 	*miembros_ci
 	************
 	gen miembros_ci=(relacion_ci>=1 & relacion_ci<9) 
-	tab persons
 	tab miembros_ci	
 	
 **********************************
@@ -209,7 +208,7 @@ replace civil_ci=4 if c5_p24==4
 	* se crea conforme las tablas de armonización IPUMS
 	gen aguared_ch=.
 	replace aguared_ch=1 if c2_p6 == 1 | c2_p6 == 2 | c2_p6 == 3
-	replace aguared_ch0 if c2_p6>3 & <9
+	replace aguared_ch=0 if c2_p6>3 & c2_p6<9
 	
 	********
 	*luz_ch*
@@ -223,7 +222,7 @@ replace civil_ci=4 if c5_p24==4
 	*bano_ch*
 	*********
 	gen bano_ch=.
-	replace bano_ch =1 if c2_p10
+	replace bano_ch=1 if c2_p10
 	replace bano_ch=1 if c2_p10 >= 1 & c2_p10 <= 4
 	replace bano_ch=0 if c2_p10>4
 	
@@ -240,9 +239,9 @@ replace civil_ci=4 if c5_p24==4
 	*piso_ch*
 	*********
 	gen piso_ch=.
-	replace piso_ch = 0 if c2_p5 ==6
-	replace piso_ch = 1 if c2_p5 ==2 | c2_p5 ==3
-	replace piso_ch ==2 if c2_p5 == 5 | c2_p5 == 4 | c2_p5==1
+	replace piso_ch = 0 if c2_p5 == 6
+	replace piso_ch = 1 if c2_p5 == 2 | c2_p5 ==3
+	replace piso_ch = 2 if c2_p5  == 5 | c2_p5 == 4 | c2_p5==1
 	
 	*****************
 	*banomejorado_ch*
@@ -313,7 +312,7 @@ replace civil_ci=4 if c5_p24==4
 	*compu_ch*
 	********
 	gen compu_ch=c3_p2_9
-	replace compu_ch =- if c3_p2_9==2
+	replace compu_ch =0 if c3_p2_9==2
 	
 	*************
 	*internet_ch*
@@ -331,9 +330,9 @@ replace civil_ci=4 if c5_p24==4
 	*viviprop_ch*
 	*************
 	*NOTA: aqui se genera una variable parecida, pues no se puede saber si es propia total o parcialmente pagada
-	gen viviprop_ch=.
-	replace viviprop_ch=1 if c2_p13 == 2 | c2_p13 == 3 
-	replace viviprop_ch=0 if c2_p13 ==1 | c2_p13 == 4
+	gen viviprop_ch1=.
+	replace viviprop_ch1=1 if c2_p13 == 2 | c2_p13 == 3 
+	replace viviprop_ch1=0 if c2_p13 ==1 | c2_p13 == 4
 	
 	
 **********************************************
@@ -377,6 +376,7 @@ replace civil_ci=4 if c5_p24==4
      ****rama de actividad****
      *************************
     gen rama_ci = .
+	destring c5_p19_cod, replace
 	replace rama_ci= 1 if c5_p19_cod>=111 & c5_p19_cod<=500
 	replace rama_ci = 2 if c5_p19_cod>=1010 & c5_p19_cod<=1429
 	replace rama_ci = 3 if c5_p19_cod>=1511 & c5_p19_cod <= 3700
@@ -538,7 +538,6 @@ replace edupc_ci=. if aedu_ci==. // NIU & missing
 **************
 gen edusi_ci=(aedu_ci>=7 & aedu_ci<11) // 7 a 10 anos de educación
 replace edusi_ci=. if aedu_ci==. // NIU & missing
-replace edusi_ci = 1 if yrschool == 92 | yrschool ==93 //some technical after primary or some secondary
 
 **************
 ***edusc_ci***
@@ -600,14 +599,14 @@ replace literacy=0 if c5_p12 == 2
 	***afroind_ci***
 	***************
 gen afroind_ci=. 
-replace afroind_ci=1 if c5_p25==1 | c5_p25==2 c5_p25==3 c5_p25==4
+replace afroind_ci=1 if c5_p25==1 | c5_p25==2 | c5_p25==3 | c5_p25==4
 replace afroind_ci=2 if c5_p25==5
 replace afroind_ci=3 if c5_p25==6 | c5_p25==7 | c5_p25==8
 
 	***************
 	***afroind_ch***
 	***************
-    gen afroind_jefe= afroind_ci if relate==1
+    gen afroind_jefe= afroind_ci if jefe_ci==1
 	egen afroind_ch  = min(afroind_jefe), by(idh_ch) 
 	
 	drop afroind_jefe 
