@@ -114,9 +114,9 @@ gen dis_ch=.
 	***********
    by idh_ch, sort: egen ynlm_ch=sum(ynlm_ci) if miembros_ci==1, missing
    
-*******************************************************
+******************************************************
 ***           VARIABLES DE EDUCACIÓN               ***
-*******************************************************
+******************************************************
 
 	*********
 	*aedu_ci* // años de educacion aprobados
@@ -132,9 +132,9 @@ gen dis_ch=.
 	gen eduno_ci=(aedu_ci==0) // never attended or pre-school
 	replace eduno_ci=. if aedu_ci==. // NIU & missing
 
-	**********
+	***********
 	*edupre_ci* // preescolar
-	**********
+	***********
 	gen edupre_ci=(educpa==03) // pre-school
 	replace edupre_ci=. if aedu_ci==. // NIU & missing
 	
@@ -156,26 +156,13 @@ gen dis_ch=.
 	**********
 	gen edusi_ci=(aedu_ci>=7 & aedu_ci<=11) // 7 a 11
 	replace edusi_ci=. if aedu_ci==. // NIU & missing
-	replace edusi_ci=1 if yrschool==93
+	replace edusi_ci=1 if yrschool ==92 | yrschool==93
 
 	**********
 	*edusc_ci* // completó la educación secundaria
 	**********
 	gen edusc_ci=(aedu_ci==12) // 12 
 	replace edusc_ci=.  if aedu_ci==. // NIU & missing
-
-	**********
-	*eduui_ci* // no completó la educación universitaria o terciaria
-	**********
-	gen eduui_ci=(aedu_ci>=13 & aedu_ci<=16) // 13 a 16 anos de educación
-	replace eduui_ci=.  if aedu_ci==. // NIU & missing
-	replace  eduui_ci=1 if yrschool==94
-
-	**********
-	*eduuc_ci* // completó la educación universitaria o terciaria
-	**********
-	gen eduuc_ci=(aedu_ci>=17) //más de 16
-	replace eduuc_ci=. if aedu_ci==. // missing a los NIU & missing
 
 	***********
 	*edus1i_ci* // no completó el primer ciclo de la educación secundaria
@@ -207,13 +194,12 @@ gen dis_ch=.
 	gen asiste_ci=(school==1) // 0 includes attended in the past (3) and never attended (4)
 	replace asiste_ci=. if school==0 | school==9 // missing a los NIU & missing
     
-	************
-	* literacy *
-	************
+	**********
+	*literacy*
+	**********
 	gen literacy=. 
 	replace literacy=1 if lit==2 // literate
 	replace literacy=0 if lit==1 // illiterate
-
 
 *****************************
 ** Include all labels of   **
