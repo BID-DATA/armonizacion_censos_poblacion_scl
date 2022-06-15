@@ -615,14 +615,20 @@ gen afroind_ano_c=2018
 	*******************
 	***dis_ci***
 	*******************
-gen dis_ci=. 
+/*	
+No, sin dificultad ..................1
+Sí, con algo de dificultad ......... 2
+Sí, con mucha dificultad ........... 3
+No puede ............................4
+*/
+gen dis_ci=0
+replace dis_ci=1 if pcp16_a>=3 & pcp16_a<=4 | pcp16_b>=3 & pcp16_b<=4 | pcp16_c>=3 & pcp16_c<=4 
+replace dis_ci=1 if pcp16_d>=3 & pcp16_d<=4 | pcp16_e>=3 & pcp16_e<=4 | pcp16_f>=3 & pcp16_f<=4 
 
 	*******************
 	***dis_ch***
 	*******************
 gen dis_ch=. 
-
-
 
 
 *****************************
