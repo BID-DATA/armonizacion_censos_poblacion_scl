@@ -30,7 +30,7 @@ local ANO "2017"
 ** Setup code, load database,       **
 ** and include all common variables **
 **************************************
-global ruta ="${censusFolder}"
+global ruta = "/home/mariarey/shared/SCLDataPoD/Harmonized Censuses - IPUMS/"
 
 local log_file ="$ruta//clean//`PAIS'//log//`PAIS'_`ANO'_censusBID.log"
 local base_in ="$ruta//raw//`PAIS'//`PAIS'_`ANO'_NOIPUMS.dta"
@@ -82,7 +82,7 @@ gen factor_ci=rk_final
 	*******************************************
 	*Factor de expansion del hogar (factor_ch)*
 	*******************************************
-gen factor_ch=.
+gen factor_ch=1
 	
 *********************************************
 ***         VARIABLES DEMOGRAFICAS        ***
@@ -620,11 +620,15 @@ gen afroind_ano_c=2017
 	***dis_ci***
 	*******************
 gen dis_ci=. 
+replace dis_ci=1 if c5_p9_1==1 | c5_p9_2==1 | c5_p9_3==1 |c5_p9_4==1 | c5_p9_5==1 | c5_p9_6==1
+replace dis_ci=0 if c5_p9_1==0  & c5_p9_2==0 & c5_p9_3==0 & c5_p9_4==0 & c5_p9_5==0 & c5_p9_6==0
+replace dis_ci=0 if c5_p9_7==1
 
 	*******************
 	***dis_ch***
 	*******************
-gen dis_ch=. 
+egen dis_ch  = sum(dis_ci), by(idh_ch) 
+replace dis_ch=1 if dis_ch>=1 & dis_ch!=.
 
 
 
