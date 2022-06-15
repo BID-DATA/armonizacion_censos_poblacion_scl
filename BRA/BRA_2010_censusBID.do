@@ -130,21 +130,34 @@ drop afroind_jefe
 	*******************
 gen afroind_ano_c=1960
 
-********************
-*** discapacidad ***
-********************
-gen dis_ci=.
-gen dis_ch=.
+************************
+*** Discapacidad (WG)***
+************************
+/* Identificación de si una persona reporta por lo menos alguna dificultad en una o más de las preguntas del Washington Group Questionnaire */
+
+gen dis_ci = 0
+recode dis_ci nonmiss=. if inlist(9,br2010a_dissee,br2010a_dishear,br2010a_dismob) //
+recode dis_ci nonmiss=. if br2010a_dissee>=. & br2010a_dishear>=. & br2010a_dismob>=. //
+	foreach i in see hear mob {
+		forvalues j=1/3 {
+		replace dis_ci=1 if br2010a_dis`i'==`j'
+		}
+		}
+
+/*Identificación de si un hogar tiene uno o más miembros que reportan por lo menos alguna dificultad en una o más de las preguntas del Washington Group Questionnaire */		
+
+egen dis_ch  = sum(dis_ci), by(idh_ch) 
+replace dis_ch=1 if dis_ch>=1 & dis_ch!=. 
+
 
 ****************************
 ***	VARIABLES EDUCATIVAS ***
 ****************************
 * BRA 2010 no tiene vairables yrschool se contruye a partir de eddatain y educbr
 
-**************
-**asiste_ci***
-**************
-
+***********
+*asiste_ci*
+***********
 gen asiste_ci=(school==1) // 0 includes attended in the past (3) and never attended (4)
 replace asiste_ci=. if school==0 | school==9 | school==. // missing a los NIU & missing
 	
@@ -153,16 +166,15 @@ replace asiste_ci=. if school==0 | school==9 | school==. // missing a los NIU & 
 *********
 gen aedu_ci=.
 
-**************
-***eduno_ci***
-**************
-
+**********
+*eduno_ci*
+**********
 gen eduno_ci=(educbr==0000 | educbr==1100 | educbr==1200 | educbr==1300)
 replace eduno_ci=. if educbr==8000 | educbr==9000
 
-***************
-***edupre_ci***
-***************
+***********
+*edupre_ci*
+***********
 gen edupre_ci=(educbr==1200) // pre-school
 replace edupre_ci=. if educbr==8000 | educbr==9000
 	
@@ -175,14 +187,12 @@ replace edupi_ci=. if educbr==8000 | educbr==9000
 ********** 
 *edupc_ci* // completó la educación primaria
 **********
-	
 gen edupc_ci=(educbr>=2200 & educbr<=2220) // primaria completa
 replace edupc_ci=. if educbr==8000 | educbr==9000
 
 **********
 *edusi_ci* // no completó la educación secundaria
 **********
-	
 gen edusi_ci=(educbr>=2230 & educbr<=3200) // más de primaria menos sec completa
 replace edusi_ci=. if educbr==8000 | educbr==9000
 
@@ -192,56 +202,32 @@ replace edusi_ci=. if educbr==8000 | educbr==9000
 gen edusc_ci=(educbr==3300) // completo sec
 replace edusc_ci=. if educbr==8000 | educbr==9000
 
-**********
-*eduui_ci* // no completó la educación universitaria o terciaria
-**********
-	
-gen eduui_ci=(educbr==4180 & edattain!=4) // asistió pero no terminó 
-replace eduui_ci=. if educbr==8000 | educbr==9000
-
-**********
-*eduuc_ci* // completó la educación universitaria o terciaria
-**********
-	
-gen eduuc_ci=((educbr>=4190 & educbr<=4280) | edattain==4) // terminó
-replace eduuc_ci=. if educbr==8000 | educbr==9000
-
 ***********
 *edus1i_ci* // no completó el primer ciclo de la educación secundaria
 ***********
-
 gen edus1i_ci=.
 
 ***********
 *edus1c_ci* // completó el primer ciclo de la educación secundaria
 ***********
-
 gen edus1c_ci=.
 
 ***********
 *edus2i_ci* // no completó el segundo ciclo de la educación secundaria
 ***********
-
 gen edus2i_ci=.
 
 ***********
 *edus2c_ci* // completó el segundo ciclo de la educación secundaria
 ***********
-
 gen edus2c_ci=(educbr==3300) // completó secundaria
 replace edus2c_ci=.  if educbr==8000 | educbr==9000
-
-
-*Other variables
 
 ************
 * literacy *
 ************
-
 gen literacy=1 if lit==2 // literate
 replace literacy=0 if lit==1 // illiterate
-
-
 
 *****************************
 ** Include all labels of   **

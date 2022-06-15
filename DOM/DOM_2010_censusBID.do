@@ -85,9 +85,9 @@ include "../Base/base.do"
 	gen eduno_ci=(aedu_ci==0) // never attended or pre-school
 	replace eduno_ci=. if edattaind==0 | edattaind==999 // NIU & missing
 	
-	**********
+	***********
 	*edupre_ci* // preescolar
-	**********
+	***********
 	gen edupre_ci=(educdo == 200) // pre-school
 	replace edupre_ci=. if educdo==0 | educdo==999 // NIU & missing
 	
@@ -117,22 +117,6 @@ include "../Base/base.do"
 	gen edusc_ci=(aedu_ci==12) // 7 a 11 anos de educación
 	replace edusc_ci=. if edattain==0 |edattain==9 // NIU & missing
 	
-	**********
-	*eduui_ci* // no completó la educación universitaria o terciaria
-	**********
-	gen eduui_ci=(aedu_ci>=13 & aedu_ci<=16 & edattain != 4) // 14 a 16 anos de educación
-	replace eduui_ci=. if edattain==0 | edattain==9 // NIU & missing
-	replace eduui_ci = 1 if yrschool == 94 // some terciary
-
-	**********
-	*eduuc_ci* // completó la educación universitaria o terciaria
-	**********
-	gen eduuc_ci=.
-	replace eduuc_ci=1 if edattain == 4
-	replace eduuc_ci=0 if edattain == 1 | edattain == 2 | edattain ==3  
-	// cualquier otro nivel de educación
-	replace eduuc_ci=. if edattain==0 | edattain==9 // NIU & missing
-
 	***********
 	*edus1i_ci* // no completó el primer ciclo de la educación secundaria
 	***********
@@ -170,7 +154,6 @@ include "../Base/base.do"
 	replace literacy=1 if lit==2 // literate
 	replace literacy=0 if lit==1 // illiterate
 		  
-		  
 	*******************************************************
 	***           VARIABLES DE DIVERSIDAD               ***
 	*******************************************************
@@ -196,11 +179,21 @@ include "../Base/base.do"
 		*******************
 	gen afroind_ano_c=.
 
-	********************
-	*** discapacid
-	********************
-	gen dis_ci=.
-	gen dis_ch=.
+************************
+*** Discapacidad (WG)***
+************************
+/* Identificación de si una persona reporta por lo menos alguna dificultad en una o más de las preguntas del Washington Group Questionnaire */
+gen dis_ci = 0
+recode dis_ci nonmiss=. if inlist(9,do2010a_blind,do2010a_deaf,do2010a_dismob,do2010a_disconc) //
+recode dis_ci nonmiss=. if do2010a_blind>=. & do2010a_deaf>=. & do2010a_dismob>=. & do2010a_disconc>=. //
+replace dis_ci=1 if do2010a_blind ==1 | do2010a_deaf==1 | do2010a_dismob==1 | do2010a_disconc==1 
+
+
+/*Identificación de si un hogar tiene uno o más miembros que reportan por lo menos alguna dificultad en una o más de las preguntas del Washington Group Questionnaire */		
+
+egen dis_ch  = sum(dis_ci), by(idh_ch) 
+replace dis_ch=1 if dis_ch>=1 & dis_ch!=.
+
 
 
 

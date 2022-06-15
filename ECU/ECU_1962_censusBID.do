@@ -112,9 +112,9 @@ variables de ingreso por hogar porque no están en el do Base*/
 	***********
    by idh_ch, sort: egen ynlm_ch=sum(ynlm_ci) if miembros_ci==1, missing
    
-*******************************************************
+******************************************************
 ***           VARIABLES DE EDUCACIÓN               ***
-*******************************************************
+******************************************************
 
 	*********
 	*aedu_ci* // años de educacion aprobados
@@ -130,16 +130,16 @@ variables de ingreso por hogar porque no están en el do Base*/
 	gen eduno_ci=(aedu_ci==0) // never attended or pre-school
 	replace eduno_ci=. if aedu_ci==. // NIU & missing
 
-	**********
+	***********
 	*edupre_ci* // preescolar
-	**********
+	***********
 	gen edupre_ci=(educec==1010) // pre-school
 	replace edupre_ci=. if aedu_ci==. // NIU & missing
 	
 	**********
 	*edupi_ci* // no completó la educación primaria
 	**********
-	gen edupi_ci=(aedu_ci>0 & aedu_ci<6) // primary (zero years completed) + grade 1-5 + primary grade unknown
+	gen edupi_ci=(aedu_ci>0 & aedu_ci<6)
 	replace edupi_ci=. if aedu_ci==. // NIU & missing
 	replace edupi_ci=1 if yrschool==91
 
@@ -154,26 +154,13 @@ variables de ingreso por hogar porque no están en el do Base*/
 	**********
 	gen edusi_ci=(aedu_ci>=7 & aedu_ci<=11) // 7 a 11
 	replace edusi_ci=. if aedu_ci==. // NIU & missing
-	replace edusi_ci=1 if yrschool==93
+	replace edusi_ci=1 if yrschool == 92 | yrschool==93
 
 	**********
 	*edusc_ci* // completó la educación secundaria
 	**********
 	gen edusc_ci=(aedu_ci==12) // 12 
 	replace edusc_ci=.  if aedu_ci==. // NIU & missing
-
-	**********
-	*eduui_ci* // no completó la educación universitaria o terciaria
-	**********
-	gen eduui_ci=(aedu_ci>=13 & aedu_ci<=16) // 13 a 16 anos de educación
-	replace eduui_ci=.  if aedu_ci==. // NIU & missing
-	replace  eduui_ci=1 if yrschool==94
-
-	**********
-	*eduuc_ci* // completó la educación universitaria o terciaria
-	**********
-	gen eduuc_ci=(aedu_ci>=16) //más de 16
-	replace eduuc_ci=. if aedu_ci==. // missing a los NIU & missing
 
 	***********
 	*edus1i_ci* // no completó el primer ciclo de la educación secundaria

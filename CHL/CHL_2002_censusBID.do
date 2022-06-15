@@ -107,9 +107,9 @@ include "../Base/base.do"
 	gen eduno_ci=(aedu_ci==0) // never attended or pre-school
 	replace eduno_ci=. if aedu_ci==. // NIU & missing
 	
-	**********
+	***********
 	*edupre_ci* // preescolar
-	**********
+	***********
 	gen edupre_ci=(educcl==100) // pre-school
 	replace edupre_ci=. if aedu_ci==. // NIU & missing
 	
@@ -139,22 +139,6 @@ include "../Base/base.do"
 	gen edusc_ci=(aedu_ci==12) // 12 anos de educación
 	replace edusc_ci=. if aedu_ci==. // NIU & missing
 	
-	**********
-	*eduui_ci* // no completó la educación universitaria o terciaria
-	**********
-	gen eduui_ci=(aedu_ci>=13 & aedu_ci<=16 & edattain != 4) // 14 a 16 anos de educación
-	replace eduui_ci=. if aedu_ci ==. // NIU & missing
-	replace eduui_ci = 1 if yrschool == 94 // some terciary
-
-	**********
-	*eduuc_ci* // completó la educación universitaria o terciaria
-	**********
-	gen eduuc_ci=.
-	replace eduuc_ci=1 if aedu_ci>=17
-	replace eduuc_ci=0 if edattain == 1 | edattain == 2 | edattain ==3  
-	// cualquier otro nivel de educación
-	replace eduuc_ci=. if aedu_ci==. // NIU & missing
-
 	***********
 	*edus1i_ci* // no completó el primer ciclo de la educación secundaria
 	***********
@@ -185,9 +169,9 @@ include "../Base/base.do"
 	* variable no existe para 2002 CHL
 	gen asiste_ci=. 
 
-	************
-	* literacy *
-	************
+	**********
+	*literacy*
+	**********
 	gen literacy=. 
 	replace literacy=1 if lit==2 // literate
 	replace literacy=0 if lit==1 // illiterate

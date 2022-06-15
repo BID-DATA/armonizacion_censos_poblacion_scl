@@ -70,9 +70,9 @@ include "../Base/base.do"
 	gen eduno_ci=(aedu_ci==0) // never attended or pre-school
 	replace eduno_ci=. if aedu_ci==. // NIU & missing
 	
-	**********
+	***********
 	*edupre_ci* // preescolar
-	**********
+	***********
 	gen edupre_ci=(educcr==100) // pre-school
 	replace edupre_ci=. if aedu_ci==. // NIU & missing
 	
@@ -102,20 +102,6 @@ include "../Base/base.do"
 	gen edusc_ci=(aedu_ci==11) // 11 anos de educación
 	replace edusc_ci=. if aedu_ci==. // NIU & missing
 	
-	**********
-	*eduui_ci* // no completó la educación universitaria o terciaria
-	**********
-	gen eduui_ci=(aedu_ci>=12 & aedu_ci<15) // 14 a 16 anos de educación
-	replace eduui_ci=. if aedu_ci==. // NIU & missing
-	replace eduui_ci = 1 if yrschool == 94 // some terciary
-
-	**********
-	*eduuc_ci* // completó la educación universitaria o terciaria
-	**********
-	gen eduuc_ci=.
-	replace eduuc_ci=(aedu_ci>=15) // más de 15
-	replace eduuc_ci=. if aedu_ci==. // NIU & missing
-
 	***********
 	*edus1i_ci* // no completó el primer ciclo de la educación secundaria
 	***********

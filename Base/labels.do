@@ -212,8 +212,6 @@ label var edupi_ci "Primaria incompleta"
 label var edupc_ci "Primaria completa"
 label var edusi_ci "Secundaria incompleta"
 label var edusc_ci "Secundaria completa"
-label var eduui_ci "Universitaria incompleta"
-label var eduuc_ci "Universitaria completa o mas"
 label var edus1i_ci "1er ciclo de la secundaria incompleto"
 label var edus1c_ci "1er ciclo de la secundaria completo"
 label var edus2i_ci "2do ciclo de la secundaria incompleto"
@@ -277,16 +275,7 @@ label var viviprop_ch1 "Propiedad de la vivienda"
 	label def viviprop_ch 0"Alquilada" 1"Propia" 3"Ocupada_(propia_de_facto)", add modify
 	label val viviprop_ch viviprop_ch1
 	
-*/
-********************************
-*** Health indicators **********
-********************************
-label var discapacidad_ci "Discapacidad"
-label var ceguera_ci "Ciego o con discpacidad visual"
-label var sordera_ci "Sordera o con discpacidad auditiva"
-label var mudez_ci "Mudo o con discpacidad de lenguaje"
-label var dismental_ci "Discapacidad mental"
-
+	
 ***********************************
 ***    VARIABLES DE MIGRACIÓN.  ***
 ***********************************
@@ -296,6 +285,12 @@ label var dismental_ci "Discapacidad mental"
 	
 	label var migrantelac_ci "=1 si es migrante proveniente de un pais LAC"
 	
+	label var migrantiguo5_ci "=1 si es migrante antiguo (5 anos o mas)(sobre población migrante)"
+	
+	label var miglac_ci "=1 si es migrante proveniente de un pais LAC(sobre población migrante)"
+	
+	
+	
 	
 * labels de variables
 
@@ -303,7 +298,7 @@ label var dismental_ci "Discapacidad mental"
 *                                                     INCLUSIóN DE VARIABLES EXTERNAS                                                *
 *====================================================================================================================================*
 capture drop _merge
-merge m:1 pais_c anio_c using "$ruta\5_International_Poverty_Lines_LAC_long",   keepusing (ppp_2011 cpi_2011 lp19_2011 lp31_2011 lp5_2011 tc_wdi ppp_wdi2011)
+merge m:1 pais_c anio_c using "$ruta\5_International_Poverty_Lines_LAC_long.dta",   keepusing (ppp_2011 cpi_2011 lp19_2011 lp31_2011 lp5_2011 tc_wdi ppp_wdi2011)
 
 drop if _merge ==2
 

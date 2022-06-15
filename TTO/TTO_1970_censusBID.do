@@ -69,9 +69,9 @@ include "../Base/base.do"
 	gen eduno_ci=(edattaind==110 | eductt == 10) // never attended or pre-school
 	replace eduno_ci=. if edattaind==0 | edattaind==999 // NIU & missing
 	
-	**********
+	***********
 	*edupre_ci* // preescolar
-	**********
+	***********
 	gen edupre_ci=(eductt==20) // pre-school
 	replace edupre_ci=. if edattaind==0 | edattaind==999 // NIU & missing
 	
@@ -98,18 +98,6 @@ include "../Base/base.do"
 	gen edusc_ci=(edattaind==311)
 	replace edusc_ci=. if edattaind==0 |edattaind==999 // NIU & missing
 	
-	**********
-	*eduui_ci* // no completó la educación universitaria o terciaria
-	**********
-	gen eduui_ci=(edattaind==312)
-	replace eduui_ci=. if edattaind==0 | edattaind==999 // NIU & missing
-
-	**********
-	*eduuc_ci* // completó la educación universitaria o terciaria
-	**********
-	gen eduuc_ci=(edattaind==400)
-	replace eduuc_ci=1 if edattain == 9
-
 	***********
 	*edus1i_ci* // no completó el primer ciclo de la educación secundaria
 	***********
@@ -136,13 +124,12 @@ include "../Base/base.do"
 	gen asiste_ci=(school==1) // 0 includes attended in the past (3) and never attended (4)
 	replace asiste_ci=. if school==0 | school==9 // missing a los NIU & missing
 
-	************
-	* literacy *
-	************
+	**********
+	*literacy*
+	**********
 	gen literacy=. 
 	replace literacy=1 if lit==2 // literate
-	replace literacy=0 if lit==1 // illiterate
-		  
+	replace literacy=0 if lit==1 // illiterate		  
 		  
 	*******************************************************
 	***           VARIABLES DE DIVERSIDAD               ***

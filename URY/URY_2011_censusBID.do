@@ -78,111 +78,86 @@ label values region_c region_c
 	***********
     gen ynlm_ch=.
 
+***********************************************
+****************** Educacion ******************
+***********************************************
+*Para el resto de los años se trabaja con la variable yrschool y se crea aedu_ci. Para 2011 esta informacion no esta disponible.
 
-*********
-*aedu_ci* // años de educacion aprobados
-*********
+*************
+***aedu_ci*** // años de educacion aprobados
+*************
 gen aedu_ci=.
 
 **************
 ***eduno_ci***
 **************
-
 gen eduno_ci=(educuy==100 | educuy==200)
 replace eduno_ci=. if educuy==0 | educuy==998
 
 ***************
 ***edupre_ci***
 ***************
-
 gen edupre_ci=(educuy==200)
 replace edupre_ci=. if educuy==0 | educuy==998
 
+**************
+***edupi_ci*** // no completó la educación primaria
+**************
+gen edupi_ci=(educuy==300 & edattaind==120) // educuy==300 por si solo incluye individuos con primaria completa.
+replace edupi_ci=. if educuy==0 | educuy==998
 
 **************
-***edupi_ci***
+***edupc_ci*** // completó la educación primaria
 **************
-
-gen edupi_ci=.
-
-**************
-***edupc_ci***
-**************
-
-gen edupc_ci=(educuy==300)
+gen edupc_ci=(edattaind==212 & educuy==300) // edattaind==212 por si solo incluye individuos con sec incompleta y educuy==300 por si solo incluye individuos con algo de primaria completa.
 replace edupc_ci=. if educuy==0 | educuy==998
 
+**************
+***edusi_ci*** // no completó la educación secundaria
+**************
+gen edusi_ci=(educuy==400)
+replace edusi_ci=. if educuy==0 | educuy==998
 
 **************
-***edusi_ci***
+***edusc_ci*** // completó la educación secundaria
 **************
-
-gen edusi_ci=.
-
-
-**************
-***edusc_ci***
-**************
-
 gen edusc_ci=(educuy==410)
 replace edusc_ci=. if educuy==0 | educuy==998
 
-
-**************
-***eduui_ci***
-**************
-
-gen eduui_ci=.
-
 ***************
-***eduuc_ci***
+***edus1i_ci*** // no completó el primer ciclo de la educación secundaria
 ***************
-
-gen eduuc_ci= (educuy>=500 & educuy<=800)
-replace eduuc_ci=. if educuy==0 | educuy==998
-
-
-***************
-***edus1i_ci***
-***************
-
 gen edus1i_ci=.
 
 ***************
-***edus1c_ci***
+***edus1c_ci*** // completó el primer ciclo de la educación secundaria
 ***************
-
 gen edus1c_ci=(educuy==400)
 replace edus1c_ci=. if educuy==0 | educuy==998
 
 ***************
-***edus2i_ci***
+***edus2i_ci*** // no completó el segundo ciclo de la educación secundaria
 ***************
-
 gen edus2i_ci=.
 
-
 ***************
-***edus2c_ci***
+***edus2c_ci*** // completó el segundo ciclo de la educación secundaria
 ***************
-
 gen edus2c_ci=(educuy==410)
 replace edus2c_ci=. if educuy==0 | educuy==998
 
-
-***********
-*asiste_ci*
-***********
+***************
+***asiste_ci***
+***************
 gen asiste_ci=(school==1) // 0 includes attended in the past (3) and never attended (4)
 replace asiste_ci=. if school==9 // missing a los NIU & missing
 
-************
-* literacy *
-************
+**************
+***literacy***
+**************
 gen literacy=. 
 replace literacy=1 if lit==2 // literate
 replace literacy=0 if lit==1 // illiterate
-
 
 *******************************************************
 ***           VARIABLES DE DIVERSIDAD               ***
@@ -214,11 +189,26 @@ drop afroind_jefe
 	*******************
 gen afroind_ano_c=2006
 
-********************
-*** discapacidad ***
-********************
-gen dis_ci=.
-gen dis_ch=.
+************************
+*** Discapacidad (WG)***
+************************
+/* Identificación de si una persona reporta por lo menos alguna dificultad en una o más de las preguntas del Washington Group Questionnaire */
+
+
+gen dis_ci = 0
+recode dis_ci nonmiss=. if inlist(9,uy2011a_disdev,uy2011a_dishear,uy2011a_dismob,uy2011a_dissee) //
+recode dis_ci nonmiss=. if uy2011a_disdev>=. & uy2011a_dishear>=. & uy2011a_dismob>=. & uy2011a_dissee>=. //
+	foreach i in dev hear mob see {
+		forvalues j=2/4 {
+		replace dis_ci=1 if uy2011a_dis`i'==`j'
+		}
+		}
+
+/*Identificación de si un hogar tiene uno o más miembros que reportan por lo menos alguna dificultad en una o más de las preguntas del Washington Group Questionnaire */		
+
+egen dis_ch  = sum(dis_ci), by(idh_ch) 
+replace dis_ch=1 if dis_ch>=1 & dis_ch!=. 
+
 
 *****************************
 ** Include all labels of   **

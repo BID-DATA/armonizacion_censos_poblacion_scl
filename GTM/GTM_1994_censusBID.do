@@ -119,9 +119,10 @@ variables de ingreso por hogar porque no están en el do Base*/
 	***********
    by idh_ch, sort: egen ynlm_ch=sum(ynlm_ci) if miembros_ci==1, missing
 
-*******************************************************
+******************************************************
 ***           VARIABLES DE EDUCACIÓN               ***
-*******************************************************   
+******************************************************   
+
 	*********
 	*aedu_ci* // 
 	*********
@@ -134,9 +135,9 @@ variables de ingreso por hogar porque no están en el do Base*/
 	gen eduno_ci=(aedu_ci==0) // never attended or pre-school
 	replace eduno_ci=. if edattaind==0 | edattaind==999 // NIU & missing
 	
-	**********
+	***********
 	*edupre_ci* // preescolar
-	**********
+	***********
 	gen edupre_ci=(educgt==110) // pre-school
 	replace edupre_ci=. if educgt==0 | educgt==999 // NIU & missing
 	
@@ -163,25 +164,9 @@ variables de ingreso por hogar porque no están en el do Base*/
 	**********
 	*edusc_ci* // completó la educación secundaria
 	**********
-	gen edusc_ci=(aedu_ci>=11 & aedu_ci <14)
+	gen edusc_ci=(aedu_ci==11)
 	replace edusc_ci=. if edattain==0 |edattain==9 // NIU & missing
 	
-	**********
-	*eduui_ci* // no completó la educación universitaria o terciaria
-	**********
-	gen eduui_ci=(aedu_ci>=14 & aedu_ci<=16 & edattain != 4) // 14 a 16 anos de educación
-	replace eduui_ci=. if edattain==0 | edattain==9 // NIU & missing
-	replace eduui_ci = 1 if yrschool == 94 // some terciary
-
-	**********
-	*eduuc_ci* // completó la educación universitaria o terciaria
-	**********
-	gen eduuc_ci=.
-	replace eduuc_ci=1 if edattain == 4
-	replace eduuc_ci=0 if edattain == 1 | edattain == 2 | edattain ==3  
-	// cualquier otro nivel de educación
-	replace eduuc_ci=. if edattain==0 | edattain==9 // NIU & missing
-
 	***********
 	*edus1i_ci* // no completó el primer ciclo de la educación secundaria
 	***********
@@ -203,7 +188,7 @@ variables de ingreso por hogar porque no están en el do Base*/
 	***********
 	*edus2c_ci* // completó el segundo ciclo de la educación secundaria
 	***********
-	gen byte edus2c_ci=(aedu_ci>=11 & aedu_ci <14)
+	gen byte edus2c_ci=(aedu_ci==11)
 	replace edus2c_ci=. if edattaind==0 | edattaind==999 // missing a los NIU & missing
 
 	***********
@@ -212,9 +197,9 @@ variables de ingreso por hogar porque no están en el do Base*/
 	gen asiste_ci=(school==1) // 0 includes attended in the past (3) and never attended (4)
 	replace asiste_ci=. if school==0 | school==9 // missing a los NIU & missing
 
-	************
-	* literacy *
-	************
+	**********
+	*literacy*
+	**********
 	gen literacy=. 
 	replace literacy=1 if lit==2 // literate
 	replace literacy=0 if lit==1 // illiterate

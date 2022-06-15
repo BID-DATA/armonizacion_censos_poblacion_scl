@@ -115,16 +115,12 @@ variables de ingreso por hogar porque no están en el do Base*/
 	***********
    by idh_ch, sort: egen ynlm_ch=sum(ynlm_ci) if miembros_ci==1, missing 
 
-*******************************************************
+******************************************************
 ***           VARIABLES DE EDUCACIÓN               ***
-*******************************************************
+******************************************************
 	*********
 	*aedu_ci* // años de educacion aprobados
 	*********
-*NOTA: Como terciario, universitario y posgrado tienen una duración variable se supone 
-*que terciario completo implica 3 años de educacion adicional a la secundaria, universitario 5 años adicionales y 
-*postgrado 7. Esto solo se basa en la modas de finalización de estos niveles. ESTO SE DEBE DISCUTIR 
-
 	gen aedu_ci=yrschool
 	replace aedu_ci=. if aedu_ci==98
 	replace aedu_ci=. if aedu_ci==99
@@ -137,9 +133,9 @@ variables de ingreso por hogar porque no están en el do Base*/
 	replace eduno_ci=1 if aedu_ci==0
 	replace eduno_ci=. if aedu_ci==.
 
-	**********
+	***********
 	*edupre_ci* // preescolar
-	**********
+	***********
 	gen edupre_ci=(educsv>=110 & educsv<=114) // pre-school
 	replace edupre_ci=. if educsv==0 | educsv==999 // NIU & missing
 	
@@ -162,7 +158,7 @@ variables de ingreso por hogar porque no están en el do Base*/
 	*edusi_ci* // no completó la educación secundaria
 	**********
 	gen byte edusi_ci=0
-	replace edusi_ci=1 if aedu_ci>6 & aedu_ci<12
+	replace edusi_ci=1 if aedu_ci>6 & aedu_ci<11
 	replace edusi_ci=1 if yrschool==92 | yrschool==93 // Some techinical after primary and some secondary
 	replace edusi_ci=. if aedu_ci==.
 	replace edusi_ci=. if yrschool==90| yrschool==98| yrschool==99 // Se asignan como missing NIU and missing (no asi las otras)
@@ -170,21 +166,9 @@ variables de ingreso por hogar porque no están en el do Base*/
 	**********
 	*edusc_ci* // completó la educación secundaria
 	**********
-	gen edusc_ci=(aedu_ci==12) // 12 
+	gen edusc_ci=(aedu_ci==11) // 11
 	replace edusc_ci=. if aedu_ci==.
 
-	**********
-	*eduui_ci* // no completó la educación universitaria o terciaria
-	**********
-	gen eduui_ci=(aedu_ci>=14 & aedu_ci<16)
-	replace eduui_ci=. if aedu_ci==.
-
-	**********
-	*eduuc_ci* // completó la educación universitaria o terciaria
-	**********
-	gen eduuc_ci=(aedu_ci>=16) // 
-	replace eduuc_ci=. if aedu_ci==.
-	
 	***********
 	*edus1i_ci* // no completó el primer ciclo de la educación secundaria
 	***********
@@ -200,13 +184,13 @@ variables de ingreso por hogar porque no están en el do Base*/
 	***********
 	*edus2i_ci* // no completó el segundo ciclo de la educación secundaria
 	***********
-	gen byte edus2i_ci=(aedu_ci>9 & aedu_ci<12)
+	gen byte edus2i_ci=(aedu_ci>9 & aedu_ci<11)
 	replace edus2i_ci=. if aedu_ci==.
 
 	***********
 	*edus2c_ci* // completó el segundo ciclo de la educación secundaria
 	***********
-	gen byte edus2c_ci=(aedu_ci==12)
+	gen byte edus2c_ci=(aedu_ci==11)
 	replace edus2c_ci=1 if yrschool==94 // Some tertiary
 	replace edus2c_ci=. if aedu_ci==.
 	
@@ -216,9 +200,9 @@ variables de ingreso por hogar porque no están en el do Base*/
 	gen asiste_ci=(school==1) // 0 includes attended in the past (3) and never attended (4)
 	replace asiste_ci=. if school==0 | school==9 // missing a los NIU & missing
 
-	************
-	* literacy *
-	************
+	**********
+	*literacy*
+	**********
 	gen literacy=. 
 	replace literacy=1 if lit==2 // literate
 	replace literacy=0 if lit==1 // illiterate

@@ -8,13 +8,11 @@ set more off
  * Los datos se obtienen de las carpetas que se encuentran en el servidor: ${censusFolder}
  * Se tiene acceso al servidor únicamente al interior del BID.
  *________________________________________________________________________________________________________________*
- 
-*Population and Housing Censuses/Harmonized Censuses - IPUMS
 
 /***************************************************************************
                  BASES DE DATOS DE CENSOS POBLACIONALES
 País: Chile
-Año: 1992
+Año: 2017
 Autores: 
 Última versión: 
 
@@ -22,7 +20,7 @@ Autores:
 ****************************************************************************/
 ****************************************************************************
 local PAIS CHL
-local ANO "1992"
+local ANO "2017"
 
 **************************************
 ** Setup code, load database,       **
@@ -31,13 +29,14 @@ local ANO "1992"
 
 include "../Base/base.do"
 
+
      ****************
      *** region_c ***
      ****************
-   * Clasificación válida para 1982, 1992 y 2002.
+   * Clasificación válida para 2017.
    gen region_c=.   
    replace region_c=1 if geo1_cl==152011			    /*Iquique*/
-   replace region_c=2 if geo1_cl==152012			    /*Arica, Parinacota*/
+   replace region_c=2 if geo1_cl==152014			    /*Tamarugal*/
    replace region_c=3 if geo1_cl==152021			    /*Antofagasta*/
    replace region_c=4 if geo1_cl==152022			    /*El Loa*/
    replace region_c=5 if geo1_cl==152023		     	/*Tocopilla*/
@@ -45,46 +44,50 @@ include "../Base/base.do"
    replace region_c=7 if geo1_cl==152032			    /*Chanaral*/
    replace region_c=8 if geo1_cl==152033			    /*Huasco*/
    replace region_c=9 if geo1_cl==152041			    /*Elqui*/
-   replace region_c=10 if geo1_cl==152042			/*Choapa*/
-   replace region_c=11 if geo1_cl==152043			/*Limari*/
-   replace region_c=12 if geo1_cl==152051			/*Valparaíso, Isla de Pascua*/
-   replace region_c=13 if geo1_cl==152053			/*Los Andes*/
-   replace region_c=14 if geo1_cl==152054			/*Petorca*/
-   replace region_c=15 if geo1_cl==152055			/*Quillota*/
-   replace region_c=16 if geo1_cl==152056			/*San Antonio*/
-   replace region_c=17 if geo1_cl==152057			/*San Felipe de Aconcagua*/
-   replace region_c=18 if geo1_cl==152061			/*Cachapoal*/
-   replace region_c=19 if geo1_cl==152062			/*Cardenal Caro*/
-   replace region_c=20 if geo1_cl==152063			/*Colchagua*/
-   replace region_c=21 if geo1_cl==152071			/*Talca*/
-   replace region_c=22 if geo1_cl==152072			/*Cauquenes*/
-   replace region_c=23 if geo1_cl==152073			/*Curico*/
-   replace region_c=24 if geo1_cl==152074			/*Linares*/
-   replace region_c=25 if geo1_cl==152081			/*Concepcion*/
-   replace region_c=26 if geo1_cl==152082			/*Arauco*/
-   replace region_c=27 if geo1_cl==152083			/*Bio Bio*/
-   replace region_c=28 if geo1_cl==152084			/*Nuble*/
-   replace region_c=29 if geo1_cl==152091			/*Cautin*/
-   replace region_c=30 if geo1_cl==152092			/*Malleco*/
-   replace region_c=31 if geo1_cl==152101			/*Llanquihue*/
-   replace region_c=32 if geo1_cl==152102			/*Chiloe*/
-   replace region_c=33 if geo1_cl==152103			/*Osorno*/
-   replace region_c=34 if geo1_cl==152105			/*Valdivia*/
-   replace region_c=35 if geo1_cl==152111			/*Coihaique*/
-   replace region_c=36 if geo1_cl==152112			/*Aisen, General Carrera, Palena*/
-   replace region_c=37 if geo1_cl==152121			/*Magallanes, Tierra del Fuego, Antartica Chilena*/
-   replace region_c=38 if geo1_cl==152124			/*Ma. Esperanza, Capitan Prat*/
-   replace region_c=39 if geo1_cl==152131			/*Santiago*/
-   replace region_c=40 if geo1_cl==152132			/*Cordillera*/
-   replace region_c=41 if geo1_cl==152133			/*Chacabuco*/
-   replace region_c=42 if geo1_cl==152134			/*Maipo*/
-   replace region_c=43 if geo1_cl==152135			/*Melipilla*/
-   replace region_c=44 if geo1_cl==152136			/*Talagante*/
-   replace region_c=45 if geo1_cl==152888			/*Waterbodies*/
+   replace region_c=10 if geo1_cl==152042				/*Choapa*/
+   replace region_c=11 if geo1_cl==152043				/*Limari*/
+   replace region_c=12 if geo1_cl==152051				/*Valparaíso, Isla de Pascua*/
+   replace region_c=13 if geo1_cl==152053				/*Los Andes*/
+   replace region_c=14 if geo1_cl==152054				/*Petorca*/
+   replace region_c=15 if geo1_cl==152055				/*Quillota*/
+   replace region_c=16 if geo1_cl==152056				/*San Antonio*/
+   replace region_c=17 if geo1_cl==152057				/*San Felipe de Aconcagua*/
+   replace region_c=18 if geo1_cl==152058				/*Marga Marga*/   
+   replace region_c=19 if geo1_cl==152061				/*Cachapoal*/
+   replace region_c=20 if geo1_cl==152062				/*Cardenal Caro*/
+   replace region_c=21 if geo1_cl==152063				/*Colchagua*/
+   replace region_c=22 if geo1_cl==152071				/*Talca*/
+   replace region_c=23 if geo1_cl==152072				/*Cauquenes*/
+   replace region_c=24 if geo1_cl==152073				/*Curico*/
+   replace region_c=25 if geo1_cl==152074				/*Linares*/
+   replace region_c=26 if geo1_cl==152081				/*Concepcion*/
+   replace region_c=27 if geo1_cl==152082				/*Arauco*/
+   replace region_c=28 if geo1_cl==152083				/*Bio Bio*/
+   replace region_c=29 if geo1_cl==152091				/*Cautin*/
+   replace region_c=30 if geo1_cl==152092				/*Malleco*/
+   replace region_c=31 if geo1_cl==152101				/*Llanquihue*/
+   replace region_c=32 if geo1_cl==152102				/*Chiloe*/
+   replace region_c=33 if geo1_cl==152103				/*Osorno*/
+   replace region_c=34 if geo1_cl==152111				/*Coihaique*/
+   replace region_c=35 if geo1_cl==152112				/*Aisen, General Carrera, Palena*/
+   replace region_c=36 if geo1_cl==152121				/*Magallanes, Tierra del Fuego, Antartica Chilena*/
+   replace region_c=37 if geo1_cl==152124				/*Ultima Esperanza*/
+   replace region_c=38 if geo1_cl==152131				/*Santiago*/
+   replace region_c=39 if geo1_cl==152132				/*Cordillera*/
+   replace region_c=40 if geo1_cl==152133				/*Chacabuco*/
+   replace region_c=41 if geo1_cl==152134				/*Maipo*/
+   replace region_c=42 if geo1_cl==152135				/*Melipilla*/
+   replace region_c=43 if geo1_cl==152136				/*Talagante*/
+   replace region_c=44 if geo1_cl==152141				/*Valdivia*/
+   replace region_c=45 if geo1_cl==152142				/*Ranco*/
+   replace region_c=46 if geo1_cl==152151				/*Arica, Parinacota*/
+   replace region_c=47 if geo1_cl==152161				/*Diguillin*/
+   replace region_c=48 if geo1_cl==152162				/*Itata*/
+   replace region_c=49 if geo1_cl==152163				/*Punilla*/
    
 
 
-	  label define region_c 1"Iquique" 2"Arica, Parinacota" 3"Antofagasta" 4"El Loa" 5"Tocopilla" 6"Copiapo" 7"Chanaral" 8"Huasco" 9"Elqui" 10"Choapa" 11"Limari" 12"Valparaíso, Isla de Pascua" 13"Los Andes" 14"Petorca" 15"Quillota" 16"San Antonio" 17"San Felipe de Aconcagua" 18"Cachapoal" 19"Cardenal Caro" 20"Colchagua" 21"Talca" 22"Cauquenes" 23"Curico" 24"Linares" 25"Concepcion" 26"Arauco" 27 "Bio Bio" 28"Nuble" 29"Cautin" 30"Malleco" 31"Llanquihue" 32"Chiloe" 33"Osorno" 34"Valdivia" 35"Coihaique" 36"Aisen, General Carrera, Palena" 37"Magallanes, Tierra del Fuego, Antartica Chilena" 38"Ma. Esperanza, Capitan Prat" 39"Santiago" 40"Cordillera" 41"Chacabuco" 42"Maipo" 43"Melipilla" 44"Talagante" 45"Waterbodies" 
+	  label define region_c 1"Iquique" 2"Tamarugal" 3"Antofagasta" 4"El Loa" 5"Tocopilla" 6"Copiapo" 7"Chanaral" 8"Huasco" 9"Elqui" 10"Choapa" 11"Limari" 12"Valparaíso, Isla de Pascua" 13"Los Andes" 14"Petorca" 15"Quillota" 16"San Antonio" 17"San Felipe de Aconcagua" 18"Marga Marga" 19"Cachapoal" 20"Cardenal Caro" 21"Colchagua" 22"Talca" 23"Cauquenes" 24"Curico" 25"Linares" 26"Concepcion" 27"Arauco" 28 "Bio Bio" 29"Cautin" 30"Malleco" 31"Llanquihue" 32"Chiloe" 33"Osorno" 34"Coihaique" 35"Aisen, General Carrera, Palena" 36"Magallanes, Tierra del Fuego, Antartica Chilena" 37"Ultima Esperanza" 38"Santiago" 39"Cordillera" 40"Chacabuco" 41"Maipo" 42"Melipilla" 43"Talagante" 44"Valdivia" 45"Ranco" 46"Arica, Parinacota" 47"Diguillin" 48"Itata" 49"Punilla"  
 
       label value region_c region_c
       label var region_c "division politico-administrativa, provincia" 
@@ -108,9 +111,9 @@ include "../Base/base.do"
 	gen eduno_ci=(aedu_ci==0) // never attended or pre-school
 	replace eduno_ci=. if aedu_ci==. // NIU & missing
 	
-	***********
+	**********
 	*edupre_ci* // preescolar
-	***********
+	**********
 	gen edupre_ci=(educcl==100) // pre-school
 	replace edupre_ci=. if aedu_ci==. // NIU & missing
 	
@@ -140,6 +143,22 @@ include "../Base/base.do"
 	gen edusc_ci=(aedu_ci==12) // 12 anos de educación
 	replace edusc_ci=. if aedu_ci==. // NIU & missing
 	
+	**********
+	*eduui_ci* // no completó la educación universitaria o terciaria
+	**********
+	gen eduui_ci=(aedu_ci>=13 & aedu_ci<=16 & edattain != 4) // 14 a 16 anos de educación
+	replace eduui_ci=. if aedu_ci ==. // NIU & missing
+	replace eduui_ci = 1 if yrschool == 94 // some terciary
+
+	**********
+	*eduuc_ci* // completó la educación universitaria o terciaria
+	**********
+	gen eduuc_ci=.
+	replace eduuc_ci=1 if aedu_ci>=17
+	replace eduuc_ci=0 if edattain == 1 | edattain == 2 | edattain ==3  
+	// cualquier otro nivel de educación
+	replace eduuc_ci=. if aedu_ci==. // NIU & missing
+
 	***********
 	*edus1i_ci* // no completó el primer ciclo de la educación secundaria
 	***********
@@ -167,46 +186,16 @@ include "../Base/base.do"
 	***********
 	*asiste_ci*
 	***********
-	* variable no existe para 1992 CHL
-	gen asiste_ci=. 
+	
+	gen asiste_ci=(school==1) // 0 includes attended in the past (3) and never attended (4)
+	replace asiste_ci=. if school==0 | school==9 // missing a los NIU & missing
 
-	**********
-	*literacy*
-	**********
+	************
+	* literacy *
+	************
 	gen literacy=. 
 	replace literacy=1 if lit==2 // literate
 	replace literacy=0 if lit==1 // illiterate
-		  
-	*******************************************************
-	***           VARIABLES DE DIVERSIDAD               ***
-	*******************************************************
-	* Cesar Lins & Nathalia Maya - Septiembre 2021	
-
-		***************
-		***afroind_ci***
-		***************
-	**Pregunta: 
-
-	gen afroind_ci=. 
-
-		***************
-		***afroind_ch***
-		***************
-	gen afroind_jefe=.
-	gen afroind_ch  =.
-
-	drop afroind_jefe 
-
-		*******************
-		***afroind_ano_c***
-		*******************
-	gen afroind_ano_c=.
-
-	********************
-	*** discapacid
-	********************
-	gen dis_ci=.
-	gen dis_ch=.
 
 *******************************************************
 ***           VARIABLES DE INGRESO                  ***
@@ -234,6 +223,40 @@ include "../Base/base.do"
 	**ynlm_ch**
 	***********
 	gen ynlm_ch=.
+
+	*******************************************************
+	***           VARIABLES DE DIVERSIDAD               ***
+	*******************************************************
+	* Cesar Lins & Nathalia Maya - Septiembre 2021	
+
+		***************
+		***afroind_ci***
+		***************
+		**Pregunta: 
+
+		gen afroind_ci=. 
+		replace afroind_ci=1  if indig==1 
+		replace afroind_ci=3 if indig==2
+
+
+		***************
+		***afroind_ch***
+		***************
+		gen afroind_jefe= afroind_ci if relate==1
+		egen afroind_ch  = min(afroind_jefe), by(idh_ch) 
+
+		drop afroind_jefe 
+
+		*******************
+		***afroind_ano_c***
+		*******************
+		gen afroind_ano_c=2002
+
+		********************
+		*** discapacid
+		********************
+		gen dis_ci=.
+		gen dis_ch=.
 	
 *****************************
 ** Include all labels of   **

@@ -118,13 +118,10 @@ variables de ingreso por hogar porque no están en el do Base*/
 	***********
    by idh_ch, sort: egen ynlm_ch=sum(ynlm_ci) if miembros_ci==1, missing
    
-*******************************************************
+******************************************************
 ***           VARIABLES DE EDUCACIÓN               ***
-*******************************************************
+******************************************************
 
-*NOTA: Como terciario, universitario y posgrado tienen una duración variable se supone 
-*que terciario completo implica 3 años de educacion adicional a la secundaria, universitario 5 años adicionales y 
-*postgrado 7. Esto solo se basa en la modas de finalización de estos niveles. ESTO SE DEBE DISCUTIR 
 	*********
 	*aedu_ci* // años de educacion aprobados
 	*********
@@ -148,7 +145,8 @@ variables de ingreso por hogar porque no están en el do Base*/
 	**********
 	*edupi_ci* // no completó la educación primaria
 	**********
-	gen edupi_ci=(aedu_ci>0 & aedu_ci<6) // primary (zero years completed) + grade 1-5 + primary grade unknown
+	gen edupi_ci=(aedu_ci>0 & aedu_ci<6)
+	replace edupi_ci = 1 if yrschool == 91 // some primary
 	replace edupi_ci=. if aedu_ci==. // NIU & missing
 
 	********** 
@@ -162,24 +160,13 @@ variables de ingreso por hogar porque no están en el do Base*/
 	**********
 	gen edusi_ci=(aedu_ci>=7 & aedu_ci<=11) // 7 a 11
 	replace edusi_ci=. if aedu_ci==. // NIU & missing
+	replace edusi_ci = 1 if yrschool == 92 | yrschool ==93 //some technical after primary or some secondary
 
 	**********
 	*edusc_ci* // completó la educación secundaria
 	**********
 	gen edusc_ci=(aedu_ci==12) // 12 
 	replace edusc_ci=.  if aedu_ci==. // NIU & missing
-
-	**********
-	*eduui_ci* // no completó la educación universitaria o terciaria
-	**********
-	gen eduui_ci=(aedu_ci>=13 & aedu_ci<=16) // 13 a 16 anos de educación
-	replace eduui_ci=.  if aedu_ci==. // NIU & missing
-
-	**********
-	*eduuc_ci* // completó la educación universitaria o terciaria
-	**********
-	gen eduuc_ci=(aedu_ci>=17) //más de 17
-	replace eduuc_ci=. if aedu_ci==. // missing a los NIU & missing
 
 	***********
 	*edus1i_ci* // no completó el primer ciclo de la educación secundaria
