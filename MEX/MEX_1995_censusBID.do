@@ -180,27 +180,22 @@ gen dis_ch=.
 ***VARIABLES DE EDUCACION***
 ****************************
 
-****************
-* asiste_ci    * 
-**************** 
+***************
+***asiste_ci*** 
+*************** 
 gen asiste_ci=1 if school==1
 replace asiste_ci=. if school==0 // not in universe as missing 
 replace asiste_ci=. if school==9 // Unknown/missing as missing
 replace asiste_ci=0 if school==2
 
-*********
-*aedu_ci* // años de educacion aprobados
-*********
-*NOTA: Como terciario, universitario y posgrado tienen una duración variable se supone 
-*que terciario completo implica 3 años de educacion adicional a la secundaria, universitario 5 años adicionales y 
-*postgrado 7. Esto solo se basa en la modas de finalización de estos niveles. ESTO SE DEBE DISCUTIR 
-
+*************
+***aedu_ci*** // años de educacion aprobados
+*************
 gen aedu_ci=yrschool
 replace aedu_ci=. if aedu_ci==98
 replace aedu_ci=. if aedu_ci==99
 replace aedu_ci=. if yrschool>=90 & yrschool<100 
 
-	
 **************
 ***eduno_ci***
 **************
@@ -240,21 +235,6 @@ replace edusc_ci=1 if aedu_ci==12
 replace edusc_ci=. if aedu_ci==.
 replace edusc_ci=1 if yrschool==94 // Some tertiary
 
-**************
-***eduui_ci***
-**************
-gen byte eduui_ci=0
-replace eduui_ci=1 if aedu_ci>12 & aedu_ci<17
-replace eduui_ci=. if aedu_ci==.
-replace eduui_ci=1 if yrschool==94 // Some tertiary
-
-***************
-***eduuc_ci****
-***************
-gen byte eduuc_ci=0
-replace eduuc_ci=1 if aedu_ci>=17
-replace eduuc_ci=. if aedu_ci==.
-
 ***************
 ***edus1i_ci***
 ***************
@@ -285,22 +265,18 @@ replace edus2c_ci=1 if aedu_ci==12
 replace edus2c_ci=. if aedu_ci==.
 replace edus2c_ci=1 if yrschool==94 // Some tertiary
 
-
 ***************
 ***edupre_ci***
 ***************
 gen edupre_ci=.
 
-** Other variables 
-***************
+**************
 ***literacy***
-***************
+**************
 gen literacy=. if lit==0
 replace literacy=. if lit==9
 replace literacy=0 if lit==1
 replace literacy=1 if lit==2
-
-*****
 
 order region_BID_c region_c pais_c anio_c idh_ch idp_ci factor_ch factor_ci estrato_ci zona_c sexo_ci edad_ci relacion_ci civil_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch miembros_ci afroind_ci afroind_ch afroind_ano_c dis_ci dis_ch condocup_ci emp_ci desemp_ci pea_ci rama_ci categopri_ci spublico_ci ylm_ci ynlm_ci ylm_ch ynlm_ch aedu_ci eduno_ci edupre_ci edupi_ci  edupc_ci  edusi_ci edusc_ci  eduui_ci eduuc_ci edus1i_ci edus1c_ci edus2i_ci edus2c_ci asiste_ci literacy aguared_ch luz_ch bano_ch des1_ch piso_ch banomejorado_ch pared_ch techo_ch resid_ch dorm_ch cuartos_ch cocina_ch telef_ch refrig_ch auto_ch compu_ch internet_ch cel_ch viviprop_ch migrante_ci migrantelac_ci migantiguo5_ci discapacidad_ci  ceguera_ci sordera_ci mudez_ci dismental_ci
 

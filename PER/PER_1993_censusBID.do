@@ -77,9 +77,13 @@ gen ylm_ch =.
 gen ynlm_ch=.
 
 
-***** Education **************
-* Use educpe
-******************************
+***************************************
+************** Education **************
+***************************************
+
+*************
+***aedu_ci***
+*************
 gen aedu_ci = yrschool 
 replace aedu_ci=. if yrschool>=90 & yrschool<100 
 
@@ -89,28 +93,22 @@ replace aedu_ci=. if yrschool>=90 & yrschool<100
 gen eduno_ci=(aedu_ci==0) // never attended or pre-school
 replace eduno_ci=. if aedu_ci==. // NIU & missing
 
-
 **************
 ***edupi_ci***
 **************
-
 gen edupi_ci=(aedu_ci>0 & aedu_ci<6) //
 replace edupi_ci=. if aedu_ci==. // NIU & missing
 replace edupi_ci = 1 if yrschool == 91 // some primary
 
-
 **************
 ***edupc_ci***
 **************
-
 gen edupc_ci=(aedu_ci==6) 
 replace edupc_ci=. if aedu_ci==. // NIU & missing
-
 
 **************
 ***edusi_ci***
 **************
-
 gen edusi_ci=(aedu_ci>=7 & aedu_ci<11) // 7 a 10 anos de educación
 replace edusi_ci=. if aedu_ci==. // NIU & missing
 replace edusi_ci = 1 if yrschool == 92 | yrschool ==93 //some technical after primary or some secondary
@@ -118,63 +116,39 @@ replace edusi_ci = 1 if yrschool == 92 | yrschool ==93 //some technical after pr
 **************
 ***edusc_ci***
 **************
-
 gen edusc_ci=(aedu_ci==11) // 11 anos de educación
 replace edusc_ci=. if aedu_ci==. // NIU & missing
 
 ***************
 ***edus1i_ci***
 ***************
-
 gen byte edus1i_ci=(aedu_ci>6 & aedu_ci<9)
 replace edus1i_ci=. if aedu_ci==. // missing a los NIU & missing
-
 
 ***************
 ***edus1c_ci***
 ***************
-
 gen byte edus1c_ci=(aedu_ci==9)
 replace edus1c_ci=. if aedu_ci==. // missing a los NIU & missing
 
 ***************
 ***edus2i_ci***
 ***************
-
 gen byte edus2i_ci=(aedu_ci>9 & aedu_ci<11)
 replace edus2i_ci=. if aedu_ci==. // missing a los NIU & missing
 
 ***************
 ***edus2c_ci***
 ***************
-
 gen byte edus2c_ci=(aedu_ci==11)
 replace edus2c_ci=. if aedu_ci==. // missing a los NIU & missing
-
-**************
-***eduui_ci***
-**************
-
-gen eduui_ci=(aedu_ci>=12 & aedu_ci<16 & edattain != 4) // 12 a 15 anos de educación
-replace eduui_ci=. if aedu_ci ==. // NIU & missing
-replace eduui_ci = 1 if yrschool == 94 // some terciary
-
-***************
-***eduuc_ci***
-***************
-
-gen eduuc_ci=(aedu_ci>=16)
-replace eduuc_ci=1 if edattain == 4
-replace eduuc_ci=. if aedu_ci==. // NIU & missing
 
 ***************
 ***edupre_ci***
 ***************
-
 gen byte edupre_ci=(educpe==110)
 replace edupre_ci=. if aedu_ci==.
 *label variable edupre_ci "Educacion preescolar"
-
 
 ***************
 ***asiste_ci***
@@ -184,9 +158,9 @@ replace asiste_ci=1 if school==1
 replace asiste_ci=0 if school==2
 *label variable asiste_ci "Asiste actualmente a la escuela"
 
-***************
+**************
 ***literacy***
-***************
+**************
 gen literacy=. if lit==0
 replace literacy=. if lit==9
 replace literacy=0 if lit==1

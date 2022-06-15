@@ -113,9 +113,9 @@ replace region_c=23 if geo1_ve1990==21	/*Zulia*/
 	gen eduno_ci=(aedu_ci==0) // never attended or pre-school
 	replace eduno_ci=. if aedu_ci==. // NIU & missing
 	
-	**********
+	***********
 	*edupre_ci* // preescolar
-	**********
+	***********
 	gen edupre_ci=(educve==100) // pre-school
 	replace edupre_ci=. if aedu_ci==. // NIU & missing
 	
@@ -145,20 +145,6 @@ replace region_c=23 if geo1_ve1990==21	/*Zulia*/
 	gen edusc_ci=(aedu_ci==11) // 11 anos de educación
 	replace edusc_ci=. if aedu_ci==. // NIU & missing
 	
-	**********
-	*eduui_ci* // no completó la educación universitaria o terciaria
-	**********
-	gen eduui_ci=(aedu_ci>=12 & aedu_ci<=15) // 14 a 16 anos de educación
-	replace eduui_ci=. if aedu_ci==. // NIU & missing
-	replace eduui_ci = 1 if yrschool == 94 // some terciary
-
-	**********
-	*eduuc_ci* // completó la educación universitaria o terciaria
-	**********
-	gen eduuc_ci=.
-	replace eduuc_ci=(aedu_ci>15) // más de 15
-	replace eduuc_ci=. if aedu_ci==. // NIU & missing
-
 	***********
 	*edus1i_ci* // no completó el primer ciclo de la educación secundaria
 	***********
@@ -189,9 +175,9 @@ replace region_c=23 if geo1_ve1990==21	/*Zulia*/
 	gen asiste_ci=(school==1) // 0 includes attended in the past (3) and never attended (4)
 	replace asiste_ci=. if school==0 | school==9 // missing a los NIU & missing
 
-	************
-	* literacy *
-	************
+	**********
+	*literacy*
+	**********
 	gen literacy=. 
 	replace literacy=1 if lit==2 // literate
 	replace literacy=0 if lit==1 // illiterate
@@ -239,23 +225,20 @@ replace region_c=23 if geo1_ve1990==21	/*Zulia*/
 ***           VARIABLES DE INGRESO                  ***
 *******************************************************
 	
-    ***********
-	**ylm_ci**
-	***********
+   ******************************************************
+***           VARIABLES DE INGRESO                  ***
+*******************************************************
+
+	replace ylm_ci=incearn
+	replace ylm_ci=. if incearn==99999998 | incearn==99999999
 	
-	*gen ylm_ci=.
-	
-    ***********
-	**ynlm_ci**
-	***********
- 
-	*gen ynlm_ci=.
 
     ***********
-	**ylm_ch**
+	**ylm_ch*
 	***********
    
-   gen ylm_ch=.
+   by idh_ch, sort: egen ylm_ch=sum(ylm_ci) if miembros_ci==1, missing
+   
    
     ***********
 	**ynlm_ch**
