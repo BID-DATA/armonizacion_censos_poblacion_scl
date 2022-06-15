@@ -32,9 +32,11 @@ local ANO "2018"
 *include "../Base/base.do"
 global ruta ="${censusFolder}"
 
-local log_file ="$ruta//clean//`PAIS'//log//`PAIS'_`ANO'_censusBID.log"
-local base_in ="$ruta//raw//`PAIS'//`PAIS'_`ANO'_NOIPUMS.dta"
-local base_out ="$ruta//clean//`PAIS'//`PAIS'_`ANO'_censusBID.dta"
+global ruta_raw = "${censusFolder_raw}"
+
+local log_file ="$ruta\\clean\\`PAIS'\\log\\`PAIS'_`ANO'_censusBID.log"
+local base_in = "Z:\census\GTM\2018\raw\\`PAIS'_`ANO'_NOIPUMS.dta"
+local base_out ="$ruta\\clean\\`PAIS'\\`PAIS'_`ANO'_censusBID.dta"
 
 capture log close
 log using "`log_file'", replace
@@ -95,7 +97,9 @@ gen anio_c = 2018
     ******************
     *idh_ch (id hogar)*
     ******************
-rename num_hogar idh_ch
+	
+	gen str14 idh_ch = string(num_vivienda,"%02.0f") + string(num_hogar,"%02.0f") 
+
 
 	******************
     *idp_ci (idpersonas)*
@@ -539,7 +543,7 @@ replace edusi_ci=. if aedu_ci==. // NIU & missing
 **************
 ***edusc_ci***
 **************
-gen edusc_ci=(aedu_ci==12) // 11 anos de educación
+gen edusc_ci=(aedu_ci>=11) // 11 anos de educación
 replace edusc_ci=. if aedu_ci==. // NIU & missing
 
 ***************
@@ -599,10 +603,11 @@ replace afroind_ci=1 if pcp12==1 | pcp12==2 | pcp12==3
 replace afroind_ci=2 if pcp12==4
 replace afroind_ci=3 if pcp12==5 | pcp12==6 
 
-	***************
+
+   ***************
 	***afroind_ch***
 	***************
-    gen afroind_jefe= afroind_ci if jefe_ci==1
+	gen afroind_jefe= afroind_ci if jefe_ci==1
 	egen afroind_ch  = min(afroind_jefe), by(idh_ch) 
 	
 	drop afroind_jefe 
@@ -610,7 +615,7 @@ replace afroind_ci=3 if pcp12==5 | pcp12==6
 	*******************
 	***afroind_ano_c***
 	*******************
-gen afroind_ano_c=2018	
+gen afroind_ano_c=1964	
 
 	*******************
 	***dis_ci***
@@ -628,7 +633,8 @@ replace dis_ci=1 if pcp16_d>=3 & pcp16_d<=4 | pcp16_e>=3 & pcp16_e<=4 | pcp16_f>
 	*******************
 	***dis_ch***
 	*******************
-gen dis_ch=. 
+egen dis_ch  = sum(dis_ci), by(idh_ch) 
+replace dis_ch=1 if dis_ch>=1 & dis_ch!=.
 
 
 *****************************
