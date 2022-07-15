@@ -302,8 +302,16 @@ label var region_c "division politico-administrativa, estados"
 	*** discapacidad ***
 	********************
 	gen dis_ci=.
-	gen dis_ch=.
+	
+replace dis_ci=0 if (disc_camin==1 & disc_ver==1 & disc_brazo==1 & disc_apren==1 & disc_oir==1 & disc_vest==1 & disc_habla==1 & disc_acti==1)
+replace dis_ci=1 if dis_ci!=0
+replace dis_ci=. if (disc_camin==9 & disc_ver==9 & disc_brazo==9 & disc_apren==9 & disc_oir==9 & disc_vest==9 & disc_habla==9 & disc_acti==9)
 
+	*************
+	***dis_ch***
+	**************
+egen dis_ch = sum(dis_ci), by(idh_ch) 
+replace dis_ch=1 if dis_ch>=1 & dis_ch!=. 
 
 **********************************
 **** VARIABLES DE LA VIVIENDA ****
