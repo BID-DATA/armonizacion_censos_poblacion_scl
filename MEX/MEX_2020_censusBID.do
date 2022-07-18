@@ -10,7 +10,6 @@ set more off
  *________________________________________________________________________________________________________________*
  
 *Population and Housing Censuses/Harmonized Censuses - IPUMS
-global censusFolder "/home/mariarey/shared/SCLDataPoD/Harmonized Censuses - IPUMS/"
 global ruta = "${censusFolder}"
 local PAIS MEX
 local ANO "2020"
