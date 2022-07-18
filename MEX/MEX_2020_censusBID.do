@@ -10,14 +10,14 @@ set more off
  *________________________________________________________________________________________________________________*
  
 *Population and Housing Censuses/Harmonized Censuses - IPUMS
-global censusFolder "\\sdssrv03\surveys\census"
+global censusFolder "/home/mariarey/shared/SCLDataPoD/Harmonized Censuses - IPUMS/"
 global ruta = "${censusFolder}"
 local PAIS MEX
 local ANO "2020"
 
-local log_file = "$ruta\\`PAIS'\\`ANO'\\Clean\\`PAIS'_`ANO'_censusBID.log"
-local base_in  = "$ruta\\`PAIS'\\`ANO'\\raw\\`PAIS'_`ANO'.dta"
-local base_out = "$ruta\\`PAIS'\\`ANO'\\Clean\\`PAIS'_`ANO'_censusBID.dta"
+local log_file = "$ruta//clean//`PAIS'//`PAIS'_`ANO'_censusBID.log"
+local base_in  = "$ruta//raw//`PAIS'//`PAIS'_`ANO'.dta"
+local base_out = "$ruta//clean//`PAIS'//`PAIS'_`ANO'_censusBID.dta"
                                                     
 capture log close
 log using "`log_file'", replace 
@@ -303,9 +303,9 @@ label var region_c "division politico-administrativa, estados"
 	********************
 	gen dis_ci=.
 	
-replace dis_ci=0 if (disc_camin==1 & disc_ver==1 & disc_brazo==1 & disc_apren==1 & disc_oir==1 & disc_vest==1 & disc_habla==1 & disc_acti==1)
+replace dis_ci=0 if (dis_caminar==1 & dis_ver==1 & dis_recordar==1 & dis_oir==1 & dis_banarse==1 & dis_hablar==1 & dis_mental==6)
 replace dis_ci=1 if dis_ci!=0
-replace dis_ci=. if (disc_camin==9 & disc_ver==9 & disc_brazo==9 & disc_apren==9 & disc_oir==9 & disc_vest==9 & disc_habla==9 & disc_acti==9)
+replace dis_ci=. if (dis_caminar==9 & dis_ver==9 & dis_recordar==9 & dis_oir==9 & dis_banarse==9 & dis_hablar==9 & dis_mental ==9)
 
 	*************
 	***dis_ch***
