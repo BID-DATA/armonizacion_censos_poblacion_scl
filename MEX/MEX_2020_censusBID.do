@@ -10,14 +10,13 @@ set more off
  *________________________________________________________________________________________________________________*
  
 *Population and Housing Censuses/Harmonized Censuses - IPUMS
-global censusFolder "\\sdssrv03\surveys\census"
 global ruta = "${censusFolder}"
 local PAIS MEX
 local ANO "2020"
 
-local log_file = "$ruta\\`PAIS'\\`ANO'\\Clean\\`PAIS'_`ANO'_censusBID.log"
-local base_in  = "$ruta\\`PAIS'\\`ANO'\\raw\\`PAIS'_`ANO'.dta"
-local base_out = "$ruta\\`PAIS'\\`ANO'\\Clean\\`PAIS'_`ANO'_censusBID.dta"
+local log_file = "$ruta//clean//`PAIS'//`PAIS'_`ANO'_censusBID.log"
+local base_in  = "$ruta//raw//`PAIS'//`PAIS'_`ANO'.dta"
+local base_out = "$ruta//clean//`PAIS'//`PAIS'_`ANO'_censusBID.dta"
                                                     
 capture log close
 log using "`log_file'", replace 
@@ -302,8 +301,16 @@ label var region_c "division politico-administrativa, estados"
 	*** discapacidad ***
 	********************
 	gen dis_ci=.
-	gen dis_ch=.
+	
+replace dis_ci=0 if (dis_caminar==1 & dis_ver==1 & dis_recordar==1 & dis_oir==1 & dis_banarse==1 & dis_hablar==1 & dis_mental==6)
+replace dis_ci=1 if dis_ci!=0
+replace dis_ci=. if (dis_caminar==9 & dis_ver==9 & dis_recordar==9 & dis_oir==9 & dis_banarse==9 & dis_hablar==9 & dis_mental ==9)
 
+	*************
+	***dis_ch***
+	**************
+egen dis_ch = sum(dis_ci), by(idh_ch) 
+replace dis_ch=1 if dis_ch>=1 & dis_ch!=. 
 
 **********************************
 **** VARIABLES DE LA VIVIENDA ****
