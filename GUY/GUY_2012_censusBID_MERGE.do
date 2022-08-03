@@ -40,7 +40,7 @@ drop if serialno==""
 
 sort serialno
 quietly by serialno: gen dup=cond(_N==1,0,_n)
-drop if dup==2 | dup==3
+drop if dup==1 | dup==2 | dup==3
 drop dup
 
 sort serialno
