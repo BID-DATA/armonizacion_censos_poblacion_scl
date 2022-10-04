@@ -35,7 +35,7 @@ global ruta ="${censusFolder}"
 global ruta_raw = "${censusFolder_raw}"
 
 local log_file ="$ruta\\clean\\`PAIS'\\log\\`PAIS'_`ANO'_censusBID.log"
-local base_in = "Z:\census\COL\2018\raw\\`PAIS'_`ANO'_NOIPUMS.dta"
+local base_in = "$censusFolder_raw/COL/Censo Colombia 2018 completo.dta"
 local base_out ="$ruta\\clean\\`PAIS'\\`PAIS'_`ANO'_censusBID.dta"
 
 capture log close
@@ -72,7 +72,15 @@ label define region_c       ///
 	68 "Santander"	        ///
 	70 "Sucre"	            ///
 	73 "Tolima"	            ///
-	76 "Valle"	
+	76 "Valle del Cauca"	///
+	81 "Arauca"	            ///
+	85 "Casanare"	        ///
+	86 "Putumayo"	        ///
+	91 "Amazonas"	        ///
+	94 "Guainía"	        ///	
+	95 "Guaviare"	        ///	
+	97 "Vaupés" 	        ///		
+	99 "Vichada"
 label value region_c region_c
 
 ************
@@ -122,6 +130,11 @@ gen factor_ci=.
 *Factor de expansion del hogar (factor_ch)*
 *******************************************
 gen factor_ch=.
+
+*******************************************
+*Estrato(estrato_ci)*
+*******************************************
+gen estrato_ci=.
 
 		****************************
 		***VARIABLES DEMOGRAFICAS***
@@ -362,6 +375,8 @@ gen factor_ch=.
 	*cocina_ch*
 	***********
 	gen cocina_ch=.
+	replace cocina_ch=1 if h_donde_prepalim ==1 
+	replace cocina_ch=0 if h_donde_prepalim==2 | h_donde_prepalim==3 | h_donde_prepalim==4  | h_donde_prepalim==5 | h_donde_prepalim==6
 	
 	***********
 	*telef_ch*
@@ -527,13 +542,12 @@ replace edupc_ci=. if p_nivel_anosr==. // NIU & missing
 **************
 ***edusi_ci***
 **************
-gen edusi_ci=(p_nivel_anosr==3) 
-replace edusi_ci=. if p_nivel_anosr==. // NIU & missing
+gen edusi_ci=.
 
 **************
 ***edusc_ci***
 **************
-gen edusc_ci=(p_nivel_anosr==4) 
+gen edusc_ci=(p_nivel_anosr==4 |p_nivel_anosr==3 |p_nivel_anosr==3 |p_nivel_anosr==6) 
 replace edusc_ci=. if p_nivel_anosr==. // NIU & missing
 
 ***************
@@ -557,7 +571,7 @@ replace edus2i_ci=. if p_nivel_anosr==. // missing a los NIU & missing
 ***************
 ***edus2c_ci***
 ***************
-gen byte edus2c_ci=.
+gen byte edus2c_ci=(p_nivel_anosr==4 |p_nivel_anosr==3 |p_nivel_anosr==5 |p_nivel_anosr==6)
 replace edus2c_ci=. if p_nivel_anosr==. // missing a los NIU & missing
 
 ***************
@@ -614,7 +628,8 @@ drop afroind_jefe
 	*******************
 	***afroind_ano_c***
 	*******************
-gen afroind_ano_c=.
+* por ahora se pone 2018 porque antes no se había considerado, pero desde 2005 se podría hacer	
+gen afroind_ano_c=2018
 label var afroind_ano_c "Año Cambio de Metodología Medición Raza/Etnicidad"
 
 	*******************
