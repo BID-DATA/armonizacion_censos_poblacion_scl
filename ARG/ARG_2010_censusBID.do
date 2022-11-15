@@ -128,6 +128,11 @@ variables de ingreso por hogar porque no están en el do Base*/
 	replace aedu_ci=. if aedu_ci==98
 	replace aedu_ci=. if aedu_ci==99
 	replace aedu_ci=. if yrschool==90 // unknown/missing or NIU
+	*Imputación
+	replace aedu_ci=0 if yrschool==91 // some primary
+	replace aedu_ci=6 if yrschool==93 // some secondary
+	replace aedu_ci=12 if yrschool==94 // some tertiary
+	replace aedu_ci=. if yrschool==96 // special education
 
 	**********
 	*eduno_ci* // no ha completado ningún año de educación
