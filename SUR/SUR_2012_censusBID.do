@@ -87,13 +87,14 @@ gen afroind_ano_c=2004
 
 
 gen dis_ci = 0
-recode dis_ci nonmiss=. if inlist(9,sr2012a_dissight,sr2012a_dishear,sr2012a_dismobil,sr2012a_dismntl,sr2012a_discare,sr2012a_dislift,sr2012a_discomm) //
-recode dis_ci nonmiss=. if sr2012a_dissight>=. & sr2012a_dishear>=. & sr2012a_dismobil>=. & sr2012a_dismntl>=. & sr2012a_discare>=. & sr2012a_dislift >=. & sr2012a_discomm>=. //
-    foreach i in sight hear mobil mntl care lift comm {
-        forvalues j=2/4 {
-        replace dis_ci=1 if sr2012a_dis`i'==`j'
-        }
-        }
+recode dis_ci nonmiss=. if inlist(9,sr2012a_dissight,sr2012a_dishear,sr2012a_dismobil,sr2012a_dismntl,sr2012a_discare,sr2012a_dislift,sr2012a_discomm) 
+recode dis_ci nonmiss=. if sr2012a_dissight>=. & sr2012a_dishear>=. & sr2012a_dismobil>=. & sr2012a_dismntl>=. & sr2012a_discare>=. & sr2012a_dislift >=. & sr2012a_discomm>=. 
+
+foreach x in sight hear mobil mntl care lift comm {
+	forvalue j=2/4 {
+		replace dis_ci=1 if sr2012a_dis`x'==`j'
+	}
+}
 
 /*Identificación de si un hogar tiene uno o más miembros que reportan por lo menos alguna dificultad en una o más de las preguntas del Washington Group Questionnaire */		
 
@@ -202,7 +203,7 @@ replace dis_ch=1 if dis_ch>=1 & dis_ch!=.
 **  harmonized variables   **
 *****************************
 
-order region_BID_c region_c pais_c anio_c idh_ch idp_ci factor_ch factor_ci estrato_ci zona_c sexo_ci edad_ci relacion_ci civil_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch miembros_ci afroind_ci afroind_ch afroind_ano_c dis_ci dis_ch condocup_ci emp_ci desemp_ci pea_ci rama_ci categopri_ci spublico_ci ylm_ci ynlm_ci ylm_ch ynlm_ch aedu_ci eduno_ci edupre_ci edupi_ci  edupc_ci  edusi_ci edusc_ci  eduui_ci eduuc_ci edus1i_ci edus1c_ci edus2i_ci edus2c_ci asiste_ci literacy aguared_ch luz_ch bano_ch des1_ch piso_ch banomejorado_ch pared_ch techo_ch resid_ch dorm_ch cuartos_ch cocina_ch telef_ch refrig_ch auto_ch compu_ch internet_ch cel_ch viviprop_ch migrante_ci migrantelac_ci migantiguo5_ci discapacidad_ci  ceguera_ci sordera_ci mudez_ci dismental_ci
+order region_BID_c region_c pais_c anio_c idh_ch idp_ci factor_ch factor_ci estrato_ci zona_c sexo_ci edad_ci relacion_ci civil_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch miembros_ci afroind_ci afroind_ch afroind_ano_c dis_ci dis_ch condocup_ci emp_ci desemp_ci pea_ci rama_ci categopri_ci spublico_ci ylm_ci ynlm_ci ylm_ch ynlm_ch aedu_ci eduno_ci edupre_ci edupi_ci  edupc_ci  edusi_ci edusc_ci edus1i_ci edus1c_ci edus2i_ci edus2c_ci asiste_ci literacy aguared_ch luz_ch bano_ch des1_ch piso_ch banomejorado_ch pared_ch techo_ch resid_ch dorm_ch cuartos_ch cocina_ch telef_ch refrig_ch auto_ch compu_ch internet_ch cel_ch viviprop_ch migrante_ci migrantelac_ci migantiguo5_ci dis_ci dis_ch
 
 include "../Base/labels.do"
 
