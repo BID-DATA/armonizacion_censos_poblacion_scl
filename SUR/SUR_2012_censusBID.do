@@ -87,13 +87,13 @@ gen afroind_ano_c=2004
 
 
 gen dis_ci = 0
-recode dis_ci nonmiss=. if inlist(9,sr2012a_dissight,sr2012a_dishear,sr2012a_dismobil,sr2012a_dismntl,sr2012a_discare,sr2012a_discomm) //
-recode dis_ci nonmiss=. if sr2012a_dissight>=. & sr2012a_dishear>=. & sr2012a_dismobil>=. & sr2012a_dismntl>=. & sr2012a_discare>=. & sr2012a_discomm>=. //
-	foreach i in sight hear mobil mntl care comm {
-		forvalues j=2/4 {
-		replace dis_ci=1 if sr2012a_dis`i'==`j'
-		}
-		}
+recode dis_ci nonmiss=. if inlist(9,sr2012a_dissight,sr2012a_dishear,sr2012a_dismobil,sr2012a_dismntl,sr2012a_discare,sr2012a_dislift,sr2012a_discomm) //
+recode dis_ci nonmiss=. if sr2012a_dissight>=. & sr2012a_dishear>=. & sr2012a_dismobil>=. & sr2012a_dismntl>=. & sr2012a_discare>=. & sr2012a_dislift >=. & sr2012a_discomm>=. //
+    foreach i in sight hear mobil mntl care lift comm {
+        forvalues j=2/4 {
+        replace dis_ci=1 if sr2012a_dis`i'==`j'
+        }
+        }
 
 /*Identificación de si un hogar tiene uno o más miembros que reportan por lo menos alguna dificultad en una o más de las preguntas del Washington Group Questionnaire */		
 

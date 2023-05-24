@@ -302,9 +302,9 @@ label var region_c "division politico-administrativa, estados"
 	********************
 	gen dis_ci=.
 	
-replace dis_ci=0 if (dis_caminar==1 & dis_ver==1 & dis_recordar==1 & dis_oir==1 & dis_banarse==1 & dis_hablar==1 & dis_mental==6)
+replace dis_ci=0 if (dis_caminar==1 & dis_ver==1 & dis_recordar==1 & dis_oir==1 & dis_banarse==1 & dis_hablar==1)
 replace dis_ci=1 if dis_ci!=0
-replace dis_ci=. if (dis_caminar==9 & dis_ver==9 & dis_recordar==9 & dis_oir==9 & dis_banarse==9 & dis_hablar==9 & dis_mental ==9)
+replace dis_ci=. if (dis_caminar==9 & dis_ver==9 & dis_recordar==9 & dis_oir==9 & dis_banarse==9 & dis_hablar==9)
 
 	*************
 	***dis_ch***
