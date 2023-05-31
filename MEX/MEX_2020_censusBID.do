@@ -181,7 +181,7 @@ label var region_c "division politico-administrativa, estados"
 	replace civil_ci=4 if situa_conyugal==4 //viudo
 	
 	
-    *********
+        *********
 	*jefe_ci*
 	*********
 	gen jefe_ci=(relacion_ci==1)
@@ -278,9 +278,9 @@ label var region_c "division politico-administrativa, estados"
 	***************
 
 	gen afroind_ci=. 
-	replace afroind_ci=1  if perte_indigena == 1
-	replace afroind_ci=1  if afrodes == 1
-	replace afroind_ci=3 if perte_indigena == 3 | afrodes==3
+	replace afroind_ci=1  if (perte_indigena == 1)
+	replace afroind_ci=2  if (afrodes == 1)
+	replace afroind_ci=3 if (perte_indigena !=1 & afrodes!=1)
 
 
 	***************
