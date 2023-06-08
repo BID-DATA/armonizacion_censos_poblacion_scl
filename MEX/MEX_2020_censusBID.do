@@ -301,16 +301,16 @@ label var region_c "division politico-administrativa, estados"
 	*** discapacidad ***
 	********************
 	gen dis_ci=.
-	
-replace dis_ci=0 if (dis_caminar==1 & dis_ver==1 & dis_recordar==1 & dis_oir==1 & dis_banarse==1 & dis_hablar==1)
-replace dis_ci=1 if dis_ci!=0
-replace dis_ci=. if (dis_caminar==9 & dis_ver==9 & dis_recordar==9 & dis_oir==9 & dis_banarse==9 & dis_hablar==9)
+	replace dis_ci=0 if ( (dis_caminar==1 |dis_caminar==2) & (dis_ver==1 | dis_ver==2) & (dis_recordar==1 |dis_recordar==2) & (dis_oir==1 | dis_oir==2) & (dis_banarse==1 | dis_banarse==2) & (dis_hablar==1|dis_hablar==2) &   dis_mental==6)
+	replace dis_ci=1 if dis_ci!=0
+	replace dis_ci=. if (dis_caminar==9 & dis_ver==9 & dis_recordar==9 & dis_oir==9 & dis_banarse==9 & dis_hablar==9 & dis_mental ==9)
 
 	*************
 	***dis_ch***
 	**************
-egen dis_ch = sum(dis_ci), by(idh_ch) 
-replace dis_ch=1 if dis_ch>=1 & dis_ch!=. 
+	egen dis_ch = sum(dis_ci), by(idh_ch) 
+	replace dis_ch=1 if dis_ch>=1 & dis_ch!=. 
+
 
 **********************************
 **** VARIABLES DE LA VIVIENDA ****
