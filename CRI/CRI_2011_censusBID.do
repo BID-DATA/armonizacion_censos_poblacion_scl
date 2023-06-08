@@ -151,8 +151,8 @@ include "../Base/base.do"
 
 	gen afroind_ci=. 
 	replace afroind_ci=1  if race == 30 | indig == 1
-	replace afroind_ci=2 if race == 20
-	replace afroind_ci=3 if race == 10 | race == 40 | race == 41 | race == 53 | race == 60
+	replace afroind_ci=2 if race == 20 | race == 60
+	replace afroind_ci=3 if race == 10 | race == 40 | race == 41 | race == 53 
 	replace afroind_ci=. if (race == 99 & indig !=1)
 
 
