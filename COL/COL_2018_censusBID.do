@@ -110,7 +110,9 @@ egen idh_ch = group(u_dpto u_mpio ua_clase cod_encuestas u_vivienda p_nrohog)
 **************
 ****idp_ci****
 **************
-gen idp_ci = p_nro_per
+
+sort idh_ch p_nro_per
+egen idp_ci = group(idh_ch p_nro_per)
 
 **********
 ***zona***
@@ -190,7 +192,7 @@ gen estrato_ci=.
 						19 "de 90 A 94 Años"	///
 						20 "de 95 A 99 Años"	///
 						21 "de 100 y más Años"
-	la val relacion_ci relacion_ci
+	la val edad_ci edad_ci
 
 *****************
 ****civil_ci*****
@@ -333,9 +335,12 @@ gen estrato_ci=.
 	*********
 	gen piso_ch=.
 	replace piso_ch = 0 if v_mat_piso == 6
-	replace piso_ch = 1 if v_mat_piso == 1 | v_mat_piso == 2 | v_mat_piso == 3 | v_mat_piso == 4
-	replace piso_ch = 2 if v_mat_piso == 5
+	replace piso_ch = 1 if v_mat_piso == 1 | v_mat_piso == 2 | v_mat_piso == 3
+	replace piso_ch = 2 if  v_mat_piso == 4 | v_mat_piso == 5
 	replace piso_ch = . if v_mat_piso==9 | v_mat_piso==.
+	label variable piso_ch "Materiales de construcción del piso"
+	label def piso_ch 0"Sin piso o sin terminar (tierra)" 1"Materiales no permanentes" 2 "Materiales permanentes"
+	label val piso_ch piso_ch
 	
 	*****************
 	*banomejorado_ch*
@@ -345,11 +350,15 @@ gen estrato_ci=.
 	**********
 	*pared_ch*
 	**********
-	gen pared_ch=.
-	replace pared_ch=0 if v_mat_pared ==8
-	replace pared_ch=1 if v_mat_pared == 1 | v_mat_pared==2 | v_mat_pared ==3 | v_mat_pared ==6
-	replace pared_ch=2 if v_mat_pared == 4 | v_mat_pared==5 | v_mat_pared ==7
-	replace pared_ch=. if v_mat_piso==9 | v_mat_piso==.
+
+	gen pared_ch = .
+	replace pared_ch = 0 if v_mat_pared == 9
+	replace pared_ch = 1 if inrange(v_mat_pared, 4, 8)
+	replace pared_ch = 2 if inrange(v_mat_pared, 1, 3)
+	label variable pared_ch "Materiales de construcción de las paredes del hogar"
+	label def pared_ch 0"No tiene paredes" 1"Materiales no permanentes" 2 "Materiales permanentes"
+	label val pared_ch pared_ch
+	
 
 	**********
 	*techo_ch*
