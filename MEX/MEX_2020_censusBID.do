@@ -142,6 +142,41 @@ label define region_c ///
 label value region_c region_c
 label var region_c "division politico-administrativa, estados"
 
+gen geolev1=.
+
+replace geolev1=484001 if ent==1 //"Aguascalientes" 
+replace geolev1=484002 if ent==2 //"Baja California" 
+replace geolev1=484003 if ent==3 //"Baja California Sur" 
+replace geolev1=484004 if ent==4 //"Campeche" 
+replace geolev1=484005 if ent==5 //"Coahuila de Zaragoza" 
+replace geolev1=484006 if ent==6 //"Colima" 
+replace geolev1=484007 if ent==7 //"Chiapas" 
+replace geolev1=484008 if ent==8 //"Chihuahua" 
+replace geolev1=484009 if ent==9 //"Distrito Federal" 
+replace geolev1=484010 if ent==10 //"Durango" 
+replace geolev1=484011 if ent==11 //"Guanajuato" 
+replace geolev1=484012 if ent==12 //"Guerrero" 
+replace geolev1=484013 if ent==13 //"Hidalgo" 
+replace geolev1=484014 if ent==14 //"Jalisco" 
+replace geolev1=484015 if ent==15 //"México" 
+replace geolev1=484016 if ent==16 //"Michoacán de Ocampo" 
+replace geolev1=484017 if ent==17 //"Morelos" 
+replace geolev1=484018 if ent==18 //"Nayarit" 
+replace geolev1=484019 if ent==19 //"Nuevo León" 
+replace geolev1=484020 if ent==20 //"Oaxaca" 
+replace geolev1=484021 if ent==21 //"Puebla" 
+replace geolev1=484022 if ent==22 //"Querétaro" 
+replace geolev1=484023 if ent==23 //"Quintana Roo" 
+replace geolev1=484024 if ent==24 //"San Luis Potosí" 
+replace geolev1=484025 if ent==25 //"Sinaloa" 
+replace geolev1=484026 if ent==26 //"Sonora" 
+replace geolev1=484027 if ent==27 //"Tabasco" 
+replace geolev1=484028 if ent==28 //"Tamaulipas" 
+replace geolev1=484029 if ent==29 //"Tlaxcala" 
+replace geolev1=484030 if ent==30 //"Veracruz de Ignacio de la Llave" 
+replace geolev1=484031 if ent==31 //"Yucatán" 
+replace geolev1=484032 if ent==32 //"Zacatecas" 
+
 *********************************************
 ***         VARIABLES DEMOGRAFICAS        ***
 *********************************************
