@@ -14,10 +14,10 @@ set more off
 
 /***************************************************************************
                  BASES DE DATOS DE CENSOS POBLACIONALES
-País: Argentina
-Año: 1970
+País: El Salvador
+Año: 2007
 Autores: 
-Última versión: 
+Última versión: 05/09/2023
 
 							SCL/LMK - IADB
 ****************************************************************************/
@@ -31,7 +31,7 @@ local ANO "2007"
 ** and include all common variables **
 **************************************
 
-include "../Base/base.do"
+include "$gitFolder\armonizacion_censos_poblacion_scl\Base\base.do"
 
 *****************************************************
 ******* Variables specific for this census **********
@@ -95,7 +95,12 @@ include "../Base/base.do"
 	*** discapacidad ***
 	********************
 	gen dis_ci=.
-	gen dis_ch=.
+	replace dis_ci=0 if (dismobil==2) & (disblnd==2) & (disdeaf==2) & (discare==2) & (dismute==2) & (disuppr==2) //No tomamos en cuenta la opcion dismntl, por uso de terminos estigmatizantes. 
+	replace dis_ci=1 if dis_ci!=0
+	replace dis_ci=. if (dismobil==0 | dismobil==9) & (disblnd==0 | disblnd==9) & (disdeaf==0 | disdeaf==9) & (discare==0 | discare==9) & (dismute==0 | dismute==9)	& (disuppr==0 | disuppr==9)
+	
+	egen dis_ch = sum(dis_ci), by(idh_ch) 
+	replace dis_ch=1 if dis_ch>=1 & dis_ch!=. 
 
 	
 *******************************************************
@@ -211,9 +216,9 @@ variables de ingreso por hogar porque no están en el do Base*/
 	** Include all labels of   **
 	**  harmonized variables   **
 	*****************************
-include "../Base/labels.do"
+include "$gitFolder\armonizacion_censos_poblacion_scl\Base\labels.do"
 
-order region_BID_c pais_c estrato_ci zona_c relacion_ci civil_ci idh_ch factor_ch idp_ci factor_ci edad_ci sexo_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch miembros_ci condocup_ci emp_ci desemp_ci pea_ci rama_ci spublico_ci migrante_ci migantiguo5_ci aguared_ch luz_ch bano_ch des1_ch piso_ch pared_ch techo_ch dorm_ch cuartos_ch cocina_ch refrig_ch auto_ch internet_ch cel_ch viviprop_ch viviprop_ch1 region_c categopri_ci discapacidad_ci ceguera_ci sordera_ci mudez_ci dismental_ci afroind_ci afroind_ch afroind_ano_c dis_ci dis_ch aedu_ci
+order region_BID_c pais_c estrato_ci zona_c relacion_ci civil_ci idh_ch factor_ch idp_ci factor_ci edad_ci sexo_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch miembros_ci condocup_ci emp_ci desemp_ci pea_ci rama_ci spublico_ci migrante_ci migantiguo5_ci aguared_ch luz_ch bano_ch des1_ch piso_ch pared_ch techo_ch dorm_ch cuartos_ch cocina_ch refrig_ch auto_ch internet_ch cel_ch viviprop_ch viviprop_ch1 region_c categopri_ci afroind_ci afroind_ch afroind_ano_c dis_ci dis_ch aedu_ci
 
 compress
 
