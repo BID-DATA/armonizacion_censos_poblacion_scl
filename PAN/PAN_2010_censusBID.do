@@ -88,9 +88,8 @@ gen afroind_ano_c=1990
 *** discapacidad ***
 ********************
 	gen dis_ci=.
-	replace dis_ci=0 if (dismobil==2) & (disblnd==2) & (disdeaf==2) & (dismute==2) & (dismntl==2)
-	replace dis_ci=1 if dis_ci!=0
-	replace dis_ci=. if (dismobil==0 | dismobil==9) & (disblnd==0 | disblnd==9) & (disdeaf==0 | disdeaf==9) & (dismute==0 | dismute==9) & (dismntl==0 | dismntl==9)	
+	replace dis_ci=((dismobil==1) | (disblnd==1) | (disdeaf==1) | (dismute==1) | (dismntl==1) | (disuppr==1) | (dispsyc==1))
+	replace dis_ci=. if (dismobil==0 | dismobil==9) & (disblnd==0 | disblnd==9) & (disdeaf==0 | disdeaf==9) & (dismute==0 | dismute==9) & (dismntl==0 | dismntl==9)	& (disuppr==0 | disuppr==9)	& (dispsyc==0 | dispsyc==9)	
 	
 	egen dis_ch = sum(dis_ci), by(idh_ch) 
 	replace dis_ch=1 if dis_ch>=1 & dis_ch!=. 

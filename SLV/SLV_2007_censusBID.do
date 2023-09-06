@@ -95,8 +95,7 @@ include "$gitFolder\armonizacion_censos_poblacion_scl\Base\base.do"
 	*** discapacidad ***
 	********************
 	gen dis_ci=.
-	replace dis_ci=0 if (dismobil==2) & (disblnd==2) & (disdeaf==2) & (discare==2) & (dismute==2) & (disuppr==2) //No tomamos en cuenta la opcion dismntl, por uso de terminos estigmatizantes. 
-	replace dis_ci=1 if dis_ci!=0
+	replace dis_ci=(dismobil==1 | disblnd ==1 | disdeaf==1 | discare==1 | dismute==1 | disuppr==1 )
 	replace dis_ci=. if (dismobil==0 | dismobil==9) & (disblnd==0 | disblnd==9) & (disdeaf==0 | disdeaf==9) & (discare==0 | discare==9) & (dismute==0 | dismute==9)	& (disuppr==0 | disuppr==9)
 	
 	egen dis_ch = sum(dis_ci), by(idh_ch) 
