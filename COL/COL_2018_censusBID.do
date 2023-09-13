@@ -205,7 +205,7 @@ gen estrato_ci=.
 	la de edad_grupo_ci	1 "de 00 A 04 Años" 	///
 						2 "de 05 A 09 Años" 	///
 						3 "de 10 A 14 Años"	    ///
-						4 "de 20 A 24 Años" 	///
+						4 "de 15 A 19 Años" 	///
 						5 "de 20 A 24 Años"		///
 						6 "de 25 A 29 Años"		///
 						7 "de 30 A 34 Años"		///
@@ -563,69 +563,71 @@ gen aedu_ci =.
 **************
 ***eduno_ci***
 **************
-gen eduno_ci=(p_nivel_anosr==10|p_nivel_anosr==1) // never attended or pre-school
-replace eduno_ci=. if p_nivel_anosr==. // NIU & missing
+gen eduno_ci=(p_nivel_anosr==10) // never attended 
+replace eduno_ci=. if p_nivel_anosr==99 // NIU & missing
 
 **************
 ***edupi_ci***
 **************
-gen edupi_ci=.
-replace edupi_ci=. if p_nivel_anosr==. // NIU & missing
+gen edupi_ci=(p_nivel_anosr==1) //  pre-school
+replace edupi_ci=. if p_nivel_anosr==99 // NIU & missing
 
 
 **************
 ***edupc_ci***
 **************
 gen edupc_ci=(p_nivel_anosr==2)
-replace edupc_ci=. if p_nivel_anosr==. // NIU & missing
+replace edupc_ci=. if p_nivel_anosr==99 // NIU & missing
 
 **************
 ***edusi_ci***
 **************
-gen edusi_ci=.
+gen edusi_ci=(p_nivel_anosr==3)
+replace edupc_ci=. if p_nivel_anosr==99 // NIU & missing
 
 **************
 ***edusc_ci***
 **************
-gen edusc_ci=(p_nivel_anosr==4 |p_nivel_anosr==3 |p_nivel_anosr==3 |p_nivel_anosr==6) 
-replace edusc_ci=. if p_nivel_anosr==. // NIU & missing
+gen edusc_ci=(p_nivel_anosr==4 |p_nivel_anosr==5|p_nivel_anosr==6) 
+replace edusc_ci=. if p_nivel_anosr==99 // NIU & missing
 
 ***************
 ***edus1i_ci***
 ***************
 gen byte edus1i_ci=.
-replace edus1i_ci=. if p_nivel_anosr==. // missing a los NIU & missing
 
 ***************
 ***edus1c_ci***
 ***************
-gen byte edus1c_ci=.
-replace edus1c_ci=. if aedu_ci==. // missing a los NIU & missing
+gen byte edus1c_ci=(p_nivel_anosr==3)
+replace edus1c_ci=. if aedu_ci==99 // missing a los NIU & missing
 
 ***************
 ***edus2i_ci***
 ***************
 gen byte edus2i_ci=.
-replace edus2i_ci=. if p_nivel_anosr==. // missing a los NIU & missing
 
 ***************
 ***edus2c_ci***
 ***************
-gen byte edus2c_ci=(p_nivel_anosr==4 |p_nivel_anosr==3 |p_nivel_anosr==5 |p_nivel_anosr==6)
-replace edus2c_ci=. if p_nivel_anosr==. // missing a los NIU & missing
+gen byte edus2c_ci=(p_nivel_anosr==4 |p_nivel_anosr==5 |p_nivel_anosr==6)
+replace edus2c_ci=. if p_nivel_anosr==99 // missing a los NIU & missing
 
 ***************
 ***edupre_ci***
 ***************
-gen byte edupre_ci=(p_nivel_anosr==1)
-replace edupre_ci=. if p_nivel_anosr==.
-*label variable edupre_ci "Educacion preescolar"
+gen byte edupre_ci=.
+
+***************
+***eduui_ci***
+***************
+gen eduui_ci=.
 
 **************
 ***eduuc_ci***
 **************
 gen eduuc_ci=(p_nivel_anosr==7|p_nivel_anosr==8|p_nivel_anosr==9) 
-replace eduuc_ci=. if p_nivel_anosr==. // NIU & missing
+replace eduuc_ci=. if p_nivel_anosr==99 // NIU & missing
 
 ***************
 ***asiste_ci***
@@ -633,7 +635,7 @@ replace eduuc_ci=. if p_nivel_anosr==. // NIU & missing
 gen asiste_ci=.
 replace asiste_ci=1 if pa_asistencia==1
 replace asiste_ci=0 if pa_asistencia==2
-replace asiste_ci=. if pa_asistencia==.|pa_asistencia==9
+replace asiste_ci=. if pa_asistencia==.|pa_asistencia==9 |pa_asistencia==4
 *label variable asiste_ci "Asiste actualmente a la escuela"
 
 **************
