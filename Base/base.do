@@ -33,6 +33,7 @@ merge 1:1 country year sample serial pernum using "$ruta\\raw\\IPUMS_extravars_1
 keep if _m==3
 drop _m 
 
+	foreach z in mx2015a_afrdes pa2010a_black ve2001a_indig {
 		sum `z'
 		if r(N)==0 {
 			drop `z'
