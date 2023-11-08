@@ -262,25 +262,26 @@ gen factor_ch=1
     ****condocup_ci****
     *******************
     gen condocup_ci=.
-	replace condocup_ci=1 if inlist(p34,1,2,4)
+	replace condocup_ci=1 if inlist(p34,1,2)
 	replace condocup_ci=2 if p34==3
 	replace condocup_ci=3 if inrange(p34,6,8)
 	replace condocup_ci=4 if edad_ci<14
 	
-	/************
+	************
     ***emp_ci***
     ************
+	
     gen emp_ci=.
-	replace emp_ci=1 if 
-	replace emp_ci=0 if c5_p17==7
+	replace emp_ci=1 if condocup_ci==1
+	replace emp_ci=0 if condocup_ci==2
 	
 	
 	****************
     ***desemp_ci***
     ****************	
 	gen desemp_ci=.
-	replace desemp_ci=1 if c5_p17==7 & c5_p18==1
-	replace desemp_ci=0 if c5_p17<7 | c5_p18==2
+	replace desemp_ci=1 if condocup_ci==2
+	replace desemp_ci=0 if condocup_ci==1 | condocup_ci==3
 	
 	*************
     ***pea_ci***
@@ -294,24 +295,67 @@ gen factor_ch=1
 	*************************
     ****rama de actividad****
     *************************
-    gen rama_ci = .
-	destring c5_p19_cod, replace
-	replace rama_ci= 1 if c5_p19_cod>=111 & c5_p19_cod<=500
-	replace rama_ci = 2 if c5_p19_cod>=1010 & c5_p19_cod<=1429
-	replace rama_ci = 3 if c5_p19_cod>=1511 & c5_p19_cod <= 3700
-	replace rama_ci = 4 if c5_p19_cod>=4010 & c5_p19_cod<=4100
-	replace rama_ci = 5 if c5_p19_cod>=4510 & c5_p19_cod<=4550
-	replace rama_ci = 6 if c5_p19_cod>=5010 & c5_p19_cod<=5260
-	replace rama_ci = 7 if c5_p19_cod>=5510 & c5_p19_cod<=5220 
-	replace rama_ci = 8 if c5_p19_cod>=6010 & c5_p19_cod<= 6420
-	replace rama_ci = 9 if c5_p19_cod>=6511 & c5_p19_cod <= 6720
-	replace rama_ci = 11 if c5_p19_cod>=7010 & c5_p19_cod <= 7499
-	replace rama_ci = 10 if c5_p19_cod>=7511 & c5_p19_cod<=7530
-	replace rama_ci = 12 if c5_p19_cod>=8010 & c5_p19_cod<=8090
-	replace rama_ci = 13 if c5_p19_cod>=8511 & c5_p19_cod>=8532
-	replace rama_ci = 14 if c5_p19_cod>=9000 & c5_p19_cod>=9309
-	replace rama_ci = 15 if c5_p19_cod==9500
 	
+	*p37_occupationcode (ISIC Rev 4)
+    gen rama_ci = .
+
+/*
+
+1	Agricultura, pesca y forestal - Agriculture, hunting, forestry and fishing
+2	Minería y extracción - Exploitation of mines and quarries
+3	Industrias manufactureras - Manufacturing industries
+4	Electricidad, gas, agua y manejo de residuos - Electricity, gas and water
+5	Construcción - Construction
+6	Comercio - Commerce
+7	Hoteles y restaurantes - Restaurants and hotels
+8	Transporte, almacenamiento y comunicaciones - Transportation, storage and communications
+9	Servicios financieros y seguros - Financial and insurance establishments
+10	Administración pública y defensa - Public administration and defense
+11	Servicios empresariales e inmobiliarios - Business and real estate services
+12	Educación - Education
+13	Salud y trabajo social - Social, community and personal services
+14	Otros servicios - Other services
+15	Servicio doméstico - Domestic work
+
+	replace rama_ci= 1 if p38_industrycode>=110 & p38_industrycode<=490
+	replace rama_ci = 2 if p38_industrycode>=510 & p38_industrycode<=990
+	replace rama_ci = 3 if p38_industrycode>=1010 & p38_industrycode <=3390
+	replace rama_ci = 4 if p38_industrycode>=3510 & p38_industrycode<=3900
+	replace rama_ci = 5 if p38_industrycode>=4100 & p38_industrycode<=4390
+	replace rama_ci = 6 if p38_industrycode>=4510 & p38_industrycode<=4799
+	replace rama_ci = 7 if p38_industrycode>=5510 & p38_industrycode<=5630 
+	replace rama_ci = 8 if (p38_industrycode>=4911 & p38_industrycode<= 5320) | (p38_industrycode>=5811 & p38_industrycode<= 6399) 
+	replace rama_ci = 9 if p38_industrycode>=6411 & p38_industrycode<= 6630
+	replace rama_ci = 10 if p38_industrycode>=8400 & p38_industrycode<=8499
+	replace rama_ci = 11 if p38_industrycode>=6800 & p38_industrycode <=8299
+	replace rama_ci = 12 if p38_industrycode>=8500 & p38_industrycode<=8599
+	replace rama_ci = 13 if p38_industrycode>=8600 & p38_industrycode<=9399
+	replace rama_ci = 14 if (p38_industrycode>=9400 & p38_industrycode<=9699) | p38_industrycode>=9900
+	replace rama_ci = 15 if p38_industrycode>=9700 & p38_industrycode<=9899
+	
+
+	label var rama_ci "Economic Sector"
+	label define rama_ci 							///
+	1"Agriculture, hunting, forestry and fishing"	///
+	2"Exploitation of mines and quarries"	        ///
+	3"Manufacturing industries"	          	  		///
+	4"Electricity, gas and water"	          		///
+	5"Construction"	          						///
+	6"Commerce"	      								///
+	7"Restaurants and hotels"	          			///
+	8"Transportation, storage and communications"   ///
+	9"Financial and insurance establishments"	    ///
+	10"Public administration and defense"	        ///
+	11"Business and real estate services"	        ///
+	12"Education"	          						///
+	13"Social, community and personal services"	    ///
+	14"Other services"	      						///
+	15"Domestic work", replace
+
+	label val rama_ci rama_ci
+
+*/
+		
 	*********************
     ****categopri_ci****
     *********************
