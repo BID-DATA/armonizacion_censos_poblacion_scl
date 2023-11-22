@@ -17,7 +17,7 @@ set more off
 País: Paraguay
 Año: 2002
 Autores: Cecilia y Olga
-Última versión: Oct, 2023
+Última versión: Nov, 2023
 
 							SCL/LMK - IADB
 ****************************************************************************/
@@ -36,195 +36,12 @@ use "`base_in'", clear
 ******* Variables specific for this census **********
 *****************************************************
 
-* Nota: Aparece Boquerón como región 18. No aparece en censo 1992 ni censo 2022
+*********************************
+** VARIABLES DE IDENTIFICACION **
+*********************************
 
-	****************
-    *** region_c ***
-    ****************
-	gen region_c=.   
-	replace region_c=1 if DPTOD==1	/*Concepción*/
-	replace region_c=2 if DPTOD==2	/*San Pedro*/
-	replace region_c=3 if DPTOD==3	/*Cordillera*/
-	replace region_c=4 if DPTOD==4	/*Guaira*/
-	replace region_c=5 if DPTOD==5	/*Caaguazú*/
-	replace region_c=6 if DPTOD==6	/*Caazapá*/
-	replace region_c=7 if DPTOD==7	/*Itapúa*/
-	replace region_c=8 if DPTOD==8	/*Misiones*/
-	replace region_c=9 if DPTOD==9	/*Paraguarí*/
-	replace region_c=10 if DPTOD==10	/*Alto Paraná*/
-	replace region_c=11 if DPTOD==11	/*Central*/
-	replace region_c=12 if DPTOD==12	/*Ñembuccú*/
-	replace region_c=13 if DPTOD==13	/*Amambay*/
-	replace region_c=14 if DPTOD==14	/*Canindeyú*/
-	replace region_c=15 if DPTOD==15	/*Presidente Hayes*/
-	replace region_c=16 if DPTOD==17	/*Alto Paraguay*/
-	replace region_c=17 if DPTOD==18	/*Asunción*/
-	replace region_c=18 if DPTOD==16	/*Boquerón*/
-
-	label define region_c ///
-	 1	"Concepción" ///
-	 2 "San Pedro" ///
-	 3	"Cordillera" ///
-	 4	"Guaira" ///
-	 5	"Caaguazú" ///
-	 6	"Caazapá" ///
-	 7	"Itapúa" ///
-	 8	"Misiones" ///
-	 9	"Paraguarí" ///
-	 10	"Alto Paraná" ///
-	 11	"Central" ///
-	 12	"Ñembuccú" ///
-	 13	"Amambay" ///
-	 14	"Canindeyú" ///
-	 15	"Presidente Hayes" ///
-	 16	"Alto Paraguay" ///
-	 17	"Asunción" ///
-	 18 "Boquerón"
-
-	label value region_c region_c
-	label var region_c "division politico-administrativa, departamento"
-
-	
-	************************
-	* VARIABLES EDUCATIVAS *
-	************************
-
-	*********
-	*aedu_ci* // 
-	*********
-	gen aedu_ci = .	
- 
-	**********
-	*eduno_ci* // no ha completado ningún año de educación
-	**********
-	gen eduno_ci=(P18A_NIV==0) // never attended or pre-school
-	replace eduno_ci=. if P18A_NIV==. // NIU & missing
-	
-	***********
-	*edupre_ci* // preescolar
-	***********
-	gen edupre_ci=(P18A_NIV==3) // pre-school
-	replace edupre_ci=. if P18A_NIV==. // NIU & missing
-	
-	**********
-	*edupi_ci* // no completó la educación primaria
-	**********
-	gen edupi_ci= .
-
-	********** 
-	*edupc_ci* // completó la educación primaria
-	**********
-	gen edupc_ci=(P18A_NIV==4) 
-	replace edupc_ci=. if P18A_NIV==. // NIU & missing
-
-	**********
-	*edusi_ci* // no completó la educación secundaria
-	**********
-	gen edusi_ci=.
-
-	**********
-	*edusc_ci* // completó la educación secundaria
-	**********
-	gen edusc_ci=(P18A_NIV==5 | P18A_NIV==6) // 
-	replace edusc_ci=. if P18A_NIV==. // NIU & missing
-	
-	***********
-	*edus1i_ci* // no completó el primer ciclo de la educación secundaria
-	***********
-	gen byte edus1i_ci=.
-
-	***********
-	*edus1c_ci* // completó el primer ciclo de la educación secundaria
-	***********
-	gen byte edus1c_ci=(P18A_NIV==5)
-	replace edus1c_ci=. if P18A_NIV==. // missing a los NIU & missing
-
-	***********
-	*edus2i_ci* // no completó el segundo ciclo de la educación secundaria
-	***********
-	gen byte edus2i_ci=.
-
-	***********
-	*edus2c_ci* // completó el segundo ciclo de la educación secundaria
-	***********
-	gen byte edus2c_ci=(P18A_NIV==6)
-	replace edus2c_ci=. if P18A_NIV==. // missing a los NIU & missing
-	
-	***********
-	*asiste_ci*
-	***********
-	gen asiste_ci=(P16==1) // 
-	replace asiste_ci=. if P16==6 | P16==9 // missing a los NIU & missing
-
-	**********
-	*literacy*
-	**********
-	gen literacy=. 
-	replace literacy=1 if P15==1 // literate
-	replace literacy=0 if P15==6 | P15==9 // illiterate
-
-	*******************************************************
-	***           VARIABLES DE DIVERSIDAD               ***
-	*******************************************************				
-	* Cesar Lins & Nathalia Maya - Septiembre 2021	
-
-		***************
-		***afroind_ci***
-		***************
-	**Pregunta: 
-
-	gen afroind_ci=. 
-	replace afroind_ci = 1 if P42A ==1
-	replace afroind_ci = 3 if P42A ==6 | P42A==9
-
-
-		***************
-		***afroind_ch***
-		***************
-	gen afroind_jefe= afroind_ci if P02==1
-	*egen afroind_ch  = min(afroind_jefe), by(idh_ch) 
-	
-	drop afroind_jefe 
-
-		*******************
-		***afroind_ano_c***
-		*******************
-	gen afroind_ano_c=2012
-
-
-		********************
-		*** discapacidad ***
-		********************
-	gen dis_ci=.
-	gen dis_ch=.
-	
-*******************************************************
-***           VARIABLES DE INGRESO                  ***
-*******************************************************
-	
-    ***********
-	**ylm_ci**
-	***********
-	
-	*gen ylm_ci=.
-	
-    ***********
-	**ynlm_ci**
-	***********
- 
-	*gen ynlm_ci=.
-
-    ***********
-	**ylm_ch**
-	***********
-   
-   gen ylm_ch=.
-   
-    ***********
-	**ynlm_ch**
-	***********
-   gen ynlm_ch=.
-
+local PAIS PRY
+local ANO "2012"
 
 *****************************
 ** Include all labels of   **
@@ -232,12 +49,6 @@ use "`base_in'", clear
 *****************************
 include "../Base/labels.do"
 
-
-			****************************
-			*  VARIABLES DE DISENO     *
-			****************************
-local PAIS PRY
-local ANO "2012"
 
 	****************
 	* region_BID_c *
@@ -258,11 +69,7 @@ local ANO "2012"
 	*\eliminar _00000*\
 	capture drop __00000
 	
-	*********
-	*pais_c*
-	*********
-	gen pais_c="`PAIS'"
-	
+
 	*********
 	*anio_c*
 	*********
@@ -271,46 +78,84 @@ local ANO "2012"
 	******************
     *idh_ch (id hogar)*
     ******************
-    rename serial idh_ch 
+	gen idh_ch = .
 	
 	******************
     *idp_ci (idpersonas)*
     ******************
 	
-	rename pernum idp_ci 
+	gen idp_ci = .
 	
 	****************************************
 	*factor expansión individio (factor_ci)*
 	****************************************
-	rename perwt factor_ci
+	gen factor_ci = FEX
 	
 	*******************************************
 	*Factor de expansion del hogar (factor_ch)*
 	*******************************************
-	rename hhwt factor_ch
+	gen factor_ch = FEX
 	
 	
 	***********
 	* estrato *
 	***********
 	gen estrato_ci=.
-	cap confirm variable strata
-	if (_rc==0) {
-	replace estrato_ci=strata 
-	}
-
 	
 	***************************
 	* Zona urbana (1) o rural (0)
 	***************************
 	gen zona_c=.
-	cap confirm variable urban
-	if (_rc==0) {
-	replace urban = urban-1
-	replace zona_c=urban
-	}
+	replace zona_c = 1 if inlist(AREA, 1, 3) // tomo suburbana como urbana 
+	replace zona_c = 0 if AREA == 6
 	
 
+	****************
+    *** region_c ***
+    ****************
+	gen region_c=.   
+	replace region_c=1 if DPTOD==1	/*Concepción*/
+	replace region_c=2 if DPTOD==2	/*San Pedro*/
+	replace region_c=3 if DPTOD==3	/*Cordillera*/
+	replace region_c=4 if DPTOD==4	/*Guaira*/
+	replace region_c=5 if DPTOD==5	/*Caaguazú*/
+	replace region_c=6 if DPTOD==6	/*Caazapá*/
+	replace region_c=7 if DPTOD==7	/*Itapúa*/
+	replace region_c=8 if DPTOD==8	/*Misiones*/
+	replace region_c=9 if DPTOD==9	/*Paraguarí*/
+	replace region_c=10 if DPTOD==10	/*Alto Paraná*/
+	replace region_c=11 if DPTOD==11	/*Central*/
+	replace region_c=12 if DPTOD==12	/*Ñembuccú*/
+	replace region_c=13 if DPTOD==13	/*Amambay*/
+	replace region_c=14 if DPTOD==14	/*Canindeyú*/
+	replace region_c=15 if DPTOD==15	/*Presidente Hayes*/
+	replace region_c=16 if DPTOD==16	 /*Boquerón*/
+	replace region_c=17 if DPTOD==17	/*Alto Paraguay*/
+	replace region_c=18 if DPTOD==18	/*Asunción*/ 
+
+	label define region_c ///
+	 1	"Concepción" ///
+	 2 "San Pedro" ///
+	 3	"Cordillera" ///
+	 4	"Guaira" ///
+	 5	"Caaguazú" ///
+	 6	"Caazapá" ///
+	 7	"Itapúa" ///
+	 8	"Misiones" ///
+	 9	"Paraguarí" ///
+	 10	"Alto Paraná" ///
+	 11	"Central" ///
+	 12	"Ñembuccú" ///
+	 13	"Amambay" ///
+	 14	"Canindeyú" ///
+	 15	"Presidente Hayes" ///
+	 16	"Boquerón" ///
+	 17	"Alto Paraguay" ///
+	 18 "Asunción"
+
+	label value region_c region_c
+	label var region_c "division politico-administrativa, departamento"
+	
 *********************************************
 ***         VARIABLES DEMOGRAFICAS        ***
 *********************************************
@@ -318,345 +163,77 @@ local ANO "2012"
 	*********
 	*sexo_c*
 	*********
-	rename sex sexo_ci
-	replace sexo_ci = . if sexo_ci == 9
+    gen sexo_ci = .
+	replace sexo_ci = 1 if P03 == 1
+	replace sexo_ci = 2 if P03 == 6
+	
 	
 	*********
 	*edad_c*
 	*********
-	rename age edad_ci
-	replace edad_ci=. if edad_ci==999 /* age=999 corresponde a "unknown" */
-	replace edad_ci=98 if edad_ci>=98  /* age=100 corresponde a 100+ */
+	gen edad_ci = P04A 
 
  	*************
 	*relacion_ci*
-	*************	
-	gen relacion_ci=1 if related==1000
-    replace relacion_ci=2 if related>=2000 & related<3000
-    replace relacion_ci=3 if related>=3000 & related <4000
-    replace relacion_ci=4 if related>=4000 & related <5000
-    replace relacion_ci=5 if (related>=5000 & related <5200) | (related>5210 & related <=6000) | related == 5900
-    replace relacion_ci=6 if related==5210 
-	replace relacion_ci=. if related==9999
+	*************
+	gen relacion_ci = . 
+	replace relacion_ci = 1 if P02 == 1 // Jefe
+    replace relacion_ci = 2 if P02 == 2 // Cónyugue/esposo/a/compañero/a
+    replace relacion_ci = 3 if P03 == 3 // Hijo/a
+    replace relacion_ci = 4 if inrange(P03, 4, 10) //  Otros parientes
+    replace relacion_ci = 5 if P03 == 12 // Otros no parientes 
+    replace relacion_ci = 6 if P03 == 11 // Servicio doméstico 
 	
 	**************
 	*Estado Civil*
 	**************
-	*2010 no tiene variable marst
-	gen civil_ci=.
-	cap confirm variable marst
-	if (_rc==0) {
-	replace civil_ci=marst 
-	replace civil_ci=. if marst==9
-}
-	
-    *********
-	*jefe_ci*
-	*********
-	gen jefe_ci=(relate==1)
-	replace jefe_ci=. if related == 9999
+	gen civil_ci = . 
+	replace civil_ci = 1 if P24 == 6 // Soltero
+	replace civil_ci = 2 if P24 == 2 // Union formal o infomral 
+	replace civil_ci = 3 if inlist(P24, 4, 5) // Divorciado o separado
+	replace civil_ci = 4 if P24 == 3 // Viudo
 	
 
-	**************
-	*nconyuges_ch*
-	**************
-	by idh_ch, sort: egen nconyuges_ch=sum(relacion_ci==2)
+	*******************************************************
+	***           VARIABLES DE DIVERSIDAD               ***
+	*******************************************************				
+	* Cesar Lins & Nathalia Maya - Septiembre 2021	
+
+		***************
+		***afroind_ci***
+		***************
+	**Pregunta: 
+
+	gen afroind_ci=. 
+	replace afroind_ci = 1 if P42A == 1
+	replace afroind_ci = 3 if P42A == 6 
 
 
-	***********
-	*nhijos_ch*
-	***********
-	by idh_ch, sort: egen nhijos_ch=sum(relacion_ci==3) 
-
-	**************
-	*notropari_ch*
-	**************
-	by idh_ch, sort: egen notropari_ch=sum(relacion_ci==4)
+		***************
+		***afroind_ch***
+		***************
+	gen afroind_jefe = afroind_ci if P02==1
+	*egen afroind_ch  = min(afroind_jefe), by(idh_ch) VER ESTO! 
 	
-	****************
-	*notronopari_ch*
-	****************
-	by idh_ch, sort: egen notronopari_ch=sum(relacion_ci==5)
+	*drop afroind_jefe 
+
+		*******************
+		***afroind_ano_c***
+		*******************
+	gen afroind_ano_c=2012
+
+
+		********************
+		*** discapacidad ***
+		********************
+	gen dis_ci = . 
+	replace dis_ci = 1 if (inrange(P09, 1, 3) | inrange(P10, 1, 3) ///
+	| inrange(P11, 1, 3) | inrange(P12, 1, 3) | inrange(P13, 1, 3))
+	replace dis_ci = 0 if (P09 == 4 | P10 == 4 | P11 == 4 | P12 == 4 ///
+	| P13 == 4)
 	
-	************
-	*nempdom_ch*
-	************
-	*NOTA: se utiliza la variable related la cual tiene más desagregación en cuanto a la relación con el jefe de hogar
-	tab related, nol
-	by idh_ch, sort: egen nempdom_ch=sum(related==5210) if relacion_ci==6	  
 	
-	*************
-	*clasehog_ch*
-	*************
-	gen byte clasehog_ch=0
-		**** unipersonal
-	replace clasehog_ch=1 if nhijos_ch==0 & nconyuges_ch==0 & notropari_ch==0 & notronopari_ch==0
-		**** nuclear (child with or without spouse but without other relatives)
-	replace clasehog_ch=2 if nhijos_ch>0 & notropari_ch==0 & notronopari_ch==0
-		**** nuclear (spouse with or without children but without other relatives)
-	replace clasehog_ch=2 if nhijos_ch==0 & nconyuges_ch>0 & notropari_ch==0 & notronopari_ch==0
-		**** ampliado
-	replace clasehog_ch=3 if notropari_ch>0 & notronopari_ch==0
-		**** compuesto (some relatives plus non relative)
-	replace clasehog_ch=4 if ((nconyuges_ch>0 | nhijos_ch>0 | notropari_ch>0) & (notronopari_ch>0))
-		**** corresidente
-	replace clasehog_ch=5 if nhijos_ch==0 & nconyuges_ch==0 & notropari_ch==0 & notronopari_ch>0
-	
-	**************
-	*nmiembros_ch*
-	**************
-	by idh_ch, sort: egen byte nmiembros_ch=sum(relacion_ci>0 & relacion_ci<9)
-
-	*************
-	*nmayor21_ch*
-	*************
-	by idh_ch, sort: egen byte nmayor21_ch=sum((relacion_ci>0 & relacion_ci<9) & (edad_ci>=21 & edad_ci<=98))
-
-	*************
-	*nmenor21_ch*
-	*************
-	by idh_ch, sort: egen byte nmenor21_ch=sum((relacion_ci>0 & relacion_ci<9) & (edad_ci<21))
-
-	*************
-	*nmayor65_ch*
-	*************
-	by idh_ch, sort: egen byte nmayor65_ch=sum((relacion_ci>0 & relacion_ci<9) & (edad_ci>=65 & edad_ci!=.))
-
-	************
-	*nmenor6_ch*
-	************
-	by idh_ch, sort: egen byte nmenor6_ch=sum((relacion_ci>0 & relacion_ci<9) & (edad_ci<6))
-
-	************
-	*nmenor1_ch*
-	************
-	by idh_ch, sort: egen byte nmenor1_ch=sum((relacion_ci>0 & relacion_ci<9) & (edad_ci<1))
-
-	************
-	*miembros_ci
-	************
-	gen miembros_ci=(relacion_ci>=1 & relacion_ci<9) 
-	tab persons
-	tab miembros_ci	
-
-**********************************
-**** VARIABLES DE LA VIVIENDA ****
-**********************************
-		
-	************
-	*aguared_ch*
-	************
-
-	gen aguared_ch=.
-	cap confirm variable watsup
-	if (_rc==0) {
-	replace aguared_ch=1 if watsup>=10 & watsup<20
-	replace aguared_ch=0 if watsup ==20
-	replace aguared_ch=. if watsup==99
-	}
-
-	********
-	*luz_ch*
-	********
-	*En la nueva encuesta no se encontro si se pregunta por instalacion electrica
-	gen luz_ch=.
-	cap confirm variable electric
-	if (_rc==0) {
-	 replace luz_ch = 0 if electric== 2
-	 replace luz_ch = 1 if electric== 1
-	 replace luz_ch=. if electric==9
-	}
-
-	*********
-	*bano_ch*
-	*********
-	gen bano_ch=.
-	gen des1_ch=.
-	cap confirm variable toilet
-	if (_rc==0) {
-	replace bano_ch= 1 if toilet==20 | toilet==21 | toilet==22 | toilet==23
-	replace bano_ch= 0 if toilet==10 | toilet==11
- 	replace bano_ch=. if toilet==99
-
-	*********
-	*des1_ch*
-	*********
-	replace des1_ch=0 if bano_ch==0
-	replace des1_ch=1 if toilet==21
-	replace des1_ch=2 if toilet==22
-	replace des1_ch=. if toilet==99
-	
-	}
-	
-	*********
-	*piso_ch*
-	*********
-	gen piso_ch=.
- 	cap confirm variable floor
-	if (_rc==0) {
-	replace piso_ch=0 if floor==100
-	replace piso_ch=1 if (floor>100 & floor<=120)
-	replace piso_ch=2 if floor>=200 & floor<999
-	replace piso_ch=. if floor==999
-	}
-	
-	*****************
-	*banomejorado_ch*
-	*****************
-	gen banomejorado_ch=.
- 	cap confirm variable sewage
-	if (_rc==0) {
-	replace banomejorado_ch=1 if sewage >= 10 & sewage <= 12
-	replace banomejorado_ch=0 if sewage == 20
-	replace piso_ch=. if sewage == 99
-	}
-
-	**********
-	*pared_ch*
-	**********
-	gen pared_ch=.
-	cap confirm variable wall
-	if (_rc==0) {
-		replace pared_ch = 0 if wall == 100
-		replace pared_ch = 1 if wall>100 & wall<500
-	    replace pared_ch= 2 if wall>=500 & wall<=600
-		replace pared_ch=. if wall==999
-	}
-
-	**********
-	*techo_ch*
-	**********
-	gen techo_ch=.
-	cap confirm variable roof
-	if (_rc==0) {
-    replace techo_ch=0  if roof == 90
-	replace techo_ch=1 if roof>=10 & roof<70
-	replace techo_ch=2 if roof>=70 & roof<=80
-	}
-	
-	**********
-	*resid_ch*
-	**********
-	gen resid_ch=.
-	cap confirm variable trash
-	if (_rc==0) {
-	replace resid_ch=0  if trash >= 10 | trash <= 14
-    replace resid_ch=1  if trash == 21 |trash == 22 | trash == 23
-	replace resid_ch=2  if trash >= 24 & trash <= 34
-	replace resid_ch=3  if trash>= 35 & trash <= 39
-	replace resid_ch=.  if trash == 99
-	}
-	
-	*********
-	*dorm_ch*
-	*********
-	gen dorm_ch=.
-	cap confirm variable bedrooms
-	if (_rc==0) {
-	replace dorm_ch=bedrooms 
-	replace dorm_ch=. if bedrooms==99 | bedrooms==98
-	}
-	
-	************
-	*cuartos_ch*
-	************
-	gen cuartos_ch=.
-	cap confirm variable rooms
-	if (_rc==0) {
-	replace cuartos_ch=rooms
-	replace cuartos_ch=. if rooms==99 | rooms==98
-	}
-
-	***********
-	*cocina_ch*
-	***********
-	gen cocina_ch=.
-	cap confirm variable kitchen
-	if (_rc==0) {
-	replace cocina_ch= 1 if kitchen>=20 & kitchen<=28
-	replace cocina_ch = 0  if kitchen >= 10 & kitchen<=13
-	replace cocina_ch=. if kitchen==99
-	}
-	
-	***********
-	*telef_ch*
-	***********
-	gen telef_ch=.
-	cap confirm variable phone
-	if (_rc==0) {
-	replace telef_ch=0 if phone == 1	
-	replace telef_ch=1 if phone == 2
-	replace telef_ch=. if phone == 9 | phone==0
-	}
-
-	***********
-	*refrig_ch*
-	***********
-	gen refrig_ch=.
-	cap confirm variable refrig
-	if (_rc==0) {
-	replace refrig_ch=0 if refrig==1
-	replace refrig_ch=1 if refrig==2
-	replace refrig_ch=. if refrig==9
-	}
-
-	*********
-	*auto_ch*
-	*********
-	gen auto_ch=.
-	cap confirm variable autos
-	if (_rc==0) {
-	replace auto_ch= 1 if autos>0 & autos<8
-	replace auto_ch= 0 if autos==0
-	replace auto_ch=. if autos==8 | autos==9
-	}
-	
-	********
-	*compu_ch*
-	********
-	gen compu_ch=.
-	cap confirm variable computer
-	if (_rc==0) {
-	    replace compu_ch=0 if computer==1
-		replace compu_ch=1 if computer==2
-		replace compu_ch=. if computer==9
-	}
-
-	*************
-	*internet_ch*
-	************* 
-	*pendiente esta variable no es lo que queremos generar
-	gen internet_ch=.
-	cap confirm variable internet
-	if (_rc==0) {
-	replace internet_ch=0 if internet == 1
-	replace internet_ch=1 if internet == 2
-	replace internet_ch=. if internet == 9 
-	}
-	
-	********
-	*cel_ch*
-	********
-	gen cel_ch=.
-	cap confirm variable cell
-	if (_rc==0) {
-	replace cel_ch=0 if cell == 1	
-	replace cel_ch=1 if cell == 2
-	replace cel_ch=. if cell == 9 | cell==0
-	}
-
-	*************
-	*viviprop_ch*
-	*************
-	*NOTA: aqui se genera una variable parecida, pues no se puede saber si es propia total o parcialmente pagada
-	gen viviprop_ch1=.
-	cap confirm variable ownership
-	if (_rc==0) {
-	replace viviprop_ch1=0 if ownership==2
-	replace viviprop_ch1=1 if ownership==1
-	*replace viviprop_ch1=3 if 
-	replace viviprop_ch1=. if ownership==9
-	}
+	gen dis_ch = . 
 	
 	
 **********************************************
@@ -668,108 +245,397 @@ local ANO "2012"
      *******************
 	 
     gen condocup_ci=.
-	cap confirm variable empstat
-	if (_rc==0){
-    replace condocup_ci=1 if empstat==1
-    replace condocup_ci=2 if empstat==2
-    replace condocup_ci=3 if empstat==3
-    replace condocup_ci=. if empstat==9 /*unkown/missing as missing*/ 
-    replace condocup_ci=. if empstat==0 /*NIU as missing*/
-	}
+	replace condocup_ci = 1 if P25 == 1 | P26 == 1 // ocupado
+	replace condocup_ci = 2 if P29 == 1 // desempleo abierto
+	replace condocup_ci = 3 if P29 == 6 // inactivos
+
 	
       ************
       ***emp_ci***
       ************
     gen emp_ci=.
-	cap confirm variable empstat
-	if (_rc==0){
-		replace emp_ci=0 if empstat==2
-		replace emp_ci=0 if empstat==3
-		replace emp_ci=1 if empstat==1
-		replace emp_ci=. if empstat==0 /*NIU as missing*/
-		replace emp_ci=. if empstat==9 /*unkown/missing as missing*/
-	}
+	replace emp_ci = 1 if condocup_ci == 1 // empleados
+	replace emp_ci = 0 if inlist(condocup_ci, 2, 3) // desempleados e inactivos
+
 	
 	
       ****************
       ***desemp_ci***
       ****************	
 	gen desemp_ci=.
-	cap confirm variable condocup_ci
-	if (_rc==0){
-		replace desemp_ci=1 if condocup_ci==2 /*1 desempleados*/
-		replace desemp_ci=0 if condocup_ci==3 | condocup_ci==1 /*0 cuando están inactivos o empleados*/
-	}
+	replace desemp_ci=1 if condocup_ci==2 /*1 desempleados*/
+	replace desemp_ci=0 if condocup_ci==3 | condocup_ci==1 /*0 cuando están inactivos o empleados*/
+
 	
       *************
       ***pea_ci***
       *************
     gen pea_ci=.
-	cap confirm variable condocup_ci
-	if (_rc==0){
-		replace pea_ci=1 if condocup_ci==1
-		replace pea_ci=1 if condocup_ci==2
-		replace pea_ci=0 if condocup_ci==3
-	}
+	replace pea_ci=1 if condocup_ci == 1 | condocup_ci == 2
+	replace pea_ci=0 if condocup_ci == 3
 	
      *************************
      ****rama de actividad****
      *************************
-	 *2010 no tiene variable indgen
-    gen rama_ci = . 
-	cap confirm variable indgen 
-	if (_rc==0) {
-    replace rama_ci = 1 if indgen==10
-    replace rama_ci = 2 if indgen==20  
-    replace rama_ci = 3 if indgen==30   
-    replace rama_ci = 4 if indgen==40    
-    replace rama_ci = 5 if indgen==50    
-    replace rama_ci = 6 if indgen==60    
-    replace rama_ci = 7 if indgen==70    
-    replace rama_ci = 8 if indgen==80    
-    replace rama_ci = 9 if indgen==90
-    replace rama_ci = 10 if indgen==100  
-    replace rama_ci = 11 if indgen==111  
-    replace rama_ci = 12 if indgen==112
-    replace rama_ci = 13 if indgen==113 
-    replace rama_ci = 14 if indgen==114 
-    replace rama_ci = 15 if indgen==120 
-	}
+
+    gen rama_ci = . //  VER: Esta la variable P33_A se usa rama de actividad a 2 digitos. el detalle no se presenta an la documentacion del censo. 
 	
      *********************
      ****categopri_ci****
      *********************
-	 *OBSERVACIONES: El censo no distingue entre actividad principal o secundaria, asigno por default principal.	
-    gen categopri_ci=.
-	cap confirm variable classwkd
-	if (_rc==0) {
-    replace categopri_ci=0 if classwkd==400 | classwkd == 150 | classwkd == 130
-    replace categopri_ci=1 if classwkd==110 | classwkd == 111
-    replace categopri_ci=2 if classwkd>=120 & classwkd<= 126 | classwkd == 141 | classwkd == 100 | classwkd == 101 | classwkd == 102 | classwkd == 199
-    replace categopri_ci=3 if classwkd>=200 & classwkd <300 | classwkd == 142
-    replace categopri_ci=4 if classwkd>=300 & classwkd <400
-	}
-	
+	 
+	gen categopri_ci=.
+	replace categopri_ci = 1 if P34 == 3 & condocup_ci == 1 // patron o empleador 
+	replace categopri_ci = 2 if P34 == 1 & condocup_ci == 1 // cuenta propia o indep 
+	replace categopri_ci = 3 if inlist(P34, 4, 5) & condocup_ci == 1 // empleado u obrero
+	replace categopri_ci = 4 if P34 == 2 & condocup_ci == 1 // empleado no remunerado
+
       *****************
       ***spublico_ci***
       *****************
     gen spublico_ci=.
-	cap confirm variable indgen
-	if (_rc==0){
-		replace spublico_ci=1 if indgen==100
-		replace spublico_ci=0 if emp_ci==1 & indgen!=100
-		replace spublico_ci=. if indgen == 998 | indgen == 999 | indgen == 000
-	}
+	replace spublico_ci = 1 if categopri_ci != . & P35 == 1 // sector publico
+	replace spublico_ci = 0 if categopri_ci != . & P35 == 6 
+	
+	
+*******************************************************
+***           VARIABLES DE INGRESO                  ***
+*******************************************************
+	
+    ***********
+	**ylm_ci**
+	***********
+	
+	gen ylm_ci=.
+	
+    ***********
+	**ynlm_ci**
+	***********
+ 
+	gen ynlm_ci=.
+
+    ***********
+	**ylm_ch**
+	***********
+   
+   gen ylm_ch=.
+   
+    ***********
+	**ynlm_ch**
+	***********
+   gen ynlm_ch=.
+
+
+
+	
+	************************
+	* VARIABLES EDUCATIVAS *
+	************************
+	
+	replace P18B_GRA = . if P18B_GRA == 9
+	
+/*	
+	  18a- ¿Cuál es el último nivel más |
+                         alto aprobado? |     Código 
+----------------------------------------+--------------
+                                Ninguno |       0
+                         Grado Especial |       1
+            Programas de alfabetización |       2
+                           Pre-primario |       3
+      EEB (1° y 2° Ciclo) / Ex Primaria |       4
+  EEB (3° Ciclo) / Ex Secundaria Básica |       5 
+      Educación Media / Ex Bachillerato |       6
+Superior No Universitario  o Universita |       7
+                                     NR |       9
+*/
+
+
+	*********
+	*aedu_ci* // 
+	*********
+	gen aedu_ci = .	
+	replace aedu_ci = 0 if inrange(P18A_NIV, 0, 3) // Ninguno, Grado especial, Programas de alfabetizacion. 
+	replace aedu_ci = P18B_GRA if inrange(P18A_NIV, 4, 5) // EEB (1° y 2° Ciclo y  EEB (3° Ciclo)
+	replace aedu_ci = P18B_GRA + 9 if P18A_NIV == 6 // Educación media.
+	replace aedu_ci = P18B_GRA + 12 if P18A_NIV == 7 // Superior (univ o no univ)
+ 
+	**********
+	*eduno_ci* // no ha completado ningún año de educación
+	**********
+	gen eduno_ci = (aedu_ci == 0) // never attended or pre-school
+	replace eduno_ci =. if aedu_ci == . // NIU & missing
+	
+	***********
+	*edupre_ci* // preescolar
+	***********
+	gen edupre_ci=(P18A_NIV==3) // pre-school
+	replace edupre_ci=. if P18A_NIV==. // NIU & missing
+	
+	**********
+	*edupi_ci* // no completó la educación primaria
+	**********
+	gen edupi_ci = (aedu_ci > 0 & aedu_ci < 6)
+	replace edupi_ci = . if aedu_ci == . 
+
+	********** 
+	*edupc_ci* // completó la educación primaria
+	**********
+	gen edupc_ci = (aedu_ci == 6) 
+	replace edupc_ci = . if aedu_ci == . // NIU & missing
+
+	**********
+	*edusi_ci* // no completó la educación secundaria
+	**********
+	gen edusi_ci = (aedu_ci > 6 & aedu_ci <= 11)
+	replace edusi_ci = . if aedu_ci == . 
+
+	**********
+	*edusc_ci* // completó la educación secundaria
+	**********
+	gen edusc_ci = (aedu_ci == 12) // 
+	replace edusc_ci = . if aedu_ci == . // NIU & missing
+	
+	***********
+	*edus1i_ci* // no completó el primer ciclo de la educación secundaria
+	***********
+	gen byte edus1i_ci = (aedu_ci > 6 & aedu_ci < 9)
+	replace edus1i_c = . if aedu_ci == .
+	
+	***********
+	*edus1c_ci* // completó el primer ciclo de la educación secundaria
+	***********
+	gen byte edus1c_ci = (aedu_ci == 9)
+	replace edus1c_ci = . if aedu_ci == . 
+
+	***********
+	*edus2i_ci* // no completó el segundo ciclo de la educación secundaria
+	***********
+	gen byte edus2i_ci = (aedu_ci > 9 & aedu_ci < 12)
+	replace edus2i_ci = . if aedu_ci == . 
+
+	***********
+	*edus2c_ci* // completó el segundo ciclo de la educación secundaria
+	***********
+	gen byte edus2c_ci = (aedu_ci == 12)
+	replace edus2c_ci = . if aedu_ci == . 
+	
+	***********
+	*asiste_ci*
+	***********
+	gen asiste_ci = . 
+	replace asiste_ci = 1 if P16 == 1
+	replace asiste_ci = 0 if P16 == 6
+
+	**********
+	*literacy*
+	**********
+	gen literacy = . 
+	replace literacy = 1 if P15 == 1 // literate
+	replace literacy = 0 if P15 == 6 // illiterate
+
 	
 **********************************
-**** VARIABLES DE INGRESO ****
-***********************************
-*NOTA: variables se generan vacias para que en el do del País y Anio se cambien dependiendo de la variable de ingreso disponible
+**** VARIABLES DE LA VIVIENDA ****
+**********************************
+		
+	************
+	*aguared_ch*
+	************
+/*
 
-   gen ylm_ci=.
- 
-   gen ynlm_ci=.
+	Nota: 
+	
+	Tomo como agua de red:
+	      
+		  ESSAP (ex corposana) 
+          SENASA o Junta de Saneamiento 
+          Red comunitaria 
+          Red  privada 
 
+*/
+
+	gen aguared_ch=.
+	replace aguared_ch = 1 if inrange(V09, 1, 4)
+	replace aguared_ch = 0 if inrange(V09, 5, 12)
+
+	********
+	*luz_ch*
+	********
+	gen luz_ch = .
+	replace luz_ch = 1 if V07 == 1
+	replace luz_ch = 0 if V07 == 6
+	
+	
+	*********
+	*bano_ch*
+	*********
+	gen bano_ch=.
+	replace bano_ch = 1 if inrange(V18, 1, 3)
+	replace bano_ch = 0 if V18 == 6
+	
+	
+	*********
+	*des1_ch*
+	*********
+	gen des1_ch = . 
+	replace des1_ch = 0 if V20 == 8 
+	replace des1_ch = 1 if V20 == 1
+	replace des1_ch = 2 if inrange(V20, 2, 6)
+	
+	
+	*********
+	*piso_ch*
+	*********
+	
+	* Se utiliza la metodologia de encustas de hogares.
+	
+	gen piso_ch = .
+	replace piso_ch = 0 if V04 == 1 // materiales no permanentes
+	replace piso_ch = 1 if inrange(V04, 2, 8) // materiales permanentes
+	replace piso_ch = 2 if V04 == 9 // otros
+	
+	*****************
+	*banomejorado_ch*
+	*****************
+	gen banomejorado_ch = .
+	replace banomejorado_ch = 1 if inrange(V20, 1, 4)
+	replace banomejorado_ch = 0 if inlist(V20, 5, 8)
+
+
+	**********
+	*pared_ch*
+	**********
+	gen pared_ch = .
+	replace pared_ch = 0 if inlist(V03, 3, 7) // no permanentes
+	replace pared_ch = 1 if inlist(V03, 1, 5) // permanentes 
+	replace pared_ch = 2 if inlist(V03, 2, 6, 9) // otros
+	
+
+	**********
+	*techo_ch*
+	**********
+	gen techo_ch = .
+	replace techo_ch = 0 if inlist(V05, 2, 3, 8) // no permanentes
+	replace techo_ch = 1 if inlist(V05, 1, 4, 5, 6, 7) // permanentes 
+	replace techo_ch = 2 if V05 == 9 // otros
+	
+	**********
+	*resid_ch*
+	**********
+	gen resid_ch = .
+	replace resid_ch = 0 if V06 == 2 // recolección pública o privada
+	replace resid_ch = 1 if inlist(V06, 1, 3) // quemados o enterrados
+	replace resid_ch = 2 if inlist(V06, 4, 5, 6, 7) // espacio abiertos
+	
+	*********
+	*dorm_ch*
+	*********
+	gen dorm_ch = .
+	replace dorm_ch = V15B if V15B != 99
+	
+	************
+	*cuartos_ch*
+	************
+	gen cuartos_ch = .
+	replace cuartos_ch = V15A if V15A != 88
+
+	***********
+	*cocina_ch*
+	***********
+	gen cocina_ch = .
+	
+	***********
+	*telef_ch*
+	***********
+	gen telef_ch = .
+	replace telef_ch = 1 if V1604 == 4 
+
+	***********
+	*refrig_ch*
+	***********
+	gen refrig_ch=.
+	replace refrig_ch = 1 if V1603 == 3 
+
+	*********
+	*auto_ch*
+	*********
+	gen auto_ch=.
+	replace auto_ch = 1 if V1611 == 11
+
+	********
+	*compu_ch*
+	********
+	gen compu_ch=.
+	replace compu_ch = 1 if V1616 == 16 
+
+	*************
+	*internet_ch*
+	************* 
+	gen internet_ch=.
+	replace internet_ch = 1 if V1617 == 17
+
+	
+	********
+	*cel_ch*
+	********
+	gen cel_ch=.
+	replace cel_ch = 1 if V1605 == 5 
+
+	*************
+	*viviprop_ch*
+	*************
+	gen vivprop_ch = .
+	replace vivprop_ch = 0 if V11 == 4 // alquilada 
+	replace vivprop_ch = 1 if V11 == 1 // propia y totalmente pagada
+	replace vivprop_ch = 2 if V11 == 2 // en proceso de pago
+	replace vivprop_ch = 3 if V11 == 6 // ocupada de hecho
+
+	
+****************************************
+***         VARIABLES DE SALUD       ***
+****************************************
+
+*****************
+*discapacidad_ci*
+*****************
+
+gen discapacidad_ci = . 
+replace discapacidad_ci = 1 if (inrange(P09, 1, 3) | inrange(P10, 1, 3) ///
+| inrange(P11, 1, 3) | inrange(P12, 1, 3) | inrange(P13, 1, 3))
+replace discapacidad_ci = 0 if (P09 == 4 | P10 == 4 | P11 == 4 | P12 == 4 ///
+| P13 == 4)
+
+************
+*ceguera_ci*
+************
+
+gen ceguera_ci = . 
+replace ceguera_ci = 1 if inrange(P09, 1, 3) 
+replace ceguera_ci = 0 if P09 == 4
+
+************
+*sordera_ci*
+************ 
+
+gen sordera_ci = . 
+replace sordera_ci = 1 if inrange(P10, 1, 3)
+replace sordera_ci = 0 if P10 == 4
+
+**********
+*mudez_ci*
+**********
+
+gen mudez_ci = . 
+
+**************
+*dismental_ci*
+**************
+
+gen dismental_ci = . 
+replace dismental_ci = 1 if inrange(P13, 1, 3)
+replace dismental_ci = 0 if P13 == 4
+
+	
 *******************************************************
 ***           VARIABLES DE MIGRACIÓN              ***
 *******************************************************
@@ -779,82 +645,30 @@ local ANO "2012"
     *******************
 	
 	gen migrante_ci =.
-	cap confirm variable nativity 
-	if(_rc==0){
-	replace migrante_ci = 1 if nativity == 2
-	replace migrante_ci = 0 if nativity == 1 
-	}
+	replace migrante_ci = 1 if P14A == 3
+	replace migrante_ci = 0 if inlist(P14A, 1, 2)
    
 	*******************
     **migantiguo5_ci***
     *******************
 	gen migantiguo5_ci =.
-	cap confirm variable migrate5
-	if(_rc==0){
-	replace migantiguo5_ci = 1 if inlist(migrate5, 10, 11, 12, 20) & migrante_ci == 1
-	replace migantiguo5_ci = 0 if (migrate5 == 30 & migrante_ci == 1) | migrante_ci == 0
-	}
-	cap confirm variable migyrs1
-	if(_rc==0){
-	replace migantiguo5_ci = 1 if migyrs1 >= 5 & migrante_ci == 1
-	replace migantiguo5_ci = 0 if (migyrs1 < 5 & migrante_ci == 1) | migrante_ci == 0
-	}
 	
 	**********************
 	*** migrantelac_ci ***
 	**********************
 
-	gen migrantelac_ci = .
-	cap confirm variable bplcountry
-	if(_rc==0){
-	replace migrantelac_ci= 1 if inlist(bplcountry, 21050, 21080, 21100, 21130, 21140, 21180, 21250, 22010, 22020, 22030, 22040, 22050, 22060, 22070, 22080, 23010, 23020, 23030, 23040, 23050, 23060, 23090, 23100, 23110, 23120, 23130, 23140) & migrante_ci == 1
-	replace migrantelac_ci = 0 if migrantelac_ci == . & migrante_ci == 1 | migrante_ci == 0
-	}
+	gen migrantelac_ci = 0
+	replace migrantelac_ci = 1 if inlist(P14CPAIS, 32, 68, 76, 152, 170, 188, 192, 214, 218, 222, 484, 604, 858, 862)
+	replace migrantelac_ci = . if P14CPAIS == 999 
 	
-	*******************
-    **migrantiguo5_ci**
-    *******************
-	gen migrantiguo5_ci =.
-	cap confirm variable migrate5
-	if(_rc==0){
-	replace migrantiguo5_ci = 1 if inlist(migrate5, 10, 11, 12, 20) & migrante_ci == 1
-	replace migrantiguo5_ci = 0 if (migrate5 == 30 & migrante_ci == 1)
-	}
-	cap confirm variable migyrs1
-	if(_rc==0){
-	replace migrantiguo5_ci = 1 if migyrs1 >= 5 & migrante_ci == 1
-	replace migrantiguo5_ci = 0 if (migyrs1 < 5 & migrante_ci == 1)
-	}
-	
+
 	**********************
 	****** miglac_ci *****
 	**********************
 
 	gen miglac_ci = .
-	cap confirm variable bplcountry
-	if(_rc==0){
-	replace miglac_ci= 1 if inlist(bplcountry, 21050, 21080, 21100, 21130, 21140, 21180, 21250, 22010, 22020, 22030, 22040, 22050, 22060, 22070, 22080, 23010, 23020, 23030, 23040, 23050, 23060, 23090, 23100, 23110, 23120, 23130, 23140) & migrante_ci == 1
-	replace miglac_ci = 0 if migrantelac_ci != 1 & migrante_ci == 1 
-	}
-   
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	replace miglac_ci = 1 if inlist(P14CPAIS, 32, 68, 76, 152, 170, 188, 192, 214, 218, 222, 484, 604, 858, 862)
+	replace miglac_ci = 0 if !inlist(P14CPAIS, 32, 68, 76, 152, 170, 188, 192, 214, 218, 222, 484, 604, 858, 862, 999)
 
 
 order region_BID_c pais_c estrato_ci zona_c relacion_ci civil_ci idh_ch factor_ch idp_ci factor_ci edad_ci sexo_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch miembros_ci condocup_ci emp_ci desemp_ci pea_ci rama_ci spublico_ci migrante_ci migantiguo5_ci aguared_ch luz_ch bano_ch des1_ch piso_ch pared_ch techo_ch dorm_ch cuartos_ch cocina_ch refrig_ch auto_ch internet_ch cel_ch viviprop_ch viviprop_ch1 region_c categopri_ci discapacidad_ci ceguera_ci sordera_ci mudez_ci dismental_ci afroind_ci afroind_ch afroind_ano_c dis_ci dis_ch aedu_ci
