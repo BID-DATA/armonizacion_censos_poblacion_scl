@@ -29,6 +29,9 @@ local ANO "2012"
 local log_file = "$ruta//clean//`PAIS'//`PAIS'_`ANO'_censusBID.log"
 local base_in  = "$ruta//raw//`PAIS'//`PAIS'_`ANO'_BID_raw.dta"
 local base_out = "$ruta//clean//`PAIS'//`PAIS'_`ANO'_censusBID.dta"
+
+capture log close
+log using "`log_file'", replace
                                                     
 use "`base_in'", clear
 
@@ -83,7 +86,6 @@ local ANO "2012"
 	******************
     *idp_ci (idpersonas)*
     ******************
-	
 	gen idp_ci = .
 	
 	****************************************
@@ -201,27 +203,27 @@ local ANO "2012"
 	**************
 	*nconyuges_ch*
 	**************
-	by idh_ch, sort: egen nconyuges_ch=sum(relacion_ci==2)
+	gen nconyuges_ch=.
 	
 	***********
 	*nhijos_ch*
 	***********
-	by idh_ch, sort: egen nhijos_ch=sum(relacion_ci==3) 
+	gen nhijos_ch=.
 	
 	**************
 	*notropari_ch*
 	**************
-	by idh_ch, sort: egen notropari_ch=sum(relacion_ci==4)
+	gen notropari_ch=.
 	
 	****************
 	*notronopari_ch*
 	****************
-	by idh_ch, sort: egen notronopari_ch=sum(relacion_ci==5)
+	gen notronopari_ch=.
 	
 	************
 	*nempdom_ch*
 	************
-	by idh_ch, sort: egen nempdom_ch=sum(relacion_ci==6)
+	gen nempdom_ch=.
 	
 	*************
 	*clasehog_ch*
@@ -243,7 +245,7 @@ local ANO "2012"
 	******************
 	***nmiembros_ch***
 	******************
-		bys idh_ch: egen nmiembros_ch = sum(relacion_ci >= 1 & relacion_ci <= 4)
+		gen nmiembros_ch = .
 
 	*****************
 	***nmayor21_ch***
@@ -294,7 +296,7 @@ local ANO "2012"
 		***afroind_ch***
 		***************
 	gen afroind_jefe= afroind_ci if relacion_ci==1
-	egen afroind_ch  = min(afroind_jefe), by(idh_ch) 
+	afroind_ch  = . 
 	label var afroind_ch "Raza/etnia del hogar en base a raza/etnia del jefe de hogar"
 	drop afroind_jefe
 
@@ -738,6 +740,11 @@ replace dismental_ci = 0 if P13 == 4
     *******************
 	gen migantiguo5_ci =.
 	
+	*******************
+    **migrantiguo5_ci**
+    *******************
+	gen migrantiguo5_ci =.
+	
 	**********************
 	*** migrantelac_ci ***
 	**********************
@@ -756,7 +763,7 @@ replace dismental_ci = 0 if P13 == 4
 	replace miglac_ci = 0 if !inlist(P14CPAIS, 32, 68, 76, 152, 170, 188, 192, 214, 218, 222, 484, 604, 858, 862, 999)
 
 
-order region_BID_c pais_c estrato_ci zona_c relacion_ci civil_ci idh_ch factor_ch idp_ci factor_ci edad_ci sexo_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch miembros_ci condocup_ci emp_ci desemp_ci pea_ci rama_ci spublico_ci migrante_ci migantiguo5_ci aguared_ch luz_ch bano_ch des1_ch piso_ch pared_ch techo_ch dorm_ch cuartos_ch cocina_ch refrig_ch auto_ch internet_ch cel_ch viviprop_ch viviprop_ch1 region_c categopri_ci discapacidad_ci ceguera_ci sordera_ci mudez_ci dismental_ci afroind_ci afroind_ch afroind_ano_c dis_ci dis_ch aedu_ci
+order region_BID_c pais_c estrato_ci zona_c relacion_ci civil_ci idh_ch factor_ch idp_ci factor_ci edad_ci sexo_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch miembros_ci condocup_ci emp_ci desemp_ci pea_ci rama_ci spublico_ci migrante_ci migantiguo5_ci migrantiguo5_ci aguared_ch luz_ch bano_ch des1_ch piso_ch pared_ch techo_ch dorm_ch cuartos_ch cocina_ch refrig_ch auto_ch internet_ch cel_ch viviprop_ch viviprop_ch1 region_c categopri_ci discapacidad_ci ceguera_ci sordera_ci mudez_ci dismental_ci afroind_ci afroind_ch afroind_ano_c dis_ci dis_ch aedu_ci
 
 *****************************
 ** Include all labels of   **
