@@ -65,7 +65,11 @@ local ANO "2012"
 	*\eliminar _00000*\
 	capture drop __00000
 	
-
+	*********
+	*pais_c*
+	*********
+    gen pais_c="`PAIS'"
+	
 	*********
 	*anio_c*
 	*********
