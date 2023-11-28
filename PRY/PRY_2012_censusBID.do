@@ -204,6 +204,11 @@ local ANO "2012"
 	**************
 	by idh_ch, sort: egen nconyuges_ch=sum(relacion_ci==2)
 	
+	***********
+	*nhijos_ch*
+	***********
+	by idh_ch, sort: egen nhijos_ch=sum(relacion_ci==3) 
+	
 	*******************************************************
 	***           VARIABLES DE DIVERSIDAD               ***
 	*******************************************************				
