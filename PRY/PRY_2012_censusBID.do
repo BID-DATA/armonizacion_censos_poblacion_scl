@@ -209,6 +209,21 @@ local ANO "2012"
 	***********
 	by idh_ch, sort: egen nhijos_ch=sum(relacion_ci==3) 
 	
+	**************
+	*notropari_ch*
+	**************
+	by idh_ch, sort: egen notropari_ch=sum(relacion_ci==4)
+	
+	****************
+	*notronopari_ch*
+	****************
+	by idh_ch, sort: egen notronopari_ch=sum(relacion_ci==5)
+	
+	************
+	*nempdom_ch*
+	************
+	by idh_ch, sort: egen nempdom_ch=sum(relacion_ci==6)
+	
 	*******************************************************
 	***           VARIABLES DE DIVERSIDAD               ***
 	*******************************************************				
