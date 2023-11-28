@@ -193,7 +193,12 @@ local ANO "2012"
 	replace civil_ci = 3 if inlist(P24, 4, 5) // Divorciado o separado
 	replace civil_ci = 4 if P24 == 3 // Viudo
 	
-
+    *********
+	*jefe_ci*
+	*********
+	gen jefe_ci=(relacion_ci==1)
+	replace jefe_ci=. if relacion_ci == .
+	
 	*******************************************************
 	***           VARIABLES DE DIVERSIDAD               ***
 	*******************************************************				
