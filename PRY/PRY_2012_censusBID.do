@@ -199,6 +199,11 @@ local ANO "2012"
 	gen jefe_ci=(relacion_ci==1)
 	replace jefe_ci=. if relacion_ci == .
 	
+	**************
+	*nconyuges_ch*
+	**************
+	by idh_ch, sort: egen nconyuges_ch=sum(relacion_ci==2)
+	
 	*******************************************************
 	***           VARIABLES DE DIVERSIDAD               ***
 	*******************************************************				
