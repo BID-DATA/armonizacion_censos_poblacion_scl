@@ -293,10 +293,10 @@ local ANO "2012"
 		***************
 		***afroind_ch***
 		***************
-	gen afroind_jefe = afroind_ci if P02==1
-	*egen afroind_ch  = min(afroind_jefe), by(idh_ch) VER ESTO! 
-	
-	*drop afroind_jefe 
+	gen afroind_jefe= afroind_ci if relacion_ci==1
+	egen afroind_ch  = min(afroind_jefe), by(idh_ch) 
+	label var afroind_ch "Raza/etnia del hogar en base a raza/etnia del jefe de hogar"
+	drop afroind_jefe
 
 		*******************
 		***afroind_ano_c***
@@ -665,13 +665,17 @@ Superior No Universitario  o Universita |       7
 	*************
 	*viviprop_ch*
 	*************
-	gen vivprop_ch = .
-	replace vivprop_ch = 0 if V11 == 4 // alquilada 
-	replace vivprop_ch = 1 if V11 == 1 // propia y totalmente pagada
-	replace vivprop_ch = 2 if V11 == 2 // en proceso de pago
-	replace vivprop_ch = 3 if V11 == 6 // ocupada de hecho
+	gen viviprop_ch = .
+	replace viviprop_ch = 0 if V11 == 4 // alquilada 
+	replace viviprop_ch = 1 if V11 == 1 // propia y totalmente pagada
+	replace viviprop_ch = 2 if V11 == 2 // en proceso de pago
+	replace viviprop_ch = 3 if V11 == 6 // ocupada de hecho
 
-	
+	*************
+	*viviprop_ch*
+	*************
+	gen viviprop_ch1=.
+
 ****************************************
 ***         VARIABLES DE SALUD       ***
 ****************************************
