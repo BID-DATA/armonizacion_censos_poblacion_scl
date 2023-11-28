@@ -224,6 +224,24 @@ local ANO "2012"
 	************
 	by idh_ch, sort: egen nempdom_ch=sum(relacion_ci==6)
 	
+	*************
+	*clasehog_ch*
+	*************
+	gen byte clasehog_ch=0
+		**** unipersonal
+	replace clasehog_ch=1 if nhijos_ch==0 & nconyuges_ch==0 & notropari_ch==0 & notronopari_ch==0
+		**** nuclear (child with or without spouse but without other relatives)
+	replace clasehog_ch=2 if nhijos_ch>0 & notropari_ch==0 & notronopari_ch==0
+		**** nuclear (spouse with or without children but without other relatives)
+	replace clasehog_ch=2 if nhijos_ch==0 & nconyuges_ch>0 & notropari_ch==0 & notronopari_ch==0
+		**** ampliado
+	replace clasehog_ch=3 if notropari_ch>0 & notronopari_ch==0
+		**** compuesto (some relatives plus non relative)
+	replace clasehog_ch=4 if ((nconyuges_ch>0 | nhijos_ch>0 | notropari_ch>0) & (notronopari_ch>0))
+		**** corresidente
+	replace clasehog_ch=5 if nhijos_ch==0 & nconyuges_ch==0 & notropari_ch==0 & notronopari_ch>0
+	
+	
 	*******************************************************
 	***           VARIABLES DE DIVERSIDAD               ***
 	*******************************************************				
