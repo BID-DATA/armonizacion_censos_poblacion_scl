@@ -179,10 +179,10 @@ local ANO "2012"
 	gen relacion_ci = . 
 	replace relacion_ci = 1 if P02 == 1 // Jefe
     replace relacion_ci = 2 if P02 == 2 // Cónyugue/esposo/a/compañero/a
-    replace relacion_ci = 3 if P03 == 3 // Hijo/a
-    replace relacion_ci = 4 if inrange(P03, 4, 10) //  Otros parientes
-    replace relacion_ci = 5 if P03 == 12 // Otros no parientes 
-    replace relacion_ci = 6 if P03 == 11 // Servicio doméstico 
+    replace relacion_ci = 3 if P02 == 3 // Hijo/a
+    replace relacion_ci = 4 if inrange(P02, 4, 10) //  Otros parientes
+    replace relacion_ci = 5 if P02 == 12 // Otros no parientes 
+    replace relacion_ci = 6 if P02 == 11 // Servicio doméstico 
 	
 	**************
 	*Estado Civil*
