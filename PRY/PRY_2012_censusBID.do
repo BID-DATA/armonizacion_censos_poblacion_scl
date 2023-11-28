@@ -240,6 +240,40 @@ local ANO "2012"
 		**** corresidente
 	replace clasehog_ch=5 if nhijos_ch==0 & nconyuges_ch==0 & notropari_ch==0 & notronopari_ch>0
 	
+	******************
+	***nmiembros_ch***
+	******************
+		bys idh_ch: egen nmiembros_ch = sum(relacion_ci >= 1 & relacion_ci <= 4)
+
+	*****************
+	***nmayor21_ch***
+	*****************
+		gen nmayor21_ch= .
+
+	*****************
+	***nmenor21_ch***
+	*****************
+		gen nmenor21_ch= .
+
+	*****************
+	***nmayor65_ch***
+	*****************
+		gen nmayor65_ch= .
+
+	****************
+	***nmenor6_ch***
+	****************
+		gen nmenor6_ch= .
+
+	****************
+	***nmenor1_ch***
+	****************
+		gen nmenor1_ch= .
+
+	****************
+	***miembros_ci***
+	****************
+		gen miembros_ci = (relacion_ci <= 4)
 	
 	*******************************************************
 	***           VARIABLES DE DIVERSIDAD               ***
