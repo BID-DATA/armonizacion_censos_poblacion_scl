@@ -47,8 +47,6 @@ local PAIS PRY
 local ANO "2012"
 
 
-
-
 	****************
 	* region_BID_c *
 	****************
@@ -183,7 +181,8 @@ local ANO "2012"
     replace relacion_ci = 2 if P02 == 2 // Cónyugue/esposo/a/compañero/a
     replace relacion_ci = 3 if inlist(P02, 3, 4) // Hijo/a
     replace relacion_ci = 4 if inlist(P02, 5, 7, 8, 6, 9) //  Otros parientes
-    replace relacion_ci = 5 if inlist(P02, 10, 11, 12) // Otros no parientes 
+    replace relacion_ci = 5 if P02 ==10  // Otros no parientes
+	replace relacion_ci = 6 if inlist(P02, 11, 12) // Domestic employee or family member of domestic employee 
 	
 	**************
 	*Estado Civil*
