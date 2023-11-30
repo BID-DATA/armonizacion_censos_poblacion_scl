@@ -295,7 +295,7 @@ local ANO "2012"
 		***afroind_ch***
 		***************
 	gen afroind_jefe= afroind_ci if relacion_ci==1
-	afroind_ch  = . 
+	gen afroind_ch  = . 
 	label var afroind_ch "Raza/etnia del hogar en base a raza/etnia del jefe de hogar"
 	drop afroind_jefe
 
