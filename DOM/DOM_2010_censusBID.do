@@ -68,7 +68,37 @@ include "../Base/base.do"
       label value region_c region_c
       label var region_c "division politico-administrativa, provincia"
 
-	
+
+	****************
+    *** ine01 ***
+    ****************
+   gen ine01 =geo1_do /*  
+   replace region_c=1 if geo1_do==214001			/*Distrito Nacional, Santo Domingo*/
+   replace region_c=2 if geo1_do==214002			/*Azua*/
+   replace region_c=3 if geo1_do==214003			/*Baoruco, Barahona, Independencia*/
+   replace region_c=4 if geo1_do==214005			/*Dajabón*/
+   replace region_c=5 if geo1_do==214006		    /*Duarte*/
+   replace region_c=6 if geo1_do==214007			/*Elías Piña*/
+   replace region_c=7 if geo1_do==214008			/*El Seibo, Hato Mayor*/
+   replace region_c=8 if geo1_do==214009			/*Espaillat*/
+   replace region_c=9 if geo1_do==214011			/*La Altagracia, La Romana*/
+   replace region_c=10 if geo1_do==214013			/*Monseñor Nouel, La Vega*/
+   replace region_c=11 if geo1_do==214014			/*María Trinidad Sánchez*/
+   replace region_c=12 if geo1_do==214015			/*Monte Cristi*/
+   replace region_c=13 if geo1_do==214016			/*Pedernales*/
+   replace region_c=14 if geo1_do==214017			/*San José de Ocoa, Peravia*/
+   replace region_c=15 if geo1_do==214018			/*Puerto Plata, Santiago*/
+   replace region_c=16 if geo1_do==214019			/*Hermanas Mirabal*/
+   replace region_c=17 if geo1_do==214020			/*Samaná*/
+   replace region_c=18 if geo1_do==214021			/*San Cristóbal, Monte Plata*/
+   replace region_c=19 if geo1_do==214022			/*San Juan*/
+   replace region_c=20 if geo1_do==214023			/*San Pedro De Macorís*/
+   replace region_c=21 if geo1_do==214024			/*Sánchez Ramírez*/
+   replace region_c=22 if geo1_do==214026			/*Santiago Rodríguez*/
+   replace region_c=23 if geo1_do==214027			/*Valverde*/
+   replace region_c=24 if geo1_do==214088			/*Lake Enriquilla*/
+   */   
+
 	************************
 	* VARIABLES EDUCATIVAS *
 	************************
@@ -231,7 +261,9 @@ replace dis_ch=1 if dis_ch>=1 & dis_ch!=.
 *****************************
 include "../Base/labels.do"
 
-order region_BID_c pais_c estrato_ci zona_c relacion_ci civil_ci idh_ch factor_ch idp_ci factor_ci edad_ci sexo_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch miembros_ci condocup_ci emp_ci desemp_ci pea_ci rama_ci spublico_ci migrante_ci migantiguo5_ci aguared_ch luz_ch bano_ch des1_ch piso_ch pared_ch techo_ch dorm_ch cuartos_ch cocina_ch refrig_ch auto_ch internet_ch cel_ch viviprop_ch viviprop_ch1 region_c categopri_ci discapacidad_ci ceguera_ci sordera_ci mudez_ci dismental_ci afroind_ci afroind_ch afroind_ano_c dis_ci dis_ch aedu_ci
+order region_BID_c pais_c estrato_ci zona_c relacion_ci civil_ci idh_ch factor_ch idp_ci factor_ci edad_ci sexo_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch miembros_ci condocup_ci emp_ci desemp_ci pea_ci rama_ci spublico_ci migrante_ci migantiguo5_ci aguared_ch luz_ch bano_ch des1_ch piso_ch pared_ch techo_ch dorm_ch cuartos_ch cocina_ch refrig_ch auto_ch internet_ch cel_ch viviprop_ch viviprop_ch1 region_c categopri_ci afroind_ci afroind_ch afroind_ano_c dis_ci dis_ch aedu_ci
+
+
 
 compress
 
