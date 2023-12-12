@@ -227,7 +227,7 @@ gen factor_ch=1
 	***************
 	gen afroind_ci=. 
 	replace afroind_ci=2 if p10==1
-	replace afroind_ci=3 if inrange(p10,2,7)
+	replace afroind_ci=3 if inrange(p10,2,9)
 
 	***************
 	***afroind_ch***
@@ -300,6 +300,17 @@ gen factor_ch=1
     gen rama_ci = .
 
 /*
+Se armonizo los grandes grupos de industrias
+
+CIIU 3										 	CIIU 4
+A Agricultura, ganadería, caza y silvicultura	A. Agricultura, ganadería, silvicultura y pesca
+B Pesca
+C Explotación de minas y canteras				B. Explotación de minas y canteras
+D Industrias manufactureras						C. Industrias manufactureras
+E Suministro de electricidad, gas y agua		D. Suministro de electricidad, gas, vapor y aire acondicionado
+												E. Suministro de agua; evacuación de aguas residuales, gestión de desechos y descontaminación
+F Construcción									F. Construcción
+
 
 1	Agricultura, pesca y forestal - Agriculture, hunting, forestry and fishing
 2	Minería y extracción - Exploitation of mines and quarries
@@ -316,7 +327,9 @@ gen factor_ch=1
 13	Salud y trabajo social - Social, community and personal services
 14	Otros servicios - Other services
 15	Servicio doméstico - Domestic work
-
+*/
+	** REVISAR **
+/*
 	replace rama_ci= 1 if p38_industrycode>=110 & p38_industrycode<=490
 	replace rama_ci = 2 if p38_industrycode>=510 & p38_industrycode<=990
 	replace rama_ci = 3 if p38_industrycode>=1010 & p38_industrycode <=3390
@@ -332,6 +345,7 @@ gen factor_ch=1
 	replace rama_ci = 13 if p38_industrycode>=8600 & p38_industrycode<=9399
 	replace rama_ci = 14 if (p38_industrycode>=9400 & p38_industrycode<=9699) | p38_industrycode>=9900
 	replace rama_ci = 15 if p38_industrycode>=9700 & p38_industrycode<=9899
+*/
 	
 
 	label var rama_ci "Economic Sector"
@@ -354,27 +368,137 @@ gen factor_ch=1
 
 	label val rama_ci rama_ci
 
-*/
+
 		
 	*********************
     ****categopri_ci****
     *********************
-	*OBSERVACIONES: El censo no distingue entre actividad principal o secundaria, asigno por default principal.
+	*
+	/*
+OBSERVACIONES: 
+- El censo no distingue entre actividad principal o secundaria, asigno por default principal.
+- No se tomo en cuenta por las categorias, la opcion "Patron o empleador"
+- Para la categoria "Cuenta propia o independiente", se tomo en cuenta: 
+	*With Paid Help (6)
+	*With Unpaid Help (7)
+- Para la categoria "Empleado o Asalariado", se tomo en cuenta: 
+	*Government (1)
+	*Private Enterprise (2)
+	*Private Household (3)
+	*Other (4)
+- Para la categoria "Trabajador no remunerado", se tomo en cuenta: 
+	*Unpaid Worker (5)
+- Tener en cuenta que existe la opcion "Did not work" (8) que no se tomo en cuenta (y a veces no se condice con la variable p34)
+	*/
+	
 	gen categopri_ci=.
-	replace categopri_ci=1 if c5_p21==1
-	replace categopri_ci=2 if c5_p21==2
-	replace categopri_ci=3 if c5_p21==3 |c5_p21==4 |c5_p21==5 | c5_p21==6
-	replace categopri_ci=4 if emp_ci==1 & c5_p16==2
+	replace categopri_ci=0 if p35==9 | p35==99
+	replace categopri_ci=2 if p35==6 | p35==7
+	replace categopri_ci=3 if p35<=4
+	replace categopri_ci=4 if emp_ci==1 & p35==5
+	replace categopri_ci=. if emp_ci==0 | emp_ci==.
 	 
 	 
 	*****************
     ***spublico_ci***
     *****************
-    gen spublico_ci=.
-	replace spublico_ci=1 if emp_ci==1 & rama_ci ==10
-	replace spublico_ci=0 if emp_ci==1 & rama_ci ~=10
+    gen spublico_ci=(p35==1) if emp_ci==1
+
+
+**********************************
+**** VARIABLES DE INGRESO ****
+***********************************
+	*Ingreso donde el periodo de pago es "Other", se considerara como missing
+   gen ylm_ci=p40b if p40a==3
+	replace ylm_ci=p40b*2 if p40a==2
+	replace ylm_ci=p40b*4 if p40a==1
+	replace ylm_ci=. if emp_ci!=1 | p40b==900999
+	replace 
+ 
+   gen ynlm_ci=p40c
+   
+   bysort idh_ch : egen ylm_ch = total(ylm_ci)
+   
+   bysort idh_ch : egen ynlm_ch= total(ynlm_ci)
+  
+
+***************************************
+************** Education **************
+***************************************
+
+	*************
+	***aedu_ci***
+	*************
+	gen aedu_ci = .
+
+	**************
+	***eduno_ci***
+	**************
+	gen eduno_ci=(p22==8) if edad_ci>=3 // never attended or pre-school
+	replace eduno_ci=. if  p22==9 | p22==. // NIU & missing
+
+	**************
+	***edupre_ci**
+	**************
+	gen edupre_ci=(p22==1) if edad_ci>=3 //
+	replace edupre_ci=. if  p22==9 | p22==. // NIU & missing
+
+	**************
+	***edupi_ci***
+	**************
+	gen edupi_ci=.
+
+	**************
+	***edupc_ci***
+	**************
+	gen edupc_ci=(p22==2) if edad_ci>=3 //
+	replace eduno_ci=. if  p22==9 | p22==. // NIU & missing
+
+	**************
+	***edusi_ci***
+	**************
+	gen edusi_ci=.
 	
-/**********************************
+	**************
+	***edusc_ci***
+	**************
+	gen edusc_ci=(p22==3) if edad_ci>=3 //
+	replace eduno_ci=. if  p22==9 | p22==. // NIU & missing
+
+	***************
+	***edus1i_ci***
+	***************
+	gen byte edus1i_ci=.
+
+	***************
+	***edus1c_ci***
+	***************
+	gen byte edus1c_ci=.
+
+	***************
+	***edus2i_ci***
+	***************
+	gen byte edus2i_ci=.
+
+	***************
+	***edus2c_ci***
+	***************
+	gen byte edus2c_ci=.
+
+	***************
+	***asiste_ci***
+	***************
+	gen asiste_ci=(p20a==1)
+		replace asiste_ci=. if p20a==9
+	*label variable asiste_ci "Asiste actualmente a la escuela"
+
+	**************
+	***literacy***
+	**************
+	gen literacy=. 
+
+
+**********************************
 **** VARIABLES DE LA VIVIENDA ****
 **********************************
 		
@@ -382,9 +506,7 @@ gen factor_ch=1
 	*aguared_ch*
 	************
 	* se crea conforme las tablas de armonización IPUMS
-	gen aguared_ch=.
-	replace aguared_ch=1 if c2_p6 == 1 | c2_p6 == 2 | c2_p6 == 3
-	replace aguared_ch=0 if c2_p6>3 & c2_p6<9
+	gen aguared_ch=(h18==1) if h18!=9
 	
 	********
 	*luz_ch*
@@ -512,18 +634,6 @@ gen factor_ch=1
 	
 	
 
-**********************************
-**** VARIABLES DE INGRESO ****
-***********************************
-*Peru no tiene variables de ingreso
-
-   gen ylm_ci=.
- 
-   gen ynlm_ci=.
-   
-   gen ylm_ch =.
-   
-   gen ynlm_ch=.
    
    
 *******************************************************
@@ -588,111 +698,6 @@ label define region_c ///
 23"Tacna"	          ///
 24"Tumbes"	          ///
 25"Ucayali"	
-
-
-***************************************
-************** Education **************
-***************************************
-
-*************
-***aedu_ci***
-*************
-gen aedu_ci = .
-replace aedu_ci = 0 if c5_p13_niv == 1 | c5_p13_niv ==2
-replace aedu_ci = 1 if (c5_p13_niv == 3 & c5_p13_gra ==1) | (c5_p13_niv == 3 & c5_p13_anio_pri ==1)
-replace aedu_ci = 2 if (c5_p13_niv == 3 & c5_p13_gra ==2) | (c5_p13_niv == 3 & c5_p13_anio_pri ==2)
-replace aedu_ci = 3 if (c5_p13_niv == 3 & c5_p13_gra ==3) | (c5_p13_niv == 3 & c5_p13_anio_pri ==3)
-replace aedu_ci = 4 if (c5_p13_niv == 3 & c5_p13_gra ==4) | (c5_p13_niv == 3 & c5_p13_anio_pri ==4)
-replace aedu_ci = 5 if (c5_p13_niv == 3 & c5_p13_gra ==5) | (c5_p13_niv == 3 & c5_p13_anio_pri ==5)
-replace aedu_ci = 6 if (c5_p13_niv == 3 & c5_p13_gra ==6) | (c5_p13_niv == 3 & c5_p13_anio_pri ==6)
-replace aedu_ci = 7 if (c5_p13_niv == 4 & c5_p13_gra ==1) | (c5_p13_niv == 4 & c5_p13_anio_sec ==1)
-replace aedu_ci = 8 if (c5_p13_niv == 4 & c5_p13_gra ==2) | (c5_p13_niv == 4 & c5_p13_anio_sec ==2)
-replace aedu_ci = 9 if (c5_p13_niv == 4 & c5_p13_gra ==3) | (c5_p13_niv == 4 & c5_p13_anio_sec ==3)
-replace aedu_ci = 10 if (c5_p13_niv == 4 & c5_p13_gra ==4) | (c5_p13_niv == 4 & c5_p13_anio_sec ==4)
-replace aedu_ci = 11 if (c5_p13_niv == 4 & c5_p13_gra ==5) | (c5_p13_niv == 4 & c5_p13_anio_sec ==5)
-replace aedu_ci = 12 if (c5_p13_niv == 4 & c5_p13_gra ==6) | (c5_p13_niv == 4 & c5_p13_anio_sec ==6)
-replace aedu_ci = 13 if c5_p13_niv ==7 | c5_p13_niv== 8 | c5_p13_niv == 9 | c5_p13_niv == 10 
-
-
-**************
-***eduno_ci***
-**************
-gen eduno_ci=(aedu_ci==0) // never attended or pre-school
-replace eduno_ci=. if aedu_ci==. // NIU & missing
-
-**************
-***edupi_ci***
-**************
-gen edupi_ci=(aedu_ci>0 & aedu_ci<6) //
-replace edupi_ci=. if aedu_ci==. // NIU & missing
-
-
-**************
-***edupc_ci***
-**************
-gen edupc_ci=(aedu_ci==6) 
-replace edupc_ci=. if aedu_ci==. // NIU & missing
-
-**************
-***edusi_ci***
-**************
-gen edusi_ci=(aedu_ci>=7 & aedu_ci<11) // 7 a 10 anos de educación
-replace edusi_ci=. if aedu_ci==. // NIU & missing
-
-**************
-***edusc_ci***
-**************
-gen edusc_ci=(aedu_ci>=11) // 11 anos de educación
-replace edusc_ci=. if aedu_ci==. // NIU & missing
-
-***************
-***edus1i_ci***
-***************
-gen byte edus1i_ci=(aedu_ci>6 & aedu_ci<9)
-replace edus1i_ci=. if aedu_ci==. // missing a los NIU & missing
-
-***************
-***edus1c_ci***
-***************
-gen byte edus1c_ci=(aedu_ci==9)
-replace edus1c_ci=. if aedu_ci==. // missing a los NIU & missing
-
-***************
-***edus2i_ci***
-***************
-gen byte edus2i_ci=(aedu_ci>9 & aedu_ci<11)
-replace edus2i_ci=. if aedu_ci==. // missing a los NIU & missing
-
-***************
-***edus2c_ci***
-***************
-gen byte edus2c_ci=(aedu_ci>=11)
-replace edus2c_ci=. if aedu_ci==. // missing a los NIU & missing
-
-***************
-***edupre_ci***
-***************
-gen byte edupre_ci=(c5_p13_niv==2)
-replace edupre_ci=. if aedu_ci==.
-*label variable edupre_ci "Educacion preescolar"
-
-***************
-***asiste_ci***
-***************
-gen asiste_ci=.
-replace asiste_ci=1 if c5_p14==1
-replace asiste_ci=0 if c5_p14==2
-*label variable asiste_ci "Asiste actualmente a la escuela"
-
-**************
-***literacy***
-**************
-gen literacy=. 
-replace literacy=1 if c5_p12 == 1
-replace literacy=0 if c5_p12 == 2
-
-
-
 
 
 *****************************
