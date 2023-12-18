@@ -14,12 +14,12 @@ set more off
 
 /***************************************************************************
                  BASES DE DATOS DE CENSOS POBLACIONALES
-País: Guatemala
-Año: 2018
-Autores: Eric Torres
-Última versión: Junio, 2022
+País: Barbados
+Año: 2010
+Autores:
+Última versión: Diciembre, 2023
 
-							SCL/LMK - IADB
+							SCL/GDI - IADB
 ****************************************************************************/
 
 local PAIS BRB
@@ -250,8 +250,7 @@ gen factor_ch=1
 	*******************
 	***dis_ch***
 	*******************
-	egen dis_ch  = sum(dis_ci), by(idh_ch) 
-	replace dis_ch=1 if dis_ch>=1 & dis_ch!=.
+	bysort idh_ch: egen dis_ch  = max(dis_ci)
 
 
 **********************************************
@@ -298,19 +297,23 @@ gen factor_ch=1
 	
 	*p37_occupationcode (ISIC Rev 4)
     gen rama_ci = .
-
+	replace rama_ci= 1 if p38_industrycode>=110 & p38_industrycode<=490
+	replace rama_ci = 2 if p38_industrycode>=510 & p38_industrycode<=990
+	replace rama_ci = 3 if p38_industrycode>=1010 & p38_industrycode <=3390
+	replace rama_ci = 4 if p38_industrycode>=3510 & p38_industrycode<=3900
+	replace rama_ci = 5 if p38_industrycode>=4100 & p38_industrycode<=4390
+	replace rama_ci = 6 if p38_industrycode>=4510 & p38_industrycode<=4799
+	replace rama_ci = 7 if p38_industrycode>=5510 & p38_industrycode<=5630 
+	replace rama_ci = 8 if (p38_industrycode>=4911 & p38_industrycode<= 5320) | (p38_industrycode>=5811 & p38_industrycode<= 6399) 
+	replace rama_ci = 9 if p38_industrycode>=6411 & p38_industrycode<= 6630
+	replace rama_ci = 10 if p38_industrycode>=8400 & p38_industrycode<=8499
+	replace rama_ci = 11 if p38_industrycode>=6800 & p38_industrycode <=7599
+	replace rama_ci = 12 if p38_industrycode>=8500 & p38_industrycode<=8599
+	replace rama_ci = 13 if p38_industrycode>=9000 & p38_industrycode<=9399
+	replace rama_ci = 14 if (p38_industrycode>=7700 & p38_industrycode<=829999) | (p38_industrycode>=9400 & p38_industrycode<=9699) | p38_industrycode>=9900
+	replace rama_ci = 15 if p38_industrycode>=9700 & p38_industrycode<=9899
 /*
-Se armonizo los grandes grupos de industrias
-
-CIIU 3										 	CIIU 4
-A Agricultura, ganadería, caza y silvicultura	A. Agricultura, ganadería, silvicultura y pesca
-B Pesca
-C Explotación de minas y canteras				B. Explotación de minas y canteras
-D Industrias manufactureras						C. Industrias manufactureras
-E Suministro de electricidad, gas y agua		D. Suministro de electricidad, gas, vapor y aire acondicionado
-												E. Suministro de agua; evacuación de aguas residuales, gestión de desechos y descontaminación
-F Construcción									F. Construcción
-
+El codigo se encuentra en CIIU Rev 4. Se armonizo los grandes grupos de industrias
 
 1	Agricultura, pesca y forestal - Agriculture, hunting, forestry and fishing
 2	Minería y extracción - Exploitation of mines and quarries
@@ -330,21 +333,7 @@ F Construcción									F. Construcción
 */
 	** REVISAR **
 /*
-	replace rama_ci= 1 if p38_industrycode>=110 & p38_industrycode<=490
-	replace rama_ci = 2 if p38_industrycode>=510 & p38_industrycode<=990
-	replace rama_ci = 3 if p38_industrycode>=1010 & p38_industrycode <=3390
-	replace rama_ci = 4 if p38_industrycode>=3510 & p38_industrycode<=3900
-	replace rama_ci = 5 if p38_industrycode>=4100 & p38_industrycode<=4390
-	replace rama_ci = 6 if p38_industrycode>=4510 & p38_industrycode<=4799
-	replace rama_ci = 7 if p38_industrycode>=5510 & p38_industrycode<=5630 
-	replace rama_ci = 8 if (p38_industrycode>=4911 & p38_industrycode<= 5320) | (p38_industrycode>=5811 & p38_industrycode<= 6399) 
-	replace rama_ci = 9 if p38_industrycode>=6411 & p38_industrycode<= 6630
-	replace rama_ci = 10 if p38_industrycode>=8400 & p38_industrycode<=8499
-	replace rama_ci = 11 if p38_industrycode>=6800 & p38_industrycode <=8299
-	replace rama_ci = 12 if p38_industrycode>=8500 & p38_industrycode<=8599
-	replace rama_ci = 13 if p38_industrycode>=8600 & p38_industrycode<=9399
-	replace rama_ci = 14 if (p38_industrycode>=9400 & p38_industrycode<=9699) | p38_industrycode>=9900
-	replace rama_ci = 15 if p38_industrycode>=9700 & p38_industrycode<=9899
+
 */
 	
 
@@ -367,8 +356,7 @@ F Construcción									F. Construcción
 	15"Domestic work", replace
 
 	label val rama_ci rama_ci
-
-
+	
 		
 	*********************
     ****categopri_ci****
@@ -413,9 +401,8 @@ OBSERVACIONES:
 	replace ylm_ci=p40b*2 if p40a==2
 	replace ylm_ci=p40b*4 if p40a==1
 	replace ylm_ci=. if emp_ci!=1 | p40b==900999
-	replace 
  
-   gen ynlm_ci=p40c
+   gen ynlm_ci=.
    
    bysort idh_ch : egen ylm_ch = total(ylm_ci)
    
@@ -490,7 +477,7 @@ OBSERVACIONES:
 	***************
 	gen asiste_ci=(p20a==1)
 		replace asiste_ci=. if p20a==9
-	*label variable asiste_ci "Asiste actualmente a la escuela"
+	label variable asiste_ci "Asiste actualmente a la escuela"
 
 	**************
 	***literacy***
@@ -511,130 +498,96 @@ OBSERVACIONES:
 	********
 	*luz_ch*
 	********
-	*En la nueva encuesta no se encontro si se pregunta por instalacion electrica
-	gen luz_ch=.
-	replace luz_ch=1 if c2_p11 ==1 
-	replace luz_ch=0 if c2_p11 ==2
+	gen luz_ch=(h20a==1) if h20a!=9
 	
 	*********
 	*bano_ch*
 	*********
-	gen bano_ch=.
-	replace bano_ch=1 if c2_p10
-	replace bano_ch=1 if c2_p10 >= 1 & c2_p10 <= 4
-	replace bano_ch=0 if c2_p10>4
+	gen bano_ch=(inlist(h19a,1,2,4)) if h19a!=9
 	
 	*********
 	*des1_ch*
 	*********
 	gen des1_ch=.
-	replace des1_ch=0 if bano_ch ==0
-	replace des1_ch=1 if c2_p10 == 3
-	replace des1_ch=2 if c2_p10 >=4 & c2_p10<9
 	
 	
 	*********
 	*piso_ch*
 	*********
 	gen piso_ch=.
-	replace piso_ch = 0 if c2_p5 == 6
-	replace piso_ch = 1 if c2_p5 == 2 | c2_p5 ==3
-	replace piso_ch = 2 if c2_p5  == 5 | c2_p5 == 4 | c2_p5==1
 	
 	*****************
 	*banomejorado_ch*
 	*****************
 	gen banomejorado_ch=.
-	replace banomejorado_ch=1 if c2_p10 >= 1 & c2_p10 < 4
-	replace banomejorado_ch=0 if c2_p10>=4
 	
 	
 	**********
 	*pared_ch*
 	**********
-	gen pared_ch=.
-	replace pared_ch=2 if c2_p3 == 1 | c2_p3==2 | c2_p3 ==3 | c2_p3 ==4
-	replace pared_ch=1 if c2_p3 >=5 & c2_p3 <=8
+	gen pared_ch=(inrange(h9,1,6)) if h9!=9
 	
 	**********
 	*techo_ch*
 	**********
-	gen techo_ch=.
-	replace techo_ch=2 if c2_p5 ==1 | c2_p5 == 2 | c2_p5 == 5 | c2_p5==6
-	replace techo_ch=1 if c2_p5 ==2 | c2_p5 == 3 | c2_p5 == 4
+	gen techo_ch=inrange(h10,1,6) if h10!=9
 	
 	**********
 	*resid_ch*
 	**********
-	* Peru no tiene está variable se genera en missing
 	gen resid_ch=. 
 
 	*********
 	*dorm_ch*
 	*********
-	* Peru no tiene está variable se genera en missing
-	gen dorm_ch=.
+	gen dorm_ch=h13 if h13!=99
 	
 	
 	************
 	*cuartos_ch*
 	************
-	gen cuartos_ch=c2_p12
-	replace cuartos_ch=. if c2_p12==99
+	gen cuartos_ch=.
 	
 	***********
 	*cocina_ch*
 	***********
-	* Peru no tiene está variable se genera en missing
 	gen cocina_ch=.
 	
 	***********
 	*telef_ch*
 	***********
-	gen telef_ch=c3_p2_11
-	replace telef_ch=0 if c3_p2_11==2
+	gen telef_ch=(h21a1_fixed_line_telephone==1 | h21a2_fixed_line_telephone==1 )
 	
 	***********
 	*refrig_ch*
 	***********
-	gen refrig_ch=c3_p2_4
-	replace refrig_ch=0 if c3_p2_4==2
+	gen refrig_ch=(h21a1_refrigerator==1 | h21a2_refrigerator==1 )
 	
 	*********
 	*auto_ch*
 	*********
-	gen auto_ch=c3_p2_14
-	replace auto_ch = 0 if c3_p2_14==2
+	gen auto_ch=.
 	
 	********
 	*compu_ch*
 	********
-	gen compu_ch=c3_p2_9
-	replace compu_ch =0 if c3_p2_9==2
+	gen compu_ch=(h21a1_computer==1 | h21a2_computer==1 )
 	
 	*************
 	*internet_ch*
 	************* 
-	gen internet_ch=c3_p2_13
-	replace internet_ch=0 if c3_p2_13==2
+	gen internet_ch=(h21b1==1)
 	
 	********
 	*cel_ch*
 	********
-	gen cel_ch=c3_p2_10
-	replace cel_ch=0 if c3_p2_10==2
+	bysort idh_ch: egen cel_ch=max(p26_cellularphone)
 	
 	*************
 	*viviprop_ch*
 	*************
-	*NOTA: aqui se genera una variable parecida, pues no se puede saber si es propia total o parcialmente pagada
-	gen viviprop_ch1=.
-	replace viviprop_ch1=1 if c2_p13 == 2 | c2_p13 == 3 
-	replace viviprop_ch1=0 if c2_p13 ==1 | c2_p13 == 4
+	gen viviprop_ch1=(h15a==1) if h15a!=9
 	
-	
-
-   
    
 *******************************************************
 ***           VARIABLES DE MIGRACIÓN              ***
@@ -643,62 +596,34 @@ OBSERVACIONES:
     *******************
     ****migrante_ci****
     *******************
-	gen migrante_ci =.  
+	gen migrante_ci =(p15a==2)
 	
 	*******************
     **migantiguo5_ci***
     *******************
-	gen migantiguo5_ci =.
+	gen migantiguo5_ci =(p16b<=2005) if p16b!=9999
+		replace migantiguo5_ci=. if migrante_ci==0
 	
 	**********************
 	*** migrantelac_ci ***
 	**********************
-	gen migrantelac_ci = .
+	gen migrantelac_ci = (inlist(p16a_country,24,35,28,26,27,25,994,29,55,34,992) | inrange(p16a_country,3,22)) if migrante_ci==1
 	
 	*******************
     **migrantiguo5_ci**
     *******************
-	gen migrantiguo5_ci =.
+	gen migrantiguo5_ci =(p16b<=2005) if p16b!=9999
+		replace migantiguo5_ci=. if migrante_ci==0
 	
 	**********************
 	****** miglac_ci *****
 	**********************
-	gen miglac_ci = .
+	gen miglac_ci = (inlist(p16a_country,24,35,28,26,27,25,994,29,55,34,992) | inrange(p16a_country,3,22)) if migrante_ci==1
 	
 	
 *****************************************************
 ******* Variables specific for this census **********
 *****************************************************
-
-****** REGION *****************
-gen region_c=ccdd
-label define region_c ///
-1"Amazonas"	          ///
-2"Ancash"	          ///
-3"Apurimac"	          ///
-4"Arequipa"	          ///
-5"Ayacucho"	          ///
-6"Cajamarca"	      ///
-7"Callao"	          ///
-8"Cusco"	          ///
-9"Huancavelica"	      ///
-10"Huanuco"	          ///
-11"Ica"	              ///
-12"Junin"	          ///
-13"La libertad"	      ///
-14"Lambayeque"	      ///
-15"Lima"	          ///
-16"Loreto"	          ///
-17"Madre de Dios"	  ///
-18"Moquegua"	      ///
-19"Pasco"	          ///
-20"Piura"	          ///
-21"Puno"	          ///
-22"San Martín"	      ///
-23"Tacna"	          ///
-24"Tumbes"	          ///
-25"Ucayali"	
-
 
 *****************************
 ** Include all labels of   **
