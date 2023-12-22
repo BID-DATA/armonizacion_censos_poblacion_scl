@@ -37,7 +37,7 @@ global ruta_raw = "$ruta\\raw\\`PAIS'"
 
 local log_file ="$ruta\\clean\\`PAIS'\\log\\`PAIS'_`ANO'_censusBID.log"
 local base_in = "$ruta_raw\\`PAIS'_`ANO'_NOIPUMS.dta"
-local base_out ="$ruta_clean\\`PAIS'\\`PAIS'_`ANO'_censusBID.dta"
+local base_out ="$ruta_clean\\`PAIS'_`ANO'_censusBID.dta"
 
 capture log close
 log using "`log_file'", replace
@@ -63,6 +63,7 @@ gen pais_c = "`PAIS'"
 	*anio_c*
 	*********
 gen anio_c = "`ANO'"
+destring anio_c, replace
 
     ******************
     *idh_ch (id hogar)*
@@ -629,6 +630,7 @@ OBSERVACIONES:
 ** Include all labels of   **
 **  harmonized variables   **
 *****************************
+
 include "../Base/labels.do"
 
 
