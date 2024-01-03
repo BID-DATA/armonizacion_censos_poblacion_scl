@@ -578,26 +578,26 @@ label define region_c  ///
 label value region_c region_c
 
 ***************
-**** ine01 ****
+**** geolev1 ****
 ***************
-gen ine01=.
-replace ine01 = 388001  if parish==1 
-replace ine01 = 388002	if parish==2 
-replace ine01 = 388003	if parish==3 
-replace ine01 = 388004	if parish==4 
-replace ine01 = 388005	if parish==5 
-replace ine01 = 388006	if parish==6 
-replace ine01 = 388007	if parish==7 
-replace ine01 = 388008	if parish==8
-replace ine01 = 388009	if parish==9 
-replace ine01 = 388010	if parish==10 
-replace ine01 = 388011	if parish==11 
-replace ine01 = 388012	if parish==12 
-replace ine01 = 388013	if parish==13 
-replace ine01 = 388014	if parish==14 
+gen geolev1=.
+replace geolev1 = 388001  if parish==1 
+replace geolev1 = 388002	if parish==2 
+replace geolev1 = 388003	if parish==3 
+replace geolev1 = 388004	if parish==4 
+replace geolev1 = 388005	if parish==5 
+replace geolev1 = 388006	if parish==6 
+replace geolev1 = 388007	if parish==7 
+replace geolev1 = 388008	if parish==8
+replace geolev1 = 388009	if parish==9 
+replace geolev1 = 388010	if parish==10 
+replace geolev1 = 388011	if parish==11 
+replace geolev1 = 388012	if parish==12 
+replace geolev1 = 388013	if parish==13 
+replace geolev1 = 388014	if parish==14 
 
-label define ine01 388001	"Kingston" 388002	"Saint Andrew" 388003	"Saint Thomas" 388004	"Portland" 388005	"Saint Mary" 388006	"Saint Ann" 388007	"Trelawny" 388008	"Saint James" 388009	"Hanover" 388010	"Westmoreland" 388011	"Saint Elizabeth" 388012	"Manchester" 388013	"Clarendon" 388014	"Saint Catherine"
-label value ine01 ine01
+label define geolev1 388001	"Kingston" 388002	"Saint Andrew" 388003	"Saint Thomas" 388004	"Portland" 388005	"Saint Mary" 388006	"Saint Ann" 388007	"Trelawny" 388008	"Saint James" 388009	"Hanover" 388010	"Westmoreland" 388011	"Saint Elizabeth" 388012	"Manchester" 388013	"Clarendon" 388014	"Saint Catherine"
+label value geolev1 geolev1
 
 *******************************************************
 ***           VARIABLES DE DIVERSIDAD               ***
