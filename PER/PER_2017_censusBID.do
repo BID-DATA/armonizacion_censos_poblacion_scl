@@ -489,37 +489,37 @@ label define region_c ///
 24"Tumbes"	          ///
 25"Ucayali"	
 
-****** ine01 *****************
+****** geolev1 *****************
 destring ccdd, replace
-gen ine01=.
-replace ine01 = 604001 if ccdd ==1
-replace ine01 = 604002 if ccdd ==2
-replace ine01 = 604003 if ccdd ==3
-replace ine01 = 604004 if ccdd ==4
-replace ine01 = 604005 if ccdd ==5
-replace ine01 = 604006 if ccdd ==6
-replace ine01 = 604007 if ccdd ==7
-replace ine01 = 604008 if ccdd ==8
-replace ine01 = 604009 if ccdd ==9
-replace ine01 = 604010 if ccdd ==10
-replace ine01 = 604011 if ccdd ==11
-replace ine01 = 604012 if ccdd ==12
-replace ine01 = 604013 if ccdd ==13
-replace ine01 = 604014 if ccdd ==14
-replace ine01 = 604015 if ccdd ==15
-replace ine01 = 604016 if ccdd ==16
-replace ine01 = 604017 if ccdd ==17
-replace ine01 = 604018 if ccdd ==18
-replace ine01 = 604019 if ccdd ==19
-replace ine01 = 604020 if ccdd ==20
-replace ine01 = 604021 if ccdd ==21
-replace ine01 = 604022 if ccdd ==22
-replace ine01 = 604023 if ccdd ==23
-replace ine01 = 604024 if ccdd ==24
-replace ine01 = 604025 if ccdd ==25
+gen geolev1=.
+replace geolev1 = 604001 if ccdd ==1
+replace geolev1 = 604002 if ccdd ==2
+replace geolev1 = 604003 if ccdd ==3
+replace geolev1 = 604004 if ccdd ==4
+replace geolev1 = 604005 if ccdd ==5
+replace geolev1 = 604006 if ccdd ==6
+replace geolev1 = 604007 if ccdd ==7
+replace geolev1 = 604008 if ccdd ==8
+replace geolev1 = 604009 if ccdd ==9
+replace geolev1 = 604010 if ccdd ==10
+replace geolev1 = 604011 if ccdd ==11
+replace geolev1 = 604012 if ccdd ==12
+replace geolev1 = 604013 if ccdd ==13
+replace geolev1 = 604014 if ccdd ==14
+replace geolev1 = 604015 if ccdd ==15
+replace geolev1 = 604016 if ccdd ==16
+replace geolev1 = 604017 if ccdd ==17
+replace geolev1 = 604018 if ccdd ==18
+replace geolev1 = 604019 if ccdd ==19
+replace geolev1 = 604020 if ccdd ==20
+replace geolev1 = 604021 if ccdd ==21
+replace geolev1 = 604022 if ccdd ==22
+replace geolev1 = 604023 if ccdd ==23
+replace geolev1 = 604024 if ccdd ==24
+replace geolev1 = 604025 if ccdd ==25
 
-label define ine01 604001 "Amazonas" 604002 "Ancash" 604003 "Apurímac" 604004 "Arequipa" 604005	"Ayacucho" 604006	"Cajamarca" 604007	"Callao" 604008	"Cusco" 604009	"Huancavelica" 604010	"Huanuco" 604011	"Ica" 604012	"Junin" 604013	"La Libertad" 604014	"Lambayeque" 604015	"Lima" 604016	"Loreto" 604017	"Madre de Dios" 604018	"Moquegua" 604019	"Pasco" 604020	"Piura" 604021	"Puno" 604022	"San Martin" 604023	"Tacna" 604024	"Tumbes" 604025	"Ucayali"
-label value ine01 ine01
+label define geolev1 604001 "Amazonas" 604002 "Ancash" 604003 "Apurímac" 604004 "Arequipa" 604005	"Ayacucho" 604006	"Cajamarca" 604007	"Callao" 604008	"Cusco" 604009	"Huancavelica" 604010	"Huanuco" 604011	"Ica" 604012	"Junin" 604013	"La Libertad" 604014	"Lambayeque" 604015	"Lima" 604016	"Loreto" 604017	"Madre de Dios" 604018	"Moquegua" 604019	"Pasco" 604020	"Piura" 604021	"Puno" 604022	"San Martin" 604023	"Tacna" 604024	"Tumbes" 604025	"Ucayali"
+label value geolev1 geolev1
 
 ***************************************
 ************** Education **************

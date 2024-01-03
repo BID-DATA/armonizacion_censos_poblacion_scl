@@ -69,36 +69,6 @@ include "../Base/base.do"
       label var region_c "division politico-administrativa, provincia"
 
 
-	****************
-    *** ine01 ***
-    ****************
-   gen ine01 =geo1_do /*  
-   replace region_c=1 if geo1_do==214001			/*Distrito Nacional, Santo Domingo*/
-   replace region_c=2 if geo1_do==214002			/*Azua*/
-   replace region_c=3 if geo1_do==214003			/*Baoruco, Barahona, Independencia*/
-   replace region_c=4 if geo1_do==214005			/*Dajabón*/
-   replace region_c=5 if geo1_do==214006		    /*Duarte*/
-   replace region_c=6 if geo1_do==214007			/*Elías Piña*/
-   replace region_c=7 if geo1_do==214008			/*El Seibo, Hato Mayor*/
-   replace region_c=8 if geo1_do==214009			/*Espaillat*/
-   replace region_c=9 if geo1_do==214011			/*La Altagracia, La Romana*/
-   replace region_c=10 if geo1_do==214013			/*Monseñor Nouel, La Vega*/
-   replace region_c=11 if geo1_do==214014			/*María Trinidad Sánchez*/
-   replace region_c=12 if geo1_do==214015			/*Monte Cristi*/
-   replace region_c=13 if geo1_do==214016			/*Pedernales*/
-   replace region_c=14 if geo1_do==214017			/*San José de Ocoa, Peravia*/
-   replace region_c=15 if geo1_do==214018			/*Puerto Plata, Santiago*/
-   replace region_c=16 if geo1_do==214019			/*Hermanas Mirabal*/
-   replace region_c=17 if geo1_do==214020			/*Samaná*/
-   replace region_c=18 if geo1_do==214021			/*San Cristóbal, Monte Plata*/
-   replace region_c=19 if geo1_do==214022			/*San Juan*/
-   replace region_c=20 if geo1_do==214023			/*San Pedro De Macorís*/
-   replace region_c=21 if geo1_do==214024			/*Sánchez Ramírez*/
-   replace region_c=22 if geo1_do==214026			/*Santiago Rodríguez*/
-   replace region_c=23 if geo1_do==214027			/*Valverde*/
-   replace region_c=24 if geo1_do==214088			/*Lake Enriquilla*/
-   */   
-
 	************************
 	* VARIABLES EDUCATIVAS *
 	************************

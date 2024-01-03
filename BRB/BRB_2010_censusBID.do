@@ -53,6 +53,36 @@ gen region_BID_c = 2
 	*region_c
 	*********
 gen region_c = parish
+
+	***************
+	*** geolev1 ***
+	***************
+	/*
+	PARISH:
+           1 St. Michael
+           2 Christ Church
+           3 St. George
+           4 St. Philip
+           5 St. John
+           6 St. James
+           7 St. Thomas
+           8 St. Joseph
+           9 St. Andrew
+          10 St. Peter
+          11 St. Lucy 
+	Nuevo código: creado por SCLData, pues IPUMS no tiene código para BRB*/
+	gen geolev1=. 
+	replace geolev1=520001 if parish==1
+	replace geolev1=520002 if parish==2
+	replace geolev1=520003 if parish==3
+	replace geolev1=520004 if parish==4
+	replace geolev1=520005 if parish==5
+	replace geolev1=520006 if parish==6
+	replace geolev1=520007 if parish==7
+	replace geolev1=520008 if parish==8
+	replace geolev1=520009 if parish==9
+	replace geolev1=520010 if parish==10
+	replace geolev1=520011 if parish==11
 	
     *********
 	*pais_c*

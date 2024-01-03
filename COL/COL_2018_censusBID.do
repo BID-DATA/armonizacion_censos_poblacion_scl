@@ -35,8 +35,9 @@ global ruta ="${censusFolder}"
 global ruta_raw = "${censusFolder_raw}"
 
 local log_file ="$ruta\\clean\\`PAIS'\\log\\`PAIS'_`ANO'_censusBID.log"
-local base_in = "$censusFolder_raw/COL/Censo Colombia 2018 completo.dta"
+local base_in  = "$ruta//raw//`PAIS'//Censo Colombia 2018 completo.dta"
 local base_out ="$ruta\\clean\\`PAIS'\\`PAIS'_`ANO'_censusBID.dta"
+
 
 capture log close
 *log using "`log_file'", replace
@@ -93,33 +94,33 @@ label define region_BID_c 1 "Centroamérica_(CID)" 2 "Caribe_(CCB)" 3 "Andinos_(
 label value region_BID_c region_BID_c
 
 ***************
-**** ine01 ****
+**** geolev1 ****
 ***************
-gen ine01=.
-replace ine01 = 170005 if u_dpto==5
-replace ine01 = 170008 if u_dpto==8
-replace ine01 = 170011 if inlist(u_dpto,11,25)
-replace ine01 = 170013 if inlist(u_dpto,13,70)
-replace ine01 = 170015 if inlist(u_dpto,15,85)
-replace ine01 = 170018 if u_dpto==18
-replace ine01 = 170019 if u_dpto==19
-replace ine01 = 170023 if u_dpto==23
-replace ine01 = 170027 if u_dpto==27
-replace ine01 = 170041 if u_dpto==41
-replace ine01 = 170044 if u_dpto==44
-replace ine01 = 170050 if u_dpto==50
-replace ine01 = 170052 if u_dpto==52
-replace ine01 = 170054 if inlist(u_dpto,20,47)
-replace ine01 = 170066 if inlist(u_dpto,17,63,66)
-replace ine01 = 170068 if inlist(u_dpto,68,54)
-replace ine01 = 170073 if u_dpto==73
-replace ine01 = 170076 if u_dpto==76
-replace ine01 = 170081 if u_dpto==81
-replace ine01 = 170086 if u_dpto==86
-replace ine01 = 170088 if u_dpto==88
-replace ine01 = 170095 if inlist(u_dpto,91,95,97,99,94)
-label define ine01 170005 "Antioquia" 170008 "Atlántico" 170011 "Bogotá D.C., Cundinamarca" 170013 "Bolívar, Sucre" 170015 "Boyacá, Casanare" 170018 "Caquetá" 170019 "Cauca" 170023 "Córdoba" 170027 "Chocó" 170041 "Huila" 170044 "La Guajira" 170050 "Meta" 170052 "Nariño" 170054 "Cesar, Norte De Santander, Magdalena" 170066 "Caldas, Quindío, Risaralda" 170068 "Santander" 170073 "Tolima" 170076 "Valle Del Cauca" 170081 "Arauca" 170086 "Putumayo" 170088 "Archipiélago De San Andrés Y Providencia" 170095 "Amazonas, Guaviare, Vaupés, Vichada, Guainía"
-label value ine01 ine01
+gen geolev1=.
+replace geolev1 = 170005 if u_dpto==5
+replace geolev1 = 170008 if u_dpto==8
+replace geolev1 = 170011 if inlist(u_dpto,11,25)
+replace geolev1 = 170013 if inlist(u_dpto,13,70)
+replace geolev1 = 170015 if inlist(u_dpto,15,85)
+replace geolev1 = 170018 if u_dpto==18
+replace geolev1 = 170019 if u_dpto==19
+replace geolev1 = 170023 if u_dpto==23
+replace geolev1 = 170027 if u_dpto==27
+replace geolev1 = 170041 if u_dpto==41
+replace geolev1 = 170044 if u_dpto==44
+replace geolev1 = 170050 if u_dpto==50
+replace geolev1 = 170052 if u_dpto==52
+replace geolev1 = 170054 if inlist(u_dpto,20,47)
+replace geolev1 = 170066 if inlist(u_dpto,17,63,66)
+replace geolev1 = 170068 if inlist(u_dpto,68,54)
+replace geolev1 = 170073 if u_dpto==73
+replace geolev1 = 170076 if u_dpto==76
+replace geolev1 = 170081 if u_dpto==81
+replace geolev1 = 170086 if u_dpto==86
+replace geolev1 = 170088 if u_dpto==88
+replace geolev1 = 170095 if inlist(u_dpto,91,95,97,99,94)
+label define geolev1 170005 "Antioquia" 170008 "Atlántico" 170011 "Bogotá D.C., Cundinamarca" 170013 "Bolívar, Sucre" 170015 "Boyacá, Casanare" 170018 "Caquetá" 170019 "Cauca" 170023 "Córdoba" 170027 "Chocó" 170041 "Huila" 170044 "La Guajira" 170050 "Meta" 170052 "Nariño" 170054 "Cesar, Norte De Santander, Magdalena" 170066 "Caldas, Quindío, Risaralda" 170068 "Santander" 170073 "Tolima" 170076 "Valle Del Cauca" 170081 "Arauca" 170086 "Putumayo" 170088 "Archipiélago De San Andrés Y Providencia" 170095 "Amazonas, Guaviare, Vaupés, Vichada, Guainía"
+label value geolev1 geolev1
 
 ************
 ****pais****

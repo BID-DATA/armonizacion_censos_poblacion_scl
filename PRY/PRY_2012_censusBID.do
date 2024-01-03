@@ -157,22 +157,22 @@ local ANO "2012"
 	label var region_c "division politico-administrativa, departamento"
 	
 	***************
-	**** ine01 ****
+	**** geolev1 ****
 	***************
-	gen ine01=. 
-	replace ine01=600001 if DPTOD==1	/*Concepción*/
-	replace ine01=600002 if DPTOD==2	/*San Pedro*/
-	replace ine01=600003 if DPTOD==3	/*Cordillera*/
-	replace ine01=600004 if DPTOD==4	/*Guaira*/
-	replace ine01=600005 if inlist(DPTOD,5,10,14)	/*Caaguazú, Canindeyú, Alto Paraná*/
-	replace ine01=600006 if DPTOD==6	/*Caazapá*/
-	replace ine01=600007 if DPTOD==7	/*Itapúa*/
-	replace ine01=600008 if inlist(DPTOD,8,12)	/*Misiones*/
-	replace ine01=600009 if DPTOD==9	/*Paraguarí*/
-	replace ine01=600011 if DPTOD==11	/*Central*/
-	replace ine01=600013 if DPTOD==13	/*Amambay*/
-	replace ine01=600015 if inlist(DPTOD,15,16,17)	/*Alto Paraguay, Boquerón, Presidente Hayes*/
-	replace ine01=600019 if DPTOD==18	/*Asunción*/ 
+	gen geolev1=. 
+	replace geolev1=600001 if DPTOD==1	/*Concepción*/
+	replace geolev1=600002 if DPTOD==2	/*San Pedro*/
+	replace geolev1=600003 if DPTOD==3	/*Cordillera*/
+	replace geolev1=600004 if DPTOD==4	/*Guaira*/
+	replace geolev1=600005 if inlist(DPTOD,5,10,14)	/*Caaguazú, Canindeyú, Alto Paraná*/
+	replace geolev1=600006 if DPTOD==6	/*Caazapá*/
+	replace geolev1=600007 if DPTOD==7	/*Itapúa*/
+	replace geolev1=600008 if inlist(DPTOD,8,12)	/*Misiones*/
+	replace geolev1=600009 if DPTOD==9	/*Paraguarí*/
+	replace geolev1=600011 if DPTOD==11	/*Central*/
+	replace geolev1=600013 if DPTOD==13	/*Amambay*/
+	replace geolev1=600015 if inlist(DPTOD,15,16,17)	/*Alto Paraguay, Boquerón, Presidente Hayes*/
+	replace geolev1=600019 if DPTOD==18	/*Asunción*/ 
 
 *********************************************
 ***         VARIABLES DEMOGRAFICAS        ***
