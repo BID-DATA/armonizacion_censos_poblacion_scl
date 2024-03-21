@@ -6,7 +6,7 @@ set more off
  * Activar si es necesario (dejar desactivado para evitar sobreescribir la base y dejar la posibilidad de 
  * utilizar un loop)
  * Los datos se obtienen de las carpetas que se encuentran en el servidor: ${censusFolder}
- * Se tiene acceso al servidor únicamente al interior del BID.
+ * Se tiene acceso al servidor únicamente al interior del BID.*
  *________________________________________________________________________________________________________________*
  
 *Population and Housing Censuses/Harmonized Censuses - IPUMS
