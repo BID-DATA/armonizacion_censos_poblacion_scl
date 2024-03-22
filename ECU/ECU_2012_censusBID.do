@@ -61,4 +61,20 @@ include "../Base/base.do"
 	label define region_c 1"Azuay" 2"Bolivar" 3"Carchi" 4"Cotopaxi" 5"Chimborazo" 6"El Oro" 7"Cañar, Esmeraldas, Guayas, Manabi, Manga del Cura" 8"Imbabura, Las Golondrinas" 9"Loja" 10"Morona Santiago" 11"Pastaza" 12"Tungurahua" 13"Zamora Chinchipe" 14"Napo, Orellana, Sucumbios" 99 ""
     label value region_c region_c
 	label var region_c "division politico-administrativa, provincias"
+
 	
+*******************************************************
+***           VARIABLES DE DIVERSIDAD               ***
+*******************************************************				
+
+	***************
+	***afroind_ci***
+	***************
+
+gen afroind_ci=. 
+replace afroind_ci=1  if race == 30 | indig == 1 
+replace afroind_ci=2 if race == 20 | race == 23 | race == 53
+replace afroind_ci=3 if race == 10 | race == 52 | race == 60 | race == 61 
+replace afroind_ci=. if (race==90 & indig!=1)
+
+
