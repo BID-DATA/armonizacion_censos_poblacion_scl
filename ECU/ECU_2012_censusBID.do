@@ -78,3 +78,7 @@ replace afroind_ci=3 if race == 10 | race == 52 | race == 60 | race == 61
 replace afroind_ci=. if (race==90 & indig!=1)
 
 
+	
+*******************************************************
+***           VARIABLES DE EDUCACIÓN              ***
+******************************************************
