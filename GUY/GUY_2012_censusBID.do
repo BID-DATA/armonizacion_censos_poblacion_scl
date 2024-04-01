@@ -77,6 +77,25 @@ replace region_c=10 if regno=="10"
 label value region_c region_c
 label var region_c "division politico-administrativa, provincias"
 
+**********
+*geolev1*
+**********
+gen geolev1=.   
+replace geolev1=328001  if regno=="01"
+replace geolev1=328002  if regno=="02"
+replace geolev1=328003  if regno=="03"
+replace geolev1=328004  if regno=="04"
+replace geolev1=328005  if regno=="05"
+replace geolev1=328006  if regno=="06"
+replace geolev1=328007  if regno=="07"
+replace geolev1=328008  if regno=="08"
+replace geolev1=328009  if regno=="09"
+replace geolev1=328010 if regno=="10"
+   
+label value geolev1 geolev1
+label var geolev1 "division politico-administrativa, provincias 6 dígitos"
+
+
 ********
 *anio_c*
 ********
