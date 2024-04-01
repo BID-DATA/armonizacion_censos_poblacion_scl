@@ -27,7 +27,7 @@ local PAIS PRY
 local ANO "2012"
 
 local log_file = "$ruta//clean//`PAIS'//`PAIS'_`ANO'_censusBID.log"
-local base_in  = "$ruta//raw//`PAIS'//`PAIS'_`ANO'_BID_raw.dta"
+local base_in  = "$ruta//raw//`PAIS'//`PAIS'_`ANO'_NOIPUMS.dta"
 local base_out = "$ruta//clean//`PAIS'//`PAIS'_`ANO'_censusBID.dta"
 
 capture log close
