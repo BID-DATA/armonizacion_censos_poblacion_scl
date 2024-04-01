@@ -35,7 +35,7 @@ local ANO "2012"
 global ruta = "${censusFolder}"
 
 local log_file = "$ruta\\clean\\`PAIS'\\log\\`PAIS'_`ANO'_censusBID.log"
-local base_in = "$ruta\\raw\\`PAIS'\\`PAIS'_`ANO'_IPUMS.dta"
+local base_in = "$ruta\\raw\\`PAIS'\\`PAIS'_`ANO'_NOIPUMS.dta"
 local base_out = "$ruta\\clean\\`PAIS'\\`PAIS'_`ANO'_censusBID.dta"
                                                     
 capture log close
@@ -63,19 +63,38 @@ label value region_BID_c region_BID_c
 *region_c*
 **********
 gen region_c=.   
-replace region_c=1  if regno==01
-replace region_c=2  if regno==02
-replace region_c=3  if regno==03
-replace region_c=4  if regno==04
-replace region_c=5  if regno==05
-replace region_c=6  if regno==06
-replace region_c=7  if regno==07
-replace region_c=8  if regno==08
-replace region_c=9  if regno==09
-replace region_c=10 if regno==10
+replace region_c=1  if regno=="01"
+replace region_c=2  if regno=="02"
+replace region_c=3  if regno=="03"
+replace region_c=4  if regno=="04"
+replace region_c=5  if regno=="05"
+replace region_c=6  if regno=="06"
+replace region_c=7  if regno=="07"
+replace region_c=8  if regno=="08"
+replace region_c=9  if regno=="09"
+replace region_c=10 if regno=="10"
    
 label value region_c region_c
 label var region_c "division politico-administrativa, provincias"
+
+**********
+*geolev1*
+**********
+gen geolev1=.   
+replace geolev1=328001  if regno=="01"
+replace geolev1=328002  if regno=="02"
+replace geolev1=328003  if regno=="03"
+replace geolev1=328004  if regno=="04"
+replace geolev1=328005  if regno=="05"
+replace geolev1=328006  if regno=="06"
+replace geolev1=328007  if regno=="07"
+replace geolev1=328008  if regno=="08"
+replace geolev1=328009  if regno=="09"
+replace geolev1=328010 if regno=="10"
+   
+label value geolev1 geolev1
+label var geolev1 "division politico-administrativa, provincias 6 dígitos"
+
 
 ********
 *anio_c*
@@ -86,7 +105,10 @@ gen anio_c=2012
 *idh_ci*
 ********
 gen idh_ci=.
-
+********
+*idp_ci*
+********
+gen idp_ci=. 
 ********
 *idh_ch*
 ********		
@@ -140,7 +162,7 @@ replace relacion_ci=5 if p11==9 | p11==10
 **********
 *civil_ci*
 **********
-gen civil_ci==1 if p61==1
+gen civil_ci=1 if p61==1
 replace civil_ci=2 if p61==2
 replace civil_ci=3 if p61==3 | p61==5
 replace civil_ci=4 if p61==4
@@ -190,7 +212,7 @@ replace clasehog_ch=2 if nhijos_ch==0 & nconyuges_ch>0 & notropari_ch==0 & notro
 **** ampliado
 replace clasehog_ch=3 if notropari_ch>0 & notronopari_ch==0
 **** compuesto (some relatives plus non relative)
-eplace clasehog_ch=4 if ((nconyuges_ch>0 | nhijos_ch>0 | notropari_ch>0) & (notronopari_ch>0))
+replace clasehog_ch=4 if ((nconyuges_ch>0 | nhijos_ch>0 | notropari_ch>0) & (notronopari_ch>0))
 **** corresidente
 replace clasehog_ch=5 if nhijos_ch==0 & nconyuges_ch==0 & notropari_ch==0 & notronopari_ch>0
 	
@@ -272,7 +294,7 @@ gen condocup_ci=.
 replace condocup_ci=1 if p81==1 | p81==2
 replace condocup_ci=2 if p81==3 | p81==4
 replace condocup_ci=3 if p81==5 | p81==6 | p81==7 | p81==8 | p81==9
-replace condocup_ci=. if p81===10 | p81==32 | p81==0
+replace condocup_ci=. if p81==10 | p81==32 | p81==0
 								
 ********
 *emp_ci*
@@ -373,7 +395,7 @@ replace categopri_ci=1 if p87==5
 replace categopri_ci=2 if p87==6
 replace categopri_ci=3 if p87>=1 & p87<=4
 replace categopri_ci=4 if p87==7
-replace categoria_ci=. if p87==0
+replace categopri_ci=. if p87==0
 				
 *************
 *spublico_ci*
@@ -580,7 +602,7 @@ replace piso_ch=. if h45==7
 gen pared_ch=.
 replace pared_ch=1 if h12==1 | h12==6 | h12==5 // wood, makeshift, adobe and palm
 replace pared_ch=2 if h12==2 | h12==3 | h12==4 | h12==7 | h12==8 | h12==9 | h12==10 // concrete, wood and concrete, stone, brick only, stone and brick, galvanize, wood and brick
-replace pared_ch==. if h12==11
+replace pared_ch=. if h12==11
 
 **********
 *techo_ch*
@@ -604,12 +626,14 @@ replace resid_ch=. if h49==8
 *dorm_ch*
 *********
 gen dorm_ch=.
+destring h48, replace
 replace dorm_ch=h48 
 	
 ************
 *cuartos_ch*
 ************
 gen cuartos_ch=.
+destring h47, replace
 replace cuartos_ch=h47
 
 ***********
@@ -667,7 +691,7 @@ replace cel_ch=0 if h512==2
 gen viviprop_ch1=.
 replace viviprop_ch1=1 if h31==1 // owned/freehold
 replace viviprop_ch1=0 if h31==2 | h31==3 | h31==4 | h31==5 | h31==6 | h31==7 // lease-hold, rented, squatted, rent-free 
-replace viviprop_ch1=. if h31==6 | h31==7 | h31==8// none/not applicable, other, ns
+replace viviprop_ch1=. if h31==6 | h31==7 | h31==8   /// none/not applicable, other, ns
 
 **********************************************
 ****          VARIABLES DE SALUD          ****
@@ -730,11 +754,12 @@ replace migrantelac_ci=0 if migrantelac_ci==. & migrante_ci==1 | migrante_ci==0
 ***********
 gen miglac_ci=.
 replace miglac_ci=1 if p33cntry=="ARG" | p33cntry=="BHS" | p33cntry=="BRB" | p33cntry=="BLZ" | p33cntry=="BOL" | p33cntry=="BRA" | p33cntry=="CHL" | p33cntry=="COL" | p33cntry=="CRI" | p33cntry=="DOM" | p33cntry=="ECU" | p33cntry=="SLV" | p33cntry=="GTM" | p33cntry=="HTI" | p33cntry=="HND" | p33cntry=="JAM" | p33cntry=="MEX" | p33cntry=="NIC" | p33cntry=="PAN" | p33cntry=="PRY" | p33cntry=="PER" | p33cntry=="SUR" | p33cntry=="TTO" | p33cntry=="URY" | p33cntry=="VEN" 
-replace miglac_ci=0 migrantelac_ci!=1 & migrante_ci==1 
+replace miglac_ci=0 if migrantelac_ci!=1 & migrante_ci==1 
 
 ****************
 *migantiguo5_ci*
 ****************
+destring p34, replace
 gen migantiguo5_ci=.
 replace migantiguo5_ci=1 if (p34<=2008 & migrante_ci==1)
 replace migantiguo5_ci=0 if migantiguo5_ci==. & migrante_ci==1 | migrante_ci==0
@@ -750,11 +775,13 @@ replace migrantiguo5_ci=0 if migantiguo5_ci!=1 & migrante_ci==1
 ** Include all labels of   **
 **  harmonized variables   **
 *****************************
+cd "C:\Users\JILLIEC\OneDrive - Inter-American Development Bank Group\2023\IADB_2023\censos\raw"
 include "../Base/labels.do"
 
 order region_BID_c pais_c estrato_ci zona_c relacion_ci civil_ci idh_ch factor_ch idp_ci factor_ci edad_ci sexo_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch miembros_ci condocup_ci emp_ci desemp_ci pea_ci rama_ci spublico_ci migrante_ci migantiguo5_ci aguared_ch luz_ch bano_ch des1_ch piso_ch pared_ch techo_ch dorm_ch cuartos_ch cocina_ch refrig_ch auto_ch internet_ch cel_ch viviprop_ch viviprop_ch1 region_c categopri_ci discapacidad_ci ceguera_ci sordera_ci mudez_ci dismental_ci afroind_ci afroind_ch afroind_ano_c dis_ci dis_ch aedu_ci
 
 compress
+
 
 save "`base_out'", replace 
 log close
