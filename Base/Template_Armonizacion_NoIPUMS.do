@@ -838,7 +838,7 @@ display "Número de variables de la base: `varconteo'"
 /*******************************************************************************
    VI. Incluir etiquetas para las variables y categorías
 *******************************************************************************/
-include "$ruta\Labels.do"
+include "$ruta\labels_general.do"
 
 
 /*******************************************************************************
