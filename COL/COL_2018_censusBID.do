@@ -82,7 +82,7 @@ label define region_c       ///
 	94 "Guainía"	        ///
 	95 "Guaviare"	        ///
 	97 "Vaupés" 	        ///
-	99 "Vichada"*
+	99 "Vichada"
 label value region_c region_c
 
 ************
