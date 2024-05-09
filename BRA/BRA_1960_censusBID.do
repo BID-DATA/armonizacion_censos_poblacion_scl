@@ -154,13 +154,12 @@ replace eduno_ci=. if aedu_ci==.
 ***********
 *edupre_ci*
 ***********
-gen edupre_ci=(educbr==1200) // pre-school
-replace edupre_ci=. if aedu_ci==.
-	
+gen edupre_ci=.
+
 **********
 *edupi_ci* // no completó la educación primaria
 **********	
-gen edupi_ci=(aedu_ci>=1 & aedu_ci<=4 | yrschool==91) // 1 a 4 anos de educación + some primary
+gen edupi_ci=(aedu_ci>=1 & aedu_ci<=4) // 1 a 4 anos de educación + some primary
 replace edupi_ci=. if aedu_ci==.
 
 ********** 
@@ -172,7 +171,7 @@ replace edupc_ci=. if aedu_ci==.
 **********
 *edusi_ci* // no completó la educación secundaria
 **********
-gen edusi_ci=(aedu_ci>=6 & aedu_ci<=11 | yrschool==93) // De 6 a 11 anos de educación + some sencondary
+gen edusi_ci=(aedu_ci>=6 & aedu_ci<=11) // De 6 a 11 anos de educación + some sencondary
 replace edusi_ci=. if aedu_ci==.
 
 **********
