@@ -35,11 +35,12 @@ global ruta ="${censusFolder}"
 global ruta_raw = "${censusFolder_raw}"
 
 local log_file ="$ruta\\clean\\`PAIS'\\log\\`PAIS'_`ANO'_censusBID.log"
-local base_in = "$censusFolder_raw/COL/Censo Colombia 2018 completo.dta"
+local base_in  = "$ruta//raw//`PAIS'//Censo Colombia 2018 completo.dta"
 local base_out ="$ruta\\clean\\`PAIS'\\`PAIS'_`ANO'_censusBID.dta"
 
+
 capture log close
-log using "`log_file'", replace
+*log using "`log_file'", replace
 
 use "`base_in'", clear
 
@@ -75,11 +76,12 @@ label define region_c       ///
 	76 "Valle del Cauca"	///
 	81 "Arauca"	            ///
 	85 "Casanare"	        ///
+	88 "Archipiélago De San Andrés Y Providencia"	        ///
 	86 "Putumayo"	        ///
 	91 "Amazonas"	        ///
-	94 "Guainía"	        ///	
-	95 "Guaviare"	        ///	
-	97 "Vaupés" 	        ///		
+	94 "Guainía"	        ///
+	95 "Guaviare"	        ///
+	97 "Vaupés" 	        ///
 	99 "Vichada"
 label value region_c region_c
 
@@ -90,6 +92,35 @@ gen region_BID_c=.
 replace region_BID_c=3 
 label define region_BID_c 1 "Centroamérica_(CID)" 2 "Caribe_(CCB)" 3 "Andinos_(CAN)" 4 "Cono_Sur_(CSC)"
 label value region_BID_c region_BID_c
+
+***************
+**** geolev1 ****
+***************
+gen geolev1=.
+replace geolev1 = 170005 if u_dpto==5
+replace geolev1 = 170008 if u_dpto==8
+replace geolev1 = 170011 if inlist(u_dpto,11,25)
+replace geolev1 = 170013 if inlist(u_dpto,13,70)
+replace geolev1 = 170015 if inlist(u_dpto,15,85)
+replace geolev1 = 170018 if u_dpto==18
+replace geolev1 = 170019 if u_dpto==19
+replace geolev1 = 170023 if u_dpto==23
+replace geolev1 = 170027 if u_dpto==27
+replace geolev1 = 170041 if u_dpto==41
+replace geolev1 = 170044 if u_dpto==44
+replace geolev1 = 170050 if u_dpto==50
+replace geolev1 = 170052 if u_dpto==52
+replace geolev1 = 170054 if inlist(u_dpto,20,47)
+replace geolev1 = 170066 if inlist(u_dpto,17,63,66)
+replace geolev1 = 170068 if inlist(u_dpto,68,54)
+replace geolev1 = 170073 if u_dpto==73
+replace geolev1 = 170076 if u_dpto==76
+replace geolev1 = 170081 if u_dpto==81
+replace geolev1 = 170086 if u_dpto==86
+replace geolev1 = 170088 if u_dpto==88
+replace geolev1 = 170095 if inlist(u_dpto,91,95,97,99,94)
+label define geolev1 170005 "Antioquia" 170008 "Atlántico" 170011 "Bogotá D.C., Cundinamarca" 170013 "Bolívar, Sucre" 170015 "Boyacá, Casanare" 170018 "Caquetá" 170019 "Cauca" 170023 "Córdoba" 170027 "Chocó" 170041 "Huila" 170044 "La Guajira" 170050 "Meta" 170052 "Nariño" 170054 "Cesar, Norte De Santander, Magdalena" 170066 "Caldas, Quindío, Risaralda" 170068 "Santander" 170073 "Tolima" 170076 "Valle Del Cauca" 170081 "Arauca" 170086 "Putumayo" 170088 "Archipiélago De San Andrés Y Providencia" 170095 "Amazonas, Guaviare, Vaupés, Vichada, Guainía"
+label value geolev1 geolev1
 
 ************
 ****pais****
@@ -110,7 +141,9 @@ egen idh_ch = group(u_dpto u_mpio ua_clase cod_encuestas u_vivienda p_nrohog)
 **************
 ****idp_ci****
 **************
-gen idp_ci = p_nro_per
+
+sort idh_ch p_nro_per
+egen idp_ci = group(idh_ch p_nro_per)
 
 **********
 ***zona***
@@ -167,12 +200,13 @@ gen estrato_ci=.
 **********
 ***edad***
 **********
-	g edad_ci = p_edadr
-	la var edad_ci "Edad del individuo (años)"
-	la de edad_ci 	1 "de 00 A 04 Años" 	///
+	g edad_ci = .
+	g edad_grupo_ci = p_edadr
+	la var edad_grupo_ci "Edad del individuo (años)"
+	la de edad_grupo_ci	1 "de 00 A 04 Años" 	///
 						2 "de 05 A 09 Años" 	///
 						3 "de 10 A 14 Años"	    ///
-						4 "de 20 A 24 Años" 	///
+						4 "de 15 A 19 Años" 	///
 						5 "de 20 A 24 Años"		///
 						6 "de 25 A 29 Años"		///
 						7 "de 30 A 34 Años"		///
@@ -190,7 +224,7 @@ gen estrato_ci=.
 						19 "de 90 A 94 Años"	///
 						20 "de 95 A 99 Años"	///
 						21 "de 100 y más Años"
-	la val relacion_ci relacion_ci
+	la val edad_ci edad_ci
 
 *****************
 ****civil_ci*****
@@ -333,9 +367,12 @@ gen estrato_ci=.
 	*********
 	gen piso_ch=.
 	replace piso_ch = 0 if v_mat_piso == 6
-	replace piso_ch = 1 if v_mat_piso == 1 | v_mat_piso == 2 | v_mat_piso == 3 | v_mat_piso == 4
-	replace piso_ch = 2 if v_mat_piso == 5
+	replace piso_ch = 1 if v_mat_piso == 1 | v_mat_piso == 2 | v_mat_piso == 3
+	replace piso_ch = 2 if  v_mat_piso == 4 | v_mat_piso == 5
 	replace piso_ch = . if v_mat_piso==9 | v_mat_piso==.
+	label variable piso_ch "Materiales de construcción del piso"
+	label def piso_ch 0"Sin piso o sin terminar (tierra)" 1"Materiales no permanentes" 2 "Materiales permanentes"
+	label val piso_ch piso_ch
 	
 	*****************
 	*banomejorado_ch*
@@ -345,11 +382,15 @@ gen estrato_ci=.
 	**********
 	*pared_ch*
 	**********
-	gen pared_ch=.
-	replace pared_ch=0 if v_mat_pared ==8
-	replace pared_ch=1 if v_mat_pared == 1 | v_mat_pared==2 | v_mat_pared ==3 | v_mat_pared ==6
-	replace pared_ch=2 if v_mat_pared == 4 | v_mat_pared==5 | v_mat_pared ==7
-	replace pared_ch=. if v_mat_piso==9 | v_mat_piso==.
+
+	gen pared_ch = .
+	replace pared_ch = 0 if v_mat_pared == 9
+	replace pared_ch = 1 if inrange(v_mat_pared, 4, 8)
+	replace pared_ch = 2 if inrange(v_mat_pared, 1, 3)
+	label variable pared_ch "Materiales de construcción de las paredes del hogar"
+	label def pared_ch 0"No tiene paredes" 1"Materiales no permanentes" 2 "Materiales permanentes"
+	label val pared_ch pared_ch
+	
 
 	**********
 	*techo_ch*
@@ -523,69 +564,71 @@ gen aedu_ci =.
 **************
 ***eduno_ci***
 **************
-gen eduno_ci=(p_nivel_anosr==10|p_nivel_anosr==1) // never attended or pre-school
-replace eduno_ci=. if p_nivel_anosr==. // NIU & missing
+gen eduno_ci=(p_nivel_anosr==10) // never attended 
+replace eduno_ci=. if p_nivel_anosr==99 // NIU & missing
 
 **************
 ***edupi_ci***
 **************
-gen edupi_ci=.
-replace edupi_ci=. if p_nivel_anosr==. // NIU & missing
+gen edupi_ci=(p_nivel_anosr==1) //  pre-school
+replace edupi_ci=. if p_nivel_anosr==99 // NIU & missing
 
 
 **************
 ***edupc_ci***
 **************
 gen edupc_ci=(p_nivel_anosr==2)
-replace edupc_ci=. if p_nivel_anosr==. // NIU & missing
+replace edupc_ci=. if p_nivel_anosr==99 // NIU & missing
 
 **************
 ***edusi_ci***
 **************
-gen edusi_ci=.
+gen edusi_ci=(p_nivel_anosr==3)
+replace edupc_ci=. if p_nivel_anosr==99 // NIU & missing
 
 **************
 ***edusc_ci***
 **************
-gen edusc_ci=(p_nivel_anosr==4 |p_nivel_anosr==3 |p_nivel_anosr==3 |p_nivel_anosr==6) 
-replace edusc_ci=. if p_nivel_anosr==. // NIU & missing
+gen edusc_ci=(p_nivel_anosr==4 |p_nivel_anosr==5|p_nivel_anosr==6) 
+replace edusc_ci=. if p_nivel_anosr==99 // NIU & missing
 
 ***************
 ***edus1i_ci***
 ***************
 gen byte edus1i_ci=.
-replace edus1i_ci=. if p_nivel_anosr==. // missing a los NIU & missing
 
 ***************
 ***edus1c_ci***
 ***************
-gen byte edus1c_ci=.
-replace edus1c_ci=. if aedu_ci==. // missing a los NIU & missing
+gen byte edus1c_ci=(p_nivel_anosr==3)
+replace edus1c_ci=. if aedu_ci==99 // missing a los NIU & missing
 
 ***************
 ***edus2i_ci***
 ***************
 gen byte edus2i_ci=.
-replace edus2i_ci=. if p_nivel_anosr==. // missing a los NIU & missing
 
 ***************
 ***edus2c_ci***
 ***************
-gen byte edus2c_ci=(p_nivel_anosr==4 |p_nivel_anosr==3 |p_nivel_anosr==5 |p_nivel_anosr==6)
-replace edus2c_ci=. if p_nivel_anosr==. // missing a los NIU & missing
+gen byte edus2c_ci=(p_nivel_anosr==4 |p_nivel_anosr==5 |p_nivel_anosr==6)
+replace edus2c_ci=. if p_nivel_anosr==99 // missing a los NIU & missing
 
 ***************
 ***edupre_ci***
 ***************
-gen byte edupre_ci=(p_nivel_anosr==1)
-replace edupre_ci=. if p_nivel_anosr==.
-*label variable edupre_ci "Educacion preescolar"
+gen byte edupre_ci=.
+
+***************
+***eduui_ci***
+***************
+gen eduui_ci=.
 
 **************
 ***eduuc_ci***
 **************
 gen eduuc_ci=(p_nivel_anosr==7|p_nivel_anosr==8|p_nivel_anosr==9) 
-replace eduuc_ci=. if p_nivel_anosr==. // NIU & missing
+replace eduuc_ci=. if p_nivel_anosr==99 // NIU & missing
 
 ***************
 ***asiste_ci***
@@ -593,7 +636,7 @@ replace eduuc_ci=. if p_nivel_anosr==. // NIU & missing
 gen asiste_ci=.
 replace asiste_ci=1 if pa_asistencia==1
 replace asiste_ci=0 if pa_asistencia==2
-replace asiste_ci=. if pa_asistencia==.|pa_asistencia==9
+replace asiste_ci=. if pa_asistencia==.|pa_asistencia==9 |pa_asistencia==4
 *label variable asiste_ci "Asiste actualmente a la escuela"
 
 **************

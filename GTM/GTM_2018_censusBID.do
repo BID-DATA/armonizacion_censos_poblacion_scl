@@ -35,7 +35,7 @@ global ruta ="${censusFolder}"
 global ruta_raw = "${censusFolder_raw}"
 
 local log_file ="$ruta\\clean\\`PAIS'\\log\\`PAIS'_`ANO'_censusBID.log"
-local base_in = "Z:\census\GTM\2018\raw\\`PAIS'_`ANO'_NOIPUMS.dta"
+local base_in = "$ruta\\raw\\`PAIS'\\`PAIS'_`ANO'_NOIPUMS.dta"
 local base_out ="$ruta\\clean\\`PAIS'\\`PAIS'_`ANO'_censusBID.dta"
 
 capture log close
@@ -51,36 +51,36 @@ use "`base_in'", clear
 *** region_c ***
 ****************
 
-   gen region_c=.   
-	replace region_c=1 if departamento==320001 /*Guatemala*/
-	replace region_c=2 if departamento==320002 /*El Progreso*/
-	replace region_c=3 if departamento==320003 /*Sacatepéquez*/
-	replace region_c=4 if departamento==320004 /*Chimaltenango*/
-	replace region_c=5 if departamento==320005 /*Escuintla*/
-	replace region_c=6 if departamento==320006 /*Santa Rosa*/
-	replace region_c=7 if departamento==320007 /*Sololá*/
-	replace region_c=8 if departamento==320008 /*Totonicapán*/
-	replace region_c=9 if departamento==320009 /*Quetzaltenango*/
-	replace region_c=10 if departamento==320010 /*Suchitepéquez*/
-	replace region_c=11 if departamento==320011 /*Retalhuleu*/
-	replace region_c=12 if departamento==320012 /*San Marcos*/
-	replace region_c=13 if departamento==320013 /*Huehuetenango*/
-	replace region_c=14 if departamento==320014 /*Quiché*/
-	replace region_c=15 if departamento==320015 /*Baja Verapaz*/
-	replace region_c=16 if departamento==320016 /*Alta Verapaz*/
-	replace region_c=17 if departamento==320017 /*Petén*/
-	replace region_c=18 if departamento==320018 /*Izabal*/
-	replace region_c=19 if departamento==320019 /*Zacapa*/
-	replace region_c=20 if departamento==320020 /*Chiquimula*/
-	replace region_c=21 if departamento==320021 /*Jalapa*/
-	replace region_c=22 if departamento==320022 /*Jutiapa*/
+   gen region_c=departamento
 
 	
 	label define region_c 1 "Guatemala" 2 "El Progreso" 3 "Sacatepéquez" 4 "Chimaltenango" 5 "Escuintla" 6 "Santa Rosa" 7 "Sololá" 8 "Totonicapán" 9 "Quetzaltenango" 10 "Suchitepéquez" 11 "Retalhuleu" 12 "San Marcos" 13 "Huehuetenango" 14 "Quiché" 15 "Baja Verapaz" 16 "Alta Verapaz" 17 "Petén" 18 "	Izabal" 19 "Zacapa" 20 "Chiquimula" 21 "Jalapa" 22 "Jutiapa"
 	
 	 label value region_c region_c
 
-	 
+	gen 	geolev1=. 
+	replace geolev1=320001 if departamento==1 /*Guatemala*/
+	replace geolev1=320002 if departamento==2 /*El Progreso*/
+	replace geolev1=320003 if departamento==3 /*Sacatepéquez*/
+	replace geolev1=320004 if departamento==4 /*Chimaltenango*/
+	replace geolev1=320005 if departamento==5 /*Escuintla*/
+	replace geolev1=320006 if departamento==6 /*Santa Rosa*/
+	replace geolev1=320007 if departamento==7 /*Sololá*/
+	replace geolev1=320008 if departamento==8 /*Totonicapán*/
+	replace geolev1=320009 if departamento==9 /*Quetzaltenango*/
+	replace geolev1=320010 if departamento==10 /*Suchitepéquez*/
+	replace geolev1=320011 if departamento==11 /*Retalhuleu*/
+	replace geolev1=320012 if departamento==12 /*San Marcos*/
+	replace geolev1=320013 if departamento==13 /*Huehuetenango*/
+	replace geolev1=320014 if departamento==14 /*Quiché*/
+	replace geolev1=320015 if departamento==15 /*Baja Verapaz*/
+	replace geolev1=320016 if departamento==16 /*Alta Verapaz*/
+	replace geolev1=320017 if departamento==17 /*Petén*/
+	replace geolev1=320018 if departamento==18 /*Izabal*/
+	replace geolev1=320019 if departamento==19 /*Zacapa*/
+	replace geolev1=320020 if departamento==20 /*Chiquimula*/
+	replace geolev1=320021 if departamento==21 /*Jalapa*/
+	replace geolev1=320022 if departamento==22 /*Jutiapa*/
 
 gen region_BID_c = 1
 
@@ -627,8 +627,10 @@ Sí, con mucha dificultad ........... 3
 No puede ............................4
 */
 gen dis_ci=0
-replace dis_ci=1 if pcp16_a>=3 & pcp16_a<=4 | pcp16_b>=3 & pcp16_b<=4 | pcp16_c>=3 & pcp16_c<=4 
-replace dis_ci=1 if pcp16_d>=3 & pcp16_d<=4 | pcp16_e>=3 & pcp16_e<=4 | pcp16_f>=3 & pcp16_f<=4 
+replace dis_ci=1 if (pcp16_a>=2 & pcp16_a<=4) | (pcp16_b>=2 & pcp16_b<=4) | (pcp16_c>=2 & pcp16_c<=4)
+replace dis_ci=1 if (pcp16_d>=2 & pcp16_d<=4) | (pcp16_e>=2 & pcp16_e<=4) | (pcp16_f>=2 & pcp16_f<=4)
+replace dis_ci=. if pcp16_a==9 & pcp16_b==9 & pcp16_c==9 & pcp16_d==9 & pcp16_e==9 & pcp16_f==9 & ///
+					pcp16_a==. & pcp16_b==. & pcp16_c==. & pcp16_d==. & pcp16_e==. & pcp16_f==. 
 
 	*******************
 	***dis_ch***
@@ -641,7 +643,7 @@ replace dis_ch=1 if dis_ch>=1 & dis_ch!=.
 ** Include all labels of   **
 **  harmonized variables   **
 *****************************
-include "../Base/labels.do"
+include "$gitFolder\armonizacion_censos_poblacion_scl\Base\labels.do"
 
 
 compress

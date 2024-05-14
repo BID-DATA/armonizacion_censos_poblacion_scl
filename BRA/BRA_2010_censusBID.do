@@ -165,63 +165,82 @@ replace asiste_ci=. if school==0 | school==9 | school==. // missing a los NIU & 
 *aedu_ci* // años de educacion aprobados
 *********
 gen aedu_ci=.
+replace aedu_ci=0 if educbr<2000
+replace aedu_ci=1 if educbr==2110
+replace aedu_ci=2 if educbr==2120
+replace aedu_ci=3 if educbr==2130
+replace aedu_ci=4 if educbr==2141
+replace aedu_ci=5 if educbr==2210
+replace aedu_ci=6 if educbr==2220
+replace aedu_ci=7 if educbr==2230
+replace aedu_ci=8 if educbr==2241
+replace aedu_ci=9 if educbr==2242
+replace aedu_ci=10 if educbr==3100
+replace aedu_ci=11 if educbr==3200
+replace aedu_ci=12 if educbr==3300
+replace aedu_ci=13 if educbr==4170 | educbr==4180
+replace aedu_ci=16 if educbr==4190
+replace aedu_ci=18 if educbr==4230 | educbr==4240 | educbr==4270 | educbr==4280
+replace aedu_ci=20 if educbr==4250 | educbr==4260
 
 **********
 *eduno_ci*
 **********
-gen eduno_ci=(educbr==0000 | educbr==1100 | educbr==1200 | educbr==1300)
-replace eduno_ci=. if educbr==8000 | educbr==9000
+gen eduno_ci=(aedu_ci==0) // none
+replace eduno_ci=. if aedu_ci==.
 
 ***********
 *edupre_ci*
 ***********
-gen edupre_ci=(educbr==1200) // pre-school
-replace edupre_ci=. if educbr==8000 | educbr==9000
+gen edupre_ci=.
 	
 **********
 *edupi_ci* // no completó la educación primaria
 **********	
-gen edupi_ci=(educbr>=1700 & educbr<=2200) // primaria incompleta
-replace edupi_ci=. if educbr==8000 | educbr==9000
+gen edupi_ci=(aedu_ci>=1 & aedu_ci<=4) // 1 a 4 anos de educación 
+replace edupi_ci=. if aedu_ci==.
 	
 ********** 
 *edupc_ci* // completó la educación primaria
 **********
-gen edupc_ci=(educbr>=2200 & educbr<=2220) // primaria completa
-replace edupc_ci=. if educbr==8000 | educbr==9000
+gen edupc_ci=(aedu_ci==5) // 5 anos de educación
+replace edupc_ci=. if aedu_ci==.
 
 **********
 *edusi_ci* // no completó la educación secundaria
 **********
-gen edusi_ci=(educbr>=2230 & educbr<=3200) // más de primaria menos sec completa
-replace edusi_ci=. if educbr==8000 | educbr==9000
+gen edusi_ci=(aedu_ci>=6 & aedu_ci<=11) // De 6 a 11 anos de educación
+replace edusi_ci=. if aedu_ci==.
 
 **********
 *edusc_ci* // completó la educación secundaria
 **********	
-gen edusc_ci=(educbr==3300) // completo sec
-replace edusc_ci=. if educbr==8000 | educbr==9000
+gen edusc_ci=(aedu_ci==12) // 12 anos de educación
+replace edusc_ci=. if aedu_ci==.
 
 ***********
 *edus1i_ci* // no completó el primer ciclo de la educación secundaria
 ***********
-gen edus1i_ci=.
+gen edus1i_ci=(aedu_ci>=6 & aedu_ci<=8) // De 6 a 8 anos de educación
+replace edus1i_ci=. if aedu_ci==.
 
 ***********
 *edus1c_ci* // completó el primer ciclo de la educación secundaria
 ***********
-gen edus1c_ci=.
+gen edus1c_ci=(aedu_ci==9) // 9 anos de educación
+replace edus1c_ci=. if aedu_ci==.
 
 ***********
 *edus2i_ci* // no completó el segundo ciclo de la educación secundaria
 ***********
-gen edus2i_ci=.
+gen edus2i_ci=(aedu_ci>=10 & aedu_ci<=11) // De 10 a 11 anos de educación
+replace edus2i_ci=. if aedu_ci==.
 
 ***********
 *edus2c_ci* // completó el segundo ciclo de la educación secundaria
 ***********
-gen edus2c_ci=(educbr==3300) // completó secundaria
-replace edus2c_ci=.  if educbr==8000 | educbr==9000
+gen edus2c_ci=(aedu_ci==12) // 12 anos de educación
+replace edus2c_ci=. if aedu_ci==.
 
 ************
 * literacy *

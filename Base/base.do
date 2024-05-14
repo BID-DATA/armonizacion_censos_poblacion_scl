@@ -27,6 +27,19 @@ log using "`log_file'", replace
 
 use "`base_in'", clear
 
+if (`"`PAIS'"'=="VEN" & `"`ANO'"'=="2001") | (`"`PAIS'"'=="MEX" & `"`ANO'"'=="2015") | (`"`PAIS'"'=="PAN" & `"`ANO'"'=="2010") {
+
+merge 1:1 country year sample serial pernum using "$ruta\\raw\\IPUMS_extravars_17Oct23.dta"
+keep if _m==3
+drop _m 
+
+	foreach z in mx2015a_afrdes pa2010a_black ve2001a_indig {
+		sum `z'
+		if r(N)==0 {
+			drop `z'
+		}
+	}
+}
 			****************************
 			*  VARIABLES DE DISENO     *
 			****************************
