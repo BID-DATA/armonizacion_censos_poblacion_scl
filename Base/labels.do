@@ -243,7 +243,7 @@ label var banomejorado_ch "Tipo de desague"
 	label values banomejorado_ch banomejorado_ch
 	
 label var pared_ch "Materiales de construcción de las paredes"
-	label define pared_ch 0 "No tiene paredes"  1	"Materiales_no_permanentes" 2 "Materiales permanentes", add modify
+	label define pared_ch 0 "No tiene paredes"  1	"Materiales no permanentes" 2 "Materiales permanentes", add modify
 	label values pared_ch pared_ch
 
 label var techo_ch "Materiales de construcción del techo" 
