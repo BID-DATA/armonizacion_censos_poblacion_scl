@@ -949,35 +949,40 @@ ta p05_nacio p03b_reg_civil
 	label val PAN_m_piso_ch  PAN_m_piso_ch 
 	
 	
-	
 	**************************
 	*ISOalpha3Pais_m_techo_ch*
 	**************************	
-	gen byte ..._m_techo_ch= ...
-	label var ..._m_techo_ch  "Material del techo según el censo del país - variable original"
-	label def ..._m_techo_ch  1 "..." 2 "..." 3 "..."   //categorías originales del país
-	lavel val ..._m_techo_ch ..._m_techo_ch 
+	gen byte PAN_m_techo_ch = v05_techo
+	label var PAN_m_techo_ch  "Material del techo según el censo del país - variable original"
+	label def PAN_m_techo_ch  1 "Metal (zinc, aluminio, entre otros)" 2 "Teja" 3 "Otro tipo de tejas (tejalit, panalit, techolit, entre otras)" 4 "Losa de concreto" ///
+           5 "Madera" ///
+           6 "Palma, paja o penca" ///
+           7 "Otros materiales" ///
+  //categorías originales del país
+	label val PAN_m_techo_ch PAN_m_techo_ch 
+	ta PAN_m_techo_ch
 	
+
 	**************************
 	*ISOalpha3Pais_ingreso_ci*
 	**************************	
-	gen long ..._ingreso_ci = ...
-	label var ..._ingreso_ci  "Ingreso total según el censo del país - variable original"
+	gen long PAN_ingreso_ci = p22a_ingr
+	label var  PAN_ingreso_ci  "Ingreso total según el censo del país - variable original"
 	
 	*****************************
 	*ISOalpha3Pais_ingresolab_ci*
 	*****************************
-	gen long ..._ingresolab_ci = ...	
-	label var ..._ingreso_ci  "Ingreso laboral según el censo del país - variable original"
+	gen long PAN_ingresolab_ci = p221_suel	
+	label var   PAN_ingresolab_ci  "Ingreso laboral según el censo del país - variable original"
 
 	**********************
 	*ISOalpha3Pais_dis_ci*
 	**********************
-	gen byte ..._dis_ci = ...
-	label var ..._dis_ci  "Individuos con discapacidad según el censo del país - variable original"
-	label def ..._dis_ci 1 "Sí" 0 "No"   //categorías originales del país
-	lavel val ..._dis_ci ..._dis_ci
-	
+	gen byte PAN_dis_ci = p11_disca
+	label var PAN_dis_ci  "Individuos con discapacidad según el censo del país - variable original"
+	label def PAN_dis_ci 1 "Sí" 2 "No" . "No declarado"   //categorías originales del país
+	label val PAN_dis_ci PAN_dis_ci
+	tab PAN_dis_ci
 
 /*******************************************************************************
    III. Incluir variables externas
@@ -994,9 +999,16 @@ g lp31_ci  = lp31_2011
 g lp5_ci   = lp5_2011
 
 *se debe eliminar una vez se actualice la linea de pobreza en Oct. 2021: lp31_ci2020= lp31_ci2019* (1.42015)
-replace lp31_ci = 2800.9949*1.420151 if anio_c==2020 & pais_c=="ARG" 
-replace lp19_ci = 1716.7388*1.420151 if anio_c==2020 & pais_c=="ARG" 
-replace lp5_ci = 4517.7334*1.420151 if anio_c==2020 & pais_c=="ARG" 
+*replace lp31_ci = 2800.9949*1.420151 if anio_c==2021 & pais_c=="PAN" 
+*replace lp19_ci = 1716.7388*1.420151 if anio_c==2021 & pais_c=="PAN" 
+*replace lp5_ci = 4517.7334*1.420151 if anio_c==2021 & pais_c=="PAN" 
+
+/*
+última actualización de la línea en 2021
+https://www.mef.gob.pa/wp-content/uploads/2023/08/MEF-DAES-Pobreza-e-Indigencia-por-ingreso-2021.pdf#:~:text=11-,Pobreza%20e%20indigencia%20por%20ingreso%20%E2%80%93%20octubre%20de%202021,la%20Encuesta%20de%20Hogares%20anterior.
+
+*/
+
 
 capture label var tc_c "Tasa de cambio LCU/USD Fuente: WB/WDI"
 capture label var ipc_c "Índice de precios al consumidor base 2011=100 Fuente: IMF/WEO"
@@ -1028,7 +1040,7 @@ foreach v of global lista_variables {
 *******************************************************************************/
 * En "..." agregar la lista de variables de ID originales (por ejemplo los ID de personas, vivienda y hogar)
 
-keep  $lista_variables ... ... ...
+keep  $lista_variables llaveviv hogar npersona 
 
 * selecciona las 3 lineas y ejecuta (do). Deben quedar 94 variables de las secciones II y III más las 
 * variables originales de ID que hayas mantenido
