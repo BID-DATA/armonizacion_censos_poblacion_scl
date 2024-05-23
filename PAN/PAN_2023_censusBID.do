@@ -91,7 +91,7 @@ use "$base_in", clear
 
 rename *, lower
 
-sample 20   		// significa muestra de 20% de la base. Activar si se necesita.     
+*sample 20   		// significa muestra de 20% de la base. Activar si se necesita.     
 
 /****************************************************************************
    II. Armonización de variables 
@@ -185,6 +185,17 @@ sample 20   		// significa muestra de 20% de la base. Activar si se necesita.
 	egen unique_tag = tag(idh_ch)
 	count if unique_tag == 1
 	
+	/*
+	
+tag(idh_ch) |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |  2,834,023       69.72       69.72
+          1 |  1,230,757       30.28      100.00
+------------+-----------------------------------
+      Total |  4,064,780      100.00
+
+*/
+	
 	
 	**********************
     *idp_ci (ID personas)*
@@ -198,6 +209,15 @@ sample 20   		// significa muestra de 20% de la base. Activar si se necesita.
 	
 	duplicates report idp_ci //  idh_ch CALIDAD: revisar que resultado sea copies =1
 		
+		
+		/*
+		--------------------------------------
+   Copies | Observations       Surplus
+----------+---------------------------
+        1 |      4064780             0
+--------------------------------------
+
+		*/
 	****************************************
 	*(factor_ci) factor expansión individio*
 	****************************************
@@ -247,7 +267,8 @@ sample 20   		// significa muestra de 20% de la base. Activar si se necesita.
 	tab edad_ci
 	tab p03_edad if edad_ci == .
 	
-	/*
+	/* 	tab p03_edad if edad_ci == .
+
 	Muchos valores atípicos en la edad
       3.EDAD |      Freq.     Percent        Cum.
 -------------+-----------------------------------
@@ -268,7 +289,7 @@ No declarada |        335        0.56      100.00
 	replace relacion_ci = 4 if inlist(p01_rela, 5,6,7,8,9,10,11,12)
 	replace relacion_ci = 5 if inlist(p01_rela, 13)
 	replace relacion_ci = 6 if inlist(p01_rela, 14)
-	tab relacion_ci
+	tab relacion_ci,m
 	
 
 
@@ -280,6 +301,8 @@ No declarada |        335        0.56      100.00
 	replace civil_ci=2 if inlist(p04_estc,1,4)
 	replace civil_ci=3 if inlist(p04_estc,2, 3, 6)
 	replace civil_ci=4 if  inlist(p04_estc,5)
+	
+	ta p04_estc,m
 	tab civil_ci, m
 
     *********
@@ -328,6 +351,7 @@ No declarada |        335        0.56      100.00
 	replace clasehog_ch=4 if ((nconyuges_ch>0 | nhijos_ch>0 | notropari_ch>0) & (notronopari_ch>0)) //compuesto  
 	replace clasehog_ch=5 if nhijos_ch==0 & nconyuges_ch==0 & notropari_ch==0 & notronopari_ch>0 //corresidente
 
+	ta clasehog_ch,m 
 	**************
 	*nmiembros_ch*
 	**************
@@ -370,20 +394,30 @@ No declarada |        335        0.56      100.00
 	replace afro_ci =1 if  inlist(p09_afrod, 1,2,3,4,5,6,7)
 	replace afro_ci =0 if inlist(p09_afrod, 8)
 	
+	ta p09_afrod,m 
+	ta afro_ci,m
+	des afro_ci
+	
 	*********
 	*indi_ci*
 	*********	
 	gen byte ind_ci =. 		  // se queda como missing (.) si no existe la pregunta
 	replace ind_ci =1 if  inlist(p08_indig, 1,2,3,4,5,6,7,8, 9, 10)
 	replace ind_ci =0 if inlist(p08_indig, 11)
+	
+	ta p08_indig,m 
+	ta ind_ci,m
+	des ind_ci
 
 	**************
 	*noafroind_ci*
 	**************
 	gen byte noafroind_ci =.   // se queda como missing (.) si no existe la pregunta
-	replace noafroind_ci =1 if afro_ci==0 & ind_ci==0
-	replace noafroind_ci =0 if afro_ci==1 | ind_ci==1
-	replace noafroind_ci =. if afro_ci==. | ind_ci==. //Esto solo en el caso que se tenga ambas opciones no disponibles. 
+	replace noafroind_ci =1 if (afro_ci==0 & ind_ci==0)
+	replace noafroind_ci =0 if (afro_ci==1 | ind_ci==1)
+	replace noafroind_ci =. if (afro_ci==. | ind_ci==.) //Esto solo en el caso que se tenga ambas opciones no disponibles. 
+	
+	ta noafroind_ci,m
 
 	************
 	*afroind_ci*
@@ -393,7 +427,7 @@ No declarada |        335        0.56      100.00
 	replace afroind_ci=2 if afro_ci==1
 	replace afroind_ci=3 if noafroind_ci == 1
 
-	
+	ta afroind_ci,m
 	*********
 	*afro_ch*
 	*********
@@ -427,29 +461,33 @@ No declarada |        335        0.56      100.00
 	********
 	gen byte dis_ci=0
 	replace dis_ci=1 if (inlist(p11b1_cami, 2,3,4))  | ///
-						(inlist(p11b2_usarb,2,3,4))  | ///
+						*(inlist(p11b2_usarb,2,3,4))  | /// según wg no se incluyé específicamente usar los brazos
 						(inlist(p11b3_habl, 2,3,4))  | ///
 						(inlist(p11b4_enten,2,3,4))  | ///
 						(inlist(p11b5_cuid, 2,3,4))  | ///
 						(inlist(p11b6_ver,  2,3,4))  | ///
 						(inlist(p11b7_oir,  2,3,4))
+						
+						
 	
 	replace dis_ci=. if p11_disca == 3
-	tab dis_ci
+	
+	tab dis_ci,m
+	ta p11_disca,m
 	
 	**********
 	*disWG_ci*
 	**********
 	gen byte disWG_ci=0 
 	replace disWG_ci=1 if   (inlist(p11b1_cami,3,4))    | ///
-							(inlist(p11b2_usarb,3,4))   | ///
+							*(inlist(p11b2_usarb,3,4))   | /// según wg no se incluyé específicamente usar los brazos
 							(inlist(p11b3_habl,3,4))    | ///
 							(inlist(p11b4_enten,3,4))   | ///
 							(inlist(p11b5_cuid,3,4))    | ///
 							(inlist(p11b6_ver, 3,4))    | ///
 							(inlist(p11b7_oir, 3,4))
 	
-	replace disWG_ci=. if disWG_ci == 3
+	replace disWG_ci=. if p11_disca == 3
 	tab disWG_ci
 	
 	********
@@ -466,12 +504,15 @@ ta p05_nacio
 ta p03b_reg_civil
 * p05a_anio1
 ta p05_nacio p03b_reg_civil
+
     *****************
     *migrante_ci****
     ****************
 	gen byte migrante_ci=0 
 	replace migrante_ci=1 if p05_nacio == 3
 	replace migrante_ci=. if p05_nacio == 4
+	
+	ta migrante_ci,m
 	 	
 	****************
     *migantiguo5_ci*
@@ -483,6 +524,7 @@ ta p05_nacio p03b_reg_civil
 	replace migrantiguo5_ci=1 if antiguedad >= 5 & migrante_ci==1
 	replace migrantiguo5_ci=. if migrante_ci == 0
 	
+	ta migrantiguo5_ci,m 
 	***********
 	*miglac_ci*
 	***********
@@ -494,7 +536,7 @@ ta p05_nacio p03b_reg_civil
 	replace miglac_ci=. if migrante_ci == 0
 
 	ta miglac_ci
-	ta migrante_ci
+	
 ***********************************
 *** 5. Educación (13 variables) ***
 ***********************************
@@ -547,6 +589,9 @@ ta p05_nacio p03b_reg_civil
 	
 	replace aedu_ci=. if p15_grado == .
 		replace aedu_ci=. if p15_grado == 99
+		
+	
+	ta aedu_ci,m 
 
 
 
@@ -634,24 +679,34 @@ ta p05_nacio p03b_reg_civil
     *************
     *condocup_ci*
     *************
+	ta p17_trab,m
+	ta p17a_trabaus,m
+	ta p17b_algtra,m
+	ta p17c_algfam,m 
+	
+	
     gen byte condocup_ci =.
-	replace condocup_ci = 1 if p17_trab == 1 | p17a_trabaus == 1  | p17b_algtra == 1 | ///
-	p17c_algfam == 1 | p17e_motivo == 1 //ocupados
+	replace condocup_ci = 1 if p17_trab == 1 | p17a_trabaus == 1  | p17b_algtra == 1 | p17c_algfam == 1  //ocupados
 	///
 	replace condocup_ci = 2 if (p17_trab == 2 & p17a_trabaus == 2 & p17b_algtra == 2 & p17c_algfam == 2) & ///
-	(p17d_bsem == 1 |  p17e_motivo == 2 |  p17e_motivo == 3)	// desocupados	
+	(p17d_bsem == 1)	// desocupados	
+	///
+	ta p17d_bsem,m 
 	///
 	replace condocup_ci = 3 if (p17_trab == 2 & p17a_trabaus == 2 & p17b_algtra == 2 & p17c_algfam == 2) & ///
-	(p17d_bsem == 2 & p17e_motivo >= 4) //inactivos
+	(p17d_bsem == 2 ) //inactivos
 	///
 	replace condocup_ci = 4 if edad_ci < 15	//no responde por ser menor de edad
 	
 	
+	ta condocup_ci,m
+
 	********
     *emp_ci*
     ********
 	gen byte emp_ci=.
 	replace emp_ci=(condocup_ci==1) if condocup_ci!=.
+	sum emp_ci if emp_ci == 1
 
 	***********
     *desemp_ci*
@@ -666,27 +721,40 @@ ta p05_nacio p03b_reg_civil
 	replace pea_ci=1 if inlist(condocup_ci,1,2)
 	replace pea_ci=0 if inlist(condocup_ci,3,4)
 
+	
+	sum desemp_ci if desemp_ci == 1
+	local dese = r(N)
+
+	sum pea_ci if pea_ci == 1
+	local pea = r(N)
+	
+	di (`dese'/`pea')*100
+	*
+
 	*******************
     *rama de actividad*
     *******************
 	destring  p18_ocup_cod4, gen(rama_temp)
+	ta p18_ocup_cod4,m
 	
 	gen byte rama_ci = . 
     replace rama_ci = 1 if rama_temp < 500 & emp_ci==1
-    replace rama_ci = 2 if (rama_temp >= 500 & rama_temp < 1000) & emp_ci==1
-    replace rama_ci = 3 if (rama_temp >= 1000 & rama_temp < 3321) & emp_ci==1
-    replace rama_ci = 4 if (rama_temp >= 3500 & rama_temp < 3990) & emp_ci==1   
-    replace rama_ci = 5 if (rama_temp >= 4100 & rama_temp < 4399) & emp_ci==1 
-    replace rama_ci = 6 if (rama_temp >= 4500 & rama_temp < 4899) & emp_ci==1   
-    replace rama_ci = 8 if (rama_temp >= 4900 & rama_temp < 5390) & emp_ci==1  
-    replace rama_ci = 7 if (rama_temp >= 5500 & rama_temp <= 6399) & emp_ci==1 
-    replace rama_ci = 9 if (rama_temp >= 6400 & rama_temp < 6630) & emp_ci==1
+    replace rama_ci = 2 if  (rama_temp >= 500 &  rama_temp < 1000) & emp_ci==1
+    replace rama_ci = 3 if  (rama_temp >= 1000 & rama_temp < 3321) & emp_ci==1
+    replace rama_ci = 4 if  (rama_temp >= 3500 & rama_temp < 3990) & emp_ci==1   
+    replace rama_ci = 5 if  (rama_temp >= 4100 & rama_temp < 4399) & emp_ci==1 
+    replace rama_ci = 6 if  (rama_temp >= 4500 & rama_temp < 4899) & emp_ci==1   
+    replace rama_ci = 8 if  (rama_temp >= 4900 & rama_temp < 5390) & emp_ci==1  
+    replace rama_ci = 7 if  (rama_temp >= 5500 & rama_temp < 6400) & emp_ci==1 
+    replace rama_ci = 9 if  (rama_temp >= 6400 & rama_temp < 6639) & emp_ci==1
     replace rama_ci = 11 if (rama_temp >= 6800 & rama_temp < 8300) & emp_ci==1
     replace rama_ci = 10 if (rama_temp >= 8400 & rama_temp < 8431) & emp_ci==1
     replace rama_ci = 12 if (rama_temp >= 8500 & rama_temp < 8599) & emp_ci==1
     replace rama_ci = 13 if (rama_temp >= 8600 & rama_temp < 8899) & emp_ci==1
     replace rama_ci = 14 if (rama_temp >= 9000 & rama_temp < 9610) & emp_ci==1
     replace rama_ci = 15 if (rama_temp >= 9700) & emp_ci==1
+	
+	ta rama_ci,m
 	
 	**************
     *categopri_ci*
@@ -702,9 +770,8 @@ ta p05_nacio p03b_reg_civil
     *spublico_ci*
     *************
 	gen byte spublico_ci=.
-	replace spublico_ci=1 if emp_ci==1 & rama_ci==10
-	replace spublico_ci=0 if emp_ci==1 & rama_ci!=10 & rama_ci!=.
-	replace 
+	replace spublico_ci=1 if p21_categ ==1 & emp_ci == 1
+	replace spublico_ci=0 if p21_categ != 1 & emp_ci == 1
 		
 		
 **********************************************************
@@ -755,13 +822,13 @@ ta p05_nacio p03b_reg_civil
 	*dorm_ch*
 	*********
 	gen byte dorm_ch=.
-	replace dorm_ch=... 
+	replace dorm_ch= v07a_dorm
 
 	************
 	*cuartos_ch*
 	************
 	gen byte cuartos_ch=.
-	replace cuartos_ch= v07a_dorm 
+	replace cuartos_ch= v07_cuar 
 	
 	***********
 	*cocina_ch*
@@ -774,15 +841,15 @@ ta p05_nacio p03b_reg_civil
 	*telef_ch*
 	***********
 	gen byte telef_ch=.
-	replace telef_ch=1 if ...
-	replace telef_ch=0 if ...
+	replace telef_ch=1 if  h18h_tres == 1
+	replace telef_ch=0 if h18h_tres == 2
 	
 	***********
 	*refrig_ch*
 	***********
 	gen byte refrig_ch=.
-	replace refrig_ch=1 if h18h_tres == 1
-	replace refrig_ch=0 if h18h_tres == 2
+	replace refrig_ch=1 if h18b_refr == 1
+	replace refrig_ch=0 if h18b_refr == 2
 	
 	*********
 	*auto_ch*
@@ -792,13 +859,6 @@ ta p05_nacio p03b_reg_civil
 	replace auto_ch=0 if h18m_auto == 2
 	
 	
-	**********
-	*refri_ch*
-	**********
-	gen byte refrig_ch=.
-	replace refrig_ch=1 if  h18b_refr == 1
-	replace refrig_ch=0 if  h18b_refr == 2
-
 
 	**********
 	*compu_ch*
@@ -825,8 +885,8 @@ ta p05_nacio p03b_reg_civil
 	*viviprop_ch*
 	*************
 	gen byte viviprop_ch1=.
-	replace viviprop_ch=1 if inlist(v03_tene,3,4,5)
-	replace viviprop_ch=0 if inlist(v03_tene,1,2,6)
+	replace viviprop_ch=1 if inlist(v03_tene,1,3,4,5)
+	replace viviprop_ch=0 if inlist(v03_tene,2,6)
 
 ***************************************************
 *** 7.2 Vivienda - variables Wash (4 variables) ***
@@ -837,8 +897,10 @@ ta p05_nacio p03b_reg_civil
 	************
 	gen byte aguared_ch=.
 	replace aguared_ch=1 if inlist(v08_agua, 1,2,3)
-	replace aguared_ch=0 if inlist(v08_agua, 4,5,6,7,8,9,10,11)
-	
+	replace aguared_ch=0 if inlist(v08_agua, 4,5,6,7,8,11)
+	replace aguared_ch = 1 if (inlist(v08_agua, 9,10)) & v11_sanit == 1
+	replace aguared_ch = 0 if (inlist(v08_agua, 9,10)) & v11_sanit != 1
+
 	*********
 	*bano_ch*
 	*********
@@ -872,18 +934,21 @@ ta p05_nacio p03b_reg_civil
 	**************************
 	*ISOalpha3Pais_m_pared_ch*
 	**************************	
-	gen byte ..._m_pared_ch= ...
-	label var ..._m_pared_ch  "Material de las paredes según el censo del país - variable original"
-	label def ..._m_pared_ch  1 "..." 2 "..." 3 "..."   //categorías originales del país
-	lavel val ..._m_pared_ch  ..._m_pared_ch 
+	gen byte PAN_m_pared_ch = v04_pared
+	label var PAN_m_pared_ch  "Material de las paredes según el censo del país - variable original"
+	label def PAN_m_pared_ch  1 "Bloque, ladrillo, piedra, concreto" 2 " Madera (tablas o troza)" 3 "Quincha o adobe"  ///
+	4 " Metal (zinc, aluminio, otros)" 5 "Palma, paja, penca, ca�aza, bamb� o pal" 6 "Otros materiales" 7 "Sin paredes" //categorías originales del país
+	label val PAN_m_pared_ch  PAN_m_pared_ch 
 
 	*************************
 	*ISOalpha3Pais_m_piso_ch*
 	*************************
-	gen byte ..._m_piso_ch= ...
-	label var ..._m_piso_ch  "Material de los pisos según el censo del país - variable original"
-	label def ..._m_piso_ch  1 "..." 2 "..." 3 "..."   //categorías originales del país
-	lavel val ..._m_piso_ch  ..._m_piso_ch 
+	gen byte PAN_m_piso_ch= v06_piso
+	label var PAN_m_piso_ch  "Material de los pisos según el censo del país - variable original"
+	label def PAN_m_piso_ch  1 "Mosaico o baldosa, m�rmol o parqu�" 2 "Pavimentado (concreto)" 3 "Ladrillo" 4 "Tierra" 5 "Madera" 6 "Otros materiales (ca�a, palos, desechos"  //categorías originales del país
+	label val PAN_m_piso_ch  PAN_m_piso_ch 
+	
+	
 	
 	**************************
 	*ISOalpha3Pais_m_techo_ch*
