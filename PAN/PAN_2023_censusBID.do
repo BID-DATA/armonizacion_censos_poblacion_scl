@@ -461,8 +461,7 @@ No declarada |        335        0.56      100.00
 	********
 	gen byte dis_ci=0
 	replace dis_ci=1 if (inlist(p11b1_cami, 2,3,4))  | ///
-						*(inlist(p11b2_usarb,2,3,4))  | /// según wg no se incluyé específicamente usar los brazos
-						(inlist(p11b3_habl, 2,3,4))  | ///
+						(inlist(p11b3_habl, 2,3,4))  | /// según wg no se incluyé específicamente usar los brazos
 						(inlist(p11b4_enten,2,3,4))  | ///
 						(inlist(p11b5_cuid, 2,3,4))  | ///
 						(inlist(p11b6_ver,  2,3,4))  | ///
@@ -480,8 +479,7 @@ No declarada |        335        0.56      100.00
 	**********
 	gen byte disWG_ci=0 
 	replace disWG_ci=1 if   (inlist(p11b1_cami,3,4))    | ///
-							*(inlist(p11b2_usarb,3,4))   | /// según wg no se incluyé específicamente usar los brazos
-							(inlist(p11b3_habl,3,4))    | ///
+							(inlist(p11b3_habl,3,4))    | /// según wg no se incluyé específicamente usar los brazos
 							(inlist(p11b4_enten,3,4))   | ///
 							(inlist(p11b5_cuid,3,4))    | ///
 							(inlist(p11b6_ver, 3,4))    | ///
@@ -980,7 +978,7 @@ ta p05_nacio p03b_reg_civil
 	**********************
 	gen byte PAN_dis_ci = p11_disca
 	label var PAN_dis_ci  "Individuos con discapacidad según el censo del país - variable original"
-	label def PAN_dis_ci 1 "Sí" 2 "No" . "No declarado"   //categorías originales del país
+	label def PAN_dis_ci 1 "Sí" 2 "No"   //categorías originales del país
 	label val PAN_dis_ci PAN_dis_ci
 	tab PAN_dis_ci
 
