@@ -60,7 +60,7 @@ set more off
 local PAIS PAN 
 local ANIO "2023"  
 
-global ruta_raw = "${censusFolder}\\raw\\`PAIS'" 
+global ruta_raw = "${censusFolder}\\raw\\`PAIS'\\`ANIO'\\data_orig" 
 
 cap log close
 local date: di %tdCCYYNNDD daily("$S_DATE", "DMY") 

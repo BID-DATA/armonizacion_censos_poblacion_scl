@@ -2,11 +2,11 @@
 /*==============================================================================
 							CENSOS POBLACIONALES
 						   Script de armonización
-País: ...
-Año: ...
-Autores: ...
-Última versión: ...
-División: ... - IADB
+País: PAN
+Año: 2023
+Autores: Pablo Cortez
+Última versión: 23MAY2023
+División: MIG - IADB
 *******************************************************************************
 
 INSTRUCCIONES:
@@ -81,9 +81,9 @@ global ruta = "${censusFolder}"  //cambiar ruta seleccionada
 global PAIS PAN    				 //cambiar
 global ANIO 2023   				 //cambiar
 
-global base_in  = "$ruta\\raw\\$PAIS\\${PAIS}_${ANIO}_NOIPUMS.dta"
+global base_in  = "$ruta\\raw\\$PAIS\\$ANIO\\data_orig\\${PAIS}_${ANIO}_NOIPUMS.dta"
 global base_out = "$ruta\\clean\\$PAIS\\${PAIS}_${ANIO}_censusBID.dta"
-global log_file ="$ruta\\clean\\$PAIS\\${PAIS}_${ANIO}_censusBID.log"                                                   
+global log_file ="$ruta\\clean\\$PAIS\\${PAIS}_${ANIO}_censusBID.log"                                                  
 capture log close
 log using "$log_file", replace  //agregar ,replace si ya está creado el log_file en tu carpeta
 
@@ -131,10 +131,7 @@ rename *, lower
 	13 "Panamá Oeste" 
 	label value region_c region_c
 	tab region_c
-	
-	
-    *label var region_c "division politico-administrativa, provincia"
-	
+		
 	*********
 	*geolev1*
 	*********
@@ -156,11 +153,6 @@ rename *, lower
 	label value geolev1 geolev1
 	tab geolev1
 	
-	tab region_c ,m 
-	tab geolev1,m 
-
-	** mismo número de registros
-	
     ********
 	*pais_c*
 	********
@@ -174,50 +166,36 @@ rename *, lower
     *******************
     *idh_ch (ID hogar)*
     *******************
-	* generar variable de ID tipo string. cambiar el formato según corresponda.
-	* Si corresponde, usar comando group para obtener identificador,
-	* por ejemplo: group(conglome vivienda hogar)
-	egen  idh_ch = group( llaveviv hogar) 	
-	tostring idh_ch, replace format("%16.0f")	
-	
+	egen  idh_ch =concat(llaveviv hogar) 	
 	
 	** chequear número de hogares
 	egen unique_tag = tag(idh_ch)
 	count if unique_tag == 1
-	
-	/*
-	
-tag(idh_ch) |      Freq.     Percent        Cum.
-------------+-----------------------------------
-          0 |  2,834,023       69.72       69.72
-          1 |  1,230,757       30.28      100.00
-------------+-----------------------------------
-      Total |  4,064,780      100.00
+		/*
+		
+		tag(idh_ch) |      Freq.     Percent        Cum.
+		------------+-----------------------------------
+				  0 |  2,834,023       69.72       69.72
+				  1 |  1,230,757       30.28      100.00
+		------------+-----------------------------------
+			  Total |  4,064,780      100.00
 
-*/
-	
+		*/
 	
 	**********************
     *idp_ci (ID personas)*
     **********************
-	* generar variable de ID tipo string. cambiar el formato según corresponda.
-	* Revisar que no existan duplicados en idp_ci.
-	egen  idp_ci = group( llaveviv hogar npersona) 	
-	tostring idp_ci, replace format("%16.0f")	
-	
-	*tostring ..., gen(idp_ci) format("%16.0f")	
-	
-	duplicates report idp_ci //  idh_ch CALIDAD: revisar que resultado sea copies =1
-		
-		
+	egen  idp_ci = concat(llaveviv hogar npersona) 	
+	duplicates report idp_ci // copies =1
+	duplicates report idh_ch idp_ci
 		/*
 		--------------------------------------
-   Copies | Observations       Surplus
-----------+---------------------------
-        1 |      4064780             0
---------------------------------------
-
+		   Copies | Observations       Surplus
+		----------+---------------------------
+				1 |      4064780             0
+		--------------------------------------
 		*/
+		
 	****************************************
 	*(factor_ci) factor expansión individio*
 	****************************************
@@ -246,7 +224,6 @@ tag(idh_ch) |      Freq.     Percent        Cum.
 	replace zona_c= 0 if area == "2"
 	tab zona_c,m 
 	
-
 ************************************
 *** 2. Demografía (18 variables) ***
 ************************************
@@ -266,18 +243,17 @@ tag(idh_ch) |      Freq.     Percent        Cum.
 	replace edad_ci=. if edad_ci > 160 | edad_ci <= 0
 	tab edad_ci
 	tab p03_edad if edad_ci == .
-	
-	/* 	tab p03_edad if edad_ci == .
+		/* 	tab p03_edad if edad_ci == .
 
-	Muchos valores atípicos en la edad
-      3.EDAD |      Freq.     Percent        Cum.
--------------+-----------------------------------
-           0 |     59,248       99.44       99.44
-No declarada |        335        0.56      100.00
--------------+-----------------------------------
-       Total |     59,583      100.00
+		Muchos valores atípicos en la edad
+			  3.EDAD |      Freq.     Percent        Cum.
+		-------------+-----------------------------------
+				   0 |     59,248       99.44       99.44
+		No declarada |        335        0.56      100.00
+		-------------+-----------------------------------
+			   Total |     59,583      100.00
 
-	*/
+		*/
 
 	*************
 	*relacion_ci*
@@ -291,8 +267,6 @@ No declarada |        335        0.56      100.00
 	replace relacion_ci = 6 if inlist(p01_rela, 14)
 	tab relacion_ci,m
 	
-
-
 	**********
 	*civil_ci*
 	**********
@@ -349,9 +323,9 @@ No declarada |        335        0.56      100.00
 	replace clasehog_ch=2 if (nhijos_ch>0| nconyuges_ch>0) & (notropari_ch==0 & notronopari_ch==0) //nuclear 
 	replace clasehog_ch=3 if notropari_ch>0 & notronopari_ch==0 //ampliado
 	replace clasehog_ch=4 if ((nconyuges_ch>0 | nhijos_ch>0 | notropari_ch>0) & (notronopari_ch>0)) //compuesto  
-	replace clasehog_ch=5 if nhijos_ch==0 & nconyuges_ch==0 & notropari_ch==0 & notronopari_ch>0 //corresidente
-
+	replace clasehog_ch=5 if nhijos_ch==0 & nconyuges_ch==0 & notropari_ch==0 & notronopari_ch>0 //corresident
 	ta clasehog_ch,m 
+	
 	**************
 	*nmiembros_ch*
 	**************
@@ -381,7 +355,6 @@ No declarada |        335        0.56      100.00
 	*nmenor1_ch*
 	************
 	egen byte nmenor1_ch=sum((relacion_ci>0 & relacion_ci<9) & (edad_ci<1)), by(idh_ch) 
-
 
 ************************************
 *** 3. Diversidad (11 variables) ***
@@ -426,8 +399,8 @@ No declarada |        335        0.56      100.00
 	replace afroind_ci=1 if ind_ci==1 
 	replace afroind_ci=2 if afro_ci==1
 	replace afroind_ci=3 if noafroind_ci == 1
-
 	ta afroind_ci,m
+	
 	*********
 	*afro_ch*
 	*********
@@ -466,9 +439,6 @@ No declarada |        335        0.56      100.00
 						(inlist(p11b5_cuid, 2,3,4))  | ///
 						(inlist(p11b6_ver,  2,3,4))  | ///
 						(inlist(p11b7_oir,  2,3,4))
-						
-						
-	
 	replace dis_ci=. if p11_disca == 3
 	
 	tab dis_ci,m
@@ -494,7 +464,6 @@ No declarada |        335        0.56      100.00
 	egen byte dis_ch = sum(dis_ci), by(idh_ch) 
 	replace dis_ch=1 if dis_ch>=1 & dis_ch!=.
 	
-	
 **********************************
 *** 4. Migración (3 variables) ***
 **********************************	
@@ -509,30 +478,25 @@ ta p05_nacio p03b_reg_civil
 	gen byte migrante_ci=0 
 	replace migrante_ci=1 if p05_nacio == 3
 	replace migrante_ci=. if p05_nacio == 4
-	
 	ta migrante_ci,m
 	 	
 	****************
     *migantiguo5_ci*
     ****************
 	gen antiguedad = 2024 - p05a_anio1 
-	
-	
 	gen byte migrantiguo5_ci=0
 	replace migrantiguo5_ci=1 if antiguedad >= 5 & migrante_ci==1
 	replace migrantiguo5_ci=. if migrante_ci == 0
-	
 	ta migrantiguo5_ci,m 
+	
 	***********
 	*miglac_ci*
 	***********
 	destring p05_naci_cod, gen(pais_naci)
 	tab pais_naci if migrante_ci == 1
-	
 	gen byte miglac_ci=0 if migrante_ci == 1
 	replace miglac_ci=1 if inrange(pais_naci,211,381)  & migrante_ci ==1
 	replace miglac_ci=. if migrante_ci == 0
-
 	ta miglac_ci
 	
 ***********************************
@@ -546,52 +510,49 @@ ta p05_nacio p03b_reg_civil
 	
 	gen byte aedu_ci=0 if inlist(p15_grado,1,2,3,4)
 	replace aedu_ci=1 if p15_grado == 11
-		replace aedu_ci=2 if p15_grado == 12
-			replace aedu_ci=3 if p15_grado == 13
-				replace aedu_ci=4 if p15_grado == 14
-					replace aedu_ci=5 if p15_grado == 15
-						replace aedu_ci=6 if p15_grado == 16
+	replace aedu_ci=2 if p15_grado == 12
+	replace aedu_ci=3 if p15_grado == 13
+	replace aedu_ci=4 if p15_grado == 14
+	replace aedu_ci=5 if p15_grado == 15
+	replace aedu_ci=6 if p15_grado == 16
 	
 	replace aedu_ci=7 if p15_grado == 21
-		replace aedu_ci=8 if p15_grado == 22
-			replace aedu_ci=9 if p15_grado == 23
+	replace aedu_ci=8 if p15_grado == 22
+	replace aedu_ci=9 if p15_grado == 23
 		 
 	replace aedu_ci=7 if p15_grado == 31
-		replace aedu_ci=8 if p15_grado == 32
-			replace aedu_ci=9 if p15_grado == 33
-				replace aedu_ci=10 if p15_grado == 34
-					replace aedu_ci=11 if p15_grado == 35
+	replace aedu_ci=8 if p15_grado == 32
+	replace aedu_ci=9 if p15_grado == 33
+	replace aedu_ci=10 if p15_grado == 34
+	replace aedu_ci=11 if p15_grado == 35
 					
 	replace aedu_ci=12 if p15_grado == 36
-		replace aedu_ci=12 if p15_grado == 41
-			replace aedu_ci=12 if p15_grado == 42
+	replace aedu_ci=12 if p15_grado == 41
+	replace aedu_ci=12 if p15_grado == 42
  
 	replace aedu_ci=12+1 if p15_grado == 51
-		replace aedu_ci=12+2 if p15_grado == 52
-			replace aedu_ci=12+3 if p15_grado == 53
-				replace aedu_ci=12+4 if p15_grado == 54
-					replace aedu_ci=12+5 if p15_grado == 55
-						replace aedu_ci=12+6 if p15_grado == 56
+	replace aedu_ci=12+2 if p15_grado == 52
+	replace aedu_ci=12+3 if p15_grado == 53
+	replace aedu_ci=12+4 if p15_grado == 54
+	replace aedu_ci=12+5 if p15_grado == 55
+	replace aedu_ci=12+6 if p15_grado == 56
 						
 	replace aedu_ci=16+1 if p15_grado == 61
 	
 	replace aedu_ci=16+1 if p15_grado == 71
-		replace aedu_ci=16+2 if p15_grado == 72
+	replace aedu_ci=16+2 if p15_grado == 72
 		
 	replace aedu_ci=16+1 if p15_grado == 81
-		replace aedu_ci=16+2 if p15_grado == 82
-			replace aedu_ci=16+3 if p15_grado == 83
-				replace aedu_ci=16+4 if p15_grado == 84
+	replace aedu_ci=16+2 if p15_grado == 82
+	replace aedu_ci=16+3 if p15_grado == 83
+	replace aedu_ci=16+4 if p15_grado == 84
 				
 	replace aedu_ci=18 if aedu_ci>=18 
 	
 	replace aedu_ci=. if p15_grado == .
-		replace aedu_ci=. if p15_grado == 99
+	replace aedu_ci=. if p15_grado == 99
 		
-	
 	ta aedu_ci,m 
-
-
 
 	**********
 	*eduno_ci*
@@ -603,9 +564,8 @@ ta p05_nacio p03b_reg_civil
 	*edupi_ci*
 	**********
 	gen byte edupi_ci=(aedu_ci>=1 & aedu_ci<=5) 
-
-		replace edupi_ci=. if aedu_ci==. 
-		ta edupi_ci
+	replace edupi_ci=. if aedu_ci==. 
+	ta edupi_ci
 
 	**********
 	*edupc_ci*
@@ -682,21 +642,12 @@ ta p05_nacio p03b_reg_civil
 	ta p17b_algtra,m
 	ta p17c_algfam,m 
 	
-	
     gen byte condocup_ci =.
 	replace condocup_ci = 1 if p17_trab == 1 | p17a_trabaus == 1  | p17b_algtra == 1 | p17c_algfam == 1  //ocupados
-	///
-	replace condocup_ci = 2 if (p17_trab == 2 & p17a_trabaus == 2 & p17b_algtra == 2 & p17c_algfam == 2) & ///
-	(p17d_bsem == 1)	// desocupados	
-	///
+	replace condocup_ci = 2 if (p17_trab == 2 & p17a_trabaus == 2 & p17b_algtra == 2 & p17c_algfam == 2) & (p17d_bsem == 1)	// desocupados	
 	ta p17d_bsem,m 
-	///
-	replace condocup_ci = 3 if (p17_trab == 2 & p17a_trabaus == 2 & p17b_algtra == 2 & p17c_algfam == 2) & ///
-	(p17d_bsem == 2 ) //inactivos
-	///
+	replace condocup_ci = 3 if (p17_trab == 2 & p17a_trabaus == 2 & p17b_algtra == 2 & p17c_algfam == 2) & (p17d_bsem == 2 ) //inactivos
 	replace condocup_ci = 4 if edad_ci < 15	//no responde por ser menor de edad
-	
-	
 	ta condocup_ci,m
 
 	********
@@ -718,7 +669,6 @@ ta p05_nacio p03b_reg_civil
 	gen byte pea_ci=.
 	replace pea_ci=1 if inlist(condocup_ci,1,2)
 	replace pea_ci=0 if inlist(condocup_ci,3,4)
-
 	
 	sum desemp_ci if desemp_ci == 1
 	local dese = r(N)
@@ -727,8 +677,7 @@ ta p05_nacio p03b_reg_civil
 	local pea = r(N)
 	
 	di (`dese'/`pea')*100
-	*
-
+	
 	*******************
     *rama de actividad*
     *******************
@@ -751,7 +700,6 @@ ta p05_nacio p03b_reg_civil
     replace rama_ci = 13 if (rama_temp >= 8600 & rama_temp < 8899) & emp_ci==1
     replace rama_ci = 14 if (rama_temp >= 9000 & rama_temp < 9610) & emp_ci==1
     replace rama_ci = 15 if (rama_temp >= 9700) & emp_ci==1
-	
 	ta rama_ci,m
 	
 	**************
@@ -770,7 +718,6 @@ ta p05_nacio p03b_reg_civil
 	gen byte spublico_ci=.
 	replace spublico_ci=1 if p21_categ ==1 & emp_ci == 1
 	replace spublico_ci=0 if p21_categ != 1 & emp_ci == 1
-		
 		
 **********************************************************
 ***  7.1 Vivienda - variables generales (15 variables) ***
@@ -856,8 +803,6 @@ ta p05_nacio p03b_reg_civil
 	replace auto_ch=1 if h18m_auto == 1
 	replace auto_ch=0 if h18m_auto == 2
 	
-	
-
 	**********
 	*compu_ch*
 	**********
@@ -921,13 +866,9 @@ ta p05_nacio p03b_reg_civil
 	replace des1_ch=1 if inlist(v11_sanit,1)
 	replace des1_ch=2 if inlist(v11_sanit,2,3)
 
-
 *************************************************************
 *** 8. Otras variables específicas por país (6 variables) ***
 *************************************************************	
-* si no existe la variable, crearla con un missing value (.). Cambia ISOalpha3Pais
-* por el país que te toca. Por ejemplo si te toca Ecuador debe ser 
-* ECU_m_pared_ch, ECU_m_piso_ch, etc.
  
 	**************************
 	*ISOalpha3Pais_m_pared_ch*
@@ -946,7 +887,6 @@ ta p05_nacio p03b_reg_civil
 	label def PAN_m_piso_ch  1 "Mosaico o baldosa, m�rmol o parqu�" 2 "Pavimentado (concreto)" 3 "Ladrillo" 4 "Tierra" 5 "Madera" 6 "Otros materiales (ca�a, palos, desechos"  //categorías originales del país
 	label val PAN_m_piso_ch  PAN_m_piso_ch 
 	
-	
 	**************************
 	*ISOalpha3Pais_m_techo_ch*
 	**************************	
@@ -960,7 +900,6 @@ ta p05_nacio p03b_reg_civil
 	label val PAN_m_techo_ch PAN_m_techo_ch 
 	ta PAN_m_techo_ch
 	
-
 	**************************
 	*ISOalpha3Pais_ingreso_ci*
 	**************************	
@@ -987,7 +926,6 @@ ta p05_nacio p03b_reg_civil
 *******************************************************************************/
 capture drop _merge
 merge m:1 pais_c anio_c using "$ruta\5_International_Poverty_Lines_LAC_long.dta", keepusing (ppp_2011 cpi_2011 lp19_2011 lp31_2011 lp5_2011 tc_wdi ppp_wdi2011)
-
 drop if _merge ==2
 
 g tc_c     = tc_wdi
@@ -1004,9 +942,7 @@ g lp5_ci   = lp5_2011
 /*
 última actualización de la línea en 2021
 https://www.mef.gob.pa/wp-content/uploads/2023/08/MEF-DAES-Pobreza-e-Indigencia-por-ingreso-2021.pdf#:~:text=11-,Pobreza%20e%20indigencia%20por%20ingreso%20%E2%80%93%20octubre%20de%202021,la%20Encuesta%20de%20Hogares%20anterior.
-
 */
-
 
 capture label var tc_c "Tasa de cambio LCU/USD Fuente: WB/WDI"
 capture label var ipc_c "Índice de precios al consumidor base 2011=100 Fuente: IMF/WEO"
@@ -1016,16 +952,15 @@ capture label var lp5_ci "Línea de pobreza USD5 por día en moneda local a prec
 
 drop ppp_2011 cpi_2011 lp19_2011 lp31_2011 lp5_2011 tc_wdi ppp_wdi2011 _merge
 
-
 /*******************************************************************************
    IV. Revisión de que se hayan creado todas las variables
 *******************************************************************************/
-* CALIDAD: revisa que hayas creado todas las variables. Si alguna no está
-* creada, te apacerá en rojo el nombre. 
+* CALIDAD: se revisa que se  hayan creado todas las variables. Si alguna no está
+* creada, apacerá en rojo el nombre. 
 
 global lista_variables region_BID_c region_c geolev1 pais_c anio_c idh_ch idp_ci factor_ci factor_ch estrato_ci upm zona_c sexo_c edad_ci relacion_ci civil_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch miembros_ci clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch afro_ci ind_ci noafroind_ci afroind_ci afro_ch ind_ch noafroind_ch afroind_ch  dis_ci disWG_ci dis_ch migrante_ci migrantiguo5_ci miglac_ci aedu_ci eduno_ci edupi_ci edupc_ci edusi_ci edusc_ci edus1i_ci edus1c_ci edus2i_ci edus2c_ci edupre_ci asiste_ci literacy condocup_ci emp_ci desemp_ci pea_ci rama_ci  categopri_ci spublico_ci luz_ch piso_ch pared_ch techo_ch resid_ch dorm_ch cuartos_ch cocina_ch telef_ch refrig_ch auto_ch compu_ch internet_ch cel_ch viviprop_ch1 aguared_ch bano_ch banomejorado_ch des1_ch ${PAIS}_ingreso_ci ${PAIS}_ingresolab_ci ${PAIS}_m_pared_ch ${PAIS}_m_piso_ch ${PAIS}_m_techo_ch ${PAIS}_dis_ci tc_c ipc_c lp19_ci lp31_ci lp5_ci
 
-* selecciona las siguientes 6 líneas y ejecuta (do)
+* seleccionar las siguientes 6 líneas y ejecuta (do)
 foreach v of global lista_variables {
 	cap confirm variable `v'
 	if _rc == 111 {
@@ -1036,12 +971,9 @@ foreach v of global lista_variables {
 /*******************************************************************************
    V. Borrar variables originales con exepción de los identificadores 
 *******************************************************************************/
-* En "..." agregar la lista de variables de ID originales (por ejemplo los ID de personas, vivienda y hogar)
 
 keep  $lista_variables llaveviv hogar npersona 
-
-* selecciona las 3 lineas y ejecuta (do). Deben quedar 94 variables de las secciones II y III más las 
-* variables originales de ID que hayas mantenido
+* selecciona las 3 lineas y ejecuta (do). Deben quedar 94 variables de las secciones II y III más las variables originales de ID que hayas mantenido (97)
 ds
 local varconteo: word count `r(varlist)'
 display "Número de variables de la base: `varconteo'"
@@ -1050,7 +982,7 @@ display "Número de variables de la base: `varconteo'"
 /*******************************************************************************
    VI. Incluir etiquetas para las variables y categorías
 *******************************************************************************/
-include "$ruta\labels_general.do"
+include "$gitFolder\armonizacion_censos_poblacion_scl\Base\labels_general.do"
 
 
 /*******************************************************************************
