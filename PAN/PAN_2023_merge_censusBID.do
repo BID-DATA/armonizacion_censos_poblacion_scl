@@ -57,10 +57,10 @@ set more off
    I. Definir rutas y log file
 ****************************************************************************/
 
-local PAIS PAN //cambia el país
-local ANIO "2023"  // cambia el año
+local PAIS PAN 
+local ANIO "2023"  
 
-global ruta_raw = "${censusFolder}\\raw\\`PAIS'" //cambia la ruta 
+global ruta_raw = "${censusFolder}\\raw\\`PAIS'" 
 
 cap log close
 local date: di %tdCCYYNNDD daily("$S_DATE", "DMY") 
@@ -71,11 +71,11 @@ log using "`log_file'", replace
    II. Unir módulos en una sola base
 *****************************************************************************/
 
-* Append de las bases de población //cambia el nombre de las bases.dta
+* Append de las bases de población 
 use "$ruta_raw\\CEN2023_PERSONA.dta" , clear
 
 
-* Merge de los módulos //cambia el nombre de las bases.dta
+* Merge de los módulos 
 merge m:1 LLAVEVIV HOGAR using "$ruta_raw\\CEN2023_HOGAR.dta"
 tab _merge
 drop _merge
