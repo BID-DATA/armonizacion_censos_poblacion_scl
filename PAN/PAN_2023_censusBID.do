@@ -168,33 +168,16 @@ rename *, lower
     *******************
 	egen  idh_ch =concat(llaveviv hogar) 	
 	
-	** chequear número de hogares
+	** revisar número de hogares
 	egen unique_tag = tag(idh_ch)
 	count if unique_tag == 1
-		/*
-		
-		tag(idh_ch) |      Freq.     Percent        Cum.
-		------------+-----------------------------------
-				  0 |  2,834,023       69.72       69.72
-				  1 |  1,230,757       30.28      100.00
-		------------+-----------------------------------
-			  Total |  4,064,780      100.00
 
-		*/
-	
 	**********************
     *idp_ci (ID personas)*
     **********************
 	egen  idp_ci = concat(llaveviv hogar npersona) 	
 	duplicates report idp_ci // copies =1
 	duplicates report idh_ch idp_ci
-		/*
-		--------------------------------------
-		   Copies | Observations       Surplus
-		----------+---------------------------
-				1 |      4064780             0
-		--------------------------------------
-		*/
 		
 	****************************************
 	*(factor_ci) factor expansión individio*
@@ -224,6 +207,7 @@ rename *, lower
 	replace zona_c= 0 if area == "2"
 	tab zona_c,m 
 	
+	
 ************************************
 *** 2. Demografía (18 variables) ***
 ************************************
@@ -234,7 +218,6 @@ rename *, lower
 	gen byte sexo_ci =.
 	replace sexo_ci = 1 if  p02_sexo == 1
 	replace sexo_ci = 2 if  p02_sexo == 2
-	tab p02_sexo,m
 	
 	********
 	*edad_c*
@@ -242,18 +225,6 @@ rename *, lower
 	gen int edad_ci = p03_edad
 	replace edad_ci=. if edad_ci > 160 | edad_ci <= 0
 	tab edad_ci
-	tab p03_edad if edad_ci == .
-		/* 	tab p03_edad if edad_ci == .
-
-		Muchos valores atípicos en la edad
-			  3.EDAD |      Freq.     Percent        Cum.
-		-------------+-----------------------------------
-				   0 |     59,248       99.44       99.44
-		No declarada |        335        0.56      100.00
-		-------------+-----------------------------------
-			   Total |     59,583      100.00
-
-		*/
 
 	*************
 	*relacion_ci*
@@ -389,7 +360,6 @@ rename *, lower
 	replace noafroind_ci =1 if (afro_ci==0 & ind_ci==0)
 	replace noafroind_ci =0 if (afro_ci==1 | ind_ci==1)
 	replace noafroind_ci =. if (afro_ci==. | ind_ci==.) //Esto solo en el caso que se tenga ambas opciones no disponibles. 
-	
 	ta noafroind_ci,m
 
 	************
