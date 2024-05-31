@@ -60,7 +60,7 @@ set more off
 local PAIS ECU //cambia el país
 local ANIO "2017"  // cambia el año
 
-global ruta_raw = "${censusFolder}\\raw\\`PAIS'" //cambia la ruta 
+global ruta_raw = "${censusFolder}\\raw\\`PAIS'\\`ANIO'\\data_orig" //cambia la ruta 
 
 cap log close
 local date: di %tdCCYYNNDD daily("$S_DATE", "DMY") 

@@ -81,7 +81,7 @@ global ruta = "${censusFolder}"  //cambiar ruta seleccionada
 global PAIS PER    				 //cambiar
 global ANIO 2017   				 //cambiar
 
-global base_in  = "$ruta\\raw\\$PAIS\\${PAIS}_${ANIO}_NOIPUMS.dta"
+global base_in  = "$ruta\\raw\\$PAIS\\$ANIO\\data_orig\\${PAIS}_${ANIO}_NOIPUMS.dta"
 global base_out = "$ruta\\clean\\$PAIS\\${PAIS}_${ANIO}_censusBID.dta"
 global log_file ="$ruta\\clean\\$PAIS\\${PAIS}_${ANIO}_censusBID.log"                                                   
 capture log close
@@ -143,17 +143,20 @@ rename *, lower
     *idh_ch (ID hogar)*
     *******************
 	* generar variable de ID tipo string. cambiar el formato según corresponda.
-	* Si corresponde, usar comando group para obtener identificador,
-	* por ejemplo: group(conglome vivienda hogar)
-	tostring ..., gen(idh_ch) format("%16.0f")	
+	* usar comando group para obtener identificador o concat si corresponde
+	* group(conglome vivienda hogar)
+	* tostring ..., gen(idh_ch) format("%16.0f")	
+	egen  idh_ch =concat(... ...) 	
+	* revisar número de hogares
+	egen unique_tag = tag(idh_ch)
+	count if unique_tag == 1
 	
 	**********************
     *idp_ci (ID personas)*
     **********************
-	* generar variable de ID tipo string. cambiar el formato según corresponda.
-	* Revisar que no existan duplicados en idp_ci.
-	tostring ..., gen(idp_ci) format("%16.0f")	
-	
+	* generar variable de ID tipo string. cambiar el formato según corresponda. Revisar que no existan duplicados en idp_ci.
+	* tostring ..., gen(idp_ci) format("%16.0f")
+	egen  idp_ci = concat(... ... ...) 
 	duplicates report idh_ch idp_ci // CALIDAD: revisar que resultado sea copies =1
 		
 	****************************************
@@ -791,11 +794,6 @@ g lp19_ci  = lp19_2011
 g lp31_ci  = lp31_2011 
 g lp5_ci   = lp5_2011
 
-*se debe eliminar una vez se actualice la linea de pobreza en Oct. 2021: lp31_ci2020= lp31_ci2019* (1.42015)
-replace lp31_ci = 2800.9949*1.420151 if anio_c==2020 & pais_c=="ARG" 
-replace lp19_ci = 1716.7388*1.420151 if anio_c==2020 & pais_c=="ARG" 
-replace lp5_ci = 4517.7334*1.420151 if anio_c==2020 & pais_c=="ARG" 
-
 capture label var tc_c "Tasa de cambio LCU/USD Fuente: WB/WDI"
 capture label var ipc_c "Índice de precios al consumidor base 2011=100 Fuente: IMF/WEO"
 capture label var lp19_ci  "Línea de pobreza USD1.9 día en moneda local a precios corrientes a PPA 2011"
@@ -838,7 +836,7 @@ display "Número de variables de la base: `varconteo'"
 /*******************************************************************************
    VI. Incluir etiquetas para las variables y categorías
 *******************************************************************************/
-include "$ruta\labels_general.do"
+include "$gitFolder\armonizacion_censos_poblacion_scl\Base\labels_general.do"
 
 
 /*******************************************************************************
