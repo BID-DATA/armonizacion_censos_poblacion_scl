@@ -4,8 +4,8 @@
 País: Ecuador
 Año: 2023
 Autores: María Isabel García
-Última versión: 15 Mayo 2024
-División: GDI - IADB
+Última versión: 15MAY2024
+División: SCL/GDI - IADB
 ****************************************************************************
 INSTRUCCIONES:
 
@@ -60,38 +60,16 @@ set more off
 local PAIS ECU //cambia el país
 local ANIO "2022"  // cambia el año
 
-global ruta_raw = "C:\Users\maytes\OneDrive - Inter-American Development Bank Group\Documents\Censos\raw\\`PAIS'" //cambia la ruta 
-global ruta_clean = "C:\Users\maytes\OneDrive - Inter-American Development Bank Group\Documents\Censos\clean\\`PAIS'" //cambia la ruta 
+global ruta_raw = "${censusFolder}\\raw\\`PAIS'\\`ANIO'\\data_orig" //cambia la ruta 
+local date: di %tdCCYYNNDD daily("$S_DATE", "DMY") 
 
+cap log close
+local log_file ="$ruta_raw\\`PAIS'_`ANIO'_NOIPUMS_`date'.log"
+log using "`log_file'", replace
 
 /****************************************************************************
    II. Unir módulos en una sola base
 *****************************************************************************/
-
-
-/* Union de todos los módulos.
-use "$ruta_raw\\censo_viv_2022.dta" , clear
-* Merge de los módulos //cambia el nombre de las bases.dta
-merge 1:m id_viv using "$ruta_raw\\censo_hog_2022.dta"
-tab v0201 _merge, m
-keep if _merge==3
-rename _merge _mergevh
-
-merge 1:m id_hog using "$ruta_raw\\censo_mort_2022.dta"
-*keep if _merge==3
-rename _merge _mergevhn
-
-
-merge m:m id_hog using "$ruta_raw\\censo_emig_2022.dta"
-*keep if _merge==3
-rename _merge _mergevhme
-
-
-merge m:m id_hog using "$ruta_raw\\censo_pob_2022.dta"
-keep if _merge==3
-*/
-
-
 
 * Union  vivienda, hogar y persona
 use "$ruta_raw\\CPV_Vivienda_2022_Nacional.dta" , clear
@@ -101,7 +79,6 @@ merge 1:m ID_VIV using "$ruta_raw\\CPV_Hogar_2022_Nacional.dta"
 
 tab V0201 _merge, m
 keep if _merge==3
-
 
 rename _merge _mergevh
 
@@ -124,3 +101,5 @@ tab _merge // 1: solo en master, 2: solo en using, 3: en ambos
 
 compress  
 save "$ruta_raw\\`PAIS'_`ANIO'_NOIPUMS.dta", replace
+
+log close
