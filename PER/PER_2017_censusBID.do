@@ -30,17 +30,17 @@ local ANO "2017"
 ** Setup code, load database,       **
 ** and include all common variables **
 **************************************
-global ruta = "/home/mariarey/shared/SCLDataPoD/Harmonized Censuses - IPUMS/"
+global ruta = "${censusFolder}"
 
-local log_file ="$ruta//clean//`PAIS'//log//`PAIS'_`ANO'_censusBID.log"
+*local log_file ="$ruta//clean//`PAIS'//log//`PAIS'_`ANO'_censusBID.log"
 local base_in ="$ruta//raw//`PAIS'//`PAIS'_`ANO'_NOIPUMS.dta"
 local base_out ="$ruta//clean//`PAIS'//`PAIS'_`ANO'_censusBID.dta"
                                                     
-capture log close
-log using "`log_file'", replace
+*capture log close
+*log using "`log_file'", replace
 
 use "`base_in'", clear
-gen region_BID_c = 3
+cap gen region_BID_c = 3
 
     *********
 	*pais_c*
@@ -342,11 +342,13 @@ replace civil_ci=4 if c5_p24==4
      *******************
      ****condocup_ci****
      *******************
-    gen condocup_ci=.
-	replace condocup_ci=1 if c5_p17 >=1 & c5_p17<=6
-	replace condocup_ci=2 if c5_p17==7 & c5_p18==1
-	replace condocup_ci=3 if c5_p17==7 & c5_p18==2
-	replace condocup_ci=4 if edad_ci<14
+	gen byte condocup_ci=.
+	replace condocup_ci=1 if (c5_p17 >=1 & c5_p17<=5)|c5_p16==1 // trabajó
+	replace condocup_ci=2 if (c5_p17==7|c5_p17==6|c5_p16==2)&c5_p18==1 // no trabajó y buscó
+	replace condocup_ci=3 if (c5_p17==7|c5_p17==6|c5_p16==2)&c5_p18==2 // no trabajó y no buscó
+	replace condocup_ci=4 if edad_ci <15     
+
+	
 	
 	************
      ***emp_ci***
@@ -675,4 +677,7 @@ compress
 
 save "`base_out'", replace 
 log close
+
+
+*log close
 
