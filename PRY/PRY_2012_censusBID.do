@@ -650,30 +650,40 @@ Superior No Universitario  o Universita |       7
 	***********
 	gen telef_ch = .
 	replace telef_ch = 1 if V1604 == 4 
-
+	replace telef_ch = 0 if V1604 == .
+	replace telef_ch = . if V1604 == 99
+	
 	***********
 	*refrig_ch*
 	***********
 	gen refrig_ch=.
 	replace refrig_ch = 1 if V1603 == 3 
+	replace refrig_ch = 0 if V1603 == .
+	replace refrig_ch = . if V1603 == 99
 
 	*********
 	*auto_ch*
 	*********
 	gen auto_ch=.
 	replace auto_ch = 1 if V1611 == 11
+	replace auto_ch = 0 if V1611 == .
+	replace auto_ch = . if V1611 == 99
 
 	********
 	*compu_ch*
 	********
 	gen compu_ch=.
 	replace compu_ch = 1 if V1616 == 16 
+	replace compu_ch = 0 if V1616 == .
+	replace compu_ch = . if V1616 == 99
 
 	*************
 	*internet_ch*
 	************* 
 	gen internet_ch=.
 	replace internet_ch = 1 if V1617 == 17
+	replace internet_ch = 0 if V1617 == .
+	replace internet_ch = . if V1617 == 99
 
 	
 	********
@@ -681,6 +691,8 @@ Superior No Universitario  o Universita |       7
 	********
 	gen cel_ch=.
 	replace cel_ch = 1 if V1605 == 5 
+	replace cel_ch = 0 if V1605 == .
+	replace cel_ch = . if V1605 == 99
 
 	*************
 	*viviprop_ch*
