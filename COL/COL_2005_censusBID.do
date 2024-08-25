@@ -107,7 +107,7 @@ label value region_c region_c
 	replace dis_ci=1 if (disblnd==1 | disdeaf==1 | dismobil==1 | discare ==1 | dismute ==1 |  dislowr==1 | disuppr==1)
 	replace dis_ci=0 if (disblnd==2 & disdeaf==2 & dismobil==2 & discare==2 & dismute==2 & disuppr==2)
 	
-	bysort idh_ch: gen dis_ch=max(dis_ci)
+	bysort idh_ch: egen dis_ch=max(dis_ci)
 
 *******************************************************
 ***           VARIABLES DE INGRESO                  ***
