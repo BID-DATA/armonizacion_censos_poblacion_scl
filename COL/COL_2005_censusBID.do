@@ -15,9 +15,9 @@ set more off
 /***************************************************************************
                  BASES DE DATOS DE CENSOS POBLACIONALES
 País: Colombia
-Año: 1993
+Año: 2005
 Autores: 
-Última versión: 
+Última versión: 24AGO2024
 
 							SCL/LMK - IADB
 ****************************************************************************/
