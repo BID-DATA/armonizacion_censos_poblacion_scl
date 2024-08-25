@@ -18,8 +18,8 @@
 *******************************************
 global ruta = "${censusFolder}"
 
-local log_file = "$ruta\\clean\\`PAIS'\\log\\`PAIS'_`ANO'_censusBID.log"
-local base_in = "$ruta\\raw\\`PAIS'\\`PAIS'_`ANO'_IPUMS.dta"
+local log_file = "$ruta//clean//`PAIS'//`PAIS'_`ANO'_censusBID.log"
+local base_in = "$ruta\\raw\\`PAIS'\\`ANO'\\data_orig\\`PAIS'_`ANO'_IPUMS.dta"
 local base_out = "$ruta\\clean\\`PAIS'\\`PAIS'_`ANO'_censusBID.dta"
                                                     
 capture log close
