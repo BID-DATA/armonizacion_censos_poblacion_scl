@@ -334,14 +334,16 @@ rename *, lower
 	********
 	*dis_ci*
 	********
+	*La encuesta cuenta con las 4 escalas, pero la version de Sep2024 la codifica y genera una dummie binaria que cumple el criterio estricto de WG. Actualizar si se llega a disponer de la data. Por tanto, se calcula disWG_ci
 	gen byte dis_ci=. 
-	replace dis_ci=1 if dh1_rec==2 | dh2_rec==2 | dh3_rec==2 | dh4_rec==2 | dh5_rec==2 | dh6_rec==2
-	replace dis_ci=0 if dh1_rec==1 & dh2_rec==1 & dh3_rec==1 & dh4_rec==1 & dh5_rec==1 & dh6_rec==1 
-	repla
+	
+	
 	**********
 	*disWG_ci*
 	**********
 	gen byte disWG_ci=. 
+	replace disWG_ci=1 if dh1_rec==2 | dh2_rec==2 | dh3_rec==2 | dh4_rec==2 | dh5_rec==2 | dh6_rec==2
+	replace disWG_ci=0 if dh1_rec==1 & dh2_rec==1 & dh3_rec==1 & dh4_rec==1 & dh5_rec==1 & dh6_rec==1 
 /*	Se calcula en caso tengamos las variables en escala
 	replace disWG_ci=1 if ...
 	replace disWG_ci=0 if ...
@@ -353,65 +355,6 @@ rename *, lower
 	egen byte dis_ch = sum(dis_ci), by(idh_ch) 
 	replace dis_ch=1 if dis_ch>=1 & dis_ch!=.
 	
-		preserve 
-		keep idh_ch idp_ci factor_ci edad_ci sexo_ci ethnicity_abridged dis_ci 
-		
-		gen edad_grupos="Entre 0 y 5 años" if inrange(edad_ci,0,5)
-		replace edad_grupos="Entre 6 y 10 años" if inrange(edad_ci,6,10)
-		replace edad_grupos="Entre 11 y 15 años" if inrange(edad_ci,11,15)
-		replace edad_grupos="Entre 16 y 20 años" if inrange(edad_ci,16,20)
-		replace edad_grupos="Entre 21 y 25 años" if inrange(edad_ci,21,25)
-		replace edad_grupos="Entre 26 y 30 años" if inrange(edad_ci,26,30)
-		replace edad_grupos="Entre 31 y 35 años" if inrange(edad_ci,31,35)
-		replace edad_grupos="Entre 36 y 40 años" if inrange(edad_ci,36,40)
-		replace edad_grupos="Entre 41 y 45 años" if inrange(edad_ci,41,45)
-		replace edad_grupos="Entre 46 y 50 años" if inrange(edad_ci,46,50)
-		replace edad_grupos="Entre 51 y 55 años" if inrange(edad_ci,51,55)
-		replace edad_grupos="Entre 56 y 60 años" if inrange(edad_ci,56,60)
-		replace edad_grupos="Entre 61 y 65 años" if inrange(edad_ci,61,65)
-		replace edad_grupos="Entre 66 y 70 años" if inrange(edad_ci,66,70)
-		replace edad_grupos="Entre 71 y 75 años" if inrange(edad_ci,71,75)
-		replace edad_grupos="Entre 76 y 80 años" if inrange(edad_ci,76,80)
-		replace edad_grupos="Entre 81 y 85 años" if inrange(edad_ci,81,85)
-		replace edad_grupos="Entre 86 y 90 años" if inrange(edad_ci,86,90)
-		replace edad_grupos="Entre 91 y 95 años" if inrange(edad_ci,91,95)
-		replace edad_grupos="Más de 96 años" if inrange(edad_ci,96,150)
-		
-		gen sexo="Mujer" if sexo_ci==2
-		replace sexo="Hombre" if sexo_ci==1
-		
-		gen discapacidad="Con discapacidad" if dis_ci==1
-		replace discapacidad="Sin discapacidad" if dis_ci==0
-		replace discapacidad="Na" if dis_ci==.
-		
-		decode ethnicity_abridged, generate(etnia)
-		
-		gen pop=1
-		collapse (sum) pop [iw=factor_ci], by(sexo discapacidad edad_grupos etnia)
-		export excel using "C:\Users\maytes\Downloads\Datos - Piramides Belice.xls", firstrow(variables) replace
-		restore 
-		
-		
-		preserve
-		gen asistencia_educativa="Asiste a la escuela" if (ed1==1 | ed1==2)
-		replace asistencia_educativa="No Asiste a la escuela" if ed1==3
-		
-		keep idh_ch idp_ci factor_ci edad_ci sexo_ci ethnicity_abridged dis_ci asistencia_educativa
-		gen sexo="Mujer" if sexo_ci==2
-		replace sexo="Hombre" if sexo_ci==1
-		
-		gen discapacidad="Con discapacidad" if dis_ci==1
-		replace discapacidad="Sin discapacidad" if dis_ci==0
-		replace discapacidad="Na" if dis_ci==.
-		
-		decode ethnicity_abridged, generate(etnia)
-
-		gen pop=1
-		
-		collapse (sum) pop [iw=factor_ci], by(sexo discapacidad etnia asistencia_educativa)
-		drop if asistencia_educativa==""
-		export excel using "C:\Users\maytes\Downloads\Datos - Asistencia Belice.xls", firstrow(variables) replace
-		restore 
 		
 **********************************
 *** 4. Migración (3 variables) ***
@@ -446,6 +389,8 @@ rename *, lower
 	*********
 	*aedu_ci*
 	*********
+	gen byte aedu_ci=.
+	/*
 	gen byte aedu_ci=0 if ...
 	replace aedu_ci=1 if ...
 	replace aedu_ci=2 if ...
@@ -461,81 +406,111 @@ rename *, lower
 	replace aedu_ci=12 if ...
 	replace aedu_ci=. if ...
 	replace aedu_ci=18 if ...
-
+	*/
 	
 	**********
 	*eduno_ci*
 	**********
-	gen byte eduno_ci=(aedu_ci==0) 
+	gen byte eduno_ci=.
+	
+/*
+	replace eduno_ci=(aedu_ci==0) 
 	replace eduno_ci=. if aedu_ci==. 
+*/
 
 	**********
 	*edupi_ci*
 	**********
-	gen byte edupi_ci=(aedu_ci>=1 & aedu_ci<=...) 
+	gen byte edupi_ci=.
+/*
+	replace edupi_ci=(aedu_ci>=1 & aedu_ci<=...) 
 	replace edupi_ci=. if aedu_ci==. 
+*/
 
 	**********
 	*edupc_ci*
 	**********
-	gen byte edupc_ci=(aedu_ci==...) 
+	gen byte edupc_ci=.
+/*
+	replace  edupc_ci=(aedu_ci==...) 
 	replace edupc_ci=. if aedu_ci==. 
+*/
 
 	**********
 	*edusi_ci*
 	**********
-	gen byte edusi_ci=(aedu_ci>=... & aedu_ci<=...) 
+	gen byte edusi_ci=.
+/*
+	replace edusi_ci=(aedu_ci>=... & aedu_ci<=...) 
 	replace edusi_ci=. if aedu_ci==. 
+*/
 
 	**********
 	*edusc_ci*
 	**********
-	gen byte edusc_ci=(aedu_ci==...) 
+	gen byte edusc_ci=.
+/*
+	replace edusc_ci=(aedu_ci==...) 
 	replace edusc_ci=. if aedu_ci==. 
+*/
 
 	***********
 	*edus1i_ci*
 	***********
-	gen byte edus1i_ci=(aedu_ci>... & aedu_ci<...)
+	gen byte edus1i_ci=.
+/*
+	replace edus1i_ci=(aedu_ci>... & aedu_ci<...)
 	replace edus1i_ci=. if aedu_ci==. 
+*/
 
 	***********
 	*edus1c_ci*
 	***********
-	gen byte edus1c_ci=(aedu_ci==...)
+	gen byte edus1c_ci=.
+/*
+	replace edus1c_ci=(aedu_ci==...)
 	replace edus1c_ci=. if aedu_ci==. 
+*/
 
 	***********
 	*edus2i_ci*
 	***********
-	gen byte edus2i_ci=(aedu_ci>... & aedu_ci<...)
+	gen byte edus2i_ci=.
+/*
+	replace edus2i_ci=(aedu_ci>... & aedu_ci<...)
 	replace edus2i_ci=. if aedu_ci==. 
+*/ 
 
 	***********
 	*edus2c_ci*
 	***********
-	gen byte edus2c_ci=(aedu_ci>=...)
+	gen byte edus2c_ci=.
+/*
+	replace edus2c_ci=(aedu_ci>=...)
 	replace edus2c_ci=. if aedu_ci==. 
+*/
 
 	***********
 	*edupre_ci*
 	***********
-	gen byte edupre_ci= ...
+	gen byte edupre_ci=.
+/*
+	replace edupre_ci= ...
 	replace edupre_ci=. if aedu_ci==.
+*/
 	
 	***********
 	*asiste_ci*
 	***********
-	gen byte asiste_ci=1 if ...
-	replace asiste_ci=0 if ...
-	replace asiste_ci=. if ...
+	*Tomaremos en cuenta la asistencia full time y part-time
+	gen byte asiste_ci=.
+	replace asiste_ci=1 if inrange(ed1,1,2)
+	replace asiste_ci=0 if ed1==3
 
 	**********
 	*literacy*
 	**********
-	gen byte literacy=1 if ...
-	replace literacy=0 if ...
-	replace literacy=. if ...
+	gen byte literacy=.
 		
 ****************************************
 *** 6. Mercado laboral (7 variables) ***
@@ -545,34 +520,44 @@ rename *, lower
     *condocup_ci*
     *************
     gen byte condocup_ci=.
+	
+/*
 	replace condocup_ci=1 if ...	//ocupados
 	replace condocup_ci=2 if ...	//desocupados	
 	replace condocup_ci=3 if ...	//inactivos
 	replace condocup_ci=4 if ...	//no responde por ser menor de edad
+*/
 	
 	********
     *emp_ci*
     ********
 	gen byte emp_ci=.
+/*
 	replace emp_ci=(condocup_ci==1) if condocup_ci!=.
+*/
 
 	***********
     *desemp_ci*
     ***********	
 	gen byte desemp_ci=.
+/*
 	replace desemp_ci=(condocup_ci==2) if condocup_ci!=.
+*/
 
 	********
     *pea_ci*
     ********
 	gen byte pea_ci=.
+/*
 	replace pea_ci=1 if inlist(condocup_ci,1,2)
 	replace pea_ci=0 if inlist(condocup_ci,3,4)
+*/
 
 	*******************
     *rama de actividad*
     *******************
 	gen byte rama_ci = . 
+/*
     replace rama_ci = 1 if ... & emp_ci==1
     replace rama_ci = 2 if ... & emp_ci==1
     replace rama_ci = 3 if ... & emp_ci==1
@@ -588,24 +573,29 @@ rename *, lower
     replace rama_ci = 13 if ... & emp_ci==1
     replace rama_ci = 14 if ... & emp_ci==1
     replace rama_ci = 15 if ... & emp_ci==1
+*/
 	
 	**************
     *categopri_ci*
     **************
 	gen byte categopri_ci=.
+/*
 	replace categopri_ci=0 if ... & emp_ci==1
 	replace categopri_ci=1 if ... & emp_ci==1
 	replace categopri_ci=2 if ... & emp_ci==1
 	replace categopri_ci=3 if ... & emp_ci==1
 	replace categopri_ci=4 if ... & emp_ci==1
+*/
 	 
 	*************
     *spublico_ci*
     *************
 	gen byte spublico_ci=.
+/*
 	replace spublico_ci=1 if emp_ci==1 & rama_ci==10
 	replace spublico_ci=0 if emp_ci==1 & rama_ci!=10 & rama_ci!=.
 	replace 
+*/
 		
 		
 **********************************************************
