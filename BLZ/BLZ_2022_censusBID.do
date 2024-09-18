@@ -606,16 +606,16 @@ rename *, lower
 	*luz_ch*
 	********
 	gen byte luz_ch=.
-	replace luz_ch=1 if ...
-	replace luz_ch=0 if ...
+	replace luz_ch=1 if inrange(hh18,1,4)
+	replace luz_ch=0 if inrange(hh18,5,8)
 
 	*********
 	*piso_ch*
 	*********
+	*Entre las alternativas, esta la opcion "Earth/sand" la colocamos como no permanente
 	gen byte piso_ch=.
-	replace piso_ch = 0 if ...
-	replace piso_ch = 1 if ...
-	replace piso_ch = 2 if ...
+	replace piso_ch = 1 if inlist(hh9,4,8)
+	replace piso_ch = 2 if inlist(hh9,1,2,3,5)
 	
 	**********
 	*pared_ch*
