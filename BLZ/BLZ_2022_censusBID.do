@@ -621,93 +621,97 @@ rename *, lower
 	*pared_ch*
 	**********
 	gen byte pared_ch=.
-	replace pared_ch=1 if ...
-	replace pared_ch=2 if ...
+	replace pared_ch=1 if inlist(hh7,1,2,4,8,10)
+	replace pared_ch=2 if inlist(hh7,3,5,6,7,9)
 
 	**********
 	*techo_ch*
 	**********
 	gen byte techo_ch=.
-	replace techo_ch=0 if ...
-	replace techo_ch=1 if ...
-	replace techo_ch=2 if ...
+	replace techo_ch=1 if inlist(hh8,9)
+	replace techo_ch=2 if inlist(hh8,1,2,3,4,5,6,7,8)
 
 	**********
 	*resid_ch*
 	**********
 	gen byte resid_ch=.
-	replace resid_ch=0 if ...
-	replace resid_ch=1 if ...
-	replace resid_ch=2 if ...
-	replace resid_ch=3 if ...
+	replace resid_ch=0 if inlist(hh12,7,8)
+	replace resid_ch=1 if inlist(hh12,4,6)
+	replace resid_ch=2 if inlist(hh12,1,2,5)
+	replace resid_ch=3 if inlist(hh12,3,88)
 
 	*********
 	*dorm_ch*
 	*********
 	gen byte dorm_ch=.
-	replace dorm_ch=... 
+	replace dorm_ch=hh5
 
 	************
 	*cuartos_ch*
 	************
 	gen byte cuartos_ch=.
-	replace cuartos_ch=... 
+	replace cuartos_ch=hh6 
 	
 	***********
 	*cocina_ch*
 	***********
+	*Existe una pregunta sobre la instalacion de la cocina, pero no si existe un espacio exclusivo
 	gen byte cocina_ch=.
+/*
 	replace cocina_ch=1 if ...
 	replace cocina_ch=0 if ...
+*/
 	
 	***********
 	*telef_ch*
 	***********
 	gen byte telef_ch=.
-	replace telef_ch=1 if ...
-	replace telef_ch=0 if ...
+	replace telef_ch=1 if hh22b==1
+	replace telef_ch=0 if hh22b==2
 	
 	***********
 	*refrig_ch*
 	***********
 	gen byte refrig_ch=.
-	replace refrig_ch=1 if ...
-	replace refrig_ch=0 if ...
+	replace refrig_ch=1 if hh21b==1
+	replace refrig_ch=0 if hh21b==0
 	
 	*********
 	*auto_ch*
 	*********
 	gen byte auto_ch=.
+/*
 	replace auto_ch=1 if ...
 	replace auto_ch=0 if ...
+*/
 
 	**********
 	*compu_ch*
 	**********
 	gen byte compu_ch=.
-	replace compu_ch=1 if ...
-	replace compu_ch=0 if ...
+	replace compu_ch=1 if hh21m==1
+	replace compu_ch=0 if hh21m==0
 
 	*************
 	*internet_ch*
 	************* 
 	gen byte internet_ch=.
-	replace internet_ch=1 if ...
-	replace internet_ch=0 if ...
+	replace internet_ch=1 if hh23==1
+	replace internet_ch=0 if hh23==2
 
 	********
 	*cel_ch*
 	********
 	gen byte cel_ch=.
-	replace cel_ch=1 if ...
-	replace cel_ch=0 if ...
+	replace cel_ch=1 if hh21l==1
+	replace cel_ch=0 if hh21l==0
 
 	*************
 	*viviprop_ch*
 	*************
 	gen byte viviprop_ch1=.
-	replace viviprop_ch=1 if ...
-	replace viviprop_ch=0 if ...
+	replace viviprop_ch=1 if inlist(hh2,1,2)
+	replace viviprop_ch=0 if inlist(hh2,3,4,5,6,7,8)
 
 ***************************************************
 *** 7.2 Vivienda - variables Wash (4 variables) ***
@@ -717,30 +721,36 @@ rename *, lower
 	*aguared_ch*
 	************
 	gen byte aguared_ch=.
-	replace aguared_ch=1 if ...
-	replace aguared_ch=0 if ...
+	replace aguared_ch=1 if inlist(hh13,1,2,3,4)
+	replace aguared_ch=0 if inlist(hh13,5,6,7,8,9,10,88)
 	
 	*********
 	*bano_ch*
 	*********
+/*
+	Existen dos preguntas en el censo: 1. Does your dwelling have a toilet facility?
+	y 2. What type of toilet facility does your household USUALLY use?. 
+	Se considera 1 a los que contestan que tienen instalacion de baño y ademas que tienen 
+	Flush toilet y Pit latrine
+ */
 	gen byte bano_ch=.
-	replace bano_ch=1 if ...
-	replace bano_ch=0 if ...
+	replace bano_ch=1 if hh16a==1 & inrange(hh16b,1,6)
+	replace bano_ch=0 if hh16a==2 | inrange(hh16b,7,8)
 
 	*****************
 	*banomejorado_ch*
 	*****************
 	gen byte banomejorado_ch=.
-	replace banomejorado_ch=1 if ...
-	replace banomejorado_ch=0 if ...
+	replace banomejorado_ch=1 if inrange(hh16b,1,2)
+	replace banomejorado_ch=0 if hh16a==2 | inrange(hh16b,3,8) 
 	
 	*********
 	*des1_ch*
 	*********
 	gen byte des1_ch=.
-	replace des1_ch=0 if ...
-	replace des1_ch=1 if ...
-	replace des1_ch=2 if ...
+	replace des1_ch=0 if bano_ch==0
+	replace des1_ch=1 if inrange(hh16b,1,1)
+	replace des1_ch=2 if inrange(hh16b,2,8)
 
 
 *************************************************************
@@ -749,50 +759,50 @@ rename *, lower
 * si no existe la variable, crearla con un missing value (.). Cambia ISOalpha3Pais
 * por el país que te toca. Por ejemplo si te toca Ecuador debe ser 
 * ECU_m_pared_ch, ECU_m_piso_ch, etc.
- 
+   
 	**************************
 	*ISOalpha3Pais_m_pared_ch*
 	**************************	
-	gen byte ..._m_pared_ch= ...
-	label var ..._m_pared_ch  "Material de las paredes según el censo del país - variable original"
-	label def ..._m_pared_ch  1 "..." 2 "..." 3 "..."   //categorías originales del país
-	lavel val ..._m_pared_ch  ..._m_pared_ch 
+	gen byte BLZ_m_pared_ch= hh7
+	label var BLZ_m_pared_ch  "Material de las paredes según el censo del país - variable original"
+	label copy labels8 BLZ_m_pared_ch, replace
+	label val BLZ_m_pared_ch  BLZ_m_pared_ch 
 
 	*************************
 	*ISOalpha3Pais_m_piso_ch*
 	*************************
-	gen byte ..._m_piso_ch= ...
-	label var ..._m_piso_ch  "Material de los pisos según el censo del país - variable original"
-	label def ..._m_piso_ch  1 "..." 2 "..." 3 "..."   //categorías originales del país
-	lavel val ..._m_piso_ch  ..._m_piso_ch 
+	gen byte BLZ_m_piso_ch= hh9
+	label var BLZ_m_piso_ch  "Material de los pisos según el censo del país - variable original"
+	label copy labels10 BLZ_m_piso_ch, replace
+	label val BLZ_m_piso_ch  BLZ_m_piso_ch 
 	
 	**************************
 	*ISOalpha3Pais_m_techo_ch*
 	**************************	
-	gen byte ..._m_techo_ch= ...
-	label var ..._m_techo_ch  "Material del techo según el censo del país - variable original"
-	label def ..._m_techo_ch  1 "..." 2 "..." 3 "..."   //categorías originales del país
-	lavel val ..._m_techo_ch ..._m_techo_ch 
+	gen byte BLZ_m_techo_ch= hh8
+	label var BLZ_m_techo_ch  "Material del techo según el censo del país - variable original"
+	label copy labels9 BLZ_m_techo_ch, replace
+	label val BLZ_m_techo_ch BLZ_m_techo_ch 
 	
 	**************************
 	*ISOalpha3Pais_ingreso_ci*
 	**************************	
-	gen long ..._ingreso_ci = ...
-	label var ..._ingreso_ci  "Ingreso total según el censo del país - variable original"
+	gen long BLZ_ingreso_ci = .
+	label var BLZ_ingreso_ci  "Ingreso total según el censo del país - variable original"
 	
 	*****************************
 	*ISOalpha3Pais_ingresolab_ci*
 	*****************************
-	gen long ..._ingresolab_ci = ...	
-	label var ..._ingreso_ci  "Ingreso laboral según el censo del país - variable original"
+	gen long BLZ_ingresolab_ci = .
+	label var BLZ_ingreso_ci  "Ingreso laboral según el censo del país - variable original"
 
 	**********************
 	*ISOalpha3Pais_dis_ci*
 	**********************
-	gen byte ..._dis_ci = ...
-	label var ..._dis_ci  "Individuos con discapacidad según el censo del país - variable original"
-	label def ..._dis_ci 1 "Sí" 0 "No"   //categorías originales del país
-	lavel val ..._dis_ci ..._dis_ci
+	gen byte BLZ_dis_ci = .
+	label var BLZ_dis_ci  "Individuos con discapacidad según el censo del país - variable original"
+	label def BLZ_dis_ci 1 "Sí" 0 "No"   //categorías originales del país
+	label val BLZ_dis_ci BLZ_dis_ci
 	
 
 /*******************************************************************************
@@ -839,7 +849,7 @@ foreach v of global lista_variables {
 *******************************************************************************/
 * En "..." agregar la lista de variables de ID originales (por ejemplo los ID de personas, vivienda y hogar)
 
-keep  $lista_variables ... ... ...
+keep  $lista_variables dwelling_id hh_id individual__id
 
 * selecciona las 3 lineas y ejecuta (do). Deben quedar 94 variables de las secciones II y III más las 
 * variables originales de ID que hayas mantenido
