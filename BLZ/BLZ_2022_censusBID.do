@@ -184,12 +184,11 @@ rename *, lower
 	*civil_ci*
 	**********
 	gen	byte civil_ci=.
-/*
-	replace civil_ci=1 if ...
-	replace civil_ci=2 if ...
-	replace civil_ci=3 if ...
-	replace civil_ci=4 if ...
-*/
+
+	replace civil_ci=1 if mu1==1
+	replace civil_ci=2 if mu1==2
+	replace civil_ci=3 if mu1==3 | mu1==5
+	replace civil_ci=4 if mu1==4
 
     *********
 	*jefe_ci*
