@@ -778,42 +778,42 @@ rename *, lower
 	***********
 	gen byte telef_ch=.
 	replace telef_ch=1 if h1001==1
-	replace telef_ch=0 if h1001==0
+	replace telef_ch=0 if h1001==2
 	
 	***********
 	*refrig_ch*
 	***********
 	gen byte refrig_ch=.
 	replace refrig_ch=1 if h1006==1
-	replace refrig_ch=0 if h1006==0
+	replace refrig_ch=0 if h1006==2
 	
 	*********
 	*auto_ch*
 	*********
 	gen byte auto_ch=.
 	replace auto_ch=1 if h1011==1
-	replace auto_ch=0 if h1011==0
+	replace auto_ch=0 if h1011==2
 
 	**********
 	*compu_ch*
 	**********
 	gen byte compu_ch=.
 	replace compu_ch=1 if h1005==1
-	replace compu_ch=0 if h1005==0
+	replace compu_ch=0 if h1005==2
 
 	*************
 	*internet_ch*
 	************* 
 	gen byte internet_ch=.
 	replace internet_ch=1 if h1004==1
-	replace internet_ch=0 if h1004==0
+	replace internet_ch=0 if h1004==2
 
 	********
 	*cel_ch*
 	********
 	gen byte cel_ch=.
 	replace cel_ch=1 if h1002==1
-	replace cel_ch=0 if h1002==0
+	replace cel_ch=0 if h1002==2
 
 	*************
 	*viviprop_ch*
