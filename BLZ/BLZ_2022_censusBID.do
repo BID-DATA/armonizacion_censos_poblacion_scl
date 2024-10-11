@@ -3,14 +3,57 @@
 							CENSOS POBLACIONALES
 						   Script de armonización
 País: BLZ
-Año: 2024
+Año: 2022
 Autores: Mayte Ysique (maytes@iadb.org / mysique@pucp.pe)
-Última versión: ..SEP2024
+Última versión: 24SEP2024
 División: SCL/GDI - IADB
 *******************************************************************************
 
 INSTRUCCIONES:
 		
+		
+	(1) Guarda este script con la estructura Pais_ANIO_censusBID.do.
+		Por ejemplo Ecuador 2017 será: ECU_2017_censusBID.do
+	
+	(2) Sigue la estructura y estilo de este script, pero ten en cuenta que
+		el contenido es referencial y que debes adaptarlo al país que te toque 
+		armonizar. 	Cada vez que encuentres "..." debes completar el código con 
+		la información del país que te toque. Existen variables en las que no 
+		debes hacer nada, pues se crean a partir de otras variables, como por 
+		ejemplo jefe_ci.
+		
+	(3) Cambia la información que está en la parte superior. 
+		- En País pon el nombre completo, por ejemplo Panamá. 
+		- En año coloca un número entero de 4 dígitos, por ejemplo 2024. 
+		- En autores pon tu 1er nombre y 1er apellido, por ejemplo Juan Casas.
+		- En última versión coloca la fecha en que la termines el script, por
+		  ejemplo 22ABR2024
+		- En división colola las siglas de tu división en el IADB, por ejemplo 
+		  SCL/GDI - IADB
+		  
+	(4) En la sección I, cambia la ruta de trabajo. Dentro de la ruta 
+		selecionada, crea las carpetas raw y clean. Adentro	de esta carpetas, 
+		crea la subcarpeta del país que te toque. Recuerda que debes 
+		utilizar el código iso-alpha3 del país para crear la subcarpeta
+		(por ejemplo, Ecuador es ECU).
+		
+			censusFolder>raw>ECU
+			censusFolder>clean>ECU
+
+    (5) Si la base que vas a correr es muy pesada. De forma temporal
+		puedes sacar una muestra con el comando sample en la sección I para que
+		sea más fácil que verifiques el trabajo que vas realizando. 
+		Cuando ya hayas creado todas las variables, desactiva el sample y 
+		corre tu código otra vez para la base completa. Este paso es opcional.
+		
+	(6) Todas las variables de las secciones II y III deben ser creadas
+		sin exepción. En caso no haya información, créala con un missing value (.)
+		
+	(7) Revisa que idp_ci no tenga duplicados (control de calidad)
+	
+	(8) Solo colocar las etiquetas o labels en este script cuando se indique.
+		Se pondrá las etiquetas a la mayoría de variables en la sección VI a 
+		través del script labels.do
 		
     (9) En la sección IV, revisa que hayas creado todas las variables (control de
 		calidad)
@@ -23,7 +66,6 @@ INSTRUCCIONES:
    (11) En la sección VII, guarda la base con el formato 
 		ISOalpha3Pais_ANIO_censusBID.dta. Por ejemplo, Ecuador 2017 será: 
 		ECU_2017_censusBID.dta
-	
 
 
 ==============================================================================*/
@@ -39,7 +81,7 @@ global ruta = "${censusFolder}"  //cambiar ruta seleccionada
 global PAIS BLZ    				 //cambiar
 global ANIO 2022   				 //cambiar
 
-global base_in  = "$ruta\\raw\\$PAIS\\$ANIO\\${PAIS}_${ANIO}_NOIPUMS.dta"
+global base_in  = "$ruta\\raw\\$PAIS\\$ANIO\\data_orig\\${PAIS}_${ANIO}_NOIPUMS.dta"
 global base_out = "$ruta\\clean\\$PAIS\\${PAIS}_${ANIO}_censusBID.dta"
 global log_file ="$ruta\\clean\\$PAIS\\${PAIS}_${ANIO}_censusBID.log"                                                   
 capture log close
@@ -807,6 +849,9 @@ rename *, lower
 /*******************************************************************************
    III. Incluir variables externas
 *******************************************************************************/
+
+global ruta = "${censusFolder}"  //cam
+
 capture drop _merge
 merge m:1 pais_c anio_c using "$ruta\5_International_Poverty_Lines_LAC_long.dta", keepusing (ppp_2011 cpi_2011 lp19_2011 lp31_2011 lp5_2011 tc_wdi ppp_wdi2011)
 
