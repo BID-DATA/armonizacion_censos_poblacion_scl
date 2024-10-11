@@ -849,9 +849,6 @@ rename *, lower
 /*******************************************************************************
    III. Incluir variables externas
 *******************************************************************************/
-
-global ruta = "${censusFolder}"  //cam
-
 capture drop _merge
 merge m:1 pais_c anio_c using "$ruta\5_International_Poverty_Lines_LAC_long.dta", keepusing (ppp_2011 cpi_2011 lp19_2011 lp31_2011 lp5_2011 tc_wdi ppp_wdi2011)
 
