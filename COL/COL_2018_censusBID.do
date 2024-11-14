@@ -335,25 +335,95 @@ gen estrato_ci=.
 **** VARIABLES DE LA VIVIENDA ****
 **********************************
 		
+	*****************
+	*aguaentubada_ch*
+	*****************
+	gen aguaentubada_ch=1 if vb_acu==1
+	replace aguaentubada_ch=0 if vb_acu==2
+	replace aguaentubada_ch=. if vb_acu==.
+	
 	************
 	*aguared_ch*
 	************
-	gen aguared_ch=1 if vb_acu==1
-	replace aguared_ch=0 if vb_acu==2
-	replace aguared_ch=. if vb_acu==.
+
+	gen aguared_ch=.
+	replace aguared_ch = 1 if inlist(vb_acu, 1)
+	replace aguared_ch = 0 if inlist(vb_acu,2)
 	
-	********
-	*luz_ch*
-	********
-	gen luz_ch= 1 if va_ee==1
-	replace luz_ch= 0 if va_ee==2
-	replace luz_ch=. if va_ee==.
+    ***************
+	*aguafuente_ch*
+	***************
+ 
+	gen aguafuente_ch=.
+	replace aguafuente_ch = 1 if inlist(h_agua_cocin, 1, 2,3)
+	replace aguafuente_ch = 2 if inlist(h_agua_cocin, 8)
+	replace aguafuente_ch = 3 if inlist(h_agua_cocin, 11)
+	replace aguafuente_ch = 4 if inlist(h_agua_cocin, 4)
+	replace aguafuente_ch = 5 if inlist(h_agua_cocin, 6)
+	replace aguafuente_ch = 6 if inlist(h_agua_cocin, 9,10)
+	replace aguafuente_ch = 8 if inlist(h_agua_cocin, 7)
+	replace aguafuente_ch = 10 if inlist(h_agua_cocin, 5)
+	
+	
+	*************
+	*aguadist_ch*
+	*************
+	gen aguadist_ch = 0 
+	
+	**************
+	*aguadisp1_ch*
+	**************
+	gen aguadisp1_ch =9 
+	
+	**************
+	*aguadisp2_ch*
+	**************
+	gen aguadisp2_ch =9	
+	*************
+	*aguamide_ch*
+	*************
+	gen aguamide_ch = 9
+	
 	
 	*********
 	*bano_ch*
 	*********
-	gen bano_ch=(inrange(v_tipo_sersa,1,5))
-	replace bano_ch=. if v_tipo_sersa==9 | v_tipo_sersa==.
+	gen bano_ch = . 
+	replace bano_ch = 0 if v_tipo_sersa == 6 
+	replace bano_ch = 1 if v_tipo_sersa == 1 
+	replace bano_ch = 2 if v_tipo_sersa == 2
+	replace bano_ch = 4 if v_tipo_sersa == 5
+	replace bano_ch = 6 if inlist(v_tipo_sersa,3,4)
+	
+	***********
+	*banoex_ch*
+	***********
+	
+	gen banoex_ch =.
+	replace banoex_ch = 9
+
+	************
+	*sinbano_ch*
+	************
+	gen sinbano_ch =.
+	replace sinbano_ch = 3 if v_tipo_sersa ==6
+	replace sinbano_ch = 0 if inlist(v_tipo_sersa,1,2,3,4,5)
+	
+
+	
+	************
+	*conbano_ch*
+	************
+	gen conbano_ch=(inrange(v_tipo_sersa,1,5))
+	replace conbano_ch=. if v_tipo_sersa==9 | v_tipo_sersa==.
+	
+	***********************
+	*banoalcantarillado_ch*
+	***********************
+	gen banoalcantarillado_ch=
+	replace banoalcantarillado_ch = 1 if vc_alc ==1
+	replace banoalcantarillado_ch = 0 if inlist(vc_alc,2,3,4)
+	
 	
 	*********
 	*des1_ch*
@@ -361,6 +431,13 @@ gen estrato_ci=.
 	gen des1_ch= 1 if inrange(v_tipo_sersa,1,2)
 	replace des1_ch=0 if inrange(v_tipo_sersa,3,6)
 	replace des1_ch=. if v_tipo_sersa==9 | v_tipo_sersa==.
+	
+    ********
+	*luz_ch*
+	********
+	gen luz_ch= 1 if va_ee==1
+	replace luz_ch= 0 if va_ee==2
+	replace luz_ch=. if va_ee==.
 	
 	*********
 	*piso_ch*
@@ -374,11 +451,7 @@ gen estrato_ci=.
 	label def piso_ch 0"Sin piso o sin terminar (tierra)" 1"Materiales no permanentes" 2 "Materiales permanentes"
 	label val piso_ch piso_ch
 	
-	*****************
-	*banomejorado_ch*
-	*****************
-	gen banomejorado_ch=.
-	
+
 	**********
 	*pared_ch*
 	**********
