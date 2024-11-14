@@ -897,7 +897,7 @@ rename *, lower
 	
 	gen banoex_ch =.
 	replace banoex_ch = 0 if inlist(h03,2)
-	replace banoex_ch = 1 if inlist(h03,1)
+	replace banoex_ch = 1 if inlist(h03,1,3)
 
 	************
 	*sinbano_ch*
