@@ -909,9 +909,9 @@ rename *, lower
 	***********************
 	*banoalcantarillado_ch*
 	***********************
-	gen byte banomejorado_ch=.
-	replace banomejorado_ch=1 if v11==1
-	replace banomejorado_ch=0 if inlist(v11,2,3,4,5,6,7)
+	gen byte banoalcantarillado_ch=.
+	replace banoalcantarillado_ch=1 if v11==1
+	replace banoalcantarillado_ch=0 if inlist(v11,2,3,4,5,6,7)
 	
 	*********
 	*des1_ch*

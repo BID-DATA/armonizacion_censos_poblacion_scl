@@ -808,11 +808,11 @@ ta p05_nacio p03b_reg_civil
 	************
 	*aguaentubada_ch*
 	************
-	gen byte aguared_ch=.
-	replace aguared_ch=1 if inlist(v08_agua, 1,2,3)
-	replace aguared_ch=0 if inlist(v08_agua, 4,5,6,7,8,11)
-	replace aguared_ch = 1 if (inlist(v08_agua, 9,10)) & v11_sanit == 1
-	replace aguared_ch = 0 if (inlist(v08_agua, 9,10)) & v11_sanit != 1
+	gen byte aguaentubada_ch=.
+	replace aguaentubada_ch=1 if inlist(v08_agua, 1,2,3)
+	replace aguaentubada_ch=0 if inlist(v08_agua, 4,5,6,7,8,11)
+	replace aguaentubada_ch = 1 if (inlist(v08_agua, 9,10)) & v11_sanit == 1
+	replace aguaentubada_ch = 0 if (inlist(v08_agua, 9,10)) & v11_sanit != 1
 
 	
 	************
@@ -901,16 +901,16 @@ ta p05_nacio p03b_reg_civil
 	*********
 	*conbano_ch*
 	*********
-	gen byte bano_ch=.
-	replace bano_ch=1 if inlist(v11_sanit,1,2,3)
-	replace bano_ch=0 if inlist(v11_sanit,4)
+	gen byte conbano_ch=.
+	replace conbano_ch=1 if inlist(v11_sanit,1,2,3)
+	replace conbano_ch=0 if inlist(v11_sanit,4)
 	
 	*****************
 	*banoalcantarillado_ch*
 	*****************
-	gen byte banomejorado_ch=.
-	replace banomejorado_ch=1 if inlist(v11_sanit,1,2)
-	replace banomejorado_ch=0 if inlist(v11_sanit,3,4)
+	gen byte banoalcantarillado_ch=.
+	replace banoalcantarillado_ch=1 if inlist(v11_sanit,1,2)
+	replace banoalcantarillado_ch=0 if inlist(v11_sanit,3,4)
 	
 	*********
 	*des1_ch*

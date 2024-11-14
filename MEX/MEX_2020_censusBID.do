@@ -435,9 +435,9 @@ replace geolev1=484032 if ent==32 //"Zacatecas"
 	*********
 	*conbano_ch*
 	*********
-	gen bano_ch=.
-	replace bano_ch=1 if sersan==1 | sersan==2
-	replace bano_ch=0 if sersan==0
+	gen conbano_ch=.
+	replace conbano_ch=1 if sersan==1 | sersan==2
+	replace conbano_ch=0 if sersan==0
 	
 
 	*********
@@ -468,9 +468,9 @@ replace geolev1=484032 if ent==32 //"Zacatecas"
 	*****************
 	*banoalcantarillado_ch*
 	*****************
-	gen banomejorado_ch=.
- 	replace banomejorado_ch=0 if drenaje==5 
-	replace banomejorado_ch=1 if drenaje>=1 & drenaje<=4
+	gen banoalcantarillado_ch=.
+ 	replace banoalcantarillado_ch=0 if drenaje==5 
+	replace banoalcantarillado_ch=1 if drenaje>=1 & drenaje<=4
 
 	**********
 	*pared_ch*
