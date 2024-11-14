@@ -806,7 +806,7 @@ ta p05_nacio p03b_reg_civil
 ***************************************************	
 
 	************
-	*aguared_ch*
+	*aguaentubada_ch*
 	************
 	gen byte aguared_ch=.
 	replace aguared_ch=1 if inlist(v08_agua, 1,2,3)
@@ -814,15 +814,99 @@ ta p05_nacio p03b_reg_civil
 	replace aguared_ch = 1 if (inlist(v08_agua, 9,10)) & v11_sanit == 1
 	replace aguared_ch = 0 if (inlist(v08_agua, 9,10)) & v11_sanit != 1
 
+	
+	************
+	*aguared_ch*
+	************
+
+	gen aguared_ch=.
+	replace aguared_ch = 1 if inlist(v08_agua,1,2)
+	replace aguared_ch = 0 if inlist(v08_agua, 3,4,5,6,7,8,9,10,11,12)
+  
+	
+    ***************
+	*aguafuente_ch*
+	***************
+ 
+	gen aguafuente_ch=.
+	replace aguafuente_ch = 1 if inlist(v08_agua,1,2) & v09_inst == 1
+	replace aguafuente_ch = 2 if inlist(v08_agua,1,2) & v09_inst == 2
+	replace aguafuente_ch = 3 if inlist(v08_agua,10) 
+	replace aguafuente_ch = 4 if inlist(v08_agua,4) 
+	replace aguafuente_ch = 5 if inlist(v08_agua,7) 
+	replace aguafuente_ch = 6 if inlist(v08_agua,9) 
+	replace aguafuente_ch = 7 if inlist(v08_agua,3) 
+	replace aguafuente_ch = 8 if inlist(v08_agua,8) 
+	replace aguafuente_ch = 9 if inlist(v08_agua,5) 
+	replace aguafuente_ch = 10 if inlist(v08_agua,6,11,12)
+	
+	*************
+	*aguadist_ch*
+	*************
+	gen aguadist_ch=0 
+
+	
+	**************
+	*aguadisp1_ch*
+	**************
+	gen aguadisp1_ch =9
+	
+		
+	
+	**************
+	*aguadisp2_ch*
+	**************
+	gen aguadisp2_ch =.
+	replace aguadisp2 = 1 if (v10b_diasel<4 | v10b_regel<12) | (v10a_diases<4 | v10a_reges<12)
+	replace aguadisp2 = 2 if (v10b_diasel>=4 | v10b_regel>=12) & (v10a_diases>=4 | v10a_reges>=12)
+	replace aguadisp2 = 3 if (v10b_diasel==7 | v10b_regel==24) & (v10a_diases ==7 | v10a_reges==24)
+	
+
+	
+	
+	*************
+	*aguamide_ch*
+	*************
+	gen aguamide_ch = 9
+	
+	
 	*********
 	*bano_ch*
+	*********
+	gen bano_ch = . 
+	replace bano_ch = 0 if v11_sanit == 4
+	replace bano_ch = 1 if v11_sanit == 1
+	replace bano_ch = 2 if v11_sanit == 2
+	replace bano_ch = 6 if v11_sanit == 3
+	
+	
+	
+	***********
+	*banoex_ch*
+	***********
+	
+	gen banoex_ch =.
+	replace banoex_ch = 1 if v12_suso ==1
+	replace banoex_ch = 0 if v12_suso ==2
+
+	************
+	*sinbano_ch*
+	************
+	gen sinbano_ch =.
+	replace sinbano_ch = 0 if inlist(v11_sanit, 1,2,3)
+	replace sinbano_ch = 1 if v13_excr ==4
+	replace sinbano_ch = 2 if inlist(v13_excr, 1,2,3)
+	replace sinbano_ch = 3 if inlist(v13_excr,5)
+	
+	*********
+	*conbano_ch*
 	*********
 	gen byte bano_ch=.
 	replace bano_ch=1 if inlist(v11_sanit,1,2,3)
 	replace bano_ch=0 if inlist(v11_sanit,4)
 	
 	*****************
-	*banomejorado_ch*
+	*banoalcantarillado_ch*
 	*****************
 	gen byte banomejorado_ch=.
 	replace banomejorado_ch=1 if inlist(v11_sanit,1,2)
@@ -928,7 +1012,7 @@ drop ppp_2011 cpi_2011 lp19_2011 lp31_2011 lp5_2011 tc_wdi ppp_wdi2011 _merge
 * CALIDAD: se revisa que se  hayan creado todas las variables. Si alguna no está
 * creada, apacerá en rojo el nombre. 
 
-global lista_variables region_BID_c region_c geolev1 pais_c anio_c idh_ch idp_ci factor_ci factor_ch estrato_ci upm zona_c sexo_c edad_ci relacion_ci civil_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch miembros_ci clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch afro_ci ind_ci noafroind_ci afroind_ci afro_ch ind_ch noafroind_ch afroind_ch  dis_ci disWG_ci dis_ch migrante_ci migrantiguo5_ci miglac_ci aedu_ci eduno_ci edupi_ci edupc_ci edusi_ci edusc_ci edus1i_ci edus1c_ci edus2i_ci edus2c_ci edupre_ci asiste_ci literacy condocup_ci emp_ci desemp_ci pea_ci rama_ci  categopri_ci spublico_ci luz_ch piso_ch pared_ch techo_ch resid_ch dorm_ch cuartos_ch cocina_ch telef_ch refrig_ch auto_ch compu_ch internet_ch cel_ch viviprop_ch1 aguared_ch bano_ch banomejorado_ch des1_ch ${PAIS}_ingreso_ci ${PAIS}_ingresolab_ci ${PAIS}_m_pared_ch ${PAIS}_m_piso_ch ${PAIS}_m_techo_ch ${PAIS}_dis_ci tc_c ipc_c lp19_ci lp31_ci lp5_ci
+global lista_variables region_BID_c region_c geolev1 pais_c anio_c idh_ch idp_ci factor_ci factor_ch estrato_ci upm zona_c sexo_c edad_ci relacion_ci civil_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch miembros_ci clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch afro_ci ind_ci noafroind_ci afroind_ci afro_ch ind_ch noafroind_ch afroind_ch  dis_ci disWG_ci dis_ch migrante_ci migrantiguo5_ci miglac_ci aedu_ci eduno_ci edupi_ci edupc_ci edusi_ci edusc_ci edus1i_ci edus1c_ci edus2i_ci edus2c_ci edupre_ci asiste_ci literacy condocup_ci emp_ci desemp_ci pea_ci rama_ci  categopri_ci spublico_ci luz_ch piso_ch pared_ch techo_ch resid_ch dorm_ch cuartos_ch cocina_ch telef_ch refrig_ch auto_ch compu_ch internet_ch cel_ch viviprop_ch1 aguaentubada_ch aguared_ch aguafuente_ch aguadist_ch aguadisp1_ch aguadisp2_ch aguamide_ch bano_ch banoex_ch banoalcantarillado_ch sinbano_ch conbano_ch des1_ch ${PAIS}_ingreso_ci ${PAIS}_ingresolab_ci ${PAIS}_m_pared_ch ${PAIS}_m_piso_ch ${PAIS}_m_techo_ch ${PAIS}_dis_ci tc_c ipc_c lp19_ci lp31_ci lp5_ci
 
 * seleccionar las siguientes 6 líneas y ejecuta (do)
 foreach v of global lista_variables {
