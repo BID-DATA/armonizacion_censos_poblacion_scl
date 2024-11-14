@@ -846,7 +846,7 @@ rename *, lower
 	************
 	gen aguafuente_ch=.
 	replace aguafuente_ch=1 if inlist(v10, 1,2) & inlist(v09,1,2)
-	replace aguafuente_ch=2 if inlist(v10, 1, 2) & inlist(v09,3)
+	replace aguafuente_ch=2 if inlist(v10, 1,2) & inlist(v09,3,4)
 	replace aguafuente_ch=6 if inlist(v10, 4)
 	replace aguafuente_ch=10 if inlist(v10,3,5)
 	
@@ -877,12 +877,12 @@ rename *, lower
 	*bano_ch*
 	*********
 	gen bano_ch = . 
-	replace bano_ch = 0 if v11 = 7
-	replace bano_ch = 1 if v11 = 1
-	replace bano_ch = 2 if v11 = 2
+	replace bano_ch = 0 if v11 == 7
+	replace bano_ch = 1 if v11 == 1
+	replace bano_ch = 2 if v11 == 2
 	replace bano_ch = 3 if inlist(v11,3,4) 
-	replace bano_ch = 4 if v11 = 5
-	replace bano_ch = 6 if v11 = 6
+	replace bano_ch = 4 if v11 == 5
+	replace bano_ch = 6 if v11 == 6
 	
 	************
 	*conbano_ch*

@@ -352,25 +352,88 @@ replace geolev1=484032 if ent==32 //"Zacatecas"
 **********************************
 		
 	************
+	*aguaentubada_ch*
+	************
+
+	gen aguaentubada_ch=.
+	replace aguaentubada_ch=1 if agua_entubada==1 | agua_entubada==2
+	replace aguaentubada_ch=0 if agua_entubada==3
+	
+	************
 	*aguared_ch*
 	************
 
 	gen aguared_ch=.
-	replace aguared_ch=1 if agua_entubada==1 | agua_entubada==2
-	replace aguared_ch=0 if agua_entubada==3
+	replace aguared_ch = 1 if aba_agua_entu == 1
+	replace aguared_ch = 0 if inlist(aba_agua_entu,2,3,4,5,6,8,9)
+	
+    ***************
+	*aguafuente_ch*
+	***************
+ 
+	gen aguafuente_ch=.
+	replace aguafuente_ch = 1 if (aba_agua_entu == 1) & (inlist(agua_entubada, 1, 2))
+	replace aguafuente_ch = 2 if (inlist(aba_agua_entu,1) & inlist(agua_entubada, 3,4,5)) | inlist(aba_agua_no_entu, 2)
+	replace aguafuente_ch = 5 if inlist(aba_agua_entu, 6) | inlist(aba_agua_no_entu,6)
+	replace aguafuente_ch = 6 if inlist(aba_agua_entu, 4) | inlist(aba_agua_no_entu,5)
+	replace aguafuente_ch = 8 if inlist(aba_agua_no_entu,4)
+	replace aguafuente_ch = 10 if inlist(aba_agua_entu, 2,3,5,7,8,9) | inlist(aba_agua_no_entu, 1,3,9) | inlist(agua_entubada, 9)
 	
 	
-	********
-	*luz_ch*
-	********
-	*En la nueva encuesta no se encontro si se pregunta por instalacion electrica
-	gen luz_ch=.
-	replace luz_ch=1 if electricidad==1
-	replace luz_ch=2 if electricidad==3
+	*************
+	*aguadist_ch*
+	*************
+	gen aguadist_ch=.
+	replace aguadist_ch = 1 if inlist(agua_entubada, 1)
+	replace aguadist_ch = 2 if inlist(agua_entubada, 2)
+	replace aguadist_ch = 3 if inlist(agua_entubada, 3)
+	replace aguadist_ch = 0 if inlist(agua_entubada, 9)
+	
+	**************
+	*aguadisp1_ch*
+	**************
+	gen aguadisp1_ch =9 
+	
+	**************
+	*aguadisp2_ch*
+	**************
+	gen aguadisp2_ch =9	
+	*************
+	*aguamide_ch*
+	*************
+	gen aguamide_ch = 9
+	
+	
+	*********
+	*bano_ch*
+	*********
+	gen bano_ch = . 
+	replace bano_ch = 0 if sersan == 3 
+	replace bano_ch = 1 if sersan == 1 & drenaje == 1
+	replace bano_ch = 2 if sersan == 1 & drenaje == 2
+	replace bano_ch = 3 if inlist(sersan,2) & inlist(drenaje,1, 2)
+	replace bano_ch = 4 if inlist(sersan, 1,2) & inlist(drenaje, 3,4)
+	replace bano_ch = 6 if (inlist(sersan,1,2) & inlist(drenaje,5,9)) | sersan == 9 
+	
+	***********
+	*banoex_ch*
+	***********
+	
+	gen banoex_ch =.
+	replace banoex_ch = 0 if inlist(usoexc,1)
+	replace banoex_ch = 1 if inlist(usoexc,3)
+	replace banoex_ch = 9 if inlist(usoexc,9)
+
+	************
+	*sinbano_ch*
+	************
+	gen sinbano_ch =.
+	replace sinbano_ch = 3 if inlist(sersan,3)
+	replace sinbano_ch = 0 if inlist(sersan, 1,2,9)
 	
 
 	*********
-	*bano_ch*
+	*conbano_ch*
 	*********
 	gen bano_ch=.
 	replace bano_ch=1 if sersan==1 | sersan==2
@@ -385,6 +448,15 @@ replace geolev1=484032 if ent==32 //"Zacatecas"
 	replace des1_ch=1 if sersan==1
 	replace des1_ch=2 if sersan==2
 	
+	********
+	*luz_ch*
+	********
+	*En la nueva encuesta no se encontro si se pregunta por instalacion electrica
+	gen luz_ch=.
+	replace luz_ch=1 if electricidad==1
+	replace luz_ch=2 if electricidad==3
+	
+	
 	*********
 	*piso_ch*
 	*********
@@ -394,7 +466,7 @@ replace geolev1=484032 if ent==32 //"Zacatecas"
 	replace piso_ch=1 if pisos==2
 	
 	*****************
-	*banomejorado_ch*
+	*banoalcantarillado_ch*
 	*****************
 	gen banomejorado_ch=.
  	replace banomejorado_ch=0 if drenaje==5 
@@ -765,7 +837,7 @@ replace literacy=1 if alfabet==2
 	
    
 
-order region_BID_c region_c pais_c anio_c idh_ch idp_ci factor_ch factor_ci estrato_ci zona_c sexo_ci edad_ci relacion_ci civil_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch miembros_ci afroind_ci afroind_ch afroind_ano_c dis_ci dis_ch condocup_ci emp_ci desemp_ci pea_ci rama_ci categopri_ci spublico_ci ylm_ci ynlm_ci ylm_ch ynlm_ch aedu_ci eduno_ci edupre_ci edupi_ci  edupc_ci  edusi_ci edusc_ci  eduui_ci eduuc_ci edus1i_ci edus1c_ci edus2i_ci edus2c_ci asiste_ci literacy aguared_ch luz_ch bano_ch des1_ch piso_ch banomejorado_ch pared_ch techo_ch resid_ch dorm_ch cuartos_ch cocina_ch telef_ch refrig_ch auto_ch compu_ch internet_ch cel_ch viviprop_ch migrante_ci migrantelac_ci migantiguo5_ci 
+order region_BID_c region_c pais_c anio_c idh_ch idp_ci factor_ch factor_ci estrato_ci zona_c sexo_ci edad_ci relacion_ci civil_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch miembros_ci afroind_ci afroind_ch afroind_ano_c dis_ci dis_ch condocup_ci emp_ci desemp_ci pea_ci rama_ci categopri_ci spublico_ci ylm_ci ynlm_ci ylm_ch ynlm_ch aedu_ci eduno_ci edupre_ci edupi_ci  edupc_ci  edusi_ci edusc_ci  eduui_ci eduuc_ci edus1i_ci edus1c_ci edus2i_ci edus2c_ci asiste_ci literacy luz_ch aguaentubada_ch aguared_ch aguafuente_ch aguadist_ch aguadisp1_ch aguadisp2_ch aguamide_ch bano_ch banoex_ch banoalcantarillado_ch sinbano_ch conbano_ch des1_ch piso_ch pared_ch techo_ch resid_ch dorm_ch cuartos_ch cocina_ch telef_ch refrig_ch auto_ch compu_ch internet_ch cel_ch viviprop_ch migrante_ci migrantelac_ci migantiguo5_ci 
 *****************************
 ** Include all labels of   **
 **  harmonized variables   **
