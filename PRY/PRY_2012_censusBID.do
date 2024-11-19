@@ -540,8 +540,12 @@ Superior No Universitario  o Universita |       7
 **********************************
 		
 	************
-	*aguared_ch*
+	*aguaentubada_ch*
 	************
+	gen aguared_ch=.
+	replace aguared_ch = 1 if inrange(V08, 1, 2)
+	replace aguared_ch = 0 if inrange(V08, 3, 9)
+	
 /*
 
 	Nota: 
@@ -551,13 +555,84 @@ Superior No Universitario  o Universita |       7
 		  ESSAP (ex corposana) 
           SENASA o Junta de Saneamiento 
           Red comunitaria 
-          Red  privada 
 
 */
 
+
+	
+	************
+	*aguared_ch*
+	************
+
 	gen aguared_ch=.
-	replace aguared_ch = 1 if inrange(V09, 1, 4)
-	replace aguared_ch = 0 if inrange(V09, 5, 12)
+	replace aguared_ch = 1 if inlist(V09, 1,2,3)
+	replace aguared_ch = 0 if inrange(V09,4,99)
+	
+    ***************
+	*aguafuente_ch*
+	***************
+ 
+	gen aguafuente_ch=.
+	replace aguafuente_ch = 1 if if inlist(V10, 1,2,3,4) & inlist(V08, 1,2)
+	replace aguafuente_ch = 2 if inlist(V10, 1,2,3,4) & inlist(V08, 3)
+	replace aguafuente_ch = 3 if V10 == 10
+	replace aguafuente_ch = 4 if inlist(V10, 5,6)
+	replace aguafuente_ch = 6 if inlist(V10, 11)
+	replace aguafuente_ch = 8 if inlist(V10, 11)
+	replace aguafuente_ch = 9 if inlist(V10, 7)
+	replace aguafuente_ch = 10 if inlist(V10, 8,9,12,99)
+	
+	
+	*************
+	*aguadist_ch*
+	*************
+	gen aguadist_ch=.
+	replace aguadist_ch = 1 if inlist(V08, 1)
+	replace aguadist_ch = 2 if inlist(V08, 2)
+	replace aguadist_ch = 3 if inlist(V08, 3)
+	replace aguadist_ch = 0 if inlist(V08, 4,5,6,9)
+	
+	**************
+	*aguadisp1_ch*
+	**************
+	gen aguadisp1_ch =9 
+	
+	**************
+	*aguadisp2_ch*
+	**************
+	gen aguadisp2_ch =9
+	
+	*************
+	*aguamide_ch*
+	*************
+	gen aguamide_ch =9
+	
+	*********
+	*bano_ch*
+	*********
+	gen bano_ch = . 
+	replace bano_ch = 0 if V20 == 8
+	replace bano_ch = 1 if inlist(V20,1)
+	replace bano_ch = 2 if inlist(V20,2)
+	replace bano_ch = 4 if inlist(V20, 6,7) 
+	replace bano_ch = 6 if inlist(V20, 3,4,5)
+	
+	***********
+	*banoex_ch*
+	***********
+	
+	gen banoex_ch =.
+	replace bano_ch = 1 if V18 ==1
+	replace bano_ch = 0 if inlist(V18, 2,6)
+	replace bano_ch = 9 if inlist(V18, 3,9)
+
+	************
+	*sinbano_ch*
+	************
+	gen sinbano_ch =.
+	replace sinbano_ch = 3 if V20 == 8
+	replace sinbano_ch = 3 if inlist(V20, 1,2,3,4,5,6,9)
+
 
 	********
 	*luz_ch*
@@ -568,11 +643,11 @@ Superior No Universitario  o Universita |       7
 	
 	
 	*********
-	*bano_ch*
+	*banoalcantarillado_ch_ch*
 	*********
-	gen bano_ch=.
-	replace bano_ch = 1 if inrange(V18, 1, 3)
-	replace bano_ch = 0 if V18 == 6
+	gen banoalcantarillado_ch_ch=.
+	replace banoalcantarillado_ch_ch = 1 if inrange(V18, 1, 3)
+	replace banoalcantarillado_ch_ch = 0 if V18 == 6
 	
 	
 	*********
@@ -793,7 +868,7 @@ replace dismental_ci = 0 if P13 == 4
 	replace miglac_ci = 0 if !inlist(P14CPAIS, 32, 68, 76, 152, 170, 188, 192, 214, 218, 222, 484, 604, 858, 862, 999)
 
 
-order region_BID_c pais_c estrato_ci zona_c relacion_ci civil_ci idh_ch factor_ch idp_ci factor_ci edad_ci sexo_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch miembros_ci condocup_ci emp_ci desemp_ci pea_ci rama_ci spublico_ci migrante_ci migantiguo5_ci migrantiguo5_ci aguared_ch luz_ch bano_ch des1_ch piso_ch pared_ch techo_ch dorm_ch cuartos_ch cocina_ch refrig_ch auto_ch internet_ch cel_ch viviprop_ch viviprop_ch1 region_c categopri_ci discapacidad_ci ceguera_ci sordera_ci mudez_ci dismental_ci afroind_ci afroind_ch afroind_ano_c dis_ci dis_ch aedu_ci
+order region_BID_c pais_c estrato_ci zona_c relacion_ci civil_ci idh_ch factor_ch idp_ci factor_ci edad_ci sexo_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch miembros_ci condocup_ci emp_ci desemp_ci pea_ci rama_ci spublico_ci migrante_ci migantiguo5_ci migrantiguo5_ci aguaentubada, aguared_ch, aguadisp1_ch, aguadist_ch, aguadisp2_ch aguamide_ch luz_ch bano_ch sinbano_ch banoex_ch banoalcantarillado_ch des1_ch piso_ch pared_ch techo_ch dorm_ch cuartos_ch cocina_ch refrig_ch auto_ch internet_ch cel_ch viviprop_ch viviprop_ch1 region_c categopri_ci discapacidad_ci ceguera_ci sordera_ci mudez_ci dismental_ci afroind_ci afroind_ch afroind_ano_c dis_ci dis_ch aedu_ci
 
 *****************************
 ** Include all labels of   **

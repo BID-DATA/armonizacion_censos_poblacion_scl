@@ -252,26 +252,89 @@ replace civil_ci=4 if pcp34==7
 **********************************
 		
 	************
-	*aguared_ch*
+	*aguaentubada_ch*
 	************
 	* se crea conforme las tablas de armonización IPUMS
-	gen aguared_ch=.
-	replace aguared_ch=1 if pch4 == 1 | pch4 == 2 | pch4 == 3
-	replace aguared_ch=0 if pch4>=4 & pch4<=10
+	gen aguaentubada_ch=.
+	replace aguaentubada_ch=1 if pch4 == 1 | pch4 == 2 | pch4 == 3
+	replace aguaentubada_ch=0 if pch4>=4 & pch4<=10
 	
-	********
-	*luz_ch*
-	********
-	*En la nueva encuesta no se encontro si se pregunta por instalacion electrica
-	gen luz_ch=pch8
-	replace luz_ch=0 if pch8>=2 & pch8<=5
+
+		
+	************
+	*aguared_ch*
+	************
+
+	gen aguared_ch=.
+	replace aguared_ch = 1 if inlist(pch4, 1,2)
+	replace aguared_ch = 0 if inlist(pch4,3,4,5,6,8,9,10)
+	
+    ***************
+	*aguafuente_ch*
+	***************
+ 
+	gen aguafuente_ch=.
+	replace aguafuente_ch = 1 if inlist(pch4, 1,2)
+	replace aguafuente_ch = 2 if pch4 ==3
+	replace aguafuente_ch = 5 if pch4 ==5
+	replace aguafuente_ch = 6 if pch4 ==9
+	replace aguafuente_ch = 8 if inlist(pch4, 6,7)
+	replace aguafuente_ch = 10 if inlist(pch4, 4,8,10)
+	
+	
+	*************
+	*aguadist_ch*
+	*************
+	gen aguadist_ch=.
+	replace aguadist_ch = 1 if inlist(pch4, 1)
+	replace aguadist_ch = 2 if inlist(pch4, 2)
+	replace aguadist_ch = 3 if inlist(pch4, 3)
+	replace aguadist_ch = 0 if inlist(pch4, 4,5,6,7,8,9,10)
+	
+	**************
+	*aguadisp1_ch*
+	**************
+	gen aguadisp1_ch =9 
+	
+	**************
+	*aguadisp2_ch*
+	**************
+	gen aguadisp2_ch =9	
+	*************
+	*aguamide_ch*
+	*************
+	gen aguamide_ch = 9
 	
 	*********
 	*bano_ch*
 	*********
-	gen bano_ch=.
-	replace bano_ch=1 if pch5>=1 & pch5<=4
-	replace bano_ch=0 if pch5==5
+	gen bano_ch = . 
+	replace bano_ch = 0 if pch5 == 5
+	replace bano_ch = 1 if pch5 == 1
+	replace bano_ch = 2 if pch5 == 2
+	replace bano_ch = 6 if inlist(pch5, 3,4)
+	
+	***********
+	*banoex_ch*
+	***********
+	
+	gen banoex_ch =.
+	replace banoex_ch = 0 if inlist(pch6,2)
+	replace banoex_ch = 1 if inlist(pch6,1)
+
+	************
+	*sinbano_ch*
+	************
+	gen sinbano_ch =.
+	replace sinbano_ch = 3 if inlist(pch5,5)
+	replace sinbano_ch = 0 if inlist(pch5, 1,2,3,4)
+	
+	*********
+	*conbano_ch*
+	*********
+	gen conbano_ch=.
+	replace conbano_ch=1 if pch5>=1 & pch5<=4
+	replace conbano_ch=0 if pch5==5
 	
 	
 	*********
@@ -282,6 +345,12 @@ replace civil_ci=4 if pcp34==7
 	replace des1_ch=1 if pch5 == 1 | pch5 == 2
 	replace des1_ch=2 if pch5 == 3 | pch5 == 4
 	
+	********
+	*luz_ch*
+	********
+	*En la nueva encuesta no se encontro si se pregunta por instalacion electrica
+	gen luz_ch=pch8
+	replace luz_ch=0 if pch8>=2 & pch8<=5
 	
 	*********
 	*piso_ch*
@@ -292,11 +361,11 @@ replace civil_ci=4 if pcp34==7
 	replace piso_ch = 2 if pcv5 == 3 | pcv5 == 8
 	
 	*****************
-	*banomejorado_ch*
+	*banoalcantarillado_ch*
 	*****************
-	gen banomejorado_ch=.
-	replace banomejorado_ch=1 if pch5 == 1 | pch5==2
-	replace banomejorado_ch=0 if pch5 == 3 | pch5==4| pch5==5
+	gen banoalcantarillado_ch=.
+	replace banoalcantarillado_ch=1 if pch5 == 1 | pch5==2
+	replace banoalcantarillado_ch=0 if pch5 == 3 | pch5==4| pch5==5
 	
 	
 	**********

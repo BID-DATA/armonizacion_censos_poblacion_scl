@@ -203,12 +203,88 @@ replace civil_ci=4 if c5_p24==4
 **********************************
 		
 	************
-	*aguared_ch*
+	*aguaentubada_ch*
 	************
 	* se crea conforme las tablas de armonización IPUMS
+	gen aguaentubada_ch=.
+	replace aguaentubada_ch=1 if c2_p6 == 1 | c2_p6 == 2 | c2_p6 == 3
+	replace aguaentubada_ch=0 if c2_p6>3 & c2_p6<9
+	
+	
+	************
+	*aguared_ch*
+	************
+
 	gen aguared_ch=.
-	replace aguared_ch=1 if c2_p6 == 1 | c2_p6 == 2 | c2_p6 == 3
-	replace aguared_ch=0 if c2_p6>3 & c2_p6<9
+	replace aguared_ch = 1 if inlist(c2_p6, 1,2)
+	replace aguared_ch = 0 if inlist(c2_p6,3,4,5,6,8)
+	
+    ***************
+	*aguafuente_ch*
+	***************
+ 
+	gen aguafuente_ch=.
+	replace aguafuente_ch = 1 if inlist(c2_p6, 1,2)
+	replace aguafuente_ch = 2 if c2_p6 ==3
+	replace aguafuente_ch = 6 if c2_p6 ==4
+	replace aguafuente_ch = 8 if inlist(c2_p6, 7)
+	replace aguafuente_ch = 10 if inlist(c2_p6, 6,7,8)
+	
+	
+	*************
+	*aguadist_ch*
+	*************
+	gen aguadist_ch=.
+	replace aguadist_ch = 1 if inlist(c2_p6, 1)
+	replace aguadist_ch = 2 if inlist(c2_p6, 2)
+	replace aguadist_ch = 3 if inlist(c2_p6, 3)
+	replace aguadist_ch = 0 if inlist(c2_p6, 4,5,6,7,8)
+	
+	**************
+	*aguadisp1_ch*
+	**************
+	gen aguadisp1_ch =9 
+	
+	**************
+	*aguadisp2_ch*
+	**************
+	gen aguadisp2_ch =.
+	replace aguadisp2_ch = 1 if c2_p7a <12 | (c2_p7c < 12 | c2_p7b<4)
+	replace aguadisp2_ch = 2 if (c2_p7a >=12 & c2_p7a<24) | (c2_p7c >= 12 & c2_p7b>=4)
+	replace aguadisp2_ch = 3 if c2_p7 ==1 & c2_p7a == 24
+	
+	*************
+	*aguamide_ch*
+	*************
+	gen aguamide_ch =9
+	
+	*********
+	*bano_ch*
+	*********
+	gen bano_ch = . 
+	replace bano_ch = 1 if inlist(c2_p10,1,2)
+	replace bano_ch = 2 if c2_p10 == 3
+	replace bano_ch = 4 if inlist(c2_p10, 6,7) 
+	replace bano_ch = 6 if inlist(c2_p10, 4,5,8)
+	
+	***********
+	*banoex_ch*
+	***********
+	
+	gen banoex_ch =9
+
+	************
+	*sinbano_ch*
+	************
+	gen sinbano_ch =.
+
+/*
+
+Nota: 
+	
+El censo no da la opcion de "no tiene" en cuanto a las instalaciones sanitarias
+
+*/
 	
 	********
 	*luz_ch*
@@ -219,12 +295,12 @@ replace civil_ci=4 if c5_p24==4
 	replace luz_ch=0 if c2_p11 ==2
 	
 	*********
-	*bano_ch*
+	*conbano_ch*
 	*********
-	gen bano_ch=.
-	replace bano_ch=1 if c2_p10
-	replace bano_ch=1 if c2_p10 >= 1 & c2_p10 <= 4
-	replace bano_ch=0 if c2_p10>4
+	gen conbano_ch=.
+	replace conbano_ch=1 if c2_p10
+	replace conbano_ch=1 if c2_p10 >= 1 & c2_p10 <= 4
+	replace conbano_ch=0 if c2_p10>4
 	
 	*********
 	*des1_ch*
@@ -244,11 +320,11 @@ replace civil_ci=4 if c5_p24==4
 	replace piso_ch = 2 if c2_p5  == 5 | c2_p5 == 4 | c2_p5==1
 	
 	*****************
-	*banomejorado_ch*
+	*banoalcantarillado_ch_ch*
 	*****************
-	gen banomejorado_ch=.
-	replace banomejorado_ch=1 if c2_p10 >= 1 & c2_p10 < 4
-	replace banomejorado_ch=0 if c2_p10>=4
+	gen banoalcantarillado_ch=.
+	replace banoalcantarillado_ch=1 if c2_p10 >= 1 & c2_p10 < 4
+	replace banoalcantarillado_ch=0 if c2_p10>=4
 	
 	
 	**********

@@ -521,10 +521,67 @@ OBSERVACIONES:
 **********************************
 		
 	************
+	*aguaentubada_ch*
+	************
+	gen aguaentubada_ch=.
+	replace aguaentubada_ch if inlist(h18,1,2)
+	
+	
+	************
 	*aguared_ch*
 	************
-	* se crea conforme las tablas de armonización IPUMS
-	gen aguared_ch=(h18==1) if h18!=9
+	gen aguared_ch=.
+	replace aguared_ch=1 if inlist(h18,1,2)
+	replace aguared_ch=2 if inlist(h18,4)
+	replace aguared_ch=7 if inlist(h18,3)
+	replace aguared_ch=10 if inlist(h18,5,6,7)
+	
+	*************
+	*aguadist_ch*
+	*************
+	gen aguadist_ch=.
+	replace aguadist_ch =1 if h18==1
+	replace aguadist_ch =2 if h18==2
+	replace aguadist_ch = 3 if h18==4
+	replace aguadist_ch = 0 if inlist(h18, 3,5,6)
+	
+	**************
+	*aguadisp1_ch*
+	**************
+	gen aguadisp1_ch= 9
+	**************
+	*aguadisp2_ch*
+	**************
+	gen aguadisp2_ch= 9
+	*************
+	*aguamide_ch*
+	*************
+	gen aguamide_ch= 9
+	
+	
+    *********
+	*bano_ch*
+	*********
+	gen bano_ch= .
+	replace bano_ch = 0 if h19a ==4
+	replace bano_ch = 1 if h19a ==1
+	replace bano_ch = 6 if inlist(h19a, 2,3,5,6)
+	
+	
+	***********
+	*banoex_ch*
+	***********
+	gen banoex_ch=.
+	replace banoex_ch = 1 if h19b == 2
+	replace banoex_ch = 0 if h19b == 1
+	
+
+	**************
+	*sinbano_ch*
+	**************
+	gen sinbano_ch =.
+	replace sinbano_ch =0 if inlist(h19a, 1,2,3,5,6)
+	replace sinbano_ch =3 if inlist(h19a, 4)
 	
 	********
 	*luz_ch*
@@ -532,9 +589,9 @@ OBSERVACIONES:
 	gen luz_ch=(h20a==1) if h20a!=9
 	
 	*********
-	*bano_ch*
+	*conbano_ch*
 	*********
-	gen bano_ch=(inlist(h19a,1,2,4)) if h19a!=9
+	gen conbano_ch=(inlist(h19a,1,2,4)) if h19a!=9
 	
 	*********
 	*des1_ch*
@@ -550,7 +607,8 @@ OBSERVACIONES:
 	*****************
 	*banomejorado_ch*
 	*****************
-	gen banomejorado_ch=.
+	gen banoalcantarillado_ch=.
+	replace banoalcantarillado_ch = 1 if h19a ==1
 	
 	
 	**********

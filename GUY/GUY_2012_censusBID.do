@@ -551,12 +551,88 @@ gen literacy=.
 ****          VARIABLES DE LA VIVIENDA          ****
 ****************************************************
 ************
-*aguared_ch*
+*aguaentubada_ch*
 ************
-gen aguared_ch=.
-replace aguared_ch=1 if h43==1 | h43==3 | h43==4 | h43==5 | h43==7 // piped into dwelling, piped into yard/plot, public well
-replace aguared_ch=0 if h43==2 | h43==6 | h43==8 | h43==9 | h43==10 // private catchments/rain water, public standpipe or hand pump, spring/river/pond, truck borne, dug well/borehole
-replace aguared_ch=. if h43==11
+
+gen aguaentubada_ch=.
+replace aguaentubada_ch=1 if h43==1 | h43==3 | h43==4 | h43==5  // piped into dwelling, piped into yard/plot, public well
+replace aguaentubada_ch=0 if h43==2 | h43==6 | h43==8 | h43==9 | h43==10 | h43==7 // private catchments/rain water, public standpipe or hand pump, spring/river/pond, truck borne, dug well/borehole
+replace aguaentubada_ch=. if h43==11
+
+	************
+	*aguared_ch*
+	************
+	gen aguared_ch=.
+	replace aguared_ch = 1 if inlist(h43,1,2,4,5)
+	replace aguared_ch = 0 if inlist(h43,3,6,7,8,9,10,11,99)
+	
+	************
+	*aguafuente_ch*
+	************
+	gen aguafuente_ch=.
+	replace aguafuente_ch=1 if inlist(h44,1,2)
+	replace aguafuente_ch=2 if inlist(h44,3)
+	replace aguafuente_ch=3 if inlist(h44,6)
+	replace aguafuente_ch=4 if inlist(h44,4,5)
+	replace aguafuente_ch=5 if inlist(h44,7)
+	replace aguafuente_ch=6 if inlist(h44,10) & inlist(h43, 9)
+	replace aguafuente_ch=7 if inlist(h44,10) & inlist(h43, 1,)
+	replace aguafuente_ch=8 if inlist(h44,9) 
+	replace aguafuente_ch=9 if inlist(h44,8) 
+	replace aguafuente_ch=10 if inlist(h44,11)
+	
+	*************
+	*aguadist_ch*
+	*************
+	gen aguadist_ch=.
+	replace aguadist_ch =1 if inlist(h44,1)
+	replace aguadist_ch =2 if inlist(h44,2)
+	replace aguadist_ch = 3 if inlist(h44,3)
+	replace aguadist_ch = 0 if inlist(h44,4,5,6,7,8,9,10,11)
+	
+	**************
+	*aguadisp1_ch*
+	**************
+	gen aguadisp1_ch= 9
+	**************
+	*aguadisp2_ch*
+	**************
+	gen aguadisp2_ch= 9
+	*************
+	*aguamide_ch*
+	*************
+	gen aguamide_ch= 9
+	
+	
+    *********
+	*bano_ch*
+	*********
+	gen bano_ch= .
+	replace bano_ch = 0 if h45 ==6
+	replace bano_ch = 1 if h45 ==1
+	replace bano_ch = 2 if h45 ==2
+	replace bano_ch = 3 if inlist(h45,3,4)
+	replace bano_ch = 5 if inlist(h45,5)
+	replace bano_ch = 6 if inlist(h45, 7)
+	
+	
+	***********
+	*banoex_ch*
+	***********
+	gen banoex_ch=.
+	replace banoex_ch = 1 if inlist(h46,2)
+	replace banoex_ch = 0 if h46 == 1
+	
+
+	**************
+	*sinbano_ch*
+	**************
+	gen sinbano_ch =.
+	replace sinbano_ch =0 if inlist(h45, 1,2,3,4,5,7)
+	replace sinbano_ch =3 if inlist(h45, 6)
+
+
+
 
 ********
 *luz_ch*
@@ -567,12 +643,12 @@ replace luz_ch=1 if h42==3 | h42==4
 replace luz_ch=. if h42==6
 	
 *********
-*bano_ch*
+*conbano_ch*
 *********
-gen bano_ch=.
-replace bano_ch=1 if h45==1 | h45==2 | h45==3 | h45==4 | h45==5 // wc (flush toilet) linked to sewer, wc (flush toilet) linked to septic tank/soak-away, ventilated pit latrine (VIP), trad. pit latrine with slab, trad. pit Latrine w/out slab
-replace bano_ch=0 if h45==6
-replace bano_ch=. if h45==7
+gen conbano_ch=.
+replace conbano_ch=1 if h45==1 | h45==2 | h45==3 | h45==4 | h45==5 // wc (flush toilet) linked to sewer, wc (flush toilet) linked to septic tank/soak-away, ventilated pit latrine (VIP), trad. pit latrine with slab, trad. pit Latrine w/out slab
+replace conbano_ch=0 if h45==6
+replace conbano_ch=. if h45==7
 	
 *********
 *des1_ch*
@@ -587,14 +663,15 @@ replace des1_ch=. if h45==6
 *piso_ch*
 *********
 gen piso_ch=.
+replace piso_ch=. if h45==7
 	
 *****************
-*banomejorado_ch*
+*banoalcantarillado_ch_ch*
 *****************
-gen banomejorado_ch=.
-replace banomejorado_ch=1 if h45==1 | h45==2 // wc (flush toilet) linked to sewer, wc (flush toilet) linked to septic tank/soak-away, 
-replace banomejorado_ch=0 if h45==3 | h45==4 | h45==5 | h45==6 // ventilated pit latrine (VIP), trad. pit latrine with slab, trad. pit Latrine w/out slab, none
-replace piso_ch=. if h45==7
+gen banoalcantarillado_ch=.
+replace banoalcantarillado_ch_ch=1 if h45==1  // wc (flush toilet) linked to sewer 
+replace banoalcantarillado_ch_ch=0 if  h45==2 | h45==3 | h45==4 | h45==5 | h45==6 //  wc (flush toilet) linked to septic tank/soak-away, ventilated pit latrine (VIP), trad. pit latrine with slab, trad. pit Latrine w/out slab, none
+
 
 **********
 *pared_ch*
@@ -778,7 +855,7 @@ replace migrantiguo5_ci=0 if migantiguo5_ci!=1 & migrante_ci==1
 cd "C:\Users\JILLIEC\OneDrive - Inter-American Development Bank Group\2023\IADB_2023\censos\raw"
 include "../Base/labels.do"
 
-order region_BID_c pais_c estrato_ci zona_c relacion_ci civil_ci idh_ch factor_ch idp_ci factor_ci edad_ci sexo_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch miembros_ci condocup_ci emp_ci desemp_ci pea_ci rama_ci spublico_ci migrante_ci migantiguo5_ci aguared_ch luz_ch bano_ch des1_ch piso_ch pared_ch techo_ch dorm_ch cuartos_ch cocina_ch refrig_ch auto_ch internet_ch cel_ch viviprop_ch viviprop_ch1 region_c categopri_ci discapacidad_ci ceguera_ci sordera_ci mudez_ci dismental_ci afroind_ci afroind_ch afroind_ano_c dis_ci dis_ch aedu_ci
+order region_BID_c pais_c estrato_ci zona_c relacion_ci civil_ci idh_ch factor_ch idp_ci factor_ci edad_ci sexo_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch miembros_ci condocup_ci emp_ci desemp_ci pea_ci rama_ci spublico_ci migrante_ci migantiguo5_ci aguaentubada_ch aguared_ch aguafuente_ch aguadist_ch aguadisp1_ch aguadisp2_ch aguamide_ch bano_ch banoex_ch sinbano_ch luz_ch conbano_ch des1_ch piso_ch banoalcantarillado_ch pared_ch techo_ch dorm_ch cuartos_ch cocina_ch refrig_ch auto_ch internet_ch cel_ch viviprop_ch viviprop_ch1 region_c categopri_ci discapacidad_ci ceguera_ci sordera_ci mudez_ci dismental_ci afroind_ci afroind_ch afroind_ano_c dis_ci dis_ch aedu_ci
 
 compress
 
