@@ -1000,7 +1000,7 @@ foreach v of global lista_variables {
 *******************************************************************************/
 
 keep  $lista_variables llaveviv hogar npersona 
-* selecciona las 3 lineas y ejecuta (do). Deben quedar 103 variables de las secciones II y III más las variables originales de ID que hayas mantenido (106)
+* selecciona las 3 lineas y ejecuta (do). Deben quedar 105 variables de las secciones II y III más las variables originales de ID que hayas mantenido (108)
 ds
 local varconteo: word count `r(varlist)'
 display "Número de variables de la base: `varconteo'"
