@@ -796,9 +796,7 @@ ta p05_nacio p03b_reg_civil
 	replace viviprop_ch=1 if inlist(v03_tene,1,3,4,5)
 	replace viviprop_ch=0 if inlist(v03_tene,2,6)
 
-***************************************************
-*** 7.2 Vivienda - variables Wash (13 variables) ***
-***************************************************	
+
 
 	************
 	*aguaentubada_ch*
