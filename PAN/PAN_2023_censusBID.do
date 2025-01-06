@@ -796,7 +796,9 @@ ta p05_nacio p03b_reg_civil
 	replace viviprop_ch=1 if inlist(v03_tene,1,3,4,5)
 	replace viviprop_ch=0 if inlist(v03_tene,2,6)
 
-
+***************************************************
+*** 7.2 Vivienda - variables Wash (4 variables) ***
+***************************************************
 
 	************
 	*aguaentubada_ch*
@@ -814,7 +816,7 @@ ta p05_nacio p03b_reg_civil
 	replace aguared_ch = 1 if inlist(v08_agua,1,2)
 	replace aguared_ch = 0 if inlist(v08_agua, 3,4,5,6,7,8,9,10,11,12)
   	
-    ***************
+    	***************
 	*aguafuente_ch*
 	***************
  	gen byte aguafuente_ch=.
@@ -909,7 +911,7 @@ ta p05_nacio p03b_reg_civil
 	gen byte PAN_m_pared_ch = v04_pared
 	label var PAN_m_pared_ch  "Material de las paredes según el censo del país - variable original"
 	label def PAN_m_pared_ch  1 "Bloque, ladrillo, piedra, concreto" 2 " Madera (tablas o troza)" 3 "Quincha o adobe"  ///
-	4 " Metal (zinc, aluminio, otros)" 5 "Palma, paja, penca, ca�aza, bamb� o pal" 6 "Otros materiales" 7 "Sin paredes" //categorías originales del país
+	4 " Metal (zinc, aluminio, otros)" 5 "Palma, paja, penca, ca aza, bamb  o pal" 6 "Otros materiales" 7 "Sin paredes" //categorías originales del país
 	label val PAN_m_pared_ch  PAN_m_pared_ch 
 
 	*************************
@@ -917,7 +919,7 @@ ta p05_nacio p03b_reg_civil
 	*************************
 	gen byte PAN_m_piso_ch= v06_piso
 	label var PAN_m_piso_ch  "Material de los pisos según el censo del país - variable original"
-	label def PAN_m_piso_ch  1 "Mosaico o baldosa, m�rmol o parqu�" 2 "Pavimentado (concreto)" 3 "Ladrillo" 4 "Tierra" 5 "Madera" 6 "Otros materiales (ca�a, palos, desechos"  //categorías originales del país
+	label def PAN_m_piso_ch  1 "Mosaico o baldosa, m rmol o parqu " 2 "Pavimentado (concreto)" 3 "Ladrillo" 4 "Tierra" 5 "Madera" 6 "Otros materiales (ca a, palos, desechos"  //categorías originales del país
 	label val PAN_m_piso_ch  PAN_m_piso_ch 
 	
 	**************************
