@@ -863,7 +863,8 @@ rename *, lower
 	**************
 	*aguadisp2_ch*
 	**************
-	gen aguadisp2_ch =9	
+	gen aguadisp2_ch =9
+	
 	*************
 	*aguamide_ch*
 	*************
@@ -1016,7 +1017,7 @@ foreach v of global lista_variables {
 
 keep  $lista_variables p00 id_viv id_hog id_per
 
-* selecciona las 3 lineas y ejecuta (do). Deben quedar 94 variables de las secciones II y III más las 
+* selecciona las 3 lineas y ejecuta (do). Deben quedar 105 variables de las secciones II y III más las 
 * variables originales de ID que hayas mantenido
 ds
 local varconteo: word count `r(varlist)'

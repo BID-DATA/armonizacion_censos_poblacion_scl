@@ -755,7 +755,7 @@ rename *, lower
 	replace viviprop_ch=0 if inlist(hh2,3,4,5,6,7,8)
 
 ***************************************************
-*** 7.2 Vivienda - variables Wash (4 variables) ***
+*** 7.2 Vivienda - variables Wash (13 variables) ***
 ***************************************************	
 
 	************
@@ -764,20 +764,17 @@ rename *, lower
 	gen byte aguaentubada_ch=.
 	replace aguaentubada_ch=1 if inlist(hh13,1,2,3,4)
 	replace aguaentubada_ch=0 if inlist(hh13,5,6,7,8,9,10,88)
-	
-	
+		
 	************
 	*aguared_ch*
 	************
-
 	gen aguared_ch=.
 	replace aguared_ch = 1 if inlist(hh13,1,2)
 	replace aguared_ch = 0 if inlist(hh13,3,4,5,6,7,8,9,10,88)
 	
-    ***************
+    	***************
 	*aguafuente_ch*
 	***************
- 
 	gen aguafuente_ch=.
 	replace aguafuente_ch = 1 if inlist(hh15,2,3,4)
 	replace aguafuente_ch = 2 if inlist(hh15,5)
@@ -788,8 +785,7 @@ rename *, lower
 	replace aguafuente_ch = 8 if inlist(hh15, 10) | (hh15== 11 & hh14==9)
 	replace aguafuente_ch = 9 if (hh15== 11 & inlist(hh14,7) )
 	replace aguafuente_ch = 10 if inlist(hh15, 12,88) | (hh15== 11 & inlist(hh14,11,88))
-	
-	
+		
 	*************
 	*aguadist_ch*
 	*************
@@ -807,13 +803,13 @@ rename *, lower
 	**************
 	*aguadisp2_ch*
 	**************
-	gen aguadisp2_ch =9	
+	gen aguadisp2_ch =9
+	
 	*************
 	*aguamide_ch*
 	*************
 	gen aguamide_ch = 9
-	
-	
+		
 	*********
 	*bano_ch*
 	*********
@@ -827,11 +823,9 @@ rename *, lower
 	***********
 	*banoex_ch*
 	***********
-	
 	gen banoex_ch =.
 	replace banoex_ch = 0 if hh16a == 1
 	replace banoex_ch = 1 if hh16d == 2
-
 
 	************
 	*sinbano_ch*
@@ -841,16 +835,9 @@ rename *, lower
 	replace sinbano_ch = 1 if hh16a == 2 & inlist(hh16b,1,2,3,4,5,6,8)
 	replace sinbano_ch = 2 if hh16a == 2 & inlist(hh16b,7)
 	
-	
 	*********
 	*conbano_ch*
 	*********
-/*
-	Existen dos preguntas en el censo: 1. Does your dwelling have a toilet facility?
-	y 2. What type of toilet facility does your household USUALLY use?. 
-	Se considera 1 a los que contestan que tienen instalacion de baño y ademas que tienen 
-	Flush toilet y Pit latrine
- */
 	gen byte conbano_ch=.
 	replace conbano_ch=1 if hh16a==1 & inrange(hh16b,1,6)
 	replace conbano_ch=0 if hh16a==2 | inrange(hh16b,7,8)
@@ -927,7 +914,7 @@ rename *, lower
    III. Incluir variables externas
 *******************************************************************************/
 capture drop _merge
-merge m:1 pais_c anio_c using "$ruta\5_International_Poverty_Lines_LAC_long.dta", keepusing (ppp_2011 cpi_2011 lp19_2011 lp31_2011 lp5_2011 tc_wdi ppp_wdi2011)
+merge m:1 pais_c anio_c using "$ruta\5_International_Poverty_Lines_LAC_long.dta", keepusing (ppp_2011 cpi_2011 lp19_2011 lp31_2011 lp5_2011 tc_wdi ppp_wdi2011 lp365_2017 lp685_2017)
 
 drop if _merge ==2
 
@@ -969,7 +956,7 @@ foreach v of global lista_variables {
 
 keep  $lista_variables dwelling_id hh_id individual__id
 
-* selecciona las 3 lineas y ejecuta (do). Deben quedar 94 variables de las secciones II y III más las 
+* selecciona las 3 lineas y ejecuta (do). Deben quedar 105 variables de las secciones II y III más las 
 * variables originales de ID que hayas mantenido
 ds
 local varconteo: word count `r(varlist)'
