@@ -5,7 +5,7 @@
 País: PAN
 Año: 2023
 Autores: Pablo Cortez
-Última versión: 23MAY2023
+Última versión: 23MAY2023 
 División: MIG - IADB
 *******************************************************************************
 
@@ -182,22 +182,22 @@ rename *, lower
 	****************************************
 	*(factor_ci) factor expansión individio*
 	****************************************
-	gen factor_ci=.
+	gen byte factor_ci=.
 	
 	*******************************************
 	*(factor_ch) Factor de expansion del hogar*
 	*******************************************
-	gen factor_ch=.
+	gen byte factor_ch=.
 		
     ************
 	*estrato_ci*
 	************
-	gen estrato_ci =.
+	gen byte estrato_ci =.
 
 	*****
 	*upm*
 	*****
-	gen upm =.
+	gen byte upm =.
 	
     ********
 	*Zona_c*
@@ -247,9 +247,6 @@ rename *, lower
 	replace civil_ci=3 if inlist(p04_estc,2, 3, 6)
 	replace civil_ci=4 if  inlist(p04_estc,5)
 	
-	ta p04_estc,m
-	tab civil_ci, m
-
     *********
 	*jefe_ci*
 	*********
@@ -522,8 +519,6 @@ ta p05_nacio p03b_reg_civil
 	replace aedu_ci=. if p15_grado == .
 	replace aedu_ci=. if p15_grado == 99
 		
-	ta aedu_ci,m 
-
 	**********
 	*eduno_ci*
 	**********
@@ -802,31 +797,101 @@ ta p05_nacio p03b_reg_civil
 	replace viviprop_ch=0 if inlist(v03_tene,2,6)
 
 ***************************************************
-*** 7.2 Vivienda - variables Wash (4 variables) ***
-***************************************************	
+*** 7.2 Vivienda - variables Wash (13 variables) ***
+***************************************************
+
+	************
+	*aguaentubada_ch*
+	************
+	gen byte aguaentubada_ch=.
+	replace aguaentubada_ch=1 if inlist(v08_agua, 1,2,3)
+	replace aguaentubada_ch=0 if inlist(v08_agua, 4,5,6,7,8,11)
+	replace aguaentubada_ch = 1 if (inlist(v08_agua, 9,10)) & v11_sanit == 1
+	replace aguaentubada_ch = 0 if (inlist(v08_agua, 9,10)) & v11_sanit != 1
 
 	************
 	*aguared_ch*
 	************
 	gen byte aguared_ch=.
-	replace aguared_ch=1 if inlist(v08_agua, 1,2,3)
-	replace aguared_ch=0 if inlist(v08_agua, 4,5,6,7,8,11)
-	replace aguared_ch = 1 if (inlist(v08_agua, 9,10)) & v11_sanit == 1
-	replace aguared_ch = 0 if (inlist(v08_agua, 9,10)) & v11_sanit != 1
+	replace aguared_ch = 1 if inlist(v08_agua,1,2)
+	replace aguared_ch = 0 if inlist(v08_agua, 3,4,5,6,7,8,9,10,11,12)
+  	
+    ***************
+	*aguafuente_ch*
+	***************
+ 	gen byte aguafuente_ch=.
+	replace aguafuente_ch = 1 if inlist(v08_agua,1,2) & v09_inst == 1
+	replace aguafuente_ch = 2 if inlist(v08_agua,1,2) & v09_inst == 2
+	replace aguafuente_ch = 3 if inlist(v08_agua,10) 
+	replace aguafuente_ch = 4 if inlist(v08_agua,4) 
+	replace aguafuente_ch = 5 if inlist(v08_agua,7) 
+	replace aguafuente_ch = 6 if inlist(v08_agua,9) 
+	replace aguafuente_ch = 7 if inlist(v08_agua,3) 
+	replace aguafuente_ch = 8 if inlist(v08_agua,8) 
+	replace aguafuente_ch = 9 if inlist(v08_agua,5) 
+	replace aguafuente_ch = 10 if inlist(v08_agua,6,11,12)
 
+	*************
+	*aguadist_ch*
+	*************
+	gen byte aguadist_ch=0 
+	
+	**************
+	*aguadisp1_ch*
+	**************
+	gen byte aguadisp1_ch =9
+		
+	**************
+	*aguadisp2_ch*
+	**************
+	gen byte aguadisp2_ch =.
+	replace aguadisp2 = 1 if (v10b_diasel<4 | v10b_regel<12) | (v10a_diases<4 | v10a_reges<12)
+	replace aguadisp2 = 2 if (v10b_diasel>=4 | v10b_regel>=12) & (v10a_diases>=4 | v10a_reges>=12)
+	replace aguadisp2 = 3 if (v10b_diasel==7 | v10b_regel==24) & (v10a_diases ==7 | v10a_reges==24)
+
+	*************
+	*aguamide_ch*
+	*************
+	gen byte aguamide_ch = 9
+	
 	*********
 	*bano_ch*
 	*********
-	gen byte bano_ch=.
-	replace bano_ch=1 if inlist(v11_sanit,1,2,3)
-	replace bano_ch=0 if inlist(v11_sanit,4)
+	gen byte bano_ch = . 
+	replace bano_ch = 0 if v11_sanit == 4
+	replace bano_ch = 1 if v11_sanit == 1
+	replace bano_ch = 2 if v11_sanit == 2
+	replace bano_ch = 6 if v11_sanit == 3
+	
+	***********
+	*banoex_ch*
+	***********
+	gen byte banoex_ch =.
+	replace banoex_ch = 1 if v12_suso ==1
+	replace banoex_ch = 0 if v12_suso ==2
+
+	************
+	*sinbano_ch*
+	************
+	gen byte sinbano_ch =.
+	replace sinbano_ch = 0 if inlist(v11_sanit, 1,2,3)
+	replace sinbano_ch = 1 if v13_excr ==4
+	replace sinbano_ch = 2 if inlist(v13_excr, 1,2,3)
+	replace sinbano_ch = 3 if inlist(v13_excr,5)
+	
+	*********
+	*conbano_ch*
+	*********
+	gen byte conbano_ch=.
+	replace conbano_ch=1 if inlist(v11_sanit,1,2,3)
+	replace conbano_ch=0 if inlist(v11_sanit,4)
 	
 	*****************
-	*banomejorado_ch*
+	*banoalcantarillado_ch*
 	*****************
-	gen byte banomejorado_ch=.
-	replace banomejorado_ch=1 if inlist(v11_sanit,1,2)
-	replace banomejorado_ch=0 if inlist(v11_sanit,3,4)
+	gen byte banoalcantarillado_ch=.
+	replace banoalcantarillado_ch=1 if inlist(v11_sanit,1,2)
+	replace banoalcantarillado_ch=0 if inlist(v11_sanit,3,4)
 	
 	*********
 	*des1_ch*
@@ -846,7 +911,7 @@ ta p05_nacio p03b_reg_civil
 	gen byte PAN_m_pared_ch = v04_pared
 	label var PAN_m_pared_ch  "Material de las paredes según el censo del país - variable original"
 	label def PAN_m_pared_ch  1 "Bloque, ladrillo, piedra, concreto" 2 " Madera (tablas o troza)" 3 "Quincha o adobe"  ///
-	4 " Metal (zinc, aluminio, otros)" 5 "Palma, paja, penca, ca�aza, bamb� o pal" 6 "Otros materiales" 7 "Sin paredes" //categorías originales del país
+	4 " Metal (zinc, aluminio, otros)" 5 "Palma, paja, penca, ca aza, bamb  o pal" 6 "Otros materiales" 7 "Sin paredes" //categorías originales del país
 	label val PAN_m_pared_ch  PAN_m_pared_ch 
 
 	*************************
@@ -854,7 +919,7 @@ ta p05_nacio p03b_reg_civil
 	*************************
 	gen byte PAN_m_piso_ch= v06_piso
 	label var PAN_m_piso_ch  "Material de los pisos según el censo del país - variable original"
-	label def PAN_m_piso_ch  1 "Mosaico o baldosa, m�rmol o parqu�" 2 "Pavimentado (concreto)" 3 "Ladrillo" 4 "Tierra" 5 "Madera" 6 "Otros materiales (ca�a, palos, desechos"  //categorías originales del país
+	label def PAN_m_piso_ch  1 "Mosaico o baldosa, m rmol o parqu " 2 "Pavimentado (concreto)" 3 "Ladrillo" 4 "Tierra" 5 "Madera" 6 "Otros materiales (ca a, palos, desechos"  //categorías originales del país
 	label val PAN_m_piso_ch  PAN_m_piso_ch 
 	
 	**************************
@@ -892,45 +957,37 @@ ta p05_nacio p03b_reg_civil
 	tab PAN_dis_ci
 
 /*******************************************************************************
-   III. Incluir variables externas
+   III. Incluir variables externas (7 variables)
 *******************************************************************************/
 capture drop _merge
-merge m:1 pais_c anio_c using "$ruta\5_International_Poverty_Lines_LAC_long.dta", keepusing (ppp_2011 cpi_2011 lp19_2011 lp31_2011 lp5_2011 tc_wdi ppp_wdi2011)
+merge m:1 pais_c anio_c using "Z:/general_documentation/data_externa/poverty/International_Poverty_Lines/5_International_Poverty_Lines_LAC_long_PPP17.dta", keepusing ( lp19_2011 lp31_2011 lp5_2011 tc_wdi cpi_2017 lp365_2017 lp685_201)
 drop if _merge ==2
 
 g tc_c     = tc_wdi
-g ipc_c    = cpi_2011
+g ipc_c    = cpi_2017
 g lp19_ci  = lp19_2011 
 g lp31_ci  = lp31_2011 
 g lp5_ci   = lp5_2011
 
-*se debe eliminar una vez se actualice la linea de pobreza en Oct. 2021: lp31_ci2020= lp31_ci2019* (1.42015)
-*replace lp31_ci = 2800.9949*1.420151 if anio_c==2021 & pais_c=="PAN" 
-*replace lp19_ci = 1716.7388*1.420151 if anio_c==2021 & pais_c=="PAN" 
-*replace lp5_ci = 4517.7334*1.420151 if anio_c==2021 & pais_c=="PAN" 
-
-/*
-última actualización de la línea en 2021
-https://www.mef.gob.pa/wp-content/uploads/2023/08/MEF-DAES-Pobreza-e-Indigencia-por-ingreso-2021.pdf#:~:text=11-,Pobreza%20e%20indigencia%20por%20ingreso%20%E2%80%93%20octubre%20de%202021,la%20Encuesta%20de%20Hogares%20anterior.
-*/
-
 capture label var tc_c "Tasa de cambio LCU/USD Fuente: WB/WDI"
-capture label var ipc_c "Índice de precios al consumidor base 2011=100 Fuente: IMF/WEO"
+capture label var ipc_c "Índice de precios al consumidor base 2017=100 Fuente: IMF/WEO"
 capture label var lp19_ci  "Línea de pobreza USD1.9 día en moneda local a precios corrientes a PPA 2011"
 capture label var lp31_ci  "Línea de pobreza USD3.1 día en moneda local a precios corrientes a PPA 2011"
 capture label var lp5_ci "Línea de pobreza USD5 por día en moneda local a precios corrientes a PPA 2011"
+capture label var lp365_2017  "Línea de pobreza USD3.65 día en moneda local a precios corrientes a PPA 2017"
+capture label var lp685_2017 "Línea de pobreza USD6.85 por día en moneda local a precios corrientes a PPA 2017"
 
-drop ppp_2011 cpi_2011 lp19_2011 lp31_2011 lp5_2011 tc_wdi ppp_wdi2011 _merge
+drop cpi_2017 lp19_2011 lp31_2011 lp5_2011 tc_wdi _merge
 
 /*******************************************************************************
    IV. Revisión de que se hayan creado todas las variables
 *******************************************************************************/
-* CALIDAD: se revisa que se  hayan creado todas las variables. Si alguna no está
-* creada, apacerá en rojo el nombre. 
+* CALIDAD: revisa que hayas creado todas las variables. Si alguna no está
+* creada, te apacerá en rojo el nombre. 
 
-global lista_variables region_BID_c region_c geolev1 pais_c anio_c idh_ch idp_ci factor_ci factor_ch estrato_ci upm zona_c sexo_c edad_ci relacion_ci civil_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch miembros_ci clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch afro_ci ind_ci noafroind_ci afroind_ci afro_ch ind_ch noafroind_ch afroind_ch  dis_ci disWG_ci dis_ch migrante_ci migrantiguo5_ci miglac_ci aedu_ci eduno_ci edupi_ci edupc_ci edusi_ci edusc_ci edus1i_ci edus1c_ci edus2i_ci edus2c_ci edupre_ci asiste_ci literacy condocup_ci emp_ci desemp_ci pea_ci rama_ci  categopri_ci spublico_ci luz_ch piso_ch pared_ch techo_ch resid_ch dorm_ch cuartos_ch cocina_ch telef_ch refrig_ch auto_ch compu_ch internet_ch cel_ch viviprop_ch1 aguared_ch bano_ch banomejorado_ch des1_ch ${PAIS}_ingreso_ci ${PAIS}_ingresolab_ci ${PAIS}_m_pared_ch ${PAIS}_m_piso_ch ${PAIS}_m_techo_ch ${PAIS}_dis_ci tc_c ipc_c lp19_ci lp31_ci lp5_ci
+global lista_variables region_BID_c region_c geolev1 pais_c anio_c idh_ch idp_ci factor_ci factor_ch estrato_ci upm zona_c sexo_c edad_ci relacion_ci civil_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch miembros_ci clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch afro_ci ind_ci noafroind_ci afroind_ci afro_ch ind_ch noafroind_ch afroind_ch  dis_ci disWG_ci dis_ch migrante_ci migrantiguo5_ci miglac_ci aedu_ci eduno_ci edupi_ci edupc_ci edusi_ci edusc_ci edus1i_ci edus1c_ci edus2i_ci edus2c_ci edupre_ci asiste_ci literacy condocup_ci emp_ci desemp_ci pea_ci rama_ci  categopri_ci spublico_ci luz_ch piso_ch pared_ch techo_ch resid_ch dorm_ch cuartos_ch cocina_ch telef_ch refrig_ch auto_ch compu_ch internet_ch cel_ch viviprop_ch1 aguaentubada_ch aguared_ch aguafuente_ch aguadist_ch aguadisp1_ch aguadisp2_ch aguamide_ch bano_ch banoex_ch banoalcantarillado_ch sinbano_ch conbano_ch des1_ch ${PAIS}_ingreso_ci ${PAIS}_ingresolab_ci ${PAIS}_m_pared_ch ${PAIS}_m_piso_ch ${PAIS}_m_techo_ch ${PAIS}_dis_ci tc_c ipc_c lp19_ci lp31_ci lp5_ci lp365_2017  lp685_2017
 
-* seleccionar las siguientes 6 líneas y ejecuta (do)
+* selecciona las siguientes 6 líneas y ejecuta (do)
 foreach v of global lista_variables {
 	cap confirm variable `v'
 	if _rc == 111 {
@@ -943,7 +1000,7 @@ foreach v of global lista_variables {
 *******************************************************************************/
 
 keep  $lista_variables llaveviv hogar npersona 
-* selecciona las 3 lineas y ejecuta (do). Deben quedar 94 variables de las secciones II y III más las variables originales de ID que hayas mantenido (97)
+* selecciona las 3 lineas y ejecuta (do). Deben quedar 105 variables de las secciones II y III más las variables originales de ID que hayas mantenido (108)
 ds
 local varconteo: word count `r(varlist)'
 display "Número de variables de la base: `varconteo'"
