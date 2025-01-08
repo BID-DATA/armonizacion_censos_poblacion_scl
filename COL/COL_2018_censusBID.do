@@ -103,7 +103,7 @@ rename *, lower
 	************
 	* Region_BID *
 	************
-	gen region_BID_c=.
+	gen byte region_BID_c=.
 	replace region_BID_c=3 
 	label define region_BID_c 1 "Centroamérica_(CID)" 2 "Caribe_(CCB)" 3 "Andinos_(CAN)" 4 "Cono_Sur_(CSC)"
 	label value region_BID_c region_BID_c
@@ -113,7 +113,7 @@ rename *, lower
 	***region_c ***
 	***************
 	destring u_dpto, replace
-	gen region_c=u_dpto
+	gen byte region_c=u_dpto
 	label define region_c       /// 
 		5  "Antioquia"	        ///
 		8  "Atlantico"	        ///
@@ -153,7 +153,7 @@ rename *, lower
 	***************
 	**** geolev1 ****
 	***************
-	gen geolev1=.
+	gen long geolev1=.
 	replace geolev1 = 170005 if u_dpto==5
 	replace geolev1 = 170008 if u_dpto==8
 	replace geolev1 = 170011 if inlist(u_dpto,11,25)
@@ -187,7 +187,7 @@ rename *, lower
 	**********
 	***anio***
 	**********
-	g anio_c = 2018
+	g int anio_c = 2018
 
 	***************
 	****idh_ch*****
@@ -206,28 +206,28 @@ rename *, lower
 	****************************************
 	*factor expansión individio (factor_ci)*
 	****************************************
-	gen factor_ci=.
+	gen byte factor_ci=.
 		
 	*******************************************
 	*Factor de expansion del hogar (factor_ch)*
 	*******************************************
-	gen factor_ch=.
+	gen byte factor_ch=.
 
 	*******************************************
 	*Estrato(estrato_ci)*
 	*******************************************
-	gen estrato_ci=.
+	gen byte estrato_ci=.
 
 	*****
 	*upm*
 	*****
-	gen upm =.
+	gen byte upm =.
 	
 	**********
 	***zona***
 	**********
 	destring ua_clase, replace
-	g zona_c = (ua_clase == 1)
+	g byte zona_c = (ua_clase == 1)
 	replace zona_c = . if ua_clase == .
 	la de zona_c 1 "Urbana" 0 "Rural"
 	la val zona_c zona_c
@@ -240,7 +240,7 @@ rename *, lower
 	**********
 	***sexo***
 	**********
-	g sexo_ci = p_sexo
+	g byte sexo_ci = p_sexo
 	replace sexo_ci = . if p_sexo == .
 	la define sexo_ci 1 "Hombre" 2 "Mujer"
 	la val sexo_ci sexo_ci
@@ -248,7 +248,7 @@ rename *, lower
 	**********
 	***edad***
 	**********
-	g edad_ci = .
+	g int edad_ci = .
 	g edad_grupo_ci = p_edadr
 	la var edad_grupo_ci "Edad del individuo (años)"
 	la de edad_grupo_ci	1 "de 00 A 04 Años" 	///
@@ -277,7 +277,7 @@ rename *, lower
 	*****************
 	***relacion_ci***
 	*****************
-	g 		relacion_ci = 1 if p_parentescor == 1
+	g 	byte relacion_ci = 1 if p_parentescor == 1
 	replace relacion_ci = 2 if p_parentescor == 2
 	replace relacion_ci = 3 if p_parentescor == 3
 	replace relacion_ci = 4 if p_parentescor == 4
@@ -293,7 +293,7 @@ rename *, lower
 	*****************
 	****civil_ci*****
 	*****************
-	g 		civil_ci = .
+	g 	byte 	civil_ci = .
 	replace civil_ci = 1 if p_est_civil == 7
 	replace civil_ci = 2 if p_est_civil == 1 | p_est_civil == 2
 	replace civil_ci = 3 if p_est_civil == 3 | p_est_civil == 4 | p_est_civil == 5 
@@ -309,90 +309,90 @@ rename *, lower
 	**************
 	***jefe_ci***
 	*************
-	g jefe_ci = relacion_ci == 1
+	g byte jefe_ci = relacion_ci == 1
 
 	******************
 	***nconyuges_ch***
 	******************
-	bys idh_ch: egen nconyuges_ch = sum(relacion_ci == 2)
+	bys idh_ch: egen byte nconyuges_ch = sum(relacion_ci == 2)
 
 	***************
 	***nhijos_ch***
 	***************
-	bys idh_ch: egen nhijos_ch = sum(relacion_ci == 3)
+	bys idh_ch: egen byte nhijos_ch = sum(relacion_ci == 3)
 
 	******************
 	***notropari_ch***
 	******************
-	bys idh_ch: egen notropari_ch = sum(relacion_ci == 4)
+	bys idh_ch: egen byte notropari_ch = sum(relacion_ci == 4)
 
 	********************
 	***notronopari_ch***
 	********************
-	bys idh_ch: egen notronopari_ch = sum(relacion_ci == 5)
+	bys idh_ch: egen byte notronopari_ch = sum(relacion_ci == 5)
 
 	****************
 	***nempdom_ch***
 	****************
-	bys idh_ch: egen nempdom_ch = sum(relacion_ci == 6)
+	bys idh_ch: egen byte nempdom_ch = sum(relacion_ci == 6)
 
 	****************
 	***miembros_ci***
 	****************
-	gen miembros_ci = (relacion_ci <= 4)
+	gen byte miembros_ci = (relacion_ci <= 4)
 	
 	*****************
 	***clasehog_ch***
 	*****************
-		g byte clasehog_ch = 0
+	g byte clasehog_ch = 0
 	**** unipersonal
-		replace clasehog_ch = 1 if nhijos_ch == 0 & nconyuges_ch == 0 & notropari_ch == 0 & notronopari_ch == 0
+	replace clasehog_ch = 1 if nhijos_ch == 0 & nconyuges_ch == 0 & notropari_ch == 0 & notronopari_ch == 0
 	**** nuclear (child with or without spouse but without other relatives)
-		replace clasehog_ch = 2 if (nhijos_ch > 0 | nconyuges_ch > 0) & (notropari_ch == 0 & notronopari_ch == 0)
+	replace clasehog_ch = 2 if (nhijos_ch > 0 | nconyuges_ch > 0) & (notropari_ch == 0 & notronopari_ch == 0)
 	**** ampliado
-		replace clasehog_ch = 3 if notropari_ch > 0 & notronopari_ch == 0
+	replace clasehog_ch = 3 if notropari_ch > 0 & notronopari_ch == 0
 	**** compuesto (some relatives plus non relative)
-		replace clasehog_ch = 4 if ((nconyuges_ch > 0 | nhijos_ch > 0 | notropari_ch > 0) & (notronopari_ch > 0))
+	replace clasehog_ch = 4 if ((nconyuges_ch > 0 | nhijos_ch > 0 | notropari_ch > 0) & (notronopari_ch > 0))
 	**** corresidente
-		replace clasehog_ch = 5 if nhijos_ch == 0 & nconyuges_ch == 0 & notropari_ch == 0 & notronopari_ch > 0
+	replace clasehog_ch = 5 if nhijos_ch == 0 & nconyuges_ch == 0 & notropari_ch == 0 & notronopari_ch > 0
 		
-		la variable clasehog_ch "Tipo de hogar"
-		la de clasehog_ch 	1 "Unipersonal" 	///
+	la variable clasehog_ch "Tipo de hogar"
+	la de clasehog_ch 	1 "Unipersonal" 	///
 							2 "Nuclear" 		///
 							3 "Ampliado" 		///
 							4 "Compuesto" 		///
 							5 "Corresidente"
-		la val clasehog_ch clasehog_ch
+	la val clasehog_ch clasehog_ch
 
 	******************
 	***nmiembros_ch***
 	******************
-		bys idh_ch: egen nmiembros_ch = sum(relacion_ci >= 1 & relacion_ci <= 4)
+	egen byte nmiembros_ch = sum(relacion_ci >= 1 & relacion_ci <= 4), by (idh_ch)
 		
 	*****************
 	***nmayor21_ch***
 	*****************
-		gen nmayor21_ch= .
+	gen byte nmayor21_ch= .
 
 	*****************
 	***nmenor21_ch***
 	*****************
-		gen nmenor21_ch= .
+	gen byte nmenor21_ch= .
 
 	*****************
 	***nmayor65_ch***
 	*****************
-		gen nmayor65_ch= .
+	gen byte nmayor65_ch= .
 
 	****************
 	***nmenor6_ch***
 	****************
-		gen nmenor6_ch= .
+	gen byte nmenor6_ch= .
 
 	****************
 	***nmenor1_ch***
 	****************
-		gen nmenor1_ch= .
+	gen byte nmenor1_ch= .
 
 ************************************
 *** 3. Diversidad (11 variables) ***
@@ -401,20 +401,23 @@ rename *, lower
 	*********
 	*afro_ci*
 	*********
+	gen byte afro_ci = .
 	
 	*********
 	*indi_ci*
 	*********	
+	gen byte ind_ci =.
 	
 	**************
 	*noafroind_ci*
 	**************
+	gen byte noafroind_ci =.
 	
 	***************
 	***afroind_ci***
 	***************
 	**Pregunta: De acuerdo con su cultura, pueblo o rasgos físicos, … es o se reconoce como:(P6080) (1- Indigena 2- Gitano - Rom 3- Raizal del archipiélago de San Andrés y providencia 4- Palenquero de San basilio o descendiente 5- Negro(a), mulato(a), Afrocolombiano(a) o Afrodescendiente 6- Ninguno de los anteriores (mestizo, blanco, etc)) 
-	gen afroind_ci=. 
+	gen byte afroind_ci=. 
 	replace afroind_ci=1 if pa1_grp_etnic == 1 
 	replace afroind_ci=2 if pa1_grp_etnic == 3 | pa1_grp_etnic == 4 | pa1_grp_etnic == 5
 	replace afroind_ci=3 if pa1_grp_etnic == 2 | pa1_grp_etnic == 6
@@ -424,14 +427,17 @@ rename *, lower
 	*********
 	*afro_ch*
 	*********
+	gen byte afro_jefe = .
 	
 	********
 	*ind_ch*
-	********	
+	********
+	gen byte ind_jefe = .
 
 	**************
 	*noafroind_ch*
 	**************
+	gen byte noafroind_jefe = .
 	
 	***************
 	***afroind_ch***
@@ -444,17 +450,18 @@ rename *, lower
 	*******************
 	***dis_ci***
 	*******************
-	gen dis_ci=. 
+	gen byte dis_ci=. 
 	label var dis_ci "Personas con discapacidad"
 
 	**********
 	*disWG_ci*
 	**********
+	gen byte disWG_ci=. 
 	
 	************
 	***dis_ch***
 	************
-	gen dis_ch=. 
+	gen byte dis_ch=. 
 	lab var dis_ch "Hogares con miembros con discapacidad"
 
 **********************************
@@ -464,20 +471,20 @@ rename *, lower
     *******************
     ****migrante_ci****
     *******************
-	gen migrante_ci = 0
+	gen byte migrante_ci = 0
 	replace migrante_ci=1 if pa_lug_nac==3
 	replace migrante_ci=. if pa_lug_nac==. | pa_lug_nac==9
 	
 	*******************
     **migantiguo5_ci***
     *******************
-	gen migantiguo5_ci =0
+	gen byte migantiguo5_ci =0
 	replace migantiguo5_ci=1 if pa_lug_nac==3 | pa_vivia_5anos==4
 		
 	**********************
 	****** miglac_ci *****
 	**********************
-	gen miglac_ci = .
+	gen byte miglac_ci = .
 
 ***********************************
 *** 5. Educación (13 variables) ***
@@ -486,36 +493,36 @@ rename *, lower
 	*************
 	***aedu_ci***
 	*************
-	gen aedu_ci =.
+	gen byte aedu_ci =.
 
 	**************
 	***eduno_ci***
 	**************
-	gen eduno_ci=(p_nivel_anosr==10) // never attended 
+	gen byte eduno_ci=(p_nivel_anosr==10) // never attended 
 	replace eduno_ci=. if p_nivel_anosr==99 // NIU & missing
 
 	**************
 	***edupi_ci***
 	**************
-	gen edupi_ci=(p_nivel_anosr==1) //  pre-school
+	gen byte edupi_ci=(p_nivel_anosr==1) //  pre-school
 	replace edupi_ci=. if p_nivel_anosr==99 // NIU & missing
 
 	**************
 	***edupc_ci***
 	**************
-	gen edupc_ci=(p_nivel_anosr==2)
+	gen byte edupc_ci=(p_nivel_anosr==2)
 	replace edupc_ci=. if p_nivel_anosr==99 // NIU & missing
 
 	**************
 	***edusi_ci***
 	**************
-	gen edusi_ci=(p_nivel_anosr==3)
+	gen byte edusi_ci=(p_nivel_anosr==3)
 	replace edupc_ci=. if p_nivel_anosr==99 // NIU & missing
 
 	**************
 	***edusc_ci***
 	**************
-	gen edusc_ci=(p_nivel_anosr==4 |p_nivel_anosr==5|p_nivel_anosr==6) 
+	gen byte edusc_ci=(p_nivel_anosr==4 |p_nivel_anosr==5|p_nivel_anosr==6) 
 	replace edusc_ci=. if p_nivel_anosr==99 // NIU & missing
 
 	***************
@@ -548,7 +555,7 @@ rename *, lower
 	***************
 	***asiste_ci***
 	***************
-	gen asiste_ci=.
+	gen byte asiste_ci=.
 	replace asiste_ci=1 if pa_asistencia==1
 	replace asiste_ci=0 if pa_asistencia==2
 	replace asiste_ci=. if pa_asistencia==.|pa_asistencia==9 |pa_asistencia==4
@@ -557,7 +564,7 @@ rename *, lower
 	**************
 	***literacy***
 	**************
-	gen literacy=(p_alfabeta==1)
+	gen byte literacy=(p_alfabeta==1)
 	replace literacy=. if p_alfabeta==.|p_alfabeta==9
 
 ****************************************
@@ -567,37 +574,37 @@ rename *, lower
     *******************
     ****condocup_ci****
     *******************
-    gen condocup_ci=.
+    gen byte condocup_ci=.
 	
 	************
      ***emp_ci***
      ************
-    gen emp_ci=(inrange(p_trabajo,1,3))
+    gen byte emp_ci=(inrange(p_trabajo,1,3))
 	
 	****************
      ***desemp_ci***
      ****************	
-	gen desemp_ci=(p_trabajo==4)
+	gen byte desemp_ci=(p_trabajo==4)
 	
 	*************
     ***pea_ci***
     *************
-    gen pea_ci=(inrange(p_trabajo,1,4))
+    gen byte pea_ci=(inrange(p_trabajo,1,4))
 
 	*************
 	**rama_ci****
 	*************
-	gen rama_ci=.
+	gen byte rama_ci=.
 	
 	*********************
     ****categopri_ci****
     *********************
-	 gen categopri_ci=.
+	 gen byte categopri_ci=.
 	  
 	*****************
     ***spublico_ci***
     *****************
-    gen spublico_ci=.
+    gen byte spublico_ci=.
 	
 **********************************************************
 ***  7.1 Vivienda - variables generales (15 variables) ***
@@ -606,14 +613,14 @@ rename *, lower
     ********
 	*luz_ch*
 	********
-	gen luz_ch= 1 if va_ee==1
+	gen byte luz_ch= 1 if va_ee==1
 	replace luz_ch= 0 if va_ee==2
 	replace luz_ch=. if va_ee==.
 	
 	*********
 	*piso_ch*
 	*********
-	gen piso_ch=.
+	gen byte piso_ch=.
 	replace piso_ch = 0 if v_mat_piso == 6
 	replace piso_ch = 1 if v_mat_piso == 1 | v_mat_piso == 2 | v_mat_piso == 3
 	replace piso_ch = 2 if  v_mat_piso == 4 | v_mat_piso == 5
@@ -625,7 +632,7 @@ rename *, lower
 	**********
 	*pared_ch*
 	**********
-	gen pared_ch = .
+	gen byte pared_ch = .
 	replace pared_ch = 0 if v_mat_pared == 9
 	replace pared_ch = 1 if inrange(v_mat_pared, 4, 8)
 	replace pared_ch = 2 if inrange(v_mat_pared, 1, 3)
@@ -636,27 +643,27 @@ rename *, lower
 	**********
 	*techo_ch*
 	**********
-	gen techo_ch=.
+	gen byte techo_ch=.
 	
 	**********
 	*resid_ch*
 	**********
-	gen resid_ch=. 
+	gen byte resid_ch=. 
 	
 	*********
 	*dorm_ch*
 	*********
-	gen dorm_ch=h_nro_dormit
+	gen byte dorm_ch=h_nro_dormit
 	
 	************
 	*cuartos_ch*
 	************
-	gen cuartos_ch=h_nro_cuartos
+	gen byte cuartos_ch=h_nro_cuartos
 	
 	***********
 	*cocina_ch*
 	***********
-	gen cocina_ch=.
+	gen byte cocina_ch=.
 	replace cocina_ch=1 if h_donde_prepalim ==1 
 	replace cocina_ch=0 if h_donde_prepalim==2 | h_donde_prepalim==3 | h_donde_prepalim==4  | h_donde_prepalim==5 | h_donde_prepalim==6
 	
@@ -664,39 +671,39 @@ rename *, lower
 	*telef_ch*
 	***********
 	*sin dato
-	gen telef_ch=.
+	gen byte telef_ch=.
 	
 	***********
 	*refrig_ch*
 	***********
-	gen refrig_ch=.
+	gen byte refrig_ch=.
 	
 	*********
 	*auto_ch*
 	*********
-	gen auto_ch=.
+	gen byte auto_ch=.
 	
 	********
 	*compu_ch*
 	********
-	gen compu_ch=.
+	gen byte compu_ch=.
 	
 	*************
 	*internet_ch*
 	************* 
-	gen internet_ch=vf_internet
+	gen byte internet_ch=vf_internet
 	replace internet_ch=0 if vf_internet==2
 	
 	********
 	*cel_ch*
 	********
 	*sin dato
-	gen cel_ch=.
+	gen byte cel_ch=.
 	
 	*************
 	*viviprop_ch*
 	*************
-	gen viviprop_ch1=.
+	gen byte viviprop_ch1=.
 	
 ***************************************************
 *** 7.2 Vivienda - variables Wash (13 variables) ***
@@ -705,21 +712,21 @@ rename *, lower
 	*****************
 	*aguaentubada_ch*
 	*****************
-	gen aguaentubada_ch=1 if vb_acu==1
+	gen byte aguaentubada_ch=1 if vb_acu==1
 	replace aguaentubada_ch=0 if vb_acu==2
 	replace aguaentubada_ch=. if vb_acu==.
 	
 	************
 	*aguared_ch*
 	************
-	gen aguared_ch=.
+	gen byte aguared_ch=.
 	replace aguared_ch = 1 if inlist(vb_acu, 1)
 	replace aguared_ch = 0 if inlist(vb_acu,2)
 	
     ***************
 	*aguafuente_ch*
 	***************
-	gen aguafuente_ch=.
+	gen byte aguafuente_ch=.
 	replace aguafuente_ch = 1 if inlist(h_agua_cocin, 1, 2,3)
 	replace aguafuente_ch = 2 if inlist(h_agua_cocin, 8)
 	replace aguafuente_ch = 3 if inlist(h_agua_cocin, 11)
@@ -732,27 +739,27 @@ rename *, lower
 	*************
 	*aguadist_ch*
 	*************
-	gen aguadist_ch = 0 
+	gen byte aguadist_ch = 0 
 	
 	**************
 	*aguadisp1_ch*
 	**************
-	gen aguadisp1_ch =9 
+	gen byte aguadisp1_ch =9 
 	
 	**************
 	*aguadisp2_ch*
 	**************
-	gen aguadisp2_ch =9	
+	gen byte aguadisp2_ch =9	
 	
 	*************
 	*aguamide_ch*
 	*************
-	gen aguamide_ch = 9
+	gen byte aguamide_ch = 9
 
 	*********
 	*bano_ch*
 	*********
-	gen bano_ch = . 
+	gen byte bano_ch = . 
 	replace bano_ch = 0 if v_tipo_sersa == 6 
 	replace bano_ch = 1 if v_tipo_sersa == 1 
 	replace bano_ch = 2 if v_tipo_sersa == 2
@@ -762,33 +769,33 @@ rename *, lower
 	***********
 	*banoex_ch*
 	***********	
-	gen banoex_ch =.
+	gen byte banoex_ch =.
 	replace banoex_ch = 9
 		
 	************
 	*sinbano_ch*
 	************
-	gen sinbano_ch =.
+	gen byte sinbano_ch =.
 	replace sinbano_ch = 3 if v_tipo_sersa ==6
 	replace sinbano_ch = 0 if inlist(v_tipo_sersa,1,2,3,4,5)
 	
 	************
 	*conbano_ch*
 	************
-	gen conbano_ch=(inrange(v_tipo_sersa,1,5))
+	gen byte conbano_ch=(inrange(v_tipo_sersa,1,5))
 	replace conbano_ch=. if v_tipo_sersa==9 | v_tipo_sersa==.
 	
 	***********************
 	*banoalcantarillado_ch*
 	***********************
-	gen banoalcantarillado_ch=
+	gen byte banoalcantarillado_ch=
 	replace banoalcantarillado_ch = 1 if vc_alc ==1
 	replace banoalcantarillado_ch = 0 if inlist(vc_alc,2,3,4)
 	
 	*********
 	*des1_ch*
 	*********
-	gen des1_ch= 1 if inrange(v_tipo_sersa,1,2)
+	gen byte des1_ch= 1 if inrange(v_tipo_sersa,1,2)
 	replace des1_ch=0 if inrange(v_tipo_sersa,3,6)
 	replace des1_ch=. if v_tipo_sersa==9 | v_tipo_sersa==.
 
@@ -825,7 +832,7 @@ rename *, lower
 	*ISOalpha3Pais_ingresolab_ci*
 	*****************************
 	gen long COL_ingresolab_ci = .
-	label var   PAN_ingresolab_ci  "Ingreso laboral según el censo del país - variable original"
+	label var   COL_ingresolab_ci  "Ingreso laboral según el censo del país - variable original"
 
 	**********************
 	*ISOalpha3Pais_dis_ci*
@@ -838,35 +845,34 @@ rename *, lower
    III. Incluir variables externas (7 variables)
 *******************************************************************************/
 capture drop _merge
-merge m:1 pais_c anio_c using "Z:\general_documentation\data_externa\poverty\International_Poverty_Lines\5_International_Poverty_Lines_LAC_long_PPP17.dta", keepusing (ppp_2011 cpi_2011 lp19_2011 lp31_2011 lp5_2011 tc_wdi  lp365_2017 lp685_2017)
+merge m:1 pais_c anio_c using "Z:/general_documentation/data_externa/poverty/International_Poverty_Lines/5_International_Poverty_Lines_LAC_long_PPP17.dta", keepusing ( lp19_2011 lp31_2011 lp5_2011 tc_wdi cpi_2017 lp365_2017 lp685_201)
 drop if _merge ==2
 
 g tc_c     = tc_wdi
-g ipc_c    = cpi_2011
+g ipc_c    = cpi_2017
 g lp19_ci  = lp19_2011 
 g lp31_ci  = lp31_2011 
 g lp5_ci   = lp5_2011
 
 capture label var tc_c "Tasa de cambio LCU/USD Fuente: WB/WDI"
-capture label var ipc_c "Índice de precios al consumidor base 2011=100 Fuente: IMF/WEO"
+capture label var ipc_c "Índice de precios al consumidor base 2017=100 Fuente: IMF/WEO"
 capture label var lp19_ci  "Línea de pobreza USD1.9 día en moneda local a precios corrientes a PPA 2011"
 capture label var lp31_ci  "Línea de pobreza USD3.1 día en moneda local a precios corrientes a PPA 2011"
 capture label var lp5_ci "Línea de pobreza USD5 por día en moneda local a precios corrientes a PPA 2011"
 capture label var lp365_2017  "Línea de pobreza USD3.65 día en moneda local a precios corrientes a PPA 2017"
 capture label var lp685_2017 "Línea de pobreza USD6.85 por día en moneda local a precios corrientes a PPA 2017"
 
-drop ppp_2011 cpi_2011 lp19_2011 lp31_2011 lp5_2011 tc_wdi _merge
-
+drop cpi_2017 lp19_2011 lp31_2011 lp5_2011 tc_wdi _merge
 
 /*******************************************************************************
    IV. Revisión de que se hayan creado todas las variables
 *******************************************************************************/
-* CALIDAD: se revisa que se  hayan creado todas las variables. Si alguna no está
-* creada, apacerá en rojo el nombre. 
+* CALIDAD: revisa que hayas creado todas las variables. Si alguna no está
+* creada, te apacerá en rojo el nombre. 
 
-global lista_variables region_BID_c region_c geolev1 pais_c anio_c idh_ch idp_ci factor_ci factor_ch estrato_ci upm zona_c sexo_c edad_ci relacion_ci civil_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch miembros_ci clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch afro_ci ind_ci noafroind_ci afroind_ci afro_ch ind_ch noafroind_ch afroind_ch  dis_ci disWG_ci dis_ch migrante_ci migrantiguo5_ci miglac_ci aedu_ci eduno_ci edupi_ci edupc_ci edusi_ci edusc_ci edus1i_ci edus1c_ci edus2i_ci edus2c_ci edupre_ci asiste_ci literacy condocup_ci emp_ci desemp_ci pea_ci rama_ci  categopri_ci spublico_ci luz_ch piso_ch pared_ch techo_ch resid_ch dorm_ch cuartos_ch cocina_ch telef_ch refrig_ch auto_ch compu_ch internet_ch cel_ch viviprop_ch1 aguaentubada_ch aguared_ch aguafuente_ch aguadist_ch aguadisp1_ch aguadisp2_ch aguamide_ch bano_ch banoex_ch sinbano_ch conbano_ch banoalcantarillado_ch des1_ch ${PAIS}_ingreso_ci ${PAIS}_ingresolab_ci ${PAIS}_m_pared_ch ${PAIS}_m_piso_ch ${PAIS}_m_techo_ch ${PAIS}_dis_ci tc_c ipc_c lp19_ci lp31_ci lp5_ci lp365_2017 lp685_2017
+global lista_variables region_BID_c region_c geolev1 pais_c anio_c idh_ch idp_ci factor_ci factor_ch estrato_ci upm zona_c sexo_c edad_ci relacion_ci civil_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch miembros_ci clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch afro_ci ind_ci noafroind_ci afroind_ci afro_ch ind_ch noafroind_ch afroind_ch  dis_ci disWG_ci dis_ch migrante_ci migrantiguo5_ci miglac_ci aedu_ci eduno_ci edupi_ci edupc_ci edusi_ci edusc_ci edus1i_ci edus1c_ci edus2i_ci edus2c_ci edupre_ci asiste_ci literacy condocup_ci emp_ci desemp_ci pea_ci rama_ci  categopri_ci spublico_ci luz_ch piso_ch pared_ch techo_ch resid_ch dorm_ch cuartos_ch cocina_ch telef_ch refrig_ch auto_ch compu_ch internet_ch cel_ch viviprop_ch1 aguaentubada_ch aguared_ch aguafuente_ch aguadist_ch aguadisp1_ch aguadisp2_ch aguamide_ch bano_ch banoex_ch banoalcantarillado_ch sinbano_ch conbano_ch des1_ch ${PAIS}_ingreso_ci ${PAIS}_ingresolab_ci ${PAIS}_m_pared_ch ${PAIS}_m_piso_ch ${PAIS}_m_techo_ch ${PAIS}_dis_ci tc_c ipc_c lp19_ci lp31_ci lp5_ci lp365_2017  lp685_2017
 
-* seleccionar las siguientes 6 líneas y ejecuta (do)
+* selecciona las siguientes 6 líneas y ejecuta (do)
 foreach v of global lista_variables {
 	cap confirm variable `v'
 	if _rc == 111 {

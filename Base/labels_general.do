@@ -311,8 +311,7 @@ label define aguared_ch 1 "Sí cuenta con servicio de agua por red" 0 "No cuenta
 label value aguared_ch aguared_ch
 
 label var aguafuente_ch  "Fuente del agua utilizada por el hogar"
-label define aguafuente_ch 1	"Red de distribución, llave privada"
-2	"Red (llave pública, standpipe)" 3	"Agua embotellada" 4	"Pozo protegido" 5	"Agua de lluvia" 6	"Camión, cisterna, pipa" 7	"Otra fuente mejorada" 8	"Cuerpo de agua superficial"  9	"Otra fuente no mejorada" 10	"Pozo, mantial o otra sin clasificación clara"
+label define aguafuente_ch 1	"Red de distribución, llave privada" 2	"Red (llave pública, standpipe)" 3	"Agua embotellada" 4	"Pozo protegido" 5	"Agua de lluvia" 6	"Camión, cisterna, pipa" 7	"Otra fuente mejorada" 8	"Cuerpo de agua superficial"  9	"Otra fuente no mejorada" 10	"Pozo, mantial o otra sin clasificación clara"
 label value aguafuente_ch aguafuente_ch 
 
 label var aguadist_ch  "Distancia de la ubicación de acceso al agua"
@@ -347,9 +346,9 @@ label var conbano_ch "El hogar tiene algún tipo de servicio higiénico (inodoro
 label define conbano_ch 1 "Sí tiene un servicio higiénico como letrina o inodoro" 0 "No tiene un servicio higiénico como letrina o inodoro"
 label value conbano_ch conbano_ch
 
-label var banomejorado_ch "El hogar tiene acceso a alcantarillado"
-label define banomejorado_ch 0 "No tiene acceso a alcantarillado" 1 "Sí tiene acceso a alcantarillado"
-label value banomejorado_ch banomejorado_ch
+label var banoalcantarillado_ch "El hogar tiene acceso a alcantarillado"
+label define banoalcantarillado_ch 0 "No tiene acceso a alcantarillado" 1 "Sí tiene acceso a alcantarillado"
+label value banoalcantarillado_ch banoalcantarillado_ch
 
 label var des1_ch "Tipo de desagüe con el que cuenta el hogar"
 label define des1_ch 0	"No tiene servicio sanitario" 1	"Escusado conectado a la red" 2	"Letrina u otro servicio no conectado a la red"
