@@ -153,6 +153,7 @@ rename *, lower
     *idh_ch (ID hogar)*
     *******************
 	egen  idh_ch =group(dwelling_id hh_id) 
+	cap tostring idp_ci, replace
 	* revisar número de hogares
 	egen unique_tag = tag(idh_ch)
 	count if unique_tag == 1
@@ -161,6 +162,7 @@ rename *, lower
     *idp_ci (ID personas)*
     **********************
 	egen  idp_ci = group(dwelling_id hh_id individual__id) 
+	cap tostring idp_ci, replace
 	duplicates report idh_ch idp_ci // CALIDAD: revisar que resultado sea copies =1
 		
 	****************************************
@@ -265,7 +267,7 @@ rename *, lower
 	************
 	*miembros_ci
 	************
-	gen byte miembros_ci=(relacion_ci>=1 & relacion_ci<5) 
+	gen byte miembros_ci=(relacion_ci>=1 & relacion_ci<=5) 
 	tab miembros_ci	
 	
 	*************
@@ -281,32 +283,32 @@ rename *, lower
 	**************
 	*nmiembros_ch*
 	**************
-	egen byte nmiembros_ch=sum(relacion_ci>0 & relacion_ci<=4), by(idh_ch)
+	egen byte nmiembros_ch=sum(relacion_ci>0 & relacion_ci<=5), by(idh_ch)
 
 	*************
 	*nmayor21_ch*
 	*************
-	egen byte nmayor21_ch=sum((relacion_ci>=1 & relacion_ci<=4) & (edad_ci>=21 & edad_ci!=.)), by(idh_ch) 
+	egen byte nmayor21_ch=sum((relacion_ci>=1 & relacion_ci<=5) & (edad_ci>=21 & edad_ci!=.)), by(idh_ch) 
 
 	*************
 	*nmenor21_ch*
 	*************
-	egen byte nmenor21_ch=sum((relacion_ci>=1 & relacion_ci<=4) & (edad_ci<21)), by(idh_ch) 
+	egen byte nmenor21_ch=sum((relacion_ci>=1 & relacion_ci<=5) & (edad_ci<21)), by(idh_ch) 
 
 	*************
 	*nmayor65_ch*
 	*************
-	egen byte nmayor65_ch=sum((relacion_ci>=1 & relacion_ci<=4) & (edad_ci>=65 & edad_ci!=.)), by(idh_ch) 
+	egen byte nmayor65_ch=sum((relacion_ci>=1 & relacion_ci<=5) & (edad_ci>=65 & edad_ci!=.)), by(idh_ch) 
 
 	************
 	*nmenor6_ch*
 	************
-	egen byte nmenor6_ch=sum((relacion_ci>0 & relacion_ci<=4) & (edad_ci<6)), by(idh_ch) 
+	egen byte nmenor6_ch=sum((relacion_ci>0 & relacion_ci<=5) & (edad_ci<6)), by(idh_ch) 
 
 	************
 	*nmenor1_ch*
 	************
-	egen byte nmenor1_ch=sum((relacion_ci>0 & relacion_ci<=4) & (edad_ci<1)), by(idh_ch) 
+	egen byte nmenor1_ch=sum((relacion_ci>0 & relacion_ci<=5) & (edad_ci<1)), by(idh_ch) 
 
 
 ************************************
@@ -409,7 +411,7 @@ rename *, lower
 	replace migrante_ci=. if inlist(cob,9999)
 	 	
 	****************
-    *migantiguo5_ci*
+    *migrantiguo5_ci*
     ****************
 	*El censo fue en el 2022, se toma migrante antiguo hasta el 2017
 	gen byte migrantiguo5_ci=0

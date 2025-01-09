@@ -339,7 +339,7 @@ rename *, lower
 	****************
 	***miembros_ci***
 	****************
-	gen byte miembros_ci = (relacion_ci <= 4)
+	gen byte miembros_ci = (relacion_ci <= 5)
 	
 	*****************
 	***clasehog_ch***
@@ -367,7 +367,7 @@ rename *, lower
 	******************
 	***nmiembros_ch***
 	******************
-	egen byte nmiembros_ch = sum(relacion_ci >= 1 & relacion_ci <= 4), by (idh_ch)
+	egen byte nmiembros_ch = sum(relacion_ci >= 1 & relacion_ci <= 5), by (idh_ch)
 		
 	*****************
 	***nmayor21_ch***
@@ -476,7 +476,7 @@ rename *, lower
 	replace migrante_ci=. if pa_lug_nac==. | pa_lug_nac==9
 	
 	*******************
-    **migantiguo5_ci***
+    **migrantiguo5_ci***
     *******************
 	gen byte migantiguo5_ci =0
 	replace migantiguo5_ci=1 if pa_lug_nac==3 | pa_vivia_5anos==4
