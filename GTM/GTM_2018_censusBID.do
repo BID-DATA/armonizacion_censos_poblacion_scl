@@ -93,9 +93,6 @@ rename *, lower
 
 * sample 20   		// significa muestra de 20% de la base. Activar si se necesita.    
 
-*****************************************************
-******* Variables specific for this census **********
-*****************************************************
 
 /****************************************************************************
    II. Armonización de variables 
@@ -792,14 +789,14 @@ rename *, lower
 	*ISOalpha3Pais_dis_ci*
 	**********************
 	gen byte GTM_dis_ci = .
-	label var ..._dis_ci  "Individuos con discapacidad según el censo del país - variable original"
+	label var GTM_dis_ci  "Individuos con discapacidad según el censo del país - variable original"
 
 
 /*******************************************************************************
    III. Incluir variables externas
 *******************************************************************************/
 capture drop _merge
-merge m:1 pais_c anio_c using "Z:/general_documentation/data_externa/poverty/International_Poverty_Lines/5_International_Poverty_Lines_LAC_long_PPP17.dta", keepusing (lp19_2011 lp31_2011 lp5_2011 tc_wdi lp365_2017 lp685_201)
+merge m:1 pais_c anio_c using "Z:/general_documentation/data_externa/poverty/International_Poverty_Lines/5_International_Poverty_Lines_LAC_long_PPP17.dta", keepusing (cpi_2017 lp19_2011 lp31_2011 lp5_2011 tc_wdi lp365_2017 lp685_201)
 drop if _merge ==2
 
 g tc_c     = tc_wdi
