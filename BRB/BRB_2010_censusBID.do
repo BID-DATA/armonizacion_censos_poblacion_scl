@@ -147,8 +147,7 @@ rename *, lower
     *********
 	*anio_c*
 	*********
-	gen anio_c = "2010"
-	destring anio_c, replace
+	gen int anio_c = 2010
 
     ******************
     *idh_ch (id hogar)*
