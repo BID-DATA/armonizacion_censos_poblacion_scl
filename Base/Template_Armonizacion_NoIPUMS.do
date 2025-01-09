@@ -261,7 +261,7 @@ rename *, lower
 	************
 	*miembros_ci
 	************
-	gen byte miembros_ci=(relacion_ci>=1 & relacion_ci<5) 
+	gen byte miembros_ci=(relacion_ci>=1 & relacion_ci<=5) 
 	tab miembros_ci	
 	
 	*************
@@ -277,7 +277,7 @@ rename *, lower
 	**************
 	*nmiembros_ch*
 	**************
-	egen byte nmiembros_ch=sum(relacion_ci>0 & relacion_ci<=4), by(idh_ch)
+	egen byte nmiembros_ch=sum(relacion_ci>0 & relacion_ci<=5), by(idh_ch)
 
 	*************
 	*nmayor21_ch*
@@ -297,12 +297,12 @@ rename *, lower
 	************
 	*nmenor6_ch*
 	************
-	egen byte nmenor6_ch=sum((relacion_ci>0 & relacion_ci<9) & (edad_ci<6)), by(idh_ch) 
+	egen byte nmenor6_ch=sum((relacion_ci>0 & relacion_ci<=4) & (edad_ci<6)), by(idh_ch) 
 
 	************
 	*nmenor1_ch*
 	************
-	egen byte nmenor1_ch=sum((relacion_ci>0 & relacion_ci<9) & (edad_ci<1)), by(idh_ch) 
+	egen byte nmenor1_ch=sum((relacion_ci>0 & relacion_ci<=4) & (edad_ci<1)), by(idh_ch) 
 
 
 ************************************
