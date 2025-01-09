@@ -2,11 +2,11 @@
 /*==============================================================================
 							CENSOS POBLACIONALES
 						   Script de armonización
-País: COL
+País: COLOMBIA
 Año: 2018
 Autores: Juan Perdomo
 Última versión: 30SET2022
-División: MIG - IADB
+División: SCL/MIG - IADB
 *******************************************************************************
 
 INSTRUCCIONES:
