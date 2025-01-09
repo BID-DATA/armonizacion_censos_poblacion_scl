@@ -626,11 +626,10 @@ Sí, con algo de dificultad ......... 2
 Sí, con mucha dificultad ........... 3
 No puede ............................4
 */
-gen dis_ci=0
-replace dis_ci=1 if (pcp16_a>=2 & pcp16_a<=4) | (pcp16_b>=2 & pcp16_b<=4) | (pcp16_c>=2 & pcp16_c<=4)
-replace dis_ci=1 if (pcp16_d>=2 & pcp16_d<=4) | (pcp16_e>=2 & pcp16_e<=4) | (pcp16_f>=2 & pcp16_f<=4)
-replace dis_ci=. if pcp16_a==9 & pcp16_b==9 & pcp16_c==9 & pcp16_d==9 & pcp16_e==9 & pcp16_f==9 & ///
-					pcp16_a==. & pcp16_b==. & pcp16_c==. & pcp16_d==. & pcp16_e==. & pcp16_f==. 
+
+gen dis_ci=.
+replace dis_ci=1 if inrange(pcp16_a,2,4) | inrange(pcp16_b,2,4) | inrange(pcp16_c,2,4) | inrange(pcp16_d,2,4) | inrange(pcp16_e,2,4) | inrange(pcp16_f,2,4)
+replace dis_ci=0 if pcp16_a==1 & pcp16_b==1 & pcp16_c==1 & pcp16_d==1 & pcp16_e==1 & pcp16_f==1
 
 	*******************
 	***dis_ch***
