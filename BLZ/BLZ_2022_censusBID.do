@@ -85,7 +85,7 @@ global base_in  = "$ruta\\raw\\$PAIS\\$ANIO\\data_orig\\${PAIS}_${ANIO}_NOIPUMS.
 global base_out = "$ruta\\clean\\$PAIS\\${PAIS}_${ANIO}_censusBID.dta"
 global log_file ="$ruta\\clean\\$PAIS\\${PAIS}_${ANIO}_censusBID.log"                                                   
 capture log close
-log using "$log_file", replace //agregar ,replace si ya está creado el log_file en tu carpeta
+log using `"$log_file"', replace //agregar ,replace si ya está creado el log_file en tu carpeta
 
 use "$base_in", clear
 

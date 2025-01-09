@@ -86,7 +86,7 @@ global base_in  = "$ruta\\raw\\$PAIS\\$ANIO\\data_orig\\${PAIS}_${ANIO}_NOIPUMS.
 global base_out = "$ruta\\clean\\$PAIS\\${PAIS}_${ANIO}_censusBID.dta"
 global log_file ="$ruta\\clean\\$PAIS\\${PAIS}_${ANIO}_censusBID.log"                                                   
 capture log close
-log using "$`log_file'"  //agregar ,replace si ya está creado el log_file en tu carpeta
+log using `"$log_file"', replace  //agregar ,replace si ya está creado el log_file en tu carpeta
 
 use "$base_in", clear
 
@@ -160,8 +160,9 @@ rename *, lower
 
 	********
 	*idh_ch*
-	********	
-	tostring serialno, gen(idh_ch)
+	********
+	gen idh_ch =serialno
+	tostring idh_ch, replace
 
 	********
 	*idp_ci*
@@ -238,7 +239,7 @@ rename *, lower
 	**************
 	*nconyuges_ch*
 	**************
-	egen byte nconyuges_ch=sum(relacion_ci==2), by (idh_ch)
+	egen byte nconyuges_ch=sum(relacion_ci==2), by(idh_ch)
 	
 	***********
 	*nhijos_ch*
@@ -344,17 +345,17 @@ rename *, lower
 	*********
 	*afro_ch*
 	*********
-	gen byte afro_jefe =.
+	gen byte afro_ch =.
 
 	********
 	*ind_ch*
 	********	
-	gen byte ind_jefe =.
+	gen byte ind_ch =.
 
 	**************
 	*noafroind_ch*
 	**************
-	gen byte noafroind_jefe =.
+	gen byte noafroind_ch =.
 	
 	************
 	*afroind_ch*
@@ -392,6 +393,11 @@ rename *, lower
 	*****************
 	*migrantiguo5_ci*
 	*****************
+	*migantiguo5_ci*
+	destring p34, replace
+	gen migantiguo5_ci=.
+	replace migantiguo5_ci=1 if (p34<=2008 & migrante_ci==1)
+	replace migantiguo5_ci=0 if migantiguo5_ci==. & migrante_ci==1 | migrante_ci==0
 	gen byte migrantiguo5_ci=.
 	replace migrantiguo5_ci=1 if (p34<=2008 & migrante_ci==1)
 	replace migrantiguo5_ci=0 if migantiguo5_ci!=1 & migrante_ci==1
@@ -399,6 +405,10 @@ rename *, lower
 	***********
 	*miglac_ci*
 	***********
+	gen migrantelac_ci=.
+	replace migrantelac_ci=1 if p33cntry=="ARG" | p33cntry=="BHS" | p33cntry=="BRB" | p33cntry=="BLZ" | p33cntry=="BOL" | p33cntry=="BRA" | p33cntry=="CHL" | p33cntry=="COL" | p33cntry=="CRI" | p33cntry=="DOM" | p33cntry=="ECU" | p33cntry=="SLV" | p33cntry=="GTM" | p33cntry=="HTI" | p33cntry=="HND" | p33cntry=="JAM" | p33cntry=="MEX" | p33cntry=="NIC" | p33cntry=="PAN" | p33cntry=="PRY" | p33cntry=="PER" | p33cntry=="SUR" | p33cntry=="TTO" | p33cntry=="URY" | p33cntry=="VEN" & migrante_ci==1
+	replace migrantelac_ci=0 if migrantelac_ci==. & migrante_ci==1 | migrante_ci==0
+
 	gen byte miglac_ci=.
 	replace miglac_ci=1 if p33cntry=="ARG" | p33cntry=="BHS" | p33cntry=="BRB" | p33cntry=="BLZ" | p33cntry=="BOL" | p33cntry=="BRA" | p33cntry=="CHL" | p33cntry=="COL" | p33cntry=="CRI" | p33cntry=="DOM" | p33cntry=="ECU" | p33cntry=="SLV" | p33cntry=="GTM" | p33cntry=="HTI" | p33cntry=="HND" | p33cntry=="JAM" | p33cntry=="MEX" | p33cntry=="NIC" | p33cntry=="PAN" | p33cntry=="PRY" | p33cntry=="PER" | p33cntry=="SUR" | p33cntry=="TTO" | p33cntry=="URY" | p33cntry=="VEN" 
 	replace miglac_ci=0 if migrantelac_ci!=1 & migrante_ci==1 
@@ -790,7 +800,7 @@ rename *, lower
 	replace aguafuente_ch=4 if inlist(h44,4,5)
 	replace aguafuente_ch=5 if inlist(h44,7)
 	replace aguafuente_ch=6 if inlist(h44,10) & inlist(h43, 9)
-	replace aguafuente_ch=7 if inlist(h44,10) & inlist(h43, 1,)
+	replace aguafuente_ch=7 if inlist(h44,10) & inlist(h43, 1)
 	replace aguafuente_ch=8 if inlist(h44,9) 
 	replace aguafuente_ch=9 if inlist(h44,8) 
 	replace aguafuente_ch=10 if inlist(h44,11)
@@ -856,8 +866,8 @@ rename *, lower
 	*banoalcantarillado_ch_ch*
 	*****************
 	gen byte banoalcantarillado_ch=.
-	replace banoalcantarillado_ch_ch=1 if h45==1  // wc (flush toilet) linked to sewer 
-	replace banoalcantarillado_ch_ch=0 if  h45==2 | h45==3 | h45==4 | h45==5 | h45==6 //  wc (flush toilet) linked to septic tank/soak-away, ventilated pit latrine (VIP), trad. pit latrine with slab, trad. pit Latrine w/out slab, none
+	replace banoalcantarillado_ch=1 if h45==1  // wc (flush toilet) linked to sewer 
+	replace banoalcantarillado_ch=0 if  h45==2 | h45==3 | h45==4 | h45==5 | h45==6 //  wc (flush toilet) linked to septic tank/soak-away, ventilated pit latrine (VIP), trad. pit latrine with slab, trad. pit Latrine w/out slab, none
 
 	*********
 	*des1_ch*
@@ -937,7 +947,7 @@ capture label var lp5_ci "Línea de pobreza USD5 por día en moneda local a prec
 capture label var lp365_2017  "Línea de pobreza USD3.65 día en moneda local a precios corrientes a PPA 2017"
 capture label var lp685_2017 "Línea de pobreza USD6.85 por día en moneda local a precios corrientes a PPA 2017"
 
-drop  lp19_2011 lp31_2011 lp5_2011 tc_wdi _merge
+drop  cpi_2017 lp19_2011 lp31_2011 lp5_2011 tc_wdi _merge
 
 /*******************************************************************************
    IV. Revisión de que se hayan creado todas las variables
@@ -961,7 +971,7 @@ foreach v of global lista_variables {
 *******************************************************************************/
 * En "..." agregar la lista de variables de ID originales (por ejemplo los ID de personas, vivienda y hogar)
 
-keep  $lista_variables num_vivienda num_hogar pcp1
+keep  $lista_variables serialno
 
 * selecciona las 3 lineas y ejecuta (do). Deben quedar 105 variables de las secciones II y III más las 
 * variables originales de ID que hayas mantenido

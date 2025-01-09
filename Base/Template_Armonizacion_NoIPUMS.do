@@ -85,7 +85,7 @@ global base_in  = "$ruta\\raw\\$PAIS\\$ANIO\\data_orig\\${PAIS}_${ANIO}_NOIPUMS.
 global base_out = "$ruta\\clean\\$PAIS\\${PAIS}_${ANIO}_censusBID.dta"
 global log_file ="$ruta\\clean\\$PAIS\\${PAIS}_${ANIO}_censusBID.log"                                                   
 capture log close
-log using "$log_file"  //agregar ,replace si ya está creado el log_file en tu carpeta
+log using `"$log_file"'  //agregar ,replace si ya está creado el log_file en tu carpeta
 
 use "$base_in", clear
 
@@ -339,7 +339,6 @@ rename *, lower
 	replace afroind_ci=2 if afro_ci==1
 	replace afroind_ci=3 if noafroind_ci = 1
 
-	
 	*********
 	*afro_ch*
 	*********
@@ -388,7 +387,6 @@ rename *, lower
 	egen byte dis_ch = sum(dis_ci), by(idh_ch) 
 	replace dis_ch=1 if dis_ch>=1 & dis_ch!=.
 	
-	
 **********************************
 *** 4. Migración (3 variables) ***
 **********************************	
@@ -401,7 +399,7 @@ rename *, lower
 	replace migrante_ci=. if ...
 	 	
 	****************
-    *migantiguo5_ci*
+    *migrantiguo5_ci*
     ****************
 	gen byte migrantiguo5_ci=0
 	replace migrantiguo5_ci=1 if ... 
@@ -544,9 +542,9 @@ rename *, lower
 	replace pea_ci=1 if inlist(condocup_ci,1,2)
 	replace pea_ci=0 if inlist(condocup_ci,3,4)
 
-	*******************
-    *rama de actividad*
-    *******************
+	**********
+    *rama_ci**
+    **********
 	gen byte rama_ci = . 
     replace rama_ci = 1 if ... & emp_ci==1
     replace rama_ci = 2 if ... & emp_ci==1
@@ -580,7 +578,7 @@ rename *, lower
 	gen byte spublico_ci=.
 	replace spublico_ci=1 if emp_ci==1 & rama_ci==10
 	replace spublico_ci=0 if emp_ci==1 & rama_ci!=10 & rama_ci!=.
-	replace 
+
 		
 		
 **********************************************************
@@ -852,7 +850,7 @@ rename *, lower
    III. Incluir variables externas
 *******************************************************************************/
 capture drop _merge
-merge m:1 pais_c anio_c using "Z:/general_documentation/data_externa/poverty/International_Poverty_Lines/5_International_Poverty_Lines_LAC_long_PPP17.dta", keepusing (lp19_2011 lp31_2011 lp5_2011 tc_wdi lp365_2017 lp685_201)
+merge m:1 pais_c anio_c using "Z:/general_documentation/data_externa/poverty/International_Poverty_Lines/5_International_Poverty_Lines_LAC_long_PPP17.dta", keepusing (lp19_2011 lp31_2011 lp5_2011 tc_wdi lp365_2017 lp685_201 cpi_2017)
 drop if _merge ==2
 
 g tc_c     = tc_wdi
@@ -869,7 +867,7 @@ capture label var lp5_ci "Línea de pobreza USD5 por día en moneda local a prec
 capture label var lp365_2017  "Línea de pobreza USD3.65 día en moneda local a precios corrientes a PPA 2017"
 capture label var lp685_2017 "Línea de pobreza USD6.85 por día en moneda local a precios corrientes a PPA 2017"
 
-drop  lp19_2011 lp31_2011 lp5_2011 tc_wdi _merge
+drop  cpi_2017 lp19_2011 lp31_2011 lp5_2011 tc_wdi _merge
 
 /*******************************************************************************
    IV. Revisión de que se hayan creado todas las variables

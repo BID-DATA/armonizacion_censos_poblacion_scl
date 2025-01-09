@@ -83,7 +83,7 @@ global base_in  = "$ruta\\raw\\$PAIS\\$ANIO\\data_orig\\${PAIS}_${ANIO}_NOIPUMS.
 global base_out = "$ruta\\clean\\$PAIS\\${PAIS}_${ANIO}_censusBID.dta"
 global log_file ="$ruta\\clean\\$PAIS\\${PAIS}_${ANIO}_censusBID.log"                                                   
 capture log close
-log using "$log_file"  //agregar ,replace si ya está creado el log_file en tu carpeta
+log using `"$log_file"' , replace  //agregar ,replace si ya está creado el log_file en tu carpeta
 
 use "$base_in", clear
 
@@ -164,12 +164,12 @@ rename *, lower
 	****************************************
 	*factor expansión individio (factor_ci)*
 	****************************************
-	gen byte factor_ci=1
+	gen byte factor_ci=.
 	
 	*******************************************
 	*Factor de expansion del hogar (factor_ch)*
 	*******************************************
-	gen byte factor_ch=1
+	gen byte factor_ch=.
 
     ***********
 	* estrato *
@@ -335,17 +335,17 @@ rename *, lower
 	*********
 	*afro_ch*
 	*********
-	gen byte afro_jefe =,
+	gen byte afro_ch =.
 	
 	********
 	*ind_ch*
 	********	
-	gen byte ind_jefe = .
+	gen byte ind_ch = .
 
 	**************
 	*noafroind_ch*
 	**************
-	gen byte noafroind_jefe =.
+	gen byte noafroind_ch =.
 	
 	***************
 	***afroind_ch**
@@ -382,7 +382,7 @@ rename *, lower
     **migrantiguo5_ci**
     *******************
 	gen byte migrantiguo5_ci =(p16b<=2005) if p16b!=9999
-	replace migantiguo5_ci=. if migrante_ci==0
+	replace migrantiguo5_ci=. if migrante_ci==0
 	
 	**********************
 	****** miglac_ci *****
@@ -685,7 +685,7 @@ OBSERVACIONES:
 	*aguaentubada_ch*
 	*****************
 	gen byte aguaentubada_ch=.
-	replace aguaentubada_ch if inlist(h18,1,2)
+	replace aguaentubada_ch =1 if inlist(h18,1,2)
 	
 	************
 	*aguared_ch*
@@ -792,7 +792,7 @@ OBSERVACIONES:
 	**************************
 	*ISOalpha3Pais_ingreso_ci*
 	**************************	
-	gen long BRB_ingreso_ci = ...
+	gen long BRB_ingreso_ci = .
 	label var BRB_ingreso_ci  "Ingreso total según el censo del país - variable original"
 	
 	*****************************
