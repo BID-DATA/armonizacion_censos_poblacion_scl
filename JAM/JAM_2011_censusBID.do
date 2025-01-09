@@ -234,14 +234,80 @@ use "`base_in'", clear
 **********************************
 
 	************
-	*aguared_ch* 
+	*aguaentubada_ch* 
 	************
 
-	gen aguared_ch=.
-	replace aguared_ch=1 if q3_13wat<=3 
-	replace aguared_ch=0 if q3_13wat>3
-	replace aguared_ch=. if q3_13wat==99
+	gen aguaentubada_ch=.
+	replace aguaentubada_ch=1 if q3_13wat<=3 
+	replace aguaentubada_ch=0 if q3_13wat>3
+	replace aguaentubada_ch=. if q3_13wat==99
 
+	************
+	*aguared_ch*
+	************
+	gen aguared_ch=.
+	replace aguared_ch = 1 if inlist(q3_6kitc,1)
+	replace aguared_ch = 0 if inlist(q3_6kitc,2,9)
+	
+	************
+	*aguafuente_ch*
+	************
+	gen aguafuente_ch=.
+	replace aguafuente_ch=1 if inlist(q3_14dri,2,3) & inlist(q3_13wat,1,2)
+	replace aguafuente_ch=2 if inlist(q3_13wat,5)
+	replace aguafuente_ch=6 if inlist(q3_13wat,8)
+	replace aguafuente_ch=7 if inlist(q3_13wat,3,4)
+	replace aguafuente_ch=8 if inlist(q3_13wat,7)
+	replace aguafuente_ch=10 if inlist(q3_13wat,6,9,99)
+	replace aguafuente_ch=3 if q3_14dri ==1
+	
+	*************
+	*aguadist_ch*
+	*************
+	gen aguadist_ch=.
+	replace aguadist_ch =1 if inlist(q3_13wat,1,3)
+	replace aguadist_ch =2 if inlist(q3_13wat,2,4)
+	replace aguadist_ch = 3 if inlist(q3_13wat,5,6)
+	replace aguadist_ch = 0 if inlist(q3_13wat,7,8,9,10)
+	
+	**************
+	*aguadisp1_ch*
+	**************
+	gen aguadisp1_ch= 9
+	**************
+	*aguadisp2_ch*
+	**************
+	gen aguadisp2_ch= 9
+	*************
+	*aguamide_ch*
+	*************
+	gen aguamide_ch= 9
+	
+	
+    *********
+	*bano_ch*
+	*********
+	gen bano_ch= .
+	replace bano_ch = 0 if q3_9toil ==5
+	replace bano_ch = 1 if q3_9toil ==1
+	replace bano_ch = 6 if inlist(q3_9toil, 2,3,4,9)
+	
+	
+	***********
+	*banoex_ch*
+	***********
+	gen banoex_ch=.
+	replace banoex_ch = 1 if inlist(q3_10toi,2)
+	replace banoex_ch = 0 if q3_10toi == 1
+	
+
+	**************
+	*sinbano_ch*
+	**************
+	gen sinbano_ch =.
+	replace sinbano_ch =0 if inlist(q3_9toil, 1,2,3,4,9)
+	replace sinbano_ch =3 if inlist(q3_9toil, 5)
+	
 		
 	********
 	*luz_ch*
@@ -254,12 +320,12 @@ use "`base_in'", clear
 	
 
 	*********
-	*bano_ch*
+	*conbano_ch*
 	*********
-	gen bano_ch=.
-	replace bano_ch= 1 if q3_9toil==1 | q3_9toil==3
-	replace bano_ch= 0 if q3_9toil==4 | q3_9toil==5
- 	replace bano_ch=. if q3_9toil==9
+	gen conbano_ch=.
+	replace conbano_ch= 1 if inlist(q3_9toil,1,2,3,4)
+	replace conbano_ch= 0 if q3_9toil==5
+ 	replace conbano_ch=. if q3_9toil==9
 
 	*********
 	*des1_ch*
@@ -278,7 +344,8 @@ use "`base_in'", clear
 	*****************
 	*banomejorado_ch*
 	*****************
-	gen banomejorado_ch=.
+	gen banoalcantarillado_ch=0
+	replace banoalcantarillado_ch =1 if q3_9toil == 1
  	
 
 	**********
@@ -762,7 +829,7 @@ gen dismental_ci =.
 
 include "../Base/labels.do"
 
-order region_BID_c region_c pais_c anio_c idh_ch idp_ci factor_ch factor_ci estrato_ci zona_c sexo_ci edad_ci relacion_ci civil_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch miembros_ci afroind_ci afroind_ch afroind_ano_c dis_ci dis_ch condocup_ci emp_ci desemp_ci pea_ci rama_ci categopri_ci spublico_ci ylm_ci ynlm_ci ylm_ch ynlm_ch aedu_ci eduno_ci edupre_ci edupi_ci  edupc_ci  edusi_ci edusc_ci  eduui_ci eduuc_ci edus1i_ci edus1c_ci edus2i_ci edus2c_ci asiste_ci literacy aguared_ch luz_ch bano_ch des1_ch piso_ch banomejorado_ch pared_ch techo_ch resid_ch dorm_ch cuartos_ch cocina_ch telef_ch refrig_ch auto_ch compu_ch internet_ch cel_ch viviprop_ch migrante_ci migrantelac_ci migantiguo5_ci discapacidad_ci ceguera_ci sordera_ci mudez_ci dismental_ci
+order region_BID_c region_c pais_c anio_c idh_ch idp_ci factor_ch factor_ci estrato_ci zona_c sexo_ci edad_ci relacion_ci civil_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch miembros_ci afroind_ci afroind_ch afroind_ano_c dis_ci dis_ch condocup_ci emp_ci desemp_ci pea_ci rama_ci categopri_ci spublico_ci ylm_ci ynlm_ci ylm_ch ynlm_ch aedu_ci eduno_ci edupre_ci edupi_ci  edupc_ci  edusi_ci edusc_ci  eduui_ci eduuc_ci edus1i_ci edus1c_ci edus2i_ci edus2c_ci asiste_ci literacy aguaentubada_ch aguared_ch aguafuente_ch aguadist_ch aguadisp1_ch aguadisp2_ch aguamide_ch bano_ch banoex_ch sinbano_ch luz_ch conbano_ch des1_ch piso_ch banoalcantarillado_ch pared_ch techo_ch resid_ch dorm_ch cuartos_ch cocina_ch telef_ch refrig_ch auto_ch compu_ch internet_ch cel_ch viviprop_ch migrante_ci migrantelac_ci migantiguo5_ci discapacidad_ci ceguera_ci sordera_ci mudez_ci dismental_ci
 
 compress
 
