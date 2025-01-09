@@ -254,7 +254,7 @@ rename *, lower
 	************
 	*miembros_ci
 	************
-	gen miembros_ci=(relacion_ci>=1 & relacion_ci<9) 
+	gen byte miembros_ci=(relacion_ci>=1 & relacion_ci<5) 
 	tab miembros_ci	
 	
 	*************
