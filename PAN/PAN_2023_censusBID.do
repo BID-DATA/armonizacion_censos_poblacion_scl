@@ -448,7 +448,7 @@ ta p05_nacio p03b_reg_civil
 	ta migrante_ci,m
 	 	
 	****************
-    *migantiguo5_ci*
+    *migrantiguo5_ci*
     ****************
 	gen antiguedad = 2024 - p05a_anio1 
 	gen byte migrantiguo5_ci=0
