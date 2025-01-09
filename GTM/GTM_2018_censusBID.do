@@ -159,7 +159,7 @@ rename *, lower
 	******************
     *idp_ci (idpersonas)*
     ******************
-	gen idp_ci = string(pcp1)
+	gen idp_ci = idh_ch+string(pcp1)
 
 	****************************************
 	*factor expansión individio (factor_ci)*

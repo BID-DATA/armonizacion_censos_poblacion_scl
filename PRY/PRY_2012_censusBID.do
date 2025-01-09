@@ -87,7 +87,7 @@ log using `"$log_file"', replace  //agregar ,replace si ya está creado el log_f
 
 use "$base_in", clear
 
-rename *, lower
+*rename *, lower
 
 * sample 20   		// significa muestra de 20% de la base. Activar si se necesita.     
 
