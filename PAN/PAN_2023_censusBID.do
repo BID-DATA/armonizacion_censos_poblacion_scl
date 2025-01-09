@@ -2,11 +2,11 @@
 /*==============================================================================
 							CENSOS POBLACIONALES
 						   Script de armonización
-País: PAN
+País: PANAMÁ
 Año: 2023
 Autores: Pablo Cortez
 Última versión: 23MAY2023 
-División: MIG - IADB
+División: SCL/MIG - IADB
 *******************************************************************************
 
 INSTRUCCIONES:

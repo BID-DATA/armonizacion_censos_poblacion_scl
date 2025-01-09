@@ -2,11 +2,11 @@
 /*==============================================================================
 							CENSOS POBLACIONALES
 						   Script de armonización
-País: MEX
+País: MEXICO
 Año: 2020
-Autores: SCL
+Autores: Eric Torres
 Última versión: 06ENE2024
-División: LMK - IADB
+División: SCL/LMK - IADB
 *******************************************************************************
 
 INSTRUCCIONES:
@@ -238,7 +238,7 @@ use "$base_in", clear
 	*********
 	*sexo_c*
 	*********
-	rename byte sexo sexo_ci
+	gen byte sexo_ci =sexo
 	replace sexo_ci =2 if sexo_ci == 3
 	
 	*********
@@ -304,7 +304,7 @@ use "$base_in", clear
 	************
 	*miembros_ci
 	************
-	gen byte miembros_ci=(relacion_ci>=1 & relacion_ci<9) 
+	gen byte miembros_ci=(relacion_ci>=1 & relacion_ci<5) 
 	tab miembros_ci	
 	
 	*************
@@ -327,32 +327,32 @@ use "$base_in", clear
 	**************
 	*nmiembros_ch*
 	**************
-	egen byte nmiembros_ch=sum(relacion_ci>0 & relacion_ci<9), by(idh_ch)
-	
+	egen byte nmiembros_ch=sum(relacion_ci>0 & relacion_ci<=4), by(idh_ch)
+
 	*************
 	*nmayor21_ch*
 	*************
-	egen byte nmayor21_ch=sum((relacion_ci>0 & relacion_ci<9) & (edad_ci>=21 & edad_ci<=98)), by(idh_ch) 
+	egen byte nmayor21_ch=sum((relacion_ci>=1 & relacion_ci<=4) & (edad_ci>=21 & edad_ci!=.)), by(idh_ch) 
 
 	*************
 	*nmenor21_ch*
 	*************
-	egen byte nmenor21_ch=sum((relacion_ci>0 & relacion_ci<9) & (edad_ci<21)), by(idh_ch) 
+	egen byte nmenor21_ch=sum((relacion_ci>=1 & relacion_ci<=4) & (edad_ci<21)), by(idh_ch) 
 
 	*************
 	*nmayor65_ch*
 	*************
-	egen byte nmayor65_ch=sum((relacion_ci>0 & relacion_ci<9) & (edad_ci>=65 & edad_ci!=.)), by(idh_ch) 
+	egen byte nmayor65_ch=sum((relacion_ci>=1 & relacion_ci<=4) & (edad_ci>=65 & edad_ci!=.)), by(idh_ch) 
 
 	************
 	*nmenor6_ch*
 	************
-	egen byte nmenor6_ch=sum((relacion_ci>0 & relacion_ci<9) & (edad_ci<6)), by(idh_ch) 
+	egen byte nmenor6_ch=sum((relacion_ci>0 & relacion_ci<=4) & (edad_ci<6)), by(idh_ch) 
 
 	************
 	*nmenor1_ch*
 	************
-	egen byte nmenor1_ch=sum((relacion_ci>0 & relacion_ci<9) & (edad_ci<1)), by(idh_ch) 
+	egen byte nmenor1_ch=sum((relacion_ci>0 & relacion_ci<=4) & (edad_ci<1)), by(idh_ch) 
 
 ************************************
 *** 3. Diversidad (11 variables) ***
@@ -896,7 +896,7 @@ gen long MEX_ingreso_ci = .
    III. Incluir variables externas (7 variables)
 *******************************************************************************/
 capture drop _merge
-merge m:1 pais_c anio_c using "Z:/general_documentation/data_externa/poverty/International_Poverty_Lines/5_International_Poverty_Lines_LAC_long_PPP17.dta", keepusing (cpi_2011 lp19_2011 lp31_2011 lp5_2011 tc_wdi lp365_2017 lp685_201)
+merge m:1 pais_c anio_c using "Z:/general_documentation/data_externa/poverty/International_Poverty_Lines/5_International_Poverty_Lines_LAC_long_PPP17.dta", keepusing (cpi_2017 lp19_2011 lp31_2011 lp5_2011 tc_wdi lp365_2017 lp685_201)
 drop if _merge ==2
 
 g tc_c     = tc_wdi
@@ -913,7 +913,7 @@ capture label var lp5_ci "Línea de pobreza USD5 por día en moneda local a prec
 capture label var lp365_2017  "Línea de pobreza USD3.65 día en moneda local a precios corrientes a PPA 2017"
 capture label var lp685_2017 "Línea de pobreza USD6.85 por día en moneda local a precios corrientes a PPA 2017"
 
-drop  lp19_2011 lp31_2011 lp5_2011 tc_wdi _merge
+drop cpi_2017 lp19_2011 lp31_2011 lp5_2011 tc_wdi _merge
 
 /*******************************************************************************
    IV. Revisión de que se hayan creado todas las variables
