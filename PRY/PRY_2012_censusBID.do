@@ -704,8 +704,8 @@ use "$base_in", clear
 	gen byte viviprop_ch = .
 	replace viviprop_ch = 0 if V11 == 4 // alquilada 
 	replace viviprop_ch = 1 if V11 == 1 // propia y totalmente pagada
-	replace viviprop_ch = 2 if V11 == 2 // en proceso de pago
-	replace viviprop_ch = 3 if V11 == 6 // ocupada de hecho
+	replace viviprop_ch = 1 if V11 == 2 // en proceso de pago
+	replace viviprop_ch = 1 if V11 == 6 // ocupada de hecho
 
 ***************************************************
 *** 7.2 Vivienda - variables Wash (13 variables) ***

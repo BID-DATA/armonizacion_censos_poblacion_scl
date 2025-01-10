@@ -729,7 +729,7 @@ rename *, lower
 	*aguadist_ch*
 	*************
 	gen byte aguadist_ch= ...
-	
+	          
 	**************
 	*aguadisp1_ch*
 	**************

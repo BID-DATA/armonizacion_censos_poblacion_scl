@@ -19,15 +19,17 @@
 
 global ruta = "${censusFolder}"  //cambiar ruta seleccionada 
 
-global base_in  = "$ruta\\raw\\$PAIS\\$ANIO\\data_orig\\${PAIS}_${ANIO}_NOIPUMS.dta"
+global base_in  = "$ruta\\raw\\$PAIS\\$ANIO\\data_orig\\${PAIS}_${ANIO}_IPUMS.dta"
 global base_out = "$ruta\\clean\\$PAIS\\${PAIS}_${ANIO}_censusBID.dta"
 global log_file ="$ruta\\clean\\$PAIS\\${PAIS}_${ANIO}_censusBID.log"
                                                     
 capture log close
-log using `"$log_file"'  //agregar ,replace si ya está creado el log_file en tu carpeta
+log using `"$log_file"' , replace  //agregar ,replace si ya está creado el log_file en tu carpeta
 
 use "$base_in", clear
 
+
+/*
 if (`"`PAIS'"'=="VEN" & `"`ANO'"'=="2001") | (`"`PAIS'"'=="MEX" & `"`ANO'"'=="2015") | (`"`PAIS'"'=="PAN" & `"`ANO'"'=="2010") {
 
 merge 1:1 country year sample serial pernum using "$ruta\\raw\\IPUMS_extravars_17Oct23.dta"
@@ -40,7 +42,7 @@ drop _m
 			drop `z'
 		}
 	}
-}
+} */
 			****************************
 			*  VARIABLES DE DISENO     *
 			****************************
@@ -49,15 +51,16 @@ drop _m
 	* region_BID_c *
 	****************
 	*CSC
-		if `"`PAIS'"'=="ARG" | `"`PAIS'"'=="URY" | `"`PAIS'"'=="BRA" | `"`PAIS'"'=="PRY" | `"`PAIS'"'=="CHL" local reg_bid 4
+		if  `"$PAIS"'=="ARG" |  `"$PAIS"' =="URY" |  `"$PAIS"' =="BRA" |  `"$PAIS"' =="PRY" |  `"$PAIS"' =="CHL" local reg_bid 4
 	*CAN	
-		if `"`PAIS'"'=="BOL" | `"`PAIS'"'=="COL" | `"`PAIS'"'=="ECU" | `"`PAIS'"'=="PER" | `"`PAIS'"'=="VEN" local reg_bid 3
+		if  `"$PAIS"' =="BOL" |  `"$PAIS"' =="COL" |  `"$PAIS"' =="ECU" |  `"$PAIS"' =="PER" |  `"$PAIS"' =="VEN" local reg_bid 3
 		
 	*CCB	
-		if `"`PAIS'"'=="BHS" | `"`PAIS'"'=="GUY" | `"`PAIS'"'=="JAM" | `"`PAIS'"'=="SUR" | `"`PAIS'"'=="BRB" | `"`PAIS'"'=="TTO" local reg_bid 2
+if  `"$PAIS"' =="BHS" |  `"$PAIS"' =="GUY" | `"$PAIS"' =="JAM" |  `"$PAIS"' =="SUR" |  `"$PAIS"' =="BRB" |  `"$PAIS"' =="TTO" local reg_bid 2
 	
 	*CID
-		if `"`PAIS'"'=="BLZ" | `"`PAIS'"'=="CRI" | `"`PAIS'"'=="SLV" | `"`PAIS'"'=="GTM" | `"`PAIS'"'=="HTI" | `"`PAIS'"'=="HND" | `"`PAIS'"'=="PAN" | `"`PAIS'"'=="MEX" | `"`PAIS'"'=="DOM" | `"`PAIS'"'=="NIC" local reg_bid 1
+		if  `"$PAIS"'=="BLZ" |  `"$PAIS"' =="CRI" |  `"$PAIS"' =="SLV" |  `"$PAIS"' =="GTM" |  `"$PAIS"' =="HTI" |  `"$PAIS"'=="HND" |  `"$PAIS"' =="PAN" | `"$PAIS"' =="MEX" |  `"$PAIS"' =="DOM" |  `"$PAIS"'=="NIC" local reg_bid 1
+
 		
 	gen region_BID_c=`reg_bid'
 	
@@ -67,7 +70,7 @@ drop _m
 	*********
 	*pais_c*
 	*********
-    gen pais_c=${PAIS}
+    gen pais_c=`"$PAIS"'
 	
 	*********
 	*anio_c*
@@ -77,13 +80,13 @@ drop _m
 	******************
     *idh_ch (id hogar)*
     ******************
-    rename serial idh_ch
+    gen idh_ch =serial 
 	tostring idh_ch, replace
 	
 	******************
     *idp_ci (idpersonas)*
     ******************
-	rename pernum idp_ci 
+	egen idp_ci = concat(idh_ch pernum)
 	tostring idp_ci , replace
 	
 	****************************************
@@ -95,6 +98,11 @@ drop _m
 	*Factor de expansion del hogar (factor_ch)*
 	*******************************************
 	rename hhwt factor_ch
+		
+	*****
+	*UPM*
+	*****	
+	gen upm =.
 	
 	***********
 	* estrato *
@@ -655,6 +663,11 @@ drop _m
 	gen byte aguafuente_ch=.
 	
 	**************
+	*aguadist_ch*
+	**************
+	gen byte aguadist_ch =.
+	
+	**************
 	*aguadisp1_ch*
 	**************
 	gen byte aguadisp1_ch = .
@@ -728,19 +741,31 @@ drop _m
 	**************************
 	*ISOalpha3Pais_m_pared_ch*
 	**************************	
-	gen  ${PAIS}_m_pared_ch= wall
+	gen ${PAIS}_m_pared_ch =.
+	cap confirm variable wall
+	if (_rc==0) {
+	    replace  ${PAIS}_m_pared_ch = wall
+	}
 	label var ${PAIS}_m_pared_ch  "Material de las paredes según el censo del país - variable original"
 
 	*************************
 	*ISOalpha3Pais_m_piso_ch*
 	*************************
-	gen  ${PAIS}_m_piso_ch= floor
+	gen ${PAIS}_m_piso_ch =.
+	cap confirm variable wall
+	if (_rc==0) {
+	    replace  ${PAIS}_m_piso_ch = wall
+	}
 	label var ${PAIS}_m_piso_ch  "Material de los pisos según el censo del país - variable original"
 	
 	**************************
 	*ISOalpha3Pais_m_techo_ch*
 	**************************	
-	gen  ${PAIS}_m_techo_ch= roof
+	gen ${PAIS}_m_techo_ch =.
+	cap confirm variable roof
+	if (_rc==0) {
+	    replace  ${PAIS}_m_piso_ch = roof
+	}
 	label var ${PAIS}_m_techo_ch  "Material del techo según el censo del país - variable original"
 	
 	**************************
