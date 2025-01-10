@@ -67,7 +67,7 @@ drop _m
 	*********
 	*pais_c*
 	*********
-    gen pais_c="`PAIS'"
+    gen pais_c=${PAIS}
 	
 	*********
 	*anio_c*
@@ -272,236 +272,94 @@ drop _m
 	********	
 	gen byte ind_ch=.
 	
+	**************
+	*noafroind_ch*
+	**************
+	gen byte noafroind_ch =.
+	
+	**********
+	*disWG_ci*
+	**********
+	gen byte disWG_ci=. 
+
 	
 **********************************
-**** VARIABLES DE LA VIVIENDA ****
-**********************************
-		
-	************
-	*aguared_ch*
-	************
+*** 4. Migración (3 variables) ***
+**********************************	
 
-	gen aguared_ch=.
-	cap confirm variable watsup
-	if (_rc==0) {
-	replace aguared_ch=1 if watsup>=10 & watsup<20
-	replace aguared_ch=0 if watsup ==20
-	replace aguared_ch=. if watsup==99
+    *******************
+    ****migrante_ci****
+    *******************
+	gen byte migrante_ci =.
+	cap confirm variable nativity 
+	if(_rc==0){
+	replace migrante_ci = 1 if nativity == 2
+	replace migrante_ci = 0 if nativity == 1 
 	}
-
-	********
-	*luz_ch*
-	********
-	*En la nueva encuesta no se encontro si se pregunta por instalacion electrica
-	gen luz_ch=.
-	cap confirm variable electric
-	if (_rc==0) {
-	 replace luz_ch = 0 if electric== 2
-	 replace luz_ch = 1 if electric== 1
-	 replace luz_ch=. if electric==9
+   
+	/*******************
+    **migantiguo5_ci***
+    *******************
+	gen migantiguo5_ci =.
+	cap confirm variable migrate5
+	if(_rc==0){
+	replace migantiguo5_ci = 1 if inlist(migrate5, 10, 11, 12, 20) & migrante_ci == 1
+	replace migantiguo5_ci = 0 if (migrate5 == 30 & migrante_ci == 1) | migrante_ci == 0
 	}
-
-	*********
-	*bano_ch*
-	*********
-	gen bano_ch=.
-	gen des1_ch=.
-	cap confirm variable toilet
-	if (_rc==0) {
-	replace bano_ch= 1 if toilet==20 | toilet==21 | toilet==22 | toilet==23
-	replace bano_ch= 0 if toilet==10 | toilet==11
- 	replace bano_ch=. if toilet==99
-
-	*********
-	*des1_ch*
-	*********
-	replace des1_ch=0 if bano_ch==0
-	replace des1_ch=1 if toilet==21
-	replace des1_ch=2 if toilet==22
-	replace des1_ch=. if toilet==99
-	
-	}
-	
-	*********
-	*piso_ch*
-	*********
-	gen piso_ch=.
- 	cap confirm variable floor
-	if (_rc==0) {
-	replace piso_ch=0 if floor==100
-	replace piso_ch=1 if (floor>100 & floor<=120)
-	replace piso_ch=2 if floor>=200 & floor<999
-	replace piso_ch=. if floor==999
-	}
-	
-	*****************
-	*banomejorado_ch*
-	*****************
-	gen banomejorado_ch=.
- 	cap confirm variable sewage
-	if (_rc==0) {
-	replace banomejorado_ch=1 if sewage >= 10 & sewage <= 12
-	replace banomejorado_ch=0 if sewage == 20
-	replace piso_ch=. if sewage == 99
-	}
-
-	**********
-	*pared_ch*
-	**********
-	gen pared_ch=.
-	cap confirm variable wall
-	if (_rc==0) {
-		replace pared_ch = 0 if wall == 100
-		replace pared_ch = 1 if wall>100 & wall<500
-	    replace pared_ch= 2 if wall>=500 & wall<=600
-		replace pared_ch=. if wall==999
-	}
-
-	**********
-	*techo_ch*
-	**********
-	gen techo_ch=.
-	cap confirm variable roof
-	if (_rc==0) {
-    replace techo_ch=0  if roof == 90
-	replace techo_ch=1 if roof>=10 & roof<70
-	replace techo_ch=2 if roof>=70 & roof<=80
-	}
-	
-	**********
-	*resid_ch*
-	**********
-	gen resid_ch=.
-	cap confirm variable trash
-	if (_rc==0) {
-	replace resid_ch=0  if trash >= 10 | trash <= 14
-    replace resid_ch=1  if trash == 21 |trash == 22 | trash == 23
-	replace resid_ch=2  if trash >= 24 & trash <= 34
-	replace resid_ch=3  if trash>= 35 & trash <= 39
-	replace resid_ch=.  if trash == 99
-	}
-	
-	*********
-	*dorm_ch*
-	*********
-	gen dorm_ch=.
-	cap confirm variable bedrooms
-	if (_rc==0) {
-	replace dorm_ch=bedrooms 
-	replace dorm_ch=. if bedrooms==99 | bedrooms==98
-	}
-	
-	************
-	*cuartos_ch*
-	************
-	gen cuartos_ch=.
-	cap confirm variable rooms
-	if (_rc==0) {
-	replace cuartos_ch=rooms
-	replace cuartos_ch=. if rooms==99 | rooms==98
-	}
-
-	***********
-	*cocina_ch*
-	***********
-	gen cocina_ch=.
-	cap confirm variable kitchen
-	if (_rc==0) {
-	replace cocina_ch= 1 if kitchen>=20 & kitchen<=28
-	replace cocina_ch = 0  if kitchen >= 10 & kitchen<=13
-	replace cocina_ch=. if kitchen==99
-	}
-	
-	***********
-	*telef_ch*
-	***********
-	gen telef_ch=.
-	cap confirm variable phone
-	if (_rc==0) {
-	replace telef_ch=0 if phone == 1	
-	replace telef_ch=1 if phone == 2
-	replace telef_ch=. if phone == 9 | phone==0
-	}
-
-	***********
-	*refrig_ch*
-	***********
-	gen refrig_ch=.
-	cap confirm variable refrig
-	if (_rc==0) {
-	replace refrig_ch=0 if refrig==1
-	replace refrig_ch=1 if refrig==2
-	replace refrig_ch=. if refrig==9
-	}
-
-	*********
-	*auto_ch*
-	*********
-	gen auto_ch=.
-	cap confirm variable autos
-	if (_rc==0) {
-	replace auto_ch= 1 if autos>0 & autos<8
-	replace auto_ch= 0 if autos==0
-	replace auto_ch=. if autos==8 | autos==9
-	}
-	
-	********
-	*compu_ch*
-	********
-	gen compu_ch=.
-	cap confirm variable computer
-	if (_rc==0) {
-	    replace compu_ch=0 if computer==1
-		replace compu_ch=1 if computer==2
-		replace compu_ch=. if computer==9
-	}
-
-	*************
-	*internet_ch*
-	************* 
-	*pendiente esta variable no es lo que queremos generar
-	gen internet_ch=.
-	cap confirm variable internet
-	if (_rc==0) {
-	replace internet_ch=0 if internet == 1
-	replace internet_ch=1 if internet == 2
-	replace internet_ch=. if internet == 9 
-	}
-	
-	********
-	*cel_ch*
-	********
-	gen cel_ch=.
-	cap confirm variable cell
-	if (_rc==0) {
-	replace cel_ch=0 if cell == 1	
-	replace cel_ch=1 if cell == 2
-	replace cel_ch=. if cell == 9 | cell==0
-	}
-
-	*************
-	*viviprop_ch*
-	*************
-	*NOTA: aqui se genera una variable parecida, pues no se puede saber si es propia total o parcialmente pagada
-	gen viviprop_ch1=.
-	cap confirm variable ownership
-	if (_rc==0) {
-	replace viviprop_ch1=0 if ownership==2
-	replace viviprop_ch1=1 if ownership==1
-	*replace viviprop_ch1=3 if 
-	replace viviprop_ch1=. if ownership==9
+	cap confirm variable migyrs1
+	if(_rc==0){
+	replace migantiguo5_ci = 1 if migyrs1 >= 5 & migrante_ci == 1
+	replace migantiguo5_ci = 0 if (migyrs1 < 5 & migrante_ci == 1) | migrante_ci == 0
 	}
 	
 	
-**********************************************
-***      VARIABLES DEL MERCADO LABORAL     ***
-**********************************************	
+	**********************
+	*** migrantelac_ci ***
+	**********************
 
-     *******************
-     ****condocup_ci****
-     *******************
-	 
-    gen condocup_ci=.
+	gen migrantelac_ci = .
+	cap confirm variable bplcountry
+	if(_rc==0){
+	replace migrantelac_ci= 1 if inlist(bplcountry, 21050, 21080, 21100, 21130, 21140, 21180, 21250, 22010, 22020, 22030, 22040, 22050, 22060, 22070, 22080, 23010, 23020, 23030, 23040, 23050, 23060, 23090, 23100, 23110, 23120, 23130, 23140) & migrante_ci == 1
+	replace migrantelac_ci = 0 if migrantelac_ci == . & migrante_ci == 1 | migrante_ci == 0
+	}
+	*/
+	
+	*******************
+    **migrantiguo5_ci**
+    *******************
+	gen byte migrantiguo5_ci =.
+	cap confirm variable migrate5
+	if(_rc==0){
+	replace migrantiguo5_ci = 1 if inlist(migrate5, 10, 11, 12, 20) & migrante_ci == 1
+	replace migrantiguo5_ci = 0 if (migrate5 == 30 & migrante_ci == 1)
+	}
+	cap confirm variable migyrs1
+	if(_rc==0){
+	replace migrantiguo5_ci = 1 if migyrs1 >= 5 & migrante_ci == 1
+	replace migrantiguo5_ci = 0 if (migyrs1 < 5 & migrante_ci == 1)
+	}
+	
+	**********************
+	****** miglac_ci *****
+	**********************
+
+	gen byte  miglac_ci = .
+	cap confirm variable bplcountry
+	if(_rc==0){
+	replace miglac_ci= 1 if inlist(bplcountry, 21050, 21080, 21100, 21130, 21140, 21180, 21250, 22010, 22020, 22030, 22040, 22050, 22060, 22070, 22080, 23010, 23020, 23030, 23040, 23050, 23060, 23090, 23100, 23110, 23120, 23130, 23140) & migrante_ci == 1
+	replace miglac_ci = 0 if migrantelac_ci != 1 & migrante_ci == 1 
+	}
+  
+  
+****************************************
+*** 6. Mercado laboral (7 variables) ***
+****************************************
+
+    *******************
+    ****condocup_ci****
+    ******************* 
+    gen byte condocup_ci=.
 	cap confirm variable empstat
 	if (_rc==0){
     replace condocup_ci=1 if empstat==1
@@ -511,10 +369,10 @@ drop _m
     replace condocup_ci=. if empstat==0 /*NIU as missing*/
 	}
 	
-      ************
-      ***emp_ci***
-      ************
-    gen emp_ci=.
+    ************
+    ***emp_ci***
+    ************
+    gen byte emp_ci=.
 	cap confirm variable empstat
 	if (_rc==0){
 		replace emp_ci=0 if empstat==2
@@ -525,20 +383,20 @@ drop _m
 	}
 	
 	
-      ****************
-      ***desemp_ci***
-      ****************	
-	gen desemp_ci=.
+    ****************
+    ***desemp_ci***
+    ****************	
+	gen byte desemp_ci=.
 	cap confirm variable condocup_ci
 	if (_rc==0){
 		replace desemp_ci=1 if condocup_ci==2 /*1 desempleados*/
 		replace desemp_ci=0 if condocup_ci==3 | condocup_ci==1 /*0 cuando están inactivos o empleados*/
 	}
 	
-      *************
-      ***pea_ci***
-      *************
-    gen pea_ci=.
+    *************
+    ***pea_ci***
+    *************
+    gen byte pea_ci=.
 	cap confirm variable condocup_ci
 	if (_rc==0){
 		replace pea_ci=1 if condocup_ci==1
@@ -546,11 +404,11 @@ drop _m
 		replace pea_ci=0 if condocup_ci==3
 	}
 	
-     *************************
-     ****rama de actividad****
-     *************************
-	 *2010 no tiene variable indgen
-    gen rama_ci = . 
+    **********
+    *rama_ci**
+    **********
+	*2010 no tiene variable indgen
+    gen byte rama_ci = . 
 	cap confirm variable indgen 
 	if (_rc==0) {
     replace rama_ci = 1 if indgen==10
@@ -570,11 +428,11 @@ drop _m
     replace rama_ci = 15 if indgen==120 
 	}
 	
-     *********************
-     ****categopri_ci****
-     *********************
-	 *OBSERVACIONES: El censo no distingue entre actividad principal o secundaria, asigno por default principal.	
-    gen categopri_ci=.
+    *********************
+    ****categopri_ci****
+    *********************
+	*OBSERVACIONES: El censo no distingue entre actividad principal o secundaria, asigno por default principal.	
+    gen byte categopri_ci=.
 	cap confirm variable classwkd
 	if (_rc==0) {
     replace categopri_ci=0 if classwkd==400 | classwkd == 150 | classwkd == 130
@@ -587,87 +445,321 @@ drop _m
       *****************
       ***spublico_ci***
       *****************
-    gen spublico_ci=.
+    gen byte spublico_ci=.
 	cap confirm variable indgen
 	if (_rc==0){
 		replace spublico_ci=1 if indgen==100
 		replace spublico_ci=0 if emp_ci==1 & indgen!=100
 		replace spublico_ci=. if indgen == 998 | indgen == 999 | indgen == 000
 	}
-	
-**********************************
-**** VARIABLES DE INGRESO ****
-***********************************
-*NOTA: variables se generan vacias para que en el do del País y Anio se cambien dependiendo de la variable de ingreso disponible
 
-   gen ylm_ci=.
+   
+**********************************************************
+***  7.1 Vivienda - variables generales (15 variables) ***
+**********************************************************	
+		
+	********
+	*luz_ch*
+	********
+	*En la nueva encuesta no se encontro si se pregunta por instalacion electrica
+	gen byte luz_ch=.
+	cap confirm variable electric
+	if (_rc==0) {
+	 replace luz_ch = 0 if electric== 2
+	 replace luz_ch = 1 if electric== 1
+	 replace luz_ch=. if electric==9
+	}
+
+	*********
+	*piso_ch*
+	*********
+	gen byte piso_ch=.
+ 	cap confirm variable floor
+	if (_rc==0) {
+	replace piso_ch=0 if floor==100
+	replace piso_ch=1 if (floor>100 & floor<=120)
+	replace piso_ch=2 if floor>=200 & floor<999
+	replace piso_ch=. if floor==999
+	}
+	
+	**********
+	*pared_ch*
+	**********
+	gen byte pared_ch=.
+	cap confirm variable wall
+	if (_rc==0) {
+		replace pared_ch = 0 if wall == 100
+		replace pared_ch = 1 if wall>100 & wall<500
+	    replace pared_ch= 2 if wall>=500 & wall<=600
+		replace pared_ch=. if wall==999
+	}
+
+	**********
+	*techo_ch*
+	**********
+	gen byte techo_ch=.
+	cap confirm variable roof
+	if (_rc==0) {
+    replace techo_ch=0  if roof == 90
+	replace techo_ch=1 if roof>=10 & roof<70
+	replace techo_ch=2 if roof>=70 & roof<=80
+	}
+	
+	**********
+	*resid_ch*
+	**********
+	gen byte resid_ch=.
+	cap confirm variable trash
+	if (_rc==0) {
+	replace resid_ch=0  if trash >= 10 | trash <= 14
+    replace resid_ch=1  if trash == 21 |trash == 22 | trash == 23
+	replace resid_ch=2  if trash >= 24 & trash <= 34
+	replace resid_ch=3  if trash>= 35 & trash <= 39
+	replace resid_ch=.  if trash == 99
+	}
+	
+	*********
+	*dorm_ch*
+	*********
+	gen byte dorm_ch=.
+	cap confirm variable bedrooms
+	if (_rc==0) {
+	replace dorm_ch=bedrooms 
+	replace dorm_ch=. if bedrooms==99 | bedrooms==98
+	}
+	
+	************
+	*cuartos_ch*
+	************
+	gen byte cuartos_ch=.
+	cap confirm variable rooms
+	if (_rc==0) {
+	replace cuartos_ch=rooms
+	replace cuartos_ch=. if rooms==99 | rooms==98
+	}
+
+	***********
+	*cocina_ch*
+	***********
+	gen byte cocina_ch=.
+	cap confirm variable kitchen
+	if (_rc==0) {
+	replace cocina_ch= 1 if kitchen>=20 & kitchen<=28
+	replace cocina_ch = 0  if kitchen >= 10 & kitchen<=13
+	replace cocina_ch=. if kitchen==99
+	}
+	
+	***********
+	*telef_ch*
+	***********
+	gen byte telef_ch=.
+	cap confirm variable phone
+	if (_rc==0) {
+	replace telef_ch=0 if phone == 1	
+	replace telef_ch=1 if phone == 2
+	replace telef_ch=. if phone == 9 | phone==0
+	}
+
+	***********
+	*refrig_ch*
+	***********
+	gen byte refrig_ch=.
+	cap confirm variable refrig
+	if (_rc==0) {
+	replace refrig_ch=0 if refrig==1
+	replace refrig_ch=1 if refrig==2
+	replace refrig_ch=. if refrig==9
+	}
+
+	*********
+	*auto_ch*
+	*********
+	gen byte auto_ch=.
+	cap confirm variable autos
+	if (_rc==0) {
+	replace auto_ch= 1 if autos>0 & autos<8
+	replace auto_ch= 0 if autos==0
+	replace auto_ch=. if autos==8 | autos==9
+	}
+	
+	********
+	*compu_ch*
+	********
+	gen byte compu_ch=.
+	cap confirm variable computer
+	if (_rc==0) {
+	    replace compu_ch=0 if computer==1
+		replace compu_ch=1 if computer==2
+		replace compu_ch=. if computer==9
+	}
+
+	*************
+	*internet_ch*
+	************* 
+	*pendiente esta variable no es lo que queremos generar
+	gen byte internet_ch=.
+	cap confirm variable internet
+	if (_rc==0) {
+	replace internet_ch=0 if internet == 1
+	replace internet_ch=1 if internet == 2
+	replace internet_ch=. if internet == 9 
+	}
+	
+	********
+	*cel_ch*
+	********
+	gen byte cel_ch=.
+	cap confirm variable cell
+	if (_rc==0) {
+	replace cel_ch=0 if cell == 1	
+	replace cel_ch=1 if cell == 2
+	replace cel_ch=. if cell == 9 | cell==0
+	}
+
+	*************
+	*viviprop_ch*
+	*************
+	*NOTA: aqui se genera una variable parecida, pues no se puede saber si es propia total o parcialmente pagada
+	gen byte viviprop_ch=.
+	cap confirm variable ownership
+	if (_rc==0) {
+	replace viviprop_ch=0 if ownership==2
+	replace viviprop_ch=1 if ownership==1
+	*replace viviprop_ch1=3 if 
+	replace viviprop_ch=. if ownership==9
+	}
+
+***************************************************
+*** 7.2 Vivienda - variables Wash (13 variables) ***
+***************************************************	
+
+	*****************
+	*aguaentubada_ch*
+	*****************
+	gen byte aguaentubada_ch=.
+	
+	************
+	*aguared_ch*
+	************
+	gen byte aguared_ch=.
+	cap confirm variable watsup
+	if (_rc==0) {
+	replace aguared_ch=1 if watsup>=10 & watsup<20
+	replace aguared_ch=0 if watsup ==20
+	replace aguared_ch=. if watsup==99
+	}
+	
+	***************
+	*aguafuente_ch*
+	***************
+	gen byte aguafuente_ch=.
+	
+	**************
+	*aguadisp1_ch*
+	**************
+	gen byte aguadisp1_ch = .
+	
+	**************
+	*aguadisp2_ch*
+	**************
+	gen byte aguadisp2_ch = .	
+
+	*************
+	*aguamide_ch*
+	*************
+	gen byte aguamide_ch = .
+	
+	*********
+	*bano_ch*
+	*********
+	gen bano_ch=.
+	gen des1_ch=.
+	cap confirm variable toilet
+	if (_rc==0) {
+	replace bano_ch= 1 if toilet==20 | toilet==21 | toilet==22 | toilet==23
+	replace bano_ch= 0 if toilet==10 | toilet==11
+ 	replace bano_ch=. if toilet==99
+	}
+	
+	***********
+	*banoex_ch*
+	***********
+	gen byte banoex_ch = .
+
+	************
+	*sinbano_ch*
+	************
+	gen byte sinbano_ch =.
+
+	************
+	*conbano_ch*
+	************
+	gen byte conbano_ch=.
+			
+	*****************
+	*banoalcantarillado_ch*
+	*****************
+	gen byte banoalcantarillado_ch=.
+	
+	/*****************
+	*banomejorado_ch*
+	*****************
+	gen banomejorado_ch=.
+ 	cap confirm variable sewage
+	if (_rc==0) {
+	replace banomejorado_ch=1 if sewage >= 10 & sewage <= 12
+	replace banomejorado_ch=0 if sewage == 20
+	replace piso_ch=. if sewage == 99
+	}*/
+	
+	*********
+	*des1_ch*
+	*********
+	replace des1_ch=0 if bano_ch==0
+	replace des1_ch=1 if toilet==21
+	replace des1_ch=2 if toilet==22
+	replace des1_ch=. if toilet==99
+	
+	
+*************************************************************
+*** 8. Otras variables específicas por país (6 variables) ***
+*************************************************************	
+
+	**************************
+	*ISOalpha3Pais_m_pared_ch*
+	**************************	
+	gen  ${PAIS}_m_pared_ch= wall
+	label var ${PAIS}_m_pared_ch  "Material de las paredes según el censo del país - variable original"
+
+	*************************
+	*ISOalpha3Pais_m_piso_ch*
+	*************************
+	gen  ${PAIS}_m_piso_ch= floor
+	label var ${PAIS}_m_piso_ch  "Material de los pisos según el censo del país - variable original"
+	
+	**************************
+	*ISOalpha3Pais_m_techo_ch*
+	**************************	
+	gen  ${PAIS}_m_techo_ch= roof
+	label var ${PAIS}_m_techo_ch  "Material del techo según el censo del país - variable original"
+	
+	**************************
+	*ISOalpha3Pais_ingreso_ci*
+	**************************	
+	gen long ${PAIS}_ingreso_ci = .
+	label var ${PAIS}_ingreso_ci  "Ingreso total según el censo del país - variable original"
+	
+	*****************************
+	*ISOalpha3Pais_ingresolab_ci*
+	*****************************
+	gen long ${PAIS}_ingresolab_ci = .	
+	label var ${PAIS}_ingresolab_ci  "Ingreso laboral según el censo del país - variable original"
+
+	**********************
+	*ISOalpha3Pais_dis_ci*
+	**********************
+	gen byte ${PAIS}_dis_ci = .
+	label var ${PAIS}_dis_ci  "Individuos con discapacidad según el censo del país - variable original"
+	
+
  
-   gen ynlm_ci=.
-
-*******************************************************
-***           VARIABLES DE MIGRACIÓN              ***
-*******************************************************
-
-    *******************
-    ****migrante_ci****
-    *******************
-	
-	gen migrante_ci =.
-	cap confirm variable nativity 
-	if(_rc==0){
-	replace migrante_ci = 1 if nativity == 2
-	replace migrante_ci = 0 if nativity == 1 
-	}
-   
-	*******************
-    **migantiguo5_ci***
-    *******************
-	gen migantiguo5_ci =.
-	cap confirm variable migrate5
-	if(_rc==0){
-	replace migantiguo5_ci = 1 if inlist(migrate5, 10, 11, 12, 20) & migrante_ci == 1
-	replace migantiguo5_ci = 0 if (migrate5 == 30 & migrante_ci == 1) | migrante_ci == 0
-	}
-	cap confirm variable migyrs1
-	if(_rc==0){
-	replace migantiguo5_ci = 1 if migyrs1 >= 5 & migrante_ci == 1
-	replace migantiguo5_ci = 0 if (migyrs1 < 5 & migrante_ci == 1) | migrante_ci == 0
-	}
-	
-	**********************
-	*** migrantelac_ci ***
-	**********************
-
-	gen migrantelac_ci = .
-	cap confirm variable bplcountry
-	if(_rc==0){
-	replace migrantelac_ci= 1 if inlist(bplcountry, 21050, 21080, 21100, 21130, 21140, 21180, 21250, 22010, 22020, 22030, 22040, 22050, 22060, 22070, 22080, 23010, 23020, 23030, 23040, 23050, 23060, 23090, 23100, 23110, 23120, 23130, 23140) & migrante_ci == 1
-	replace migrantelac_ci = 0 if migrantelac_ci == . & migrante_ci == 1 | migrante_ci == 0
-	}
-	
-	*******************
-    **migrantiguo5_ci**
-    *******************
-	gen migrantiguo5_ci =.
-	cap confirm variable migrate5
-	if(_rc==0){
-	replace migrantiguo5_ci = 1 if inlist(migrate5, 10, 11, 12, 20) & migrante_ci == 1
-	replace migrantiguo5_ci = 0 if (migrate5 == 30 & migrante_ci == 1)
-	}
-	cap confirm variable migyrs1
-	if(_rc==0){
-	replace migrantiguo5_ci = 1 if migyrs1 >= 5 & migrante_ci == 1
-	replace migrantiguo5_ci = 0 if (migyrs1 < 5 & migrante_ci == 1)
-	}
-	
-	**********************
-	****** miglac_ci *****
-	**********************
-
-	gen miglac_ci = .
-	cap confirm variable bplcountry
-	if(_rc==0){
-	replace miglac_ci= 1 if inlist(bplcountry, 21050, 21080, 21100, 21130, 21140, 21180, 21250, 22010, 22020, 22030, 22040, 22050, 22060, 22070, 22080, 23010, 23020, 23030, 23040, 23050, 23060, 23090, 23100, 23110, 23120, 23130, 23140) & migrante_ci == 1
-	replace miglac_ci = 0 if migrantelac_ci != 1 & migrante_ci == 1 
-	}
-   
