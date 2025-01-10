@@ -159,7 +159,7 @@ rename *, lower
 	******************
     *idp_ci (idpersonas)*
     ******************
-	gen idp_ci = idh_ch+string(pcp1)
+	egen idp_ci = concat(idh_ch pcp1)
 
 	****************************************
 	*factor expansión individio (factor_ci)*
@@ -646,8 +646,8 @@ rename *, lower
 	*viviprop_ch*
 	*************
 	gen byte viviprop_ch=.
-	replace viviprop_ch=0 if pch1 == 3
-	replace viviprop_ch=1 if pch1 ==1 
+	replace viviprop_ch=0 ifinlist(pch1, 3,6,4) 
+	replace viviprop_ch=1 if  inlist(pch1, 1,2,5) 
 	replace viviprop_ch=2 if pch1 == 2 
 
 ***************************************************
