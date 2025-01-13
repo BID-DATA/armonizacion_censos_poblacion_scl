@@ -34,7 +34,7 @@ include "../Base/base.do"
 
 
 *****************************************************
-******* Variables specific for this census **********
+******* Variables específicas del censo    **********
 *****************************************************
 
  ****************
@@ -179,7 +179,7 @@ drop afroind_jefe
 
 
 /*******************************************************************************
-   III. Incluir variables externas
+   Incluir variables externas
 *******************************************************************************/
 capture drop _merge
 merge m:1 pais_c anio_c using "Z:/general_documentation/data_externa/poverty/International_Poverty_Lines/5_International_Poverty_Lines_LAC_long_PPP17.dta", keepusing (lp19_2011 lp31_2011 lp5_2011 tc_wdi lp365_2017 lp685_201 cpi_2017)
@@ -202,7 +202,7 @@ capture label var lp685_2017 "Línea de pobreza USD6.85 por día en moneda local
 drop  cpi_2017 lp19_2011 lp31_2011 lp5_2011 tc_wdi _merge
 
 /*******************************************************************************
-   IV. Revisión de que se hayan creado todas las variables
+   Revisión de que se hayan creado todas las variables
 *******************************************************************************/
 * CALIDAD: revisa que hayas creado todas las variables. Si alguna no está
 * creada, te apacerá en rojo el nombre. 
@@ -219,7 +219,7 @@ foreach v of global lista_variables {
 
 
 /*******************************************************************************
-   V. Borrar variables originales con exepción de los identificadores 
+   Borrar variables originales con exepción de los identificadores 
 *******************************************************************************/
 * En "..." agregar la lista de variables de ID originales (por ejemplo los ID de personas, vivienda y hogar)
 
@@ -232,13 +232,13 @@ display "Número de variables de la base: `varconteo'"
 
 
 /*******************************************************************************
-   VI. Incluir etiquetas para las variables y categorías
+   Incluir etiquetas para las variables y categorías
 *******************************************************************************/
 include "$gitFolder\armonizacion_censos_poblacion_scl\Base\labels_general.do"
 
 
 /*******************************************************************************
-   VII. Guardar la base armonizada 
+   Guardar la base armonizada 
 *******************************************************************************/
 compress
 save "$base_out", replace 

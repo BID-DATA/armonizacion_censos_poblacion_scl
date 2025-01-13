@@ -87,7 +87,7 @@ global base_in  = "$ruta\\raw\\$PAIS\\$ANIO\\data_orig\\${PAIS}_${ANIO}_NOIPUMS.
 global base_out = "$ruta\\clean\\$PAIS\\${PAIS}_${ANIO}_censusBID.dta"
 global log_file ="$ruta\\clean\\$PAIS\\${PAIS}_${ANIO}_censusBID.log"                                                   
 capture log close
-log using `"$log_file"'  //agregar ,replace si ya está creado el log_file en tu carpeta
+log using `"$log_file"', replace  //agregar ,replace si ya está creado el log_file en tu carpeta
 
 use "$base_in", clear
 
@@ -746,15 +746,15 @@ El censo no da la opcion de "no tiene" en cuanto a las instalaciones sanitarias
 	*aguadisp1_ch*
 	**************
 	gen byte aguadisp1_ch =9 
-	
+
 	**************
 	*aguadisp2_ch*
 	**************
 	gen byte aguadisp2_ch =.
-	replace aguadisp2_ch = 1 if c2_p7a <12 | (c2_p7c < 12 | c2_p7b<4)
+/*		replace aguadisp2_ch = 1 if c2_p7a <12 | (c2_p7c < 12 | c2_p7b<4)
 	replace aguadisp2_ch = 2 if (c2_p7a >=12 & c2_p7a<24) | (c2_p7c >= 12 & c2_p7b>=4)
 	replace aguadisp2_ch = 3 if c2_p7 ==1 & c2_p7a == 24
-	
+*/
 	*************
 	*aguamide_ch*
 	*************
