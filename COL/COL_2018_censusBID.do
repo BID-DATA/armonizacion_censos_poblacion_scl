@@ -2,11 +2,11 @@
 /*==============================================================================
 							CENSOS POBLACIONALES
 						   Script de armonización
-País: COL
+País: COLOMBIA
 Año: 2018
 Autores: Juan Perdomo
 Última versión: 30SET2022
-División: MIG - IADB
+División: SCL/MIG - IADB
 *******************************************************************************
 
 INSTRUCCIONES:
@@ -84,7 +84,7 @@ global base_in  = "$ruta\\raw\\$PAIS\\$ANIO\\data_orig\\${PAIS}_${ANIO}_NOIPUMS.
 global base_out = "$ruta\\clean\\$PAIS\\${PAIS}_${ANIO}_censusBID.dta"
 global log_file ="$ruta\\clean\\$PAIS\\${PAIS}_${ANIO}_censusBID.log"                                                  
 capture log close
-log using "$log_file", replace  //agregar ,replace si ya está creado el log_file en tu carpeta
+log using `"$log_file"', replace  //agregar ,replace si ya está creado el log_file en tu carpeta
 
 use "$base_in", clear
 
@@ -339,7 +339,7 @@ rename *, lower
 	****************
 	***miembros_ci***
 	****************
-	gen byte miembros_ci = (relacion_ci <= 4)
+	gen byte miembros_ci = (relacion_ci <= 5)
 	
 	*****************
 	***clasehog_ch***
@@ -367,7 +367,7 @@ rename *, lower
 	******************
 	***nmiembros_ch***
 	******************
-	egen byte nmiembros_ch = sum(relacion_ci >= 1 & relacion_ci <= 4), by (idh_ch)
+	egen byte nmiembros_ch = sum(relacion_ci >= 1 & relacion_ci <= 5), by (idh_ch)
 		
 	*****************
 	***nmayor21_ch***
@@ -476,7 +476,7 @@ rename *, lower
 	replace migrante_ci=. if pa_lug_nac==. | pa_lug_nac==9
 	
 	*******************
-    **migantiguo5_ci***
+    **migrantiguo5_ci***
     *******************
 	gen byte migantiguo5_ci =0
 	replace migantiguo5_ci=1 if pa_lug_nac==3 | pa_vivia_5anos==4
@@ -703,7 +703,7 @@ rename *, lower
 	*************
 	*viviprop_ch*
 	*************
-	gen byte viviprop_ch1=.
+	gen byte viviprop_ch=.
 	
 ***************************************************
 *** 7.2 Vivienda - variables Wash (13 variables) ***
@@ -870,7 +870,7 @@ drop cpi_2017 lp19_2011 lp31_2011 lp5_2011 tc_wdi _merge
 * CALIDAD: revisa que hayas creado todas las variables. Si alguna no está
 * creada, te apacerá en rojo el nombre. 
 
-global lista_variables region_BID_c region_c geolev1 pais_c anio_c idh_ch idp_ci factor_ci factor_ch estrato_ci upm zona_c sexo_c edad_ci relacion_ci civil_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch miembros_ci clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch afro_ci ind_ci noafroind_ci afroind_ci afro_ch ind_ch noafroind_ch afroind_ch  dis_ci disWG_ci dis_ch migrante_ci migrantiguo5_ci miglac_ci aedu_ci eduno_ci edupi_ci edupc_ci edusi_ci edusc_ci edus1i_ci edus1c_ci edus2i_ci edus2c_ci edupre_ci asiste_ci literacy condocup_ci emp_ci desemp_ci pea_ci rama_ci  categopri_ci spublico_ci luz_ch piso_ch pared_ch techo_ch resid_ch dorm_ch cuartos_ch cocina_ch telef_ch refrig_ch auto_ch compu_ch internet_ch cel_ch viviprop_ch1 aguaentubada_ch aguared_ch aguafuente_ch aguadist_ch aguadisp1_ch aguadisp2_ch aguamide_ch bano_ch banoex_ch banoalcantarillado_ch sinbano_ch conbano_ch des1_ch ${PAIS}_ingreso_ci ${PAIS}_ingresolab_ci ${PAIS}_m_pared_ch ${PAIS}_m_piso_ch ${PAIS}_m_techo_ch ${PAIS}_dis_ci tc_c ipc_c lp19_ci lp31_ci lp5_ci lp365_2017  lp685_2017
+global lista_variables region_BID_c region_c geolev1 pais_c anio_c idh_ch idp_ci factor_ci factor_ch estrato_ci upm zona_c sexo_c edad_ci relacion_ci civil_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch miembros_ci clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch afro_ci ind_ci noafroind_ci afroind_ci afro_ch ind_ch noafroind_ch afroind_ch  dis_ci disWG_ci dis_ch migrante_ci migrantiguo5_ci miglac_ci aedu_ci eduno_ci edupi_ci edupc_ci edusi_ci edusc_ci edus1i_ci edus1c_ci edus2i_ci edus2c_ci edupre_ci asiste_ci literacy condocup_ci emp_ci desemp_ci pea_ci rama_ci  categopri_ci spublico_ci luz_ch piso_ch pared_ch techo_ch resid_ch dorm_ch cuartos_ch cocina_ch telef_ch refrig_ch auto_ch compu_ch internet_ch cel_ch viviprop_ch aguaentubada_ch aguared_ch aguafuente_ch aguadist_ch aguadisp1_ch aguadisp2_ch aguamide_ch bano_ch banoex_ch banoalcantarillado_ch sinbano_ch conbano_ch des1_ch ${PAIS}_ingreso_ci ${PAIS}_ingresolab_ci ${PAIS}_m_pared_ch ${PAIS}_m_piso_ch ${PAIS}_m_techo_ch ${PAIS}_dis_ci tc_c ipc_c lp19_ci lp31_ci lp5_ci lp365_2017  lp685_2017
 
 * selecciona las siguientes 6 líneas y ejecuta (do)
 foreach v of global lista_variables {
