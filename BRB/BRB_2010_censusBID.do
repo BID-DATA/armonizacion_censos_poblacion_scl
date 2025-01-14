@@ -690,7 +690,6 @@ OBSERVACIONES:
 	*aguared_ch*
 	************
 	gen byte aguared_ch=.
-	replace aguared_ch=1 if inlist(h18,1,2)
 	
 
 
@@ -698,10 +697,8 @@ OBSERVACIONES:
 	*aguafuente_ch*
 	***************
 	gen byte aguafuente_ch = .
-	replace aguafuente_ch=1 if inlist(h18,1,2)
 	replace aguafuente_ch=2 if inlist(h18,4)
-	replace aguafuente_ch=7 if inlist(h18,3)
-	replace aguafuente_ch=10 if inlist(h18,5,6,7)
+	replace aguafuente_ch=10 if inlist(h18,1,2,3,5,6,7)
 	
 	*************
 	*aguadist_ch*
