@@ -15,7 +15,7 @@ set more off
 /***************************************************************************
                  BASES DE DATOS DE CENSOS POBLACIONALES
 País: Peru
-Año: 2007
+Año: 2017
 Autores: Cesar Lins
 Última versión: October, 2021
 
@@ -205,10 +205,10 @@ replace civil_ci=4 if c5_p24==4
 	************
 	*aguaentubada_ch*
 	************
-	* se crea conforme las tablas de armonización IPUMS
+	
 	gen aguaentubada_ch=.
-	replace aguaentubada_ch=1 if c2_p6 == 1 | c2_p6 == 2 | c2_p6 == 3
-	replace aguaentubada_ch=0 if c2_p6>3 & c2_p6<9
+	replace aguaentubada_ch=1 if c2_p6 == 1 | c2_p6 == 2 
+	replace aguaentubada_ch=0 if c2_p6>2 & c2_p6<9 
 	
 	
 	************

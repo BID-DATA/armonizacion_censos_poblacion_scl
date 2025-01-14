@@ -542,9 +542,9 @@ Superior No Universitario  o Universita |       7
 	************
 	*aguaentubada_ch*
 	************
-	gen aguared_ch=.
-	replace aguared_ch = 1 if inrange(V08, 1, 2)
-	replace aguared_ch = 0 if inrange(V08, 3, 9)
+	gen aguaentubada_ch=.
+	replace aguaentubada_ch = 1 if inrange(V08, 1, 2)
+	replace aguaentubada_ch = 0 if inrange(V08, 3, 4, 9)
 	
 	
 	************
@@ -572,11 +572,12 @@ Superior No Universitario  o Universita |       7
 	***************
  
 	gen aguafuente_ch=.
-	replace aguafuente_ch = 1 if if inlist(V10, 1,2,3,4) & inlist(V08, 1,2)
-	replace aguafuente_ch = 2 if inlist(V10, 1,2,3,4) & inlist(V08, 3)
+	replace aguafuente_ch = 1 if if inlist(V10, 1,2,3) & inlist(V08, 1,2)
+	replace aguafuente_ch = 2 if inlist(V10, 1,2,3) & inlist(V08, 3)
 	replace aguafuente_ch = 3 if V10 == 10
 	replace aguafuente_ch = 4 if inlist(V10, 5,6)
 	replace aguafuente_ch = 6 if inlist(V10, 11)
+	replace aguafuente_ch = 7 if inlist(v10, 4)
 	replace aguafuente_ch = 8 if inlist(V10, 11)
 	replace aguafuente_ch = 9 if inlist(V10, 7)
 	replace aguafuente_ch = 10 if inlist(V10, 8,9,12,99)

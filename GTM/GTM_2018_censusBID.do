@@ -654,8 +654,8 @@ rename *, lower
 	*aguaentubada_ch*
 	*****************
 	gen byte aguaentubada_ch=.
-	replace aguaentubada_ch=1 if pch4 == 1 | pch4 == 2 | pch4 == 3
-	replace aguaentubada_ch=0 if pch4>=4 & pch4<=10
+	replace aguaentubada_ch=1 if pch4 == 1 | pch4 == 2 
+	replace aguaentubada_ch=0 if pch4>=3 & pch4<=10
 		
 	************
 	*aguared_ch*
