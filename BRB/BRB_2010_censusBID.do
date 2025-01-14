@@ -691,14 +691,17 @@ OBSERVACIONES:
 	************
 	gen byte aguared_ch=.
 	replace aguared_ch=1 if inlist(h18,1,2)
-	replace aguared_ch=2 if inlist(h18,4)
-	replace aguared_ch=7 if inlist(h18,3)
-	replace aguared_ch=10 if inlist(h18,5,6,7)
+	
+
 
 	***************
 	*aguafuente_ch*
 	***************
 	gen byte aguafuente_ch = .
+	replace aguafuente_ch=1 if inlist(h18,1,2)
+	replace aguafuente_ch=2 if inlist(h18,4)
+	replace aguafuente_ch=7 if inlist(h18,3)
+	replace aguafuente_ch=10 if inlist(h18,5,6,7)
 	
 	*************
 	*aguadist_ch*
@@ -749,7 +752,9 @@ OBSERVACIONES:
 	*********
 	*conbano_ch*
 	*********
-	gen byte conbano_ch=(inlist(h19a,1,2,4)) if h19a!=9
+	gen byte conbano_ch=.
+	replace conbano_ch=1 if inlist(h19a,1,2,3,5,6)
+	replace conbano_ch=0 if inlist(h19a, 4)
 	
 	***********************
 	*banoalcantarillado_ch*

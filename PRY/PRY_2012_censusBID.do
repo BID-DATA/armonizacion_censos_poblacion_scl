@@ -56,7 +56,7 @@ local ANO "2012"
 		if `"`PAIS'"'=="BOL" | `"`PAIS'"'=="COL" | `"`PAIS'"'=="ECU" | `"`PAIS'"'=="PER" | `"`PAIS'"'=="VEN" local reg_bid 3
 		
 	*CCB	
-		if `"`PAIS'"'=="BHS" | `"`PAIS'"'=="GUY" | `"`PAIS'"'=="JAM" | `"`PAIS'"'=="SUR" | `"`PAIS'"'=="BRB" | `"`PAIS'"'=="TTO" local reg_bid 2
+		if `"`PAIS'"'=="BHS" | `"`PAIS'"'=="GUY" | `"`PAIS'"'=="JAM" |`"`PAIS'"'=="SUR" | `"`PAIS'"'=="BRB" | `"`PAIS'"'=="TTO" local reg_bid 2
 	
 	*CID
 		if `"`PAIS'"'=="BLZ" | `"`PAIS'"'=="CRI" | `"`PAIS'"'=="SLV" | `"`PAIS'"'=="GTM" | `"`PAIS'"'=="HTI" | `"`PAIS'"'=="HND" | `"`PAIS'"'=="PAN" | `"`PAIS'"'=="MEX" | `"`PAIS'"'=="DOM" | `"`PAIS'"'=="NIC" local reg_bid 1
@@ -546,7 +546,16 @@ Superior No Universitario  o Universita |       7
 	replace aguared_ch = 1 if inrange(V08, 1, 2)
 	replace aguared_ch = 0 if inrange(V08, 3, 9)
 	
-/*
+	
+	************
+	*aguared_ch*
+	************
+
+	gen aguared_ch=.
+	replace aguared_ch = 1 if inlist(V09, 1,2,3)
+	replace aguared_ch = 0 if inrange(V09,4,99)
+	
+	/*
 
 	Nota: 
 	
@@ -557,16 +566,6 @@ Superior No Universitario  o Universita |       7
           Red comunitaria 
 
 */
-
-
-	
-	************
-	*aguared_ch*
-	************
-
-	gen aguared_ch=.
-	replace aguared_ch = 1 if inlist(V09, 1,2,3)
-	replace aguared_ch = 0 if inrange(V09,4,99)
 	
     ***************
 	*aguafuente_ch*
@@ -631,7 +630,14 @@ Superior No Universitario  o Universita |       7
 	************
 	gen sinbano_ch =.
 	replace sinbano_ch = 3 if V20 == 8
-	replace sinbano_ch = 3 if inlist(V20, 1,2,3,4,5,6,9)
+	replace sinbano_ch = 0 if inlist(V20, 1,2,3,4,5,6,9)
+	
+	************
+	*conbano_ch*
+	************
+	gen conbano_ch =.
+	replace conbano_ch = 0 if V20 == 8
+	replace sinbano_ch = 1 if inlist(V20, 1,2,3,4,5,6,9)
 
 
 	********
@@ -868,7 +874,7 @@ replace dismental_ci = 0 if P13 == 4
 	replace miglac_ci = 0 if !inlist(P14CPAIS, 32, 68, 76, 152, 170, 188, 192, 214, 218, 222, 484, 604, 858, 862, 999)
 
 
-order region_BID_c pais_c estrato_ci zona_c relacion_ci civil_ci idh_ch factor_ch idp_ci factor_ci edad_ci sexo_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch miembros_ci condocup_ci emp_ci desemp_ci pea_ci rama_ci spublico_ci migrante_ci migantiguo5_ci migrantiguo5_ci aguaentubada, aguared_ch, aguadisp1_ch, aguadist_ch, aguadisp2_ch aguamide_ch luz_ch bano_ch sinbano_ch banoex_ch banoalcantarillado_ch des1_ch piso_ch pared_ch techo_ch dorm_ch cuartos_ch cocina_ch refrig_ch auto_ch internet_ch cel_ch viviprop_ch viviprop_ch1 region_c categopri_ci discapacidad_ci ceguera_ci sordera_ci mudez_ci dismental_ci afroind_ci afroind_ch afroind_ano_c dis_ci dis_ch aedu_ci
+order region_BID_c pais_c estrato_ci zona_c relacion_ci civil_ci idh_ch factor_ch idp_ci factor_ci edad_ci sexo_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch miembros_ci condocup_ci emp_ci desemp_ci pea_ci rama_ci spublico_ci migrante_ci migantiguo5_ci migrantiguo5_ci aguaentubada, aguared_ch, aguadisp1_ch, aguadist_ch, aguadisp2_ch aguamide_ch luz_ch bano_ch sinbano_ch banoex_ch conbano_ch banoalcantarillado_ch des1_ch piso_ch pared_ch techo_ch dorm_ch cuartos_ch cocina_ch refrig_ch auto_ch internet_ch cel_ch viviprop_ch viviprop_ch1 region_c categopri_ci discapacidad_ci ceguera_ci sordera_ci mudez_ci dismental_ci afroind_ci afroind_ch afroind_ano_c dis_ci dis_ch aedu_ci
 
 *****************************
 ** Include all labels of   **
