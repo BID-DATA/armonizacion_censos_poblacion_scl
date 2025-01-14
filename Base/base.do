@@ -673,17 +673,17 @@ if  `"$PAIS"' =="BHS" |  `"$PAIS"' =="GUY" | `"$PAIS"' =="JAM" |  `"$PAIS"' =="S
 	**************
 	*aguadisp1_ch*
 	**************
-	gen byte aguadisp1_ch = .
+	gen byte aguadisp1_ch= 9
 	
 	**************
 	*aguadisp2_ch*
 	**************
-	gen byte aguadisp2_ch = .	
-
+	gen byte aguadisp2_ch= 9
+	
 	*************
 	*aguamide_ch*
 	*************
-	gen byte aguamide_ch = .
+	gen byte aguamide_ch= 9
 	
 	*********
 	*bano_ch*
