@@ -804,10 +804,9 @@ ta p05_nacio p03b_reg_civil
 	*aguaentubada_ch*
 	************
 	gen byte aguaentubada_ch=.
-	replace aguaentubada_ch=1 if inlist(v08_agua, 1,2,3)
+	replace aguaentubada_ch=1 if inlist(v08_agua, 1,2,3) 
 	replace aguaentubada_ch=0 if inlist(v08_agua, 4,5,6,7,8,11)
-	replace aguaentubada_ch = 1 if (inlist(v08_agua, 9,10)) & v11_sanit == 1
-	replace aguaentubada_ch = 0 if (inlist(v08_agua, 9,10)) & v11_sanit != 1
+	
 
 	************
 	*aguared_ch*

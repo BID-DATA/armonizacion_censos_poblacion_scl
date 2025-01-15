@@ -827,23 +827,23 @@ rename *, lower
 	*aguaentubada_ch*
 	************
 	gen byte aguaentubada_ch=.
-	replace aguaentubada_ch=1 if inlist(v09,1,2,3)
-	replace aguaentubada_ch=0 if v09==4
+	replace aguaentubada_ch=1 if inlist(v09,1,2)
+	replace aguaentubada_ch=0 if inlist(v09,3,4)
 	
 	************
 	*aguared_ch*
 	************
 	gen byte aguared_ch=.
-	replace aguared_ch=1 if inlist(v10,1)
-	replace aguared_ch=0 if inlist(v10,2,3,4,5)
+	replace aguared_ch=1 if inlist(v10,1,2)
+	replace aguared_ch=0 if inlist(v10,3,4,5)
 	
 	************
 	*aguafuente_ch*
 	************
 	gen  byte aguafuente_ch=.
-	replace aguafuente_ch=1 if inlist(v10, 1,2) & inlist(v09,1,2)
-	replace aguafuente_ch=2 if inlist(v10, 1,2) & inlist(v09,3,4)
-	replace aguafuente_ch=6 if inlist(v10, 4)
+	replace aguafuente_ch=1 if inlist(v10,1,2) & inlist(v09,1,2)
+	replace aguafuente_ch=2 if inlist(v10,1,2) & inlist(v09,3,4)
+	replace aguafuente_ch=6 if inlist(v10,4)
 	replace aguafuente_ch=10 if inlist(v10,3,5)
 	
 	************
