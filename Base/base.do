@@ -666,9 +666,9 @@ if  `"$PAIS"' =="BHS" |  `"$PAIS"' =="GUY" | `"$PAIS"' =="JAM" |  `"$PAIS"' =="S
 	**************
 	gen byte aguadist_ch =.
 	replace aguadist_ch =1 if watsup == 11
-	replace aguadist_ch =2 if watsup inrange(14,16)
-	replace aguadist_ch =3 if watsup inrange(17,18)
-	replace aguadist_ch =0 if watsup inrange(20,99)
+	replace aguadist_ch =2 if inrange(watsup,14,16)
+	replace aguadist_ch =3 if inrange(watsup,17,18)
+	replace aguadist_ch =0 if inrange(watsup,20,99)
 	
 	**************
 	*aguadisp1_ch*
