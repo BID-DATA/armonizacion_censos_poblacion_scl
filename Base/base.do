@@ -645,8 +645,8 @@ if  `"$PAIS"' =="BHS" |  `"$PAIS"' =="GUY" | `"$PAIS"' =="JAM" |  `"$PAIS"' =="S
 	*aguaentubada_ch*
 	*****************
 	gen byte aguaentubada_ch=.
-	replace aguaentubada_ch = 1 if watsup inrange(10,17)
-	replace aguaentubada_ch = 0 if watsup inrange(18,20)
+	replace aguaentubada_ch = 1 if inrange(watsup,10,17)
+	replace aguaentubada_ch = 0 if inrange(watsup,18,20)
 	
 	************
 	*aguared_ch*
@@ -665,7 +665,7 @@ if  `"$PAIS"' =="BHS" |  `"$PAIS"' =="GUY" | `"$PAIS"' =="JAM" |  `"$PAIS"' =="S
 	*aguadist_ch*
 	**************
 	gen byte aguadist_ch =.
-	replace aguadist_ch =1 uf watsup == 11
+	replace aguadist_ch =1 if watsup == 11
 	replace aguadist_ch =2 if watsup inrange(14,16)
 	replace aguadist_ch =3 if watsup inrange(17,18)
 	replace aguadist_ch =0 if watsup inrange(20,99)
