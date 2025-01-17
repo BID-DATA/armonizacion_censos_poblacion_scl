@@ -2,11 +2,11 @@
 /*==============================================================================
 							CENSOS POBLACIONALES
 						   Script de armonización
-País: MEX
+País: MEXICO
 Año: 2020
-Autores: SCL
+Autores: Eric Torres
 Última versión: 06ENE2024
-División: LMK - IADB
+División: SCL/LMK - IADB
 *******************************************************************************
 
 INSTRUCCIONES:
@@ -84,7 +84,7 @@ global base_in  = "$ruta\\raw\\$PAIS\\$ANIO\\data_orig\\${PAIS}_${ANIO}_NOIPUMS.
 global base_out = "$ruta\\clean\\$PAIS\\${PAIS}_${ANIO}_censusBID.dta"
 global log_file ="$ruta\\clean\\$PAIS\\${PAIS}_${ANIO}_censusBID.log"                                                  
 capture log close
-log using "$log_file", replace  //agregar ,replace si ya está creado el log_file en tu carpeta
+log using `"$log_file"', replace  //agregar ,replace si ya está creado el log_file en tu carpeta
 
 use "$base_in", clear
 
@@ -238,7 +238,7 @@ use "$base_in", clear
 	*********
 	*sexo_c*
 	*********
-	rename byte sexo sexo_ci
+	gen byte sexo_ci =sexo
 	replace sexo_ci =2 if sexo_ci == 3
 	
 	*********
@@ -304,7 +304,7 @@ use "$base_in", clear
 	************
 	*miembros_ci
 	************
-	gen byte miembros_ci=(relacion_ci>=1 & relacion_ci<9) 
+	gen byte miembros_ci=(relacion_ci>=1 & relacion_ci<=5) 
 	tab miembros_ci	
 	
 	*************
@@ -327,32 +327,32 @@ use "$base_in", clear
 	**************
 	*nmiembros_ch*
 	**************
-	egen byte nmiembros_ch=sum(relacion_ci>0 & relacion_ci<9), by(idh_ch)
-	
+	egen byte nmiembros_ch=sum(relacion_ci>0 & relacion_ci<=5), by(idh_ch)
+
 	*************
 	*nmayor21_ch*
 	*************
-	egen byte nmayor21_ch=sum((relacion_ci>0 & relacion_ci<9) & (edad_ci>=21 & edad_ci<=98)), by(idh_ch) 
+	egen byte nmayor21_ch=sum((relacion_ci>=1 & relacion_ci<=5) & (edad_ci>=21 & edad_ci!=.)), by(idh_ch) 
 
 	*************
 	*nmenor21_ch*
 	*************
-	egen byte nmenor21_ch=sum((relacion_ci>0 & relacion_ci<9) & (edad_ci<21)), by(idh_ch) 
+	egen byte nmenor21_ch=sum((relacion_ci>=1 & relacion_ci<=5) & (edad_ci<21)), by(idh_ch) 
 
 	*************
 	*nmayor65_ch*
 	*************
-	egen byte nmayor65_ch=sum((relacion_ci>0 & relacion_ci<9) & (edad_ci>=65 & edad_ci!=.)), by(idh_ch) 
+	egen byte nmayor65_ch=sum((relacion_ci>=1 & relacion_ci<=5) & (edad_ci>=65 & edad_ci!=.)), by(idh_ch) 
 
 	************
 	*nmenor6_ch*
 	************
-	egen byte nmenor6_ch=sum((relacion_ci>0 & relacion_ci<9) & (edad_ci<6)), by(idh_ch) 
+	egen byte nmenor6_ch=sum((relacion_ci>0 & relacion_ci<=5) & (edad_ci<6)), by(idh_ch) 
 
 	************
 	*nmenor1_ch*
 	************
-	egen byte nmenor1_ch=sum((relacion_ci>0 & relacion_ci<9) & (edad_ci<1)), by(idh_ch) 
+	egen byte nmenor1_ch=sum((relacion_ci>0 & relacion_ci<=5) & (edad_ci<1)), by(idh_ch) 
 
 ************************************
 *** 3. Diversidad (11 variables) ***
@@ -440,7 +440,7 @@ use "$base_in", clear
 	replace migrante_ci = 0 if ent_pais_nac>0 & ent_pais_nac<33
 	
 	*******************
-    **migantiguo5_ci***
+    **migrantiguo5_ci***
     *******************
 	gen byte migrantiguo5_ci =.
 	
@@ -746,7 +746,7 @@ use "$base_in", clear
 	*viviprop_ch*
 	*************
 	*NOTA: aqui se genera una variable parecida, pues no se puede saber si es propia total o parcialmente pagada
-	gen byte viviprop_ch1=.
+	gen byte viviprop_ch=.
 	replace viviprop_ch=1 if tenencia==1
 	replace viviprop_ch=0 if tenencia>1 & tenencia<=4
 	
@@ -896,7 +896,7 @@ gen long MEX_ingreso_ci = .
    III. Incluir variables externas (7 variables)
 *******************************************************************************/
 capture drop _merge
-merge m:1 pais_c anio_c using "Z:/general_documentation/data_externa/poverty/International_Poverty_Lines/5_International_Poverty_Lines_LAC_long_PPP17.dta", keepusing (cpi_2011 lp19_2011 lp31_2011 lp5_2011 tc_wdi lp365_2017 lp685_201)
+merge m:1 pais_c anio_c using "Z:/general_documentation/data_externa/poverty/International_Poverty_Lines/5_International_Poverty_Lines_LAC_long_PPP17.dta", keepusing (cpi_2017 lp19_2011 lp31_2011 lp5_2011 tc_wdi lp365_2017 lp685_201)
 drop if _merge ==2
 
 g tc_c     = tc_wdi
@@ -913,7 +913,7 @@ capture label var lp5_ci "Línea de pobreza USD5 por día en moneda local a prec
 capture label var lp365_2017  "Línea de pobreza USD3.65 día en moneda local a precios corrientes a PPA 2017"
 capture label var lp685_2017 "Línea de pobreza USD6.85 por día en moneda local a precios corrientes a PPA 2017"
 
-drop  lp19_2011 lp31_2011 lp5_2011 tc_wdi _merge
+drop cpi_2017 lp19_2011 lp31_2011 lp5_2011 tc_wdi _merge
 
 /*******************************************************************************
    IV. Revisión de que se hayan creado todas las variables
@@ -921,7 +921,7 @@ drop  lp19_2011 lp31_2011 lp5_2011 tc_wdi _merge
 * CALIDAD: revisa que hayas creado todas las variables. Si alguna no está
 * creada, te apacerá en rojo el nombre. 
 
-global lista_variables region_BID_c region_c geolev1 pais_c anio_c idh_ch idp_ci factor_ci factor_ch estrato_ci upm zona_c sexo_c edad_ci relacion_ci civil_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch miembros_ci clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch afro_ci ind_ci noafroind_ci afroind_ci afro_ch ind_ch noafroind_ch afroind_ch  dis_ci disWG_ci dis_ch migrante_ci migrantiguo5_ci miglac_ci aedu_ci eduno_ci edupi_ci edupc_ci edusi_ci edusc_ci edus1i_ci edus1c_ci edus2i_ci edus2c_ci edupre_ci asiste_ci literacy condocup_ci emp_ci desemp_ci pea_ci rama_ci  categopri_ci spublico_ci luz_ch piso_ch pared_ch techo_ch resid_ch dorm_ch cuartos_ch cocina_ch telef_ch refrig_ch auto_ch compu_ch internet_ch cel_ch viviprop_ch1 aguaentubada_ch aguared_ch aguafuente_ch aguadist_ch aguadisp1_ch aguadisp2_ch aguamide_ch bano_ch banoex_ch banoalcantarillado_ch sinbano_ch conbano_ch des1_ch ${PAIS}_ingreso_ci ${PAIS}_ingresolab_ci ${PAIS}_m_pared_ch ${PAIS}_m_piso_ch ${PAIS}_m_techo_ch ${PAIS}_dis_ci tc_c ipc_c lp19_ci lp31_ci lp5_ci lp365_2017  lp685_2017
+global lista_variables region_BID_c region_c geolev1 pais_c anio_c idh_ch idp_ci factor_ci factor_ch estrato_ci upm zona_c sexo_c edad_ci relacion_ci civil_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch miembros_ci clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch afro_ci ind_ci noafroind_ci afroind_ci afro_ch ind_ch noafroind_ch afroind_ch  dis_ci disWG_ci dis_ch migrante_ci migrantiguo5_ci miglac_ci aedu_ci eduno_ci edupi_ci edupc_ci edusi_ci edusc_ci edus1i_ci edus1c_ci edus2i_ci edus2c_ci edupre_ci asiste_ci literacy condocup_ci emp_ci desemp_ci pea_ci rama_ci  categopri_ci spublico_ci luz_ch piso_ch pared_ch techo_ch resid_ch dorm_ch cuartos_ch cocina_ch telef_ch refrig_ch auto_ch compu_ch internet_ch cel_ch viviprop_ch aguaentubada_ch aguared_ch aguafuente_ch aguadist_ch aguadisp1_ch aguadisp2_ch aguamide_ch bano_ch banoex_ch banoalcantarillado_ch sinbano_ch conbano_ch des1_ch ${PAIS}_ingreso_ci ${PAIS}_ingresolab_ci ${PAIS}_m_pared_ch ${PAIS}_m_piso_ch ${PAIS}_m_techo_ch ${PAIS}_dis_ci tc_c ipc_c lp19_ci lp31_ci lp5_ci lp365_2017  lp685_2017
 
 * selecciona las siguientes 6 líneas y ejecuta (do)
 foreach v of global lista_variables {

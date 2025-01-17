@@ -293,9 +293,9 @@ label var  cel_ch "El hogar cuenta con servicio telefónico celular"
 label define cel_ch 1 "Sí tiene servicio telefónico celular" 0 "No tiene servicio telefónico celular"
 label value cel_ch cel_ch
 
-label var  viviprop_ch1 "Propiedad de la vivienda en la que reside el hogar"
-label define viviprop_ch1 1 "Sí pertenece a los habitantes del hogar" 0 "No pertenece a los habitantes del hogar"
-label value viviprop_ch1 viviprop_ch1
+label var  viviprop_ch "Propiedad de la vivienda en la que reside el hogar"
+label define viviprop_ch 1 "Sí pertenece a los habitantes del hogar" 0 "No pertenece a los habitantes del hogar"
+label value viviprop_ch viviprop_ch
 
 
  ******************************************************

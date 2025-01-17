@@ -83,7 +83,7 @@ global base_in  = "$ruta\\raw\\$PAIS\\$ANIO\\data_orig\\${PAIS}_${ANIO}_NOIPUMS.
 global base_out = "$ruta\\clean\\$PAIS\\${PAIS}_${ANIO}_censusBID.dta"
 global log_file ="$ruta\\clean\\$PAIS\\${PAIS}_${ANIO}_censusBID.log"                                                   
 capture log close
-log using "$log_file"  //agregar ,replace si ya está creado el log_file en tu carpeta
+log using `"$log_file"' , replace  //agregar ,replace si ya está creado el log_file en tu carpeta
 
 use "$base_in", clear
 
@@ -147,28 +147,29 @@ rename *, lower
     *********
 	*anio_c*
 	*********
-	gen anio_c = "2010"
-	destring anio_c, replace
+	gen int anio_c = 2010
 
     ******************
     *idh_ch (id hogar)*
     ******************
 	egen idh_ch = group(ed building dwelling_unit household) 
+	tostring idh_ch, replace
 
 	*********************
     *idp_ci (idpersonas)*
     *********************
 	egen idp_ci = group(ed building dwelling_unit household id_person) 
+	tostring idp_ci, replace
 
 	****************************************
 	*factor expansión individio (factor_ci)*
 	****************************************
-	gen byte factor_ci=1
+	gen byte factor_ci=.
 	
 	*******************************************
 	*Factor de expansion del hogar (factor_ch)*
 	*******************************************
-	gen byte factor_ch=1
+	gen byte factor_ch=.
 
     ***********
 	* estrato *
@@ -254,7 +255,7 @@ rename *, lower
 	************
 	*miembros_ci
 	************
-	gen byte miembros_ci=(relacion_ci>=1 & relacion_ci<5) 
+	gen byte miembros_ci=(relacion_ci>=1 & relacion_ci<=5) 
 	tab miembros_ci	
 	
 	*************
@@ -277,32 +278,32 @@ rename *, lower
 	**************
 	*nmiembros_ch*
 	**************
-	egen byte nmiembros_ch=sum(relacion_ci>0 & relacion_ci<=4), by(idh_ch)
+	egen byte nmiembros_ch=sum(relacion_ci>0 & relacion_ci<=5), by(idh_ch)
 
 	*************
 	*nmayor21_ch*
 	*************
-	egen byte nmayor21_ch=sum((relacion_ci>=1 & relacion_ci<=4) & (edad_ci>=21 & edad_ci!=.)), by(idh_ch) 
+	egen byte nmayor21_ch=sum((relacion_ci>=1 & relacion_ci<=5) & (edad_ci>=21 & edad_ci!=.)), by(idh_ch) 
 
 	*************
 	*nmenor21_ch*
 	*************
-	egen byte nmenor21_ch=sum((relacion_ci>=1 & relacion_ci<=4) & (edad_ci<21)), by(idh_ch) 
+	egen byte nmenor21_ch=sum((relacion_ci>=1 & relacion_ci<=5) & (edad_ci<21)), by(idh_ch) 
 
 	*************
 	*nmayor65_ch*
 	*************
-	egen byte nmayor65_ch=sum((relacion_ci>=1 & relacion_ci<=4) & (edad_ci>=65 & edad_ci!=.)), by(idh_ch) 
+	egen byte nmayor65_ch=sum((relacion_ci>=1 & relacion_ci<=5) & (edad_ci>=65 & edad_ci!=.)), by(idh_ch) 
 
 	************
 	*nmenor6_ch*
 	************
-	egen byte nmenor6_ch=sum((relacion_ci>0 & relacion_ci<=4) & (edad_ci<6)), by(idh_ch) 
+	egen byte nmenor6_ch=sum((relacion_ci>0 & relacion_ci<=5) & (edad_ci<6)), by(idh_ch) 
 
 	************
 	*nmenor1_ch*
 	************
-	egen byte nmenor1_ch=sum((relacion_ci>0 & relacion_ci<=4) & (edad_ci<1)), by(idh_ch) 
+	egen byte nmenor1_ch=sum((relacion_ci>0 & relacion_ci<=5) & (edad_ci<1)), by(idh_ch) 
 
 
 ************************************
@@ -334,17 +335,17 @@ rename *, lower
 	*********
 	*afro_ch*
 	*********
-	gen byte afro_jefe =,
+	gen byte afro_ch =.
 	
 	********
 	*ind_ch*
 	********	
-	gen byte ind_jefe = .
+	gen byte ind_ch = .
 
 	**************
 	*noafroind_ch*
 	**************
-	gen byte noafroind_jefe =.
+	gen byte noafroind_ch =.
 	
 	***************
 	***afroind_ch**
@@ -381,7 +382,7 @@ rename *, lower
     **migrantiguo5_ci**
     *******************
 	gen byte migrantiguo5_ci =(p16b<=2005) if p16b!=9999
-	replace migantiguo5_ci=. if migrante_ci==0
+	replace migrantiguo5_ci=. if migrante_ci==0
 	
 	**********************
 	****** miglac_ci *****
@@ -674,7 +675,7 @@ OBSERVACIONES:
 	*************
 	*viviprop_ch*
 	*************
-	gen byte viviprop_ch1=(h15a==1) if h15a!=9
+	gen byte viviprop_ch=(h15a==1) if h15a!=9
 
 ***************************************************
 *** 7.2 Vivienda - variables Wash (13 variables) ***
@@ -684,7 +685,7 @@ OBSERVACIONES:
 	*aguaentubada_ch*
 	*****************
 	gen byte aguaentubada_ch=.
-	replace aguaentubada_ch if inlist(h18,1,2)
+	replace aguaentubada_ch =1 if inlist(h18,1,2)
 	
 	************
 	*aguared_ch*
@@ -793,7 +794,7 @@ OBSERVACIONES:
 	**************************
 	*ISOalpha3Pais_ingreso_ci*
 	**************************	
-	gen long BRB_ingreso_ci = ...
+	gen long BRB_ingreso_ci = .
 	label var BRB_ingreso_ci  "Ingreso total según el censo del país - variable original"
 	
 	*****************************
@@ -811,7 +812,7 @@ OBSERVACIONES:
 	**********************
 	*ISOalpha3Pais_dis_ci*
 	**********************
-	gen byte BRB_dis_ci = ...
+	gen byte BRB_dis_ci = .
 	label var BRB_dis_ci  "Individuos con discapacidad según el censo del país - variable original"
 
 /*******************************************************************************
@@ -843,7 +844,7 @@ drop  lp19_2011 lp31_2011 lp5_2011 tc_wdi _merge
 * CALIDAD: revisa que hayas creado todas las variables. Si alguna no está
 * creada, te apacerá en rojo el nombre. 
 
-global lista_variables region_BID_c region_c geolev1 pais_c anio_c idh_ch idp_ci factor_ci factor_ch estrato_ci upm zona_c sexo_c edad_ci relacion_ci civil_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch miembros_ci clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch afro_ci ind_ci noafroind_ci afroind_ci afro_ch ind_ch noafroind_ch afroind_ch  dis_ci disWG_ci dis_ch migrante_ci migrantiguo5_ci miglac_ci aedu_ci eduno_ci edupi_ci edupc_ci edusi_ci edusc_ci edus1i_ci edus1c_ci edus2i_ci edus2c_ci edupre_ci asiste_ci literacy condocup_ci emp_ci desemp_ci pea_ci rama_ci  categopri_ci spublico_ci luz_ch piso_ch pared_ch techo_ch resid_ch dorm_ch cuartos_ch cocina_ch telef_ch refrig_ch auto_ch compu_ch internet_ch cel_ch viviprop_ch1 aguaentubada_ch aguared_ch aguafuente_ch aguadist_ch aguadisp1_ch aguadisp2_ch aguamide_ch bano_ch banoex_ch banoalcantarillado_ch sinbano_ch conbano_ch des1_ch ${PAIS}_ingreso_ci ${PAIS}_ingresolab_ci ${PAIS}_m_pared_ch ${PAIS}_m_piso_ch ${PAIS}_m_techo_ch ${PAIS}_dis_ci tc_c ipc_c lp19_ci lp31_ci lp5_ci lp365_2017  lp685_2017
+global lista_variables region_BID_c region_c geolev1 pais_c anio_c idh_ch idp_ci factor_ci factor_ch estrato_ci upm zona_c sexo_c edad_ci relacion_ci civil_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch miembros_ci clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch afro_ci ind_ci noafroind_ci afroind_ci afro_ch ind_ch noafroind_ch afroind_ch  dis_ci disWG_ci dis_ch migrante_ci migrantiguo5_ci miglac_ci aedu_ci eduno_ci edupi_ci edupc_ci edusi_ci edusc_ci edus1i_ci edus1c_ci edus2i_ci edus2c_ci edupre_ci asiste_ci literacy condocup_ci emp_ci desemp_ci pea_ci rama_ci  categopri_ci spublico_ci luz_ch piso_ch pared_ch techo_ch resid_ch dorm_ch cuartos_ch cocina_ch telef_ch refrig_ch auto_ch compu_ch internet_ch cel_ch viviprop_ch aguaentubada_ch aguared_ch aguafuente_ch aguadist_ch aguadisp1_ch aguadisp2_ch aguamide_ch bano_ch banoex_ch banoalcantarillado_ch sinbano_ch conbano_ch des1_ch ${PAIS}_ingreso_ci ${PAIS}_ingresolab_ci ${PAIS}_m_pared_ch ${PAIS}_m_piso_ch ${PAIS}_m_techo_ch ${PAIS}_dis_ci tc_c ipc_c lp19_ci lp31_ci lp5_ci lp365_2017  lp685_2017
 
 * selecciona las siguientes 6 líneas y ejecuta (do)
 foreach v of global lista_variables {
