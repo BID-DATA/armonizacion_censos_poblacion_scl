@@ -692,7 +692,7 @@ if  `"$PAIS"' =="BHS" |  `"$PAIS"' =="GUY" | `"$PAIS"' =="JAM" |  `"$PAIS"' =="S
 	gen des1_ch=.
 	cap confirm variable toilet
 	if (_rc==0) {
-		replace bano_ch= 0 if toilet==10 & bathrooms ==00
+		replace bano_ch= 0 if toilet==10 
 		replace bano_ch= 1 if toilet==21 & sewage==11 
 		replace bano_ch= 2 if toilet==21 & sewage==12
 		replace bano_ch= 3 if toilet==22 & (sewage ==12 | sewage ==10)
