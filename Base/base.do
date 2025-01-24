@@ -320,7 +320,7 @@ if  `"$PAIS"' =="BHS" |  `"$PAIS"' =="GUY" | `"$PAIS"' =="JAM" |  `"$PAIS"' =="S
 	replace migantiguo5_ci = 0 if (migyrs1 < 5 & migrante_ci == 1) | migrante_ci == 0
 	}
 	
-	
+	*/
 	**********************
 	*** migrantelac_ci ***
 	**********************
@@ -331,7 +331,7 @@ if  `"$PAIS"' =="BHS" |  `"$PAIS"' =="GUY" | `"$PAIS"' =="JAM" |  `"$PAIS"' =="S
 	replace migrantelac_ci= 1 if inlist(bplcountry, 21050, 21080, 21100, 21130, 21140, 21180, 21250, 22010, 22020, 22030, 22040, 22050, 22060, 22070, 22080, 23010, 23020, 23030, 23040, 23050, 23060, 23090, 23100, 23110, 23120, 23130, 23140) & migrante_ci == 1
 	replace migrantelac_ci = 0 if migrantelac_ci == . & migrante_ci == 1 | migrante_ci == 0
 	}
-	*/
+	
 	
 	*******************
     **migrantiguo5_ci**
@@ -645,8 +645,8 @@ if  `"$PAIS"' =="BHS" |  `"$PAIS"' =="GUY" | `"$PAIS"' =="JAM" |  `"$PAIS"' =="S
 	*aguaentubada_ch*
 	*****************
 	gen byte aguaentubada_ch=.
-	replace aguaentubada_ch = 1 if watsup inrange(10,17)
-	replace aguaentubada_ch = 0 if watsup inrange(18,20)
+	replace aguaentubada_ch = 1 if inrange(watsup,10,17)
+	replace aguaentubada_ch = 0 if inrange(watsup,18,20)
 	
 	************
 	*aguared_ch*
@@ -665,10 +665,10 @@ if  `"$PAIS"' =="BHS" |  `"$PAIS"' =="GUY" | `"$PAIS"' =="JAM" |  `"$PAIS"' =="S
 	*aguadist_ch*
 	**************
 	gen byte aguadist_ch =.
-	replace aguadist_ch =1 uf watsup == 11
-	replace aguadist_ch =2 if watsup inrange(14,16)
-	replace aguadist_ch =3 if watsup inrange(17,18)
-	replace aguadist_ch =0 if watsup inrange(20,99)
+	replace aguadist_ch =1 if watsup == 11
+	replace aguadist_ch =2 if inrange(watsup,14,16)
+	replace aguadist_ch =3 if inrange(watsup,17,18)
+	replace aguadist_ch =0 if inrange(watsup,20,99)
 	
 	**************
 	*aguadisp1_ch*
@@ -690,14 +690,15 @@ if  `"$PAIS"' =="BHS" |  `"$PAIS"' =="GUY" | `"$PAIS"' =="JAM" |  `"$PAIS"' =="S
 	*********
 	gen bano_ch=.
 	gen des1_ch=.
-	cap confirm variable toilet
+	cap confirm variable sewage bathrooms toilet
 	if (_rc==0) {
 		replace bano_ch= 0 if toilet==10 
 		replace bano_ch= 1 if toilet==21 & sewage==11 
 		replace bano_ch= 2 if toilet==21 & sewage==12
 		replace bano_ch= 3 if toilet==22 & (sewage ==12 | sewage ==10)
-		replace bano_ch= 6 if inrange(toilet, 20,99) & (sewage == 20 | sewage ==99)
+		replace bano_ch= 6 if inrange(toilet, 20,99) & (sewage == 20 | sewage ==99)*/
 	}
+	
 	
 	***********
 	*banoex_ch*
@@ -716,13 +717,17 @@ if  `"$PAIS"' =="BHS" |  `"$PAIS"' =="GUY" | `"$PAIS"' =="JAM" |  `"$PAIS"' =="S
 	************
 	gen byte conbano_ch=.
 	replace conbano_ch = 1 if inrange(toilet, 11,23)
-	replace conbano_ch = 0 if if toilet ==10			
+	replace conbano_ch = 0 if toilet ==10	
+	
 	*****************
 	*banoalcantarillado_ch*
 	*****************
 	gen byte banoalcantarillado_ch=.
-	replace banoalcantarillado_ch =1 if sewage ==11
-	replace banoalcantarillado_ch =0 if inrange(sewage, 12,20)
+	cap confirm variable sewage
+	if (_rc==0) {
+		replace banoalcantarillado_ch =1 if sewage ==11
+		replace banoalcantarillado_ch =0 if inrange(sewage, 12,20)
+	}
 	
 	*****************
 	*banomejorado_ch*
@@ -733,7 +738,7 @@ if  `"$PAIS"' =="BHS" |  `"$PAIS"' =="GUY" | `"$PAIS"' =="JAM" |  `"$PAIS"' =="S
 	replace banomejorado_ch =0 if bano_ch ==0
  	
 	
-	/*********
+	*********
 	*des1_ch*
 	*********
 	replace des1_ch=0 if bano_ch==0

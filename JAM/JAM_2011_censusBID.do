@@ -86,7 +86,7 @@ global base_in  = "$ruta\\raw\\$PAIS\\$ANIO\\data_orig\\${PAIS}_${ANIO}_NOIPUMS.
 global base_out = "$ruta\\clean\\$PAIS\\${PAIS}_${ANIO}_censusBID.dta"
 global log_file ="$ruta\\clean\\$PAIS\\${PAIS}_${ANIO}_censusBID.log"                                                   
 capture log close
-log using `"$log_file"'  //agregar ,replace si ya está creado el log_file en tu carpeta
+log using `"$log_file"', replace  //agregar ,replace si ya está creado el log_file en tu carpeta
 
 use "$base_in", clear
 
@@ -161,14 +161,12 @@ rename *, lower
 	******************
     *idh_ch (id hogar)*
     ******************
-	** SE ENCUENTRA EN EL SCRIPT DE MERGE ****
-	tostring idh_ch, replace 
+	*gen str14 idh_ch = string(parish,"%02.0f") + string(constitu,"%02.0f") + string(enumerat,"%03.0f") + string(housing,"%03.0f") + string(dwelling,"%02.0f") + string(househol,"%02.0f")
 	
 	******************
     *idp_ci (idpersonas)*
     ******************
-	gen idp_ci = individu 
-	tostring idp_ci, replace 
+	egen idp_ci = concat(idh_ch individu) 
 	
 	****************************************
 	*factor expansión individio (factor_ci)* 
@@ -209,7 +207,7 @@ rename *, lower
 	*********
 	*edad_c*
 	*********
-	gen int edad_ci = q1_2b_ag
+	gen int edad_ci = q1_2bage
 
  	*************
 	*relacion_ci*
@@ -411,8 +409,8 @@ rename *, lower
 	****migrante_ci****
 	*******************
 	gen byte migrante_ci =.
-	replace migrante_ci = 1 if q4_3a == 1
-	replace migrante_ci = 0 if q4_3a == .
+	replace migrante_ci = 1 if q4_3fore == 1
+	replace migrante_ci = 0 if q4_3fore == .
 
 	*******************
 	**migrantiguo5_ci**
@@ -424,9 +422,9 @@ rename *, lower
 	**********************
 	****** miglac_ci *****
 	**********************
-	gen miglac_ci= 1 if inlist(q4_3a_2,5,13,29)
-	replace miglac_ci = 0 if q4_3a_2!=5 & q4_3a_2!=13 & q4_3a_2!=29
-	replace miglac_ci = . if q4_3a_2==.
+	gen miglac_ci= 1 if inlist( q4_3birt ,5,13,29)
+	replace miglac_ci = 0 if  q4_3birt !=5 &  q4_3birt !=13 &  q4_3birt !=29
+	replace miglac_ci = . if  q4_3birt ==. |q4_3birt ==9999
 	
 	
 ***********************************
@@ -496,8 +494,8 @@ rename *, lower
 	*asiste_ci*
 	***********
 	gen byte asiste_ci=.
-	replace asiste_ci=1 if q2_1==1
-	replace asiste_ci=0 if q2_1==2
+	replace asiste_ci=1 if q2_1atte==1
+	replace asiste_ci=0 if q2_1atte==2
 	
 	************
 	* literacy *
@@ -513,11 +511,11 @@ rename *, lower
     ****condocup_ci****
     ******************* 
     gen byte condocup_ci=.
-    replace condocup_ci=1 if q5_1==1 | q5_2==1 | q5_3==1 | q5_4==1 | q5_4==2
-    replace condocup_ci=2 if q5_1==2 & q5_2==2 & q5_3==2 & (q5_4==3 | q5_4==4)
-    replace condocup_ci=3 if q5_1==2 & q5_2==2 & q5_3==2 & q5_4>=5
-    replace condocup_ci=. if q5_1==2 & q5_2==2 & q5_3==2 & q5_4==99/*unkown/missing as missing*/ 
-    replace condocup_ci=. if q5_1==. & q5_2==. & q5_3==. & q5_4==. /*NIU as missing*/
+    replace condocup_ci=1 if q5_1work==1 | q5_2farm==1 | q5_3oddj==1 | q5_4othe==1 | q5_4othe==2
+    replace condocup_ci=2 if q5_1work==2 & q5_2farm==2 & q5_3oddj==2 & (q5_4othe==3 | q5_4othe==4)
+    replace condocup_ci=3 if q5_1work==2 & q5_2farm==2 & q5_3oddj==2 & q5_4othe>=5
+    replace condocup_ci=. if q5_1work==2 & q5_2farm==2 & q5_3oddj==2 & q5_4othe==99/*unkown/missing as missing*/ 
+    replace condocup_ci=. if q5_1work==. & q5_2farm==. & q5_3oddj==. & q5_4othe==. /*NIU as missing*/
 	
     ************
     ***emp_ci***
@@ -568,19 +566,19 @@ rename *, lower
     *********************
 	*OBSERVACIONES: El censo no distingue entre actividad principal o secundaria, asigno por default principal.	
 	gen byte categopri_ci=.
-    replace categopri_ci=0 if q5_8==7
-    replace categopri_ci=1 if q5_8==5
-    replace categopri_ci=2 if q5_8==6
-    replace categopri_ci=3 if q5_8==1 | q5_8==2 | q5_8==3
-    replace categopri_ci=4 if q5_8==4
-    replace categopri_ci=. if q5_8==9 | q5_8==9999 
+    replace categopri_ci=0 if q5_8emps==7
+    replace categopri_ci=1 if q5_8emps==5
+    replace categopri_ci=2 if q5_8emps==6
+    replace categopri_ci=3 if q5_8emps==1 | q5_8emps==2 | q5_8emps==3
+    replace categopri_ci=4 if q5_8emps==4
+    replace categopri_ci=. if q5_8emps==9 | q5_8emps==9999 
 	
     *****************
     ***spublico_ci***
     *****************
     gen byte spublico_ci=.
-	replace spublico_ci=1 if q5_8==1
-	replace spublico_ci=0 if q5_8!=1
+	replace spublico_ci=1 if q5_8emps==1
+	replace spublico_ci=0 if q5_8emps!=1
 		
    	
 **********************************************************
@@ -592,9 +590,10 @@ rename *, lower
 	********
 	*En la nueva encuesta no se encontro si se pregunta por instalacion electrica
 	gen byte luz_ch=.
-	replace aguared_ch=1 if q3_11lig==1 
-	replace aguared_ch=0 if q3_11lig==2 | q3_11lig==3  
-	replace aguared_ch=. if q3_11lig==9
+	
+	replace luz_ch=1 if q3_11lig==1 
+	replace luz_ch=0 if q3_11lig==2 | q3_11lig==3  
+	replace luz_ch=. if q3_11lig==9
 	
 	*********
 	*piso_ch*
