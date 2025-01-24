@@ -14,7 +14,7 @@ set more off
 
 /***************************************************************************
                  BASES DE DATOS DE CENSOS POBLACIONALES
-País: Surinam
+País: SURINAME
 Año: 2012
 Autores: Cesar Lins
 Última versión: Septiembre, 2021

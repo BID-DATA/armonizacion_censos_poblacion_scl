@@ -14,8 +14,8 @@ set more off
 
 /***************************************************************************
                  BASES DE DATOS DE CENSOS POBLACIONALES
-País: Paraguay
-Año: 2002
+País: VENEZUELA
+Año: 2001
 Autores: Carolina Rivas
 Última versión: Nov, 2021
 

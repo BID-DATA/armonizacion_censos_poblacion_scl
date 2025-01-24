@@ -764,8 +764,8 @@ rename *, lower
 	*aguaentubada_ch*
 	************
 	gen byte aguaentubada_ch=.
-	replace aguaentubada_ch=1 if inlist(hh13,1,2,3,4)
-	replace aguaentubada_ch=0 if inlist(hh13,5,6,7,8,9,10,88)
+	replace aguaentubada_ch=1 if inlist(hh13,1,2,3)
+	replace aguaentubada_ch=0 if inlist(hh13,4,5,6,7,8,9,10,88)
 		
 	************
 	*aguared_ch*
@@ -778,12 +778,12 @@ rename *, lower
 	*aguafuente_ch*
 	***************
 	gen aguafuente_ch=.
-	replace aguafuente_ch = 1 if inlist(hh15,2,3,4)
+	replace aguafuente_ch = 1 if inlist(hh15,2,3)
 	replace aguafuente_ch = 2 if inlist(hh15,5)
 	replace aguafuente_ch = 3 if inlist(hh15,1)
 	replace aguafuente_ch = 4 if inlist(hh15,7)
 	replace aguafuente_ch = 6 if inlist(hh15,6)
-	replace aguafuente_ch = 7 if inlist(hh15,9) | (hh15== 11 & inlist(hh14,1,2,3,4,5,6) )
+	replace aguafuente_ch = 7 if inlist(hh15,9,4) | (hh15== 11 & inlist(hh14,1,2,3,4,5,6) )
 	replace aguafuente_ch = 8 if inlist(hh15, 10) | (hh15== 11 & hh14==9)
 	replace aguafuente_ch = 9 if (hh15== 11 & inlist(hh14,7) )
 	replace aguafuente_ch = 10 if inlist(hh15, 12,88) | (hh15== 11 & inlist(hh14,11,88))

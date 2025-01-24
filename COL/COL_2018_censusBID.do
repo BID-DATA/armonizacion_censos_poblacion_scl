@@ -727,7 +727,7 @@ rename *, lower
 	*aguafuente_ch*
 	***************
 	gen byte aguafuente_ch=.
-	replace aguafuente_ch = 1 if inlist(h_agua_cocin, 1, 2,3)
+	replace aguafuente_ch = 1 if inlist(h_agua_cocin, 1,2,3)
 	replace aguafuente_ch = 2 if inlist(h_agua_cocin, 8)
 	replace aguafuente_ch = 3 if inlist(h_agua_cocin, 11)
 	replace aguafuente_ch = 4 if inlist(h_agua_cocin, 4)
