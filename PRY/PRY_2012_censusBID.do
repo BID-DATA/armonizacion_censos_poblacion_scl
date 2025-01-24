@@ -716,7 +716,7 @@ use "$base_in", clear
 	************
 	gen aguaentubada_ch=.
 	replace aguaentubada_ch = 1 if inrange(V08, 1, 2)
-	replace aguaentubada_ch = 0 if inrange(V08, 3, 4, 9)
+	replace aguaentubada_ch = 0 if inrange(V08, 3, 9)
 
 	
 	************
