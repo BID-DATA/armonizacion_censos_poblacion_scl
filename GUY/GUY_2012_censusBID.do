@@ -779,7 +779,7 @@ rename *, lower
 	*aguaentubada_ch*
 	************
 	gen byte aguaentubada_ch=.
-	replace aguaentubada_ch=1 if h43==1 | h43==3 | h43==4 | h43==5  // piped into dwelling, piped into yard/plot, public well
+	replace aguaentubada_ch=1 if h43==1 | h43==3 | h43==4 | h43==5  // piped into dwelling, piped into yard/plot, 
 	replace aguaentubada_ch=0 if h43==2 | h43==6 | h43==8 | h43==9 | h43==10 | h43==7 // private catchments/rain water, public standpipe or hand pump, spring/river/pond, truck borne, dug well/borehole
 	replace aguaentubada_ch=. if h43==11
 
@@ -787,20 +787,20 @@ rename *, lower
 	*aguared_ch*
 	************
 	gen byte aguared_ch=.
-	replace aguared_ch = 1 if inlist(h43,1,2,4,5)
-	replace aguared_ch = 0 if inlist(h43,3,6,7,8,9,10,11,99)
+	replace aguared_ch = 1 if inlist(h43,4,5)
+	replace aguared_ch = 0 if inlist(h43,1,2,3,6,7,8,9,10,11,99)
 	
 	************
 	*aguafuente_ch*
 	************
 	gen byte aguafuente_ch=.
-	replace aguafuente_ch=1 if inlist(h44,1,2)
+	replace aguafuente_ch=1 if inlist(h44,1,2) & inlist(h43,4,5)
 	replace aguafuente_ch=2 if inlist(h44,3)
 	replace aguafuente_ch=3 if inlist(h44,6)
 	replace aguafuente_ch=4 if inlist(h44,4,5)
 	replace aguafuente_ch=5 if inlist(h44,7)
 	replace aguafuente_ch=6 if inlist(h44,10) & inlist(h43, 9)
-	replace aguafuente_ch=7 if inlist(h44,10) & inlist(h43, 1)
+	replace aguafuente_ch=7 if inlist(h44,10) & inlist(h43, 1,3)
 	replace aguafuente_ch=8 if inlist(h44,9) 
 	replace aguafuente_ch=9 if inlist(h44,8) 
 	replace aguafuente_ch=10 if inlist(h44,11)

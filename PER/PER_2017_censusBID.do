@@ -100,6 +100,7 @@ rename *, lower
    II. Armonización de variables 
 *****************************************************************************/
 
+
 *************************************
 *** Identificación (12 variables) ***
 *************************************
@@ -337,9 +338,34 @@ rename *, lower
 	************
 	egen byte nmenor1_ch=sum((relacion_ci>0 & relacion_ci<=5) & (edad_ci<1)), by(idh_ch) 
 
+<<<<<<< HEAD
+	************
+	*miembros_ci
+	************
+	gen miembros_ci=(relacion_ci>=1 & relacion_ci<9) 
+	tab miembros_ci	
+	
+**********************************
+**** VARIABLES DE LA VIVIENDA ****
+**********************************
+		
+	************
+	*aguaentubada_ch*
+	************
+	
+	gen aguaentubada_ch=.
+	replace aguaentubada_ch=1 if c2_p6 == 1 | c2_p6 == 2 
+	replace aguaentubada_ch=0 if c2_p6>2 & c2_p6<9 
+	
+	
+	************
+	*aguared_ch*
+	************
+=======
 ************************************
 *** 3. Diversidad (11 variables) ***
 ************************************	
+>>>>>>> development
 
 	*********
 	*afro_ci*

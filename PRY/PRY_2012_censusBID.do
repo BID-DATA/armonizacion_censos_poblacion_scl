@@ -713,35 +713,29 @@ use "$base_in", clear
 
 	*****************
 	*aguaentubada_ch*
-	*****************
-	gen byte aguaentubada_ch=.
+	************
+	gen aguaentubada_ch=.
 	replace aguaentubada_ch = 1 if inrange(V08, 1, 2)
 	replace aguaentubada_ch = 0 if inrange(V08, 3, 9)
-	/*
-		Nota: 
-		Tomo como agua de red:
-			  
-			  ESSAP (ex corposana) 
-			  SENASA o Junta de Saneamiento 
-			  Red comunitaria 
-	*/
+
 	
 	************
 	*aguared_ch*
 	************
-	gen byte aguared_ch=.
+	gen aguared_ch=.
 	replace aguared_ch = 1 if inlist(V09, 1,2,3)
 	replace aguared_ch = 0 if inrange(V09,4,99)
-	
+		
     ***************
 	*aguafuente_ch*
 	***************
-	gen byte aguafuente_ch=.
-	replace aguafuente_ch = 1 if inlist(V10, 1,2,3,4) & inlist(V08, 1,2)
-	replace aguafuente_ch = 2 if inlist(V10, 1,2,3,4) & inlist(V08, 3)
+	gen aguafuente_ch=.
+	replace aguafuente_ch = 1 if if inlist(V10, 1,2,3) & inlist(V08, 1,2)
+	replace aguafuente_ch = 2 if inlist(V10, 1,2,3) & inlist(V08, 3)
 	replace aguafuente_ch = 3 if V10 == 10
 	replace aguafuente_ch = 4 if inlist(V10, 5,6)
 	replace aguafuente_ch = 6 if inlist(V10, 11)
+	replace aguafuente_ch = 7 if inlist(v10, 4)
 	replace aguafuente_ch = 8 if inlist(V10, 11)
 	replace aguafuente_ch = 9 if inlist(V10, 7)
 	replace aguafuente_ch = 10 if inlist(V10, 8,9,12,99)
@@ -793,7 +787,14 @@ use "$base_in", clear
 	************
 	gen byte sinbano_ch =.
 	replace sinbano_ch = 3 if V20 == 8
-	replace sinbano_ch = 3 if inlist(V20, 1,2,3,4,5,6,9)
+	replace sinbano_ch = 0 if inlist(V20, 1,2,3,4,5,6,9)
+	
+	************
+	*conbano_ch*
+	************
+	gen conbano_ch =.
+	replace conbano_ch = 0 if V20 == 8
+	replace sinbano_ch = 1 if inlist(V20, 1,2,3,4,5,6,9)
 
 	*********
 	*conbano_ch*
