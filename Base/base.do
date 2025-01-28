@@ -696,7 +696,7 @@ if  `"$PAIS"' =="BHS" |  `"$PAIS"' =="GUY" | `"$PAIS"' =="JAM" |  `"$PAIS"' =="S
 		replace bano_ch= 1 if toilet==21 & sewage==11 
 		replace bano_ch= 2 if toilet==21 & sewage==12
 		replace bano_ch= 3 if toilet==22 & (sewage ==12 | sewage ==10)
-		replace bano_ch= 6 if inrange(toilet, 20,99) & (sewage == 20 | sewage ==99)*/
+		replace bano_ch= 6 if inrange(toilet, 20,99) & (sewage == 20 | sewage ==99)
 	}
 	
 	
