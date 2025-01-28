@@ -90,7 +90,7 @@ use "$base_in", clear
 
 rename *, lower
 
-*sample 20   		// significa muestra de 20% de la base. Activar si se necesita.     
+*sample 10   		// significa muestra de 20% de la base. Activar si se necesita.     
 
 /****************************************************************************
    II. Armonización de variables 
