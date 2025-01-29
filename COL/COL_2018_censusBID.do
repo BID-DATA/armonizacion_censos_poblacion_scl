@@ -478,8 +478,8 @@ rename *, lower
 	*******************
     **migrantiguo5_ci***
     *******************
-	gen byte migantiguo5_ci =0
-	replace migantiguo5_ci=1 if pa_lug_nac==3 | pa_vivia_5anos==4
+	gen byte migrantiguo5_ci =0
+	replace migrantiguo5_ci=1 if pa_lug_nac==3 | pa_vivia_5anos==4
 		
 	**********************
 	****** miglac_ci *****
@@ -788,7 +788,7 @@ rename *, lower
 	***********************
 	*banoalcantarillado_ch*
 	***********************
-	gen byte banoalcantarillado_ch=
+	gen byte banoalcantarillado_ch=.
 	replace banoalcantarillado_ch = 1 if vc_alc ==1
 	replace banoalcantarillado_ch = 0 if inlist(vc_alc,2,3,4)
 	
@@ -837,8 +837,8 @@ rename *, lower
 	**********************
 	*ISOalpha3Pais_dis_ci*
 	**********************
-	gen byte PAN_dis_ci = .
-	label var PAN_dis_ci  "Individuos con discapacidad según el censo del país - variable original"
+	gen byte COL_dis_ci = .
+	label var COL_dis_ci  "Individuos con discapacidad según el censo del país - variable original"
 
 
 /*******************************************************************************
