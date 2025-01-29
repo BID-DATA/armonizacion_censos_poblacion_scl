@@ -437,7 +437,7 @@ rename *, lower
 	**************
 	*noafroind_ch*
 	**************
-	gen byte noafroind_ch = .
+	gen byte noafroind_jefe = .
 	
 	***************
 	***afroind_ch***
