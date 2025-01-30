@@ -884,7 +884,7 @@ foreach v of global lista_variables {
    V. Borrar variables originales con exepción de los identificadores 
 *******************************************************************************/
 
-keep  $lista_variables llaveviv hogar npersona 
+keep  $lista_variables u_dpto u_mpio ua_clase cod_encuestas u_vivienda p_nrohog p_nro_per
 * selecciona las 3 lineas y ejecuta (do). Deben quedar 105 variables de las secciones II y III más las variables originales de ID que hayas mantenido (108)
 ds
 local varconteo: word count `r(varlist)'
