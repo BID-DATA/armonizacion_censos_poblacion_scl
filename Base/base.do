@@ -645,8 +645,11 @@ if  `"$PAIS"' =="BHS" |  `"$PAIS"' =="GUY" | `"$PAIS"' =="JAM" |  `"$PAIS"' =="S
 	*aguaentubada_ch*
 	*****************
 	gen byte aguaentubada_ch=.
+	cap confirm watsup
+	if (_rc==0) {
 	replace aguaentubada_ch = 1 if inrange(watsup,10,17)
 	replace aguaentubada_ch = 0 if inrange(watsup,18,20)
+	}
 	
 	************
 	*aguared_ch*
@@ -658,17 +661,23 @@ if  `"$PAIS"' =="BHS" |  `"$PAIS"' =="GUY" | `"$PAIS"' =="JAM" |  `"$PAIS"' =="S
 	*aguafuente_ch*
 	***************
 	gen byte aguafuente_ch=.
+	cap confirm watsup
+	if (_rc==0) {
 	replace aguafuente_ch = 2 if watsup ==17 | watsup == 18
 	replace aguafuente_ch = 6 if inrange(watsup,10,16) | inrange(watsup,20,99)
+	}
 	
 	**************
 	*aguadist_ch*
 	**************
 	gen byte aguadist_ch =.
+	cap confirm watsup
+	if (_rc==0) {
 	replace aguadist_ch =1 if watsup == 11
 	replace aguadist_ch =2 if inrange(watsup,14,16)
 	replace aguadist_ch =3 if inrange(watsup,17,18)
 	replace aguadist_ch =0 if inrange(watsup,20,99)
+	}
 	
 	**************
 	*aguadisp1_ch*
@@ -689,7 +698,6 @@ if  `"$PAIS"' =="BHS" |  `"$PAIS"' =="GUY" | `"$PAIS"' =="JAM" |  `"$PAIS"' =="S
 	*bano_ch*
 	*********
 	gen bano_ch=.
-	gen des1_ch=.
 	cap confirm variable sewage bathrooms toilet
 	if (_rc==0) {
 		replace bano_ch= 0 if toilet==10 
@@ -698,8 +706,7 @@ if  `"$PAIS"' =="BHS" |  `"$PAIS"' =="GUY" | `"$PAIS"' =="JAM" |  `"$PAIS"' =="S
 		replace bano_ch= 3 if toilet==22 & (sewage ==12 | sewage ==10)
 		replace bano_ch= 6 if inrange(toilet, 20,99) & (sewage == 20 | sewage ==99)
 	}
-	
-	
+		
 	***********
 	*banoex_ch*
 	***********
@@ -709,15 +716,21 @@ if  `"$PAIS"' =="BHS" |  `"$PAIS"' =="GUY" | `"$PAIS"' =="JAM" |  `"$PAIS"' =="S
 	*sinbano_ch*
 	************
 	gen byte sinbano_ch =.
-	replace sinbano_ch = 3 if toilet ==10
-	replace sinbano_ch = 0 if inrange(toilet, 11,23)
-
+	cap confirm variable toilet
+	if (_rc==0) {	
+		replace sinbano_ch = 3 if toilet ==10
+		replace sinbano_ch = 0 if inrange(toilet, 11,23)
+	}
+	
 	************
 	*conbano_ch*
 	************
 	gen byte conbano_ch=.
-	replace conbano_ch = 1 if inrange(toilet, 11,23)
-	replace conbano_ch = 0 if toilet ==10	
+	cap confirm variable toilet
+	if (_rc==0) {	
+		replace conbano_ch = 1 if inrange(toilet, 11,23)
+		replace conbano_ch = 0 if toilet ==10	
+	}
 	
 	*****************
 	*banoalcantarillado_ch*
@@ -733,19 +746,24 @@ if  `"$PAIS"' =="BHS" |  `"$PAIS"' =="GUY" | `"$PAIS"' =="JAM" |  `"$PAIS"' =="S
 	*banomejorado_ch*
 	*****************
 	gen banomejorado_ch=.
-	replace banomejorado_ch =1 if inrange(bano_ch, 1,3)
-	replace banomejorado_ch =2 if bano_ch ==6
-	replace banomejorado_ch =0 if bano_ch ==0
- 	
+	cap confirm sewage toilet
+	if (_rc==0) {
+	cap replace banomejorado_ch =1 if inrange(bano_ch, 1,3)
+	cap replace banomejorado_ch =2 if bano_ch ==6
+	cap replace banomejorado_ch =0 if bano_ch ==0
+ 	}
 	
 	*********
 	*des1_ch*
 	*********
+	gen des1_ch=.
+	cap confirm toilet
+	if (_rc==0) {
 	replace des1_ch=0 if bano_ch==0
 	replace des1_ch=1 if toilet==21
 	replace des1_ch=2 if toilet==22
 	replace des1_ch=. if toilet==99
-	
+	}
 	
 *************************************************************
 *** 8. Otras variables específicas por país (6 variables) ***
