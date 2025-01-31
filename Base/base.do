@@ -199,7 +199,7 @@ if  `"$PAIS"' =="BHS" |  `"$PAIS"' =="GUY" | `"$PAIS"' =="JAM" |  `"$PAIS"' =="S
 	************
 	*miembros_ci
 	************
-	gen miembros_ci=(relacion_ci>=1 & relacion_ci<9) 
+	gen miembros_ci=(relacion_ci>=1 & relacion_ci<=5) 
 	tab persons
 	tab miembros_ci	
 	
