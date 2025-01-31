@@ -730,12 +730,12 @@ use "$base_in", clear
 	*aguafuente_ch*
 	***************
 	gen aguafuente_ch=.
-	replace aguafuente_ch = 1 if if inlist(V10, 1,2,3) & inlist(V08, 1,2)
+	replace aguafuente_ch = 1 if inlist(V10, 1,2,3) & inlist(V08, 1,2)
 	replace aguafuente_ch = 2 if inlist(V10, 1,2,3) & inlist(V08, 3)
 	replace aguafuente_ch = 3 if V10 == 10
 	replace aguafuente_ch = 4 if inlist(V10, 5,6)
 	replace aguafuente_ch = 6 if inlist(V10, 11)
-	replace aguafuente_ch = 7 if inlist(v10, 4)
+	replace aguafuente_ch = 7 if inlist(V10, 4)
 	replace aguafuente_ch = 8 if inlist(V10, 11)
 	replace aguafuente_ch = 9 if inlist(V10, 7)
 	replace aguafuente_ch = 10 if inlist(V10, 8,9,12,99)
@@ -795,11 +795,6 @@ use "$base_in", clear
 	gen conbano_ch =.
 	replace conbano_ch = 0 if V20 == 8
 	replace sinbano_ch = 1 if inlist(V20, 1,2,3,4,5,6,9)
-
-	*********
-	*conbano_ch*
-	*********
-	gen byte conbano_ch=.
 
 	*********
 	*banoalcantarillado_ch_ch*
