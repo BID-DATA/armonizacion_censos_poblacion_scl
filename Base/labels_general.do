@@ -241,7 +241,6 @@ label value spublico_ci spublico_ci
  ***  7.1 Vivienda - variables generales (15 variables) ***
  **********************************************************		
 
-
 label var luz_ch  "La principal fuente de iluminación de la vivienda es electricidad"
 label define luz_ch 1 "La principal fuente sí es la electricidad" 0 "La principal fuente no es la electricidad"
 label value luz_ch luz_ch
@@ -294,13 +293,68 @@ label var  cel_ch "El hogar cuenta con servicio telefónico celular"
 label define cel_ch 1 "Sí tiene servicio telefónico celular" 0 "No tiene servicio telefónico celular"
 label value cel_ch cel_ch
 
-label var  viviprop_ch1 "Propiedad de la vivienda en la que reside el hogar"
-label define viviprop_ch1 1 "Sí pertenece a los habitantes del hogar" 0 "No pertenece a los habitantes del hogar"
-label value viviprop_ch1 viviprop_ch1
+label var  viviprop_ch "Propiedad de la vivienda en la que reside el hogar"
+label define viviprop_ch 1 "Sí pertenece a los habitantes del hogar" 0 "No pertenece a los habitantes del hogar"
+label value viviprop_ch viviprop_ch
 
 
+ ******************************************************
+ ***  7.2 Vivienda - variables WASH (13 variables) ***
+ *****************************************************
 
-	
+label var aguaentubada_ch "El hogar tiene acceso a agua entubada"
+label define aguaentubada_ch 1 "Sí cuenta con agua entubada " 0 "No cuenta con agua entubada"
+label value aguaentubada_ch aguaentubada_ch
+
+label var aguared_ch "El hogar tiene acceso a un servicio de agua por red"
+label define aguared_ch 1 "Sí cuenta con servicio de agua por red" 0 "No cuenta con servicio de agua por red"
+label value aguared_ch aguared_ch
+
+label var aguafuente_ch  "Fuente del agua utilizada por el hogar"
+label define aguafuente_ch 1	"Red de distribución, llave privada" 2	"Red (llave pública, standpipe)" 3	"Agua embotellada" 4	"Pozo protegido" 5	"Agua de lluvia" 6	"Camión, cisterna, pipa" 7	"Otra fuente mejorada" 8	"Cuerpo de agua superficial"  9	"Otra fuente no mejorada" 10	"Pozo, mantial o otra sin clasificación clara"
+label value aguafuente_ch aguafuente_ch 
+
+label var aguadist_ch  "Distancia de la ubicación de acceso al agua"
+label define aguadist_ch 1	"Adentro de la casa" 2	"Afuera de la casa pero adentro del terreno (o a menos de 100mts de distancia)" 3	"Afuera de la casa y afuera del terreno (o a más de 100mts de distancia)" 0	"No se especifica"
+label value aguadist_ch aguadist_ch 
+
+label var aguadisp1_ch "Disponibilidad de agua si la encuesta pregunta si el hogar tiene suficiente continuidad del acceso al agua"
+label define aguadisp1_ch 0	"No" 1	"Sí" 9	"La encuesta no hace esta pregunta"
+label value aguadisp1_ch aguadisp1_ch
+
+label var aguadisp2_ch "Disponibilidad de agua si la encuesta mide la continuidad al acceso a agua de manera cuantitativa"
+label define aguadisp2_ch 1	"Reporta corte y el agua está disponible menos de la mitad del tiempo" 2	"Reporta corte pero el agua está disponible más de la mitad del tiempo" 3	"Reporta que no han tenido corte de agua durante el periodo" 9	"La encuesta no hace esta pregunta"
+label value aguadisp2_ch aguadisp2_ch
+
+label var aguamide_ch "El hogar tiene un medidor de agua"
+label define aguamide_ch 0	"No" 1	"Sí" 9	"La encuesta no hace esta pregunta"
+label value  aguamide_ch  aguamide_ch 
+
+label var bano_ch "Instalación sanitaria disponible en el hogar"
+label define bano_ch 0	"Sin instalaciones" 1	"Indoro a red de desagüe" 2	"Indoro a fosa séptica" 3	"Letrina mejorada / otra instalacion mejorada" 4	"Indoro/letrina a cuerpo de agua superficial o suelo" 5	"Instalación no mejorada" 6	"Instalación que no se puede clasificar"
+label value bano_ch bano_ch
+
+label var banoex_ch  "El uso del baño es exclusivo al hogar"
+label define banoex_ch 0	"No" 1	"Sí" 9	"La encuesta no hace esta pregunta"
+label value banoex_ch banoex_ch 
+
+label var sinbano_ch "Indica qué hacen los hogares que no tienen baños para sus necesidades sanitarias"
+label define sinbano_ch 0	"Tiene baño" 1	"Utliza instalaciones públicas, o las de un vecino o amigo" 2	"Defecación al aire libre" 3	"No tiene baño y no se pregunta qué alternativas se usan en el hogar"
+label value sinbano_ch sinbano_ch 
+
+label var conbano_ch "El hogar tiene algún tipo de servicio higiénico (inodoro o letrina)"
+label define conbano_ch 1 "Sí tiene un servicio higiénico como letrina o inodoro" 0 "No tiene un servicio higiénico como letrina o inodoro"
+label value conbano_ch conbano_ch
+
+label var banoalcantarillado_ch "El hogar tiene acceso a alcantarillado"
+label define banoalcantarillado_ch 0 "No tiene acceso a alcantarillado" 1 "Sí tiene acceso a alcantarillado"
+label value banoalcantarillado_ch banoalcantarillado_ch
+
+label var des1_ch "Tipo de desagüe con el que cuenta el hogar"
+label define des1_ch 0	"No tiene servicio sanitario" 1	"Escusado conectado a la red" 2	"Letrina u otro servicio no conectado a la red"
+label value des1_ch des1_ch
+
+
 
 	
 	

@@ -22,8 +22,8 @@ Autores: Cesar Lins
 ****************************************************************************/
 
 
-local PAIS BRA
-local ANO "2010"
+global PAIS BRA   				 //cambiar
+global ANIO 2010   				 //cambiar
 
 **************************************
 ** Setup code, load database,       **
@@ -33,7 +33,7 @@ include "../Base/base.do"
 
 
 *****************************************************
-******* Variables specific for this census **********
+******* Variables específicas del censo    **********
 *****************************************************
 
 ****************
@@ -72,35 +72,6 @@ include "../Base/base.do"
  label define region_c 1"Rondônia" 2"Acre" 3"Amazonas" 4"Roraima" 5"Pará" 6"Amapá" 7"Tocantins" 8"Maranhão" 9"Piauí" 10"Ceará" 11"Rio Grande do Norte" 12"Paraíba" 13"Pernambuco" 14"Alagoas" 15"Sergipe" 16"Bahia" 17"Minas Gerais" 18"Espírito Santo" 19"Rio de Janeiro" 20"São Paulo" 21"Paraná" 22"Santa Catarina" 23"Rio Grande do Sul" 24"Mato Grosso do Sul" 25"Mato Grosso" 26"Goiás" 27"Distrito Federal"
 label values region_c region_c 
  
-**********************************
-**** VARIABLES DE INGRESO ****
-**********************************
-	
-     ***********
-	  *ylm_ci*
-	 ***********
-   cap confirm variable incearn
-   if (_rc==0) {
-   replace ylm_ci = incearn
-   replace ylm_ci =. if incearn==99999999 | incearn==99999998
-   }
-
-	 *********
-	 *ynlm_ci*
-	 *********
-   replace ynlm_ci=.
-   
-     ***********
-	  *ylm_ch*
-	 ***********
-   
-   by idh_ch, sort: egen ylm_ch=sum(ylm_ci) if miembros_ci==1, missing
-   
-    ***********
-	  *ynlm_ch*
-	 ***********
-   gen ynlm_ch=.
-   
 *******************************************************
 ***           VARIABLES DE DIVERSIDAD               ***
 *******************************************************				
@@ -248,13 +219,76 @@ replace edus2c_ci=. if aedu_ci==.
 gen literacy=1 if lit==2 // literate
 replace literacy=0 if lit==1 // illiterate
 
-*****************************
-** Include all labels of   **
-**  harmonized variables   **
-*****************************
-include "../Base/labels.do"
 
+/*******************************************************************************
+   Incluir variables externas
+*******************************************************************************/
+capture drop _merge
+merge m:1 pais_c anio_c using "Z:/general_documentation/data_externa/poverty/International_Poverty_Lines/5_International_Poverty_Lines_LAC_long_PPP17.dta", keepusing (lp19_2011 lp31_2011 lp5_2011 tc_wdi lp365_2017 lp685_201 cpi_2017)
+drop if _merge ==2
+
+g tc_c     = tc_wdi
+g ipc_c    = cpi_2017
+g lp19_ci  = lp19_2011 
+g lp31_ci  = lp31_2011 
+g lp5_ci   = lp5_2011
+
+capture label var tc_c "Tasa de cambio LCU/USD Fuente: WB/WDI"
+capture label var ipc_c "Índice de precios al consumidor base 2017=100 Fuente: IMF/WEO"
+capture label var lp19_ci  "Línea de pobreza USD1.9 día en moneda local a precios corrientes a PPA 2011"
+capture label var lp31_ci  "Línea de pobreza USD3.1 día en moneda local a precios corrientes a PPA 2011"
+capture label var lp5_ci "Línea de pobreza USD5 por día en moneda local a precios corrientes a PPA 2011"
+capture label var lp365_2017  "Línea de pobreza USD3.65 día en moneda local a precios corrientes a PPA 2017"
+capture label var lp685_2017 "Línea de pobreza USD6.85 por día en moneda local a precios corrientes a PPA 2017"
+
+drop  cpi_2017 lp19_2011 lp31_2011 lp5_2011 tc_wdi _merge
+
+/*******************************************************************************
+   Revisión de que se hayan creado todas las variables
+*******************************************************************************/
+* CALIDAD: revisa que hayas creado todas las variables. Si alguna no está
+* creada, te apacerá en rojo el nombre. 
+
+global lista_variables region_BID_c region_c geolev1 pais_c anio_c idh_ch idp_ci factor_ci factor_ch estrato_ci upm zona_c sexo_c edad_ci relacion_ci civil_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch miembros_ci clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch afro_ci ind_ci noafroind_ci afroind_ci afro_ch ind_ch noafroind_ch afroind_ch  dis_ci disWG_ci dis_ch migrante_ci migrantiguo5_ci miglac_ci aedu_ci eduno_ci edupi_ci edupc_ci edusi_ci edusc_ci edus1i_ci edus1c_ci edus2i_ci edus2c_ci edupre_ci asiste_ci literacy condocup_ci emp_ci desemp_ci pea_ci rama_ci  categopri_ci spublico_ci luz_ch piso_ch pared_ch techo_ch resid_ch dorm_ch cuartos_ch cocina_ch telef_ch refrig_ch auto_ch compu_ch internet_ch cel_ch viviprop_ch aguaentubada_ch aguared_ch aguafuente_ch aguadist_ch aguadisp1_ch aguadisp2_ch aguamide_ch bano_ch banoex_ch banoalcantarillado_ch sinbano_ch conbano_ch des1_ch ${PAIS}_ingreso_ci ${PAIS}_ingresolab_ci ${PAIS}_m_pared_ch ${PAIS}_m_piso_ch ${PAIS}_m_techo_ch ${PAIS}_dis_ci tc_c ipc_c lp19_ci lp31_ci lp5_ci lp365_2017  lp685_2017
+
+* selecciona las siguientes 6 líneas y ejecuta (do)
+foreach v of global lista_variables {
+	cap confirm variable `v'
+	if _rc == 111 {
+		display in red "variable `v' NO existe."
+	}
+}
+
+
+/*******************************************************************************
+   Borrar variables originales con exepción de los identificadores 
+*******************************************************************************/
+* En "..." agregar la lista de variables de ID originales (por ejemplo los ID de personas, vivienda y hogar)
+
+keep  $lista_variables serial pernum
+* selecciona las 3 lineas y ejecuta (do). Deben quedar 105 variables de las secciones II y III más las 
+* variables originales de ID que hayas mantenido
+ds
+local varconteo: word count `r(varlist)'
+display "Número de variables de la base: `varconteo'"
+
+
+/*******************************************************************************
+   Incluir etiquetas para las variables y categorías
+*******************************************************************************/
+include "$gitFolder\armonizacion_censos_poblacion_scl\Base\labels_general.do"
+
+
+/*******************************************************************************
+   Guardar la base armonizada 
+*******************************************************************************/
 compress
+save "$base_out", replace 
 
-save "`base_out'", replace  
 log close
+
+********************************************************************************
+******************* FIN. Muchas gracias por tu trabajo ;) **********************
+********************************************************************************
+ 
+

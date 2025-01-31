@@ -15,9 +15,9 @@ set more off
 /***************************************************************************
                  BASES DE DATOS DE CENSOS POBLACIONALES
 País: Colombia
-Año: 1993
+Año: 2005
 Autores: 
-Última versión: 
+Última versión: 24AGO2024
 
 							SCL/LMK - IADB
 ****************************************************************************/
@@ -84,14 +84,17 @@ label value region_c region_c
 	***afroind_ci***
 	*************** 
 
-	gen afroind_ci=. 
-	gen afroind_ch  =.
+	gen afroind_ci=.
+	replace afroind_ci=1 if race==30
+	replace afroind_ci=2 if race==20
+	replace afroind_ci=3 if inlist(race,10,60)
 	
 	***************
 	***afroind_ch***
 	***************
-	gen afroind_jefe=.
-
+	gen afroind_jefe=afroind_ci if relacion_ci==1
+	bysort idh_ch:	egen afroind_ch=max(afroind_jefe)
+	
 	*******************
 	***afroind_ano_c***
 	*******************
@@ -101,7 +104,10 @@ label value region_c region_c
 	*** discapacidad ***
 	********************
 	gen dis_ci=.
-	gen dis_ch=.
+	replace dis_ci=1 if (disblnd==1 | disdeaf==1 | dismobil==1 | discare ==1 | dismute ==1 |  dislowr==1 | disuppr==1)
+	replace dis_ci=0 if (disblnd==2 & disdeaf==2 & dismobil==2 & discare==2 & dismute==2 & disuppr==2)
+	
+	bysort idh_ch: egen dis_ch=max(dis_ci)
 
 *******************************************************
 ***           VARIABLES DE INGRESO                  ***
@@ -230,7 +236,8 @@ replace literacy=0 if lit==1 // illiterate
 
 include "../Base/labels.do"
 
-order region_BID_c pais_c estrato_ci zona_c relacion_ci civil_ci idh_ch factor_ch idp_ci factor_ci edad_ci sexo_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch miembros_ci condocup_ci emp_ci desemp_ci pea_ci rama_ci spublico_ci migrante_ci migantiguo5_ci aguared_ch luz_ch bano_ch des1_ch piso_ch pared_ch techo_ch dorm_ch cuartos_ch cocina_ch refrig_ch auto_ch internet_ch cel_ch viviprop_ch viviprop_ch1 region_c categopri_ci discapacidad_ci ceguera_ci sordera_ci mudez_ci dismental_ci afroind_ci afroind_ch afroind_ano_c dis_ci dis_ch aedu_ci
+order region_BID_c pais_c estrato_ci zona_c relacion_ci civil_ci idh_ch factor_ch idp_ci factor_ci edad_ci sexo_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch miembros_ci condocup_ci emp_ci desemp_ci pea_ci rama_ci spublico_ci migrante_ci migantiguo5_ci migrantiguo5_ci aguared_ch luz_ch bano_ch des1_ch piso_ch pared_ch techo_ch dorm_ch cuartos_ch cocina_ch refrig_ch auto_ch internet_ch cel_ch viviprop_ch viviprop_ch1 region_c categopri_ci  afroind_ci afroind_ch afroind_ano_c dis_ci dis_ch aedu_ci
+
 
 compress
 

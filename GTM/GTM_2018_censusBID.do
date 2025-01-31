@@ -1,64 +1,123 @@
-* (Versión Stata 12)
-clear
-set more off
-*________________________________________________________________________________________________________________*
-
- * Activar si es necesario (dejar desactivado para evitar sobreescribir la base y dejar la posibilidad de 
- * utilizar un loop)
- * Los datos se obtienen de las carpetas que se encuentran en el servidor: ${censusFolder}
- * Se tiene acceso al servidor únicamente al interior del BID.
- *________________________________________________________________________________________________________________*
- 
-*Population and Housing Censuses/Harmonized Censuses - IPUMS
-
-
-/***************************************************************************
-                 BASES DE DATOS DE CENSOS POBLACIONALES
-País: Guatemala
+* (Versión Stata 17)
+/*==============================================================================
+							CENSOS POBLACIONALES
+						   Script de armonización
+País: GUATEMALA
 Año: 2018
 Autores: Eric Torres
-Última versión: Junio, 2022
+Última versión: 30JUN2022
+División: SCL/LMK - IADB
+*******************************************************************************
 
-							SCL/LMK - IADB
-****************************************************************************/
+INSTRUCCIONES:
 
-local PAIS GTM
-local ANO "2018"
+	(1) Guarda este script con la estructura Pais_ANIO_censusBID.do.
+		Por ejemplo Ecuador 2017 será: ECU_2017_censusBID.do
+	
+	(2) Sigue la estructura y estilo de este script, pero ten en cuenta que
+		el contenido es referencial y que debes adaptarlo al país que te toque 
+		armonizar. 	Cada vez que encuentres "..." debes completar el código con 
+		la información del país que te toque. Existen variables en las que no 
+		debes hacer nada, pues se crean a partir de otras variables, como por 
+		ejemplo jefe_ci.
+		
+	(3) Cambia la información que está en la parte superior. 
+		- En País pon el nombre completo, por ejemplo Panamá. 
+		- En año coloca un número entero de 4 dígitos, por ejemplo 2024. 
+		- En autores pon tu 1er nombre y 1er apellido, por ejemplo Juan Casas.
+		- En última versión coloca la fecha en que la termines el script, por
+		  ejemplo 22ABR2024
+		- En división colola las siglas de tu división en el IADB, por ejemplo 
+		  SCL/GDI - IADB
+		  
+	(4) En la sección I, cambia la ruta de trabajo. Dentro de la ruta 
+		selecionada, crea las carpetas raw y clean. Adentro	de esta carpetas, 
+		crea la subcarpeta del país que te toque. Recuerda que debes 
+		utilizar el código iso-alpha3 del país para crear la subcarpeta
+		(por ejemplo, Ecuador es ECU).
+		
+			censusFolder>raw>ECU
+			censusFolder>clean>ECU
 
-**************************************
-** Setup code, load database,       **
-** and include all common variables **
-**************************************
-*include "../Base/base.do"
-global ruta ="${censusFolder}"
+    (5) Si la base que vas a correr es muy pesada. De forma temporal
+		puedes sacar una muestra con el comando sample en la sección I para que
+		sea más fácil que verifiques el trabajo que vas realizando. 
+		Cuando ya hayas creado todas las variables, desactiva el sample y 
+		corre tu código otra vez para la base completa. Este paso es opcional.
+		
+	(6) Todas las variables de las secciones II y III deben ser creadas
+		sin exepción. En caso no haya información, créala con un missing value (.)
+		
+	(7) Revisa que idp_ci no tenga duplicados (control de calidad)
+	
+	(8) Solo colocar las etiquetas o labels en este script cuando se indique.
+		Se pondrá las etiquetas a la mayoría de variables en la sección VI a 
+		través del script labels.do
+		
+    (9) En la sección IV, revisa que hayas creado todas las variables (control de
+		calidad)
+		
+   (10) En la sección V, borra todas las variables excepto las variables 
+		creadas en las secciones II y III y las variables de ID originales. 
+		Corre el código y verificalo. Debes tener 94 variables de las secciones 
+		II y III más las variables de ID originales (control de calidad).
+		
+   (11) En la sección VII, guarda la base con el formato 
+		ISOalpha3Pais_ANIO_censusBID.dta. Por ejemplo, Ecuador 2017 será: 
+		ECU_2017_censusBID.dta
+	
 
-global ruta_raw = "${censusFolder_raw}"
 
-local log_file ="$ruta\\clean\\`PAIS'\\log\\`PAIS'_`ANO'_censusBID.log"
-local base_in = "$ruta\\raw\\`PAIS'\\`PAIS'_`ANO'_NOIPUMS.dta"
-local base_out ="$ruta\\clean\\`PAIS'\\`PAIS'_`ANO'_censusBID.dta"
+==============================================================================*/
 
+/****************************************************************************
+   I. Define las rutas de trabajo y abre la base de datos raw
+*****************************************************************************/
+
+clear
+set more off
+
+global ruta = "${censusFolder}"  //cambiar ruta seleccionada 
+global PAIS GTM    				 //cambiar
+global ANIO 2018  				 //cambiar
+
+global base_in  = "$ruta\\raw\\$PAIS\\$ANIO\\data_orig\\${PAIS}_${ANIO}_NOIPUMS.dta"
+global base_out = "$ruta\\clean\\$PAIS\\${PAIS}_${ANIO}_censusBID.dta"
+global log_file ="$ruta\\clean\\$PAIS\\${PAIS}_${ANIO}_censusBID.log"                                                   
 capture log close
-log using "`log_file'", replace
+log using `"$log_file"', replace  //agregar ,replace si ya está creado el log_file en tu carpeta
 
-use "`base_in'", clear
+use "$base_in", clear
 
-*****************************************************
-******* Variables specific for this census **********
-*****************************************************
+rename *, lower
 
-****************
-*** region_c ***
-****************
+* sample 20   		// significa muestra de 20% de la base. Activar si se necesita.    
 
-   gen region_c=departamento
 
-	
+/****************************************************************************
+   II. Armonización de variables 
+*****************************************************************************/
+
+*************************************
+*** Identificación (12 variables) ***
+*************************************
+
+	**************
+	*region_BID_c*
+	**************
+	gen byte region_BID_c = 1
+
+	****************
+	*** region_c ***
+	****************
+    gen region_c=departamento
 	label define region_c 1 "Guatemala" 2 "El Progreso" 3 "Sacatepéquez" 4 "Chimaltenango" 5 "Escuintla" 6 "Santa Rosa" 7 "Sololá" 8 "Totonicapán" 9 "Quetzaltenango" 10 "Suchitepéquez" 11 "Retalhuleu" 12 "San Marcos" 13 "Huehuetenango" 14 "Quiché" 15 "Baja Verapaz" 16 "Alta Verapaz" 17 "Petén" 18 "	Izabal" 19 "Zacapa" 20 "Chiquimula" 21 "Jalapa" 22 "Jutiapa"
+	label value region_c region_c
 	
-	 label value region_c region_c
-
-	gen 	geolev1=. 
+	*********
+	*geolev1*
+	*********
+	gen long geolev1 =.
 	replace geolev1=320001 if departamento==1 /*Guatemala*/
 	replace geolev1=320002 if departamento==2 /*El Progreso*/
 	replace geolev1=320003 if departamento==3 /*Sacatepéquez*/
@@ -82,115 +141,120 @@ use "`base_in'", clear
 	replace geolev1=320021 if departamento==21 /*Jalapa*/
 	replace geolev1=320022 if departamento==22 /*Jutiapa*/
 
-gen region_BID_c = 1
-
     *********
 	*pais_c*
 	*********
-gen pais_c = "GTM"
+	gen pais_c = "GTM"
 
     *********
 	*anio_c*
 	*********
-gen anio_c = 2018
+	gen anio_c = 2018
 
     ******************
     *idh_ch (id hogar)*
     ******************
-	
 	gen str14 idh_ch = string(num_vivienda,"%02.0f") + string(num_hogar,"%02.0f") 
-
 
 	******************
     *idp_ci (idpersonas)*
     ******************
-rename pcp1 idp_ci 
+	egen idp_ci = concat(idh_ch pcp1)
 
-    ***********
-	* estrato *
-	***********
-gen estrato_ci=.
-
-    ***************************
-	* Zona urbana (1) o rural (0)
-	***************************
-gen zona_c=.
-replace zona_c=1 if area==1
-replace zona_c=0 if area==2
-	
 	****************************************
 	*factor expansión individio (factor_ci)*
 	****************************************
-gen factor_ci=.
+	gen byte factor_ci=.
 	
 	*******************************************
 	*Factor de expansion del hogar (factor_ch)*
 	*******************************************
-gen factor_ch=.
+	gen byte factor_ch=.
 
+    ***********
+	* estrato *
+	***********
+	gen byte estrato_ci=.
 
+    ********
+	* upm  *
+	********
+	gen byte upm=.
+	
+    ********
+	*zona_c*
+	********
+	gen byte zona_c=.
+	replace zona_c=1 if area==1
+	replace zona_c=0 if area==2
+		
+************************************
+*** 2. Demografía (18 variables) ***
+************************************
 
-*****************************************************
-***             VARIABLES DEMOGRAFICAS            ***
-*****************************************************
     *********
-	*sexo_c*
+	*sexo_c *
 	*********
-rename pcp6 sexo_ci 
+	gen byte sexo_ci = pcp6  
 
 	*********
-	*edad_c*=3
+	*edad_c *
 	*********
-rename pcp7 edad_ci
+	gen int edad_ci =pcp7 
 
 	*************
 	*relacion_ci*
 	*************
-*considero hijastro como hijo y no como otro pariente
-gen relacion_ci=pcp5
-replace relacion_ci=3 if pcp5==4
-replace relacion_ci=4 if pcp5==5 | pcp5==6 | pcp5==7 | pcp5==8 | pcp5==9 | pcp5==10 | pcp5==11
-replace relacion_ci=5 if pcp5==13 | pcp5==14 | pcp5==15
-replace relacion_ci=6 if pcp5==12
+	*considero hijastro como hijo y no como otro pariente
+	gen byte relacion_ci=pcp5
+	replace relacion_ci=3 if pcp5==4
+	replace relacion_ci=4 if pcp5==5 | pcp5==6 | pcp5==7 | pcp5==8 | pcp5==9 | pcp5==10 | pcp5==11
+	replace relacion_ci=5 if pcp5==13 | pcp5==14 | pcp5==15
+	replace relacion_ci=6 if pcp5==12
 
-	**************
-	*Estado Civil*
-	**************
-gen	civil_ci=pcp34
-replace civil_ci=2 if pcp34==3
-replace civil_ci=3 if pcp34==4 | pcp34==5 | pcp34==6
-replace civil_ci=4 if pcp34==7
+	**********
+	*civil_ci*
+	**********
+	gen	byte civil_ci=pcp34
+	replace civil_ci=2 if pcp34==3
+	replace civil_ci=3 if pcp34==4 | pcp34==5 | pcp34==6
+	replace civil_ci=4 if pcp34==7
 
-	
     *********
 	*jefe_ci*
 	*********
-	gen jefe_ci=(pcp5==1)
+	gen byte jefe_ci=(pcp5==1)
 	
 	**************
 	*nconyuges_ch*
 	**************
-	by idh_ch, sort: egen nconyuges_ch=sum(relacion_ci==2)
+	egen byte nconyuges_ch=sum(relacion_ci==2), by (idh_ch)
 	
 	***********
 	*nhijos_ch*
 	***********
-	by idh_ch, sort: egen nhijos_ch=sum(relacion_ci==3) 
+	egen byte nhijos_ch=sum(relacion_ci==3), by(idh_ch)
 
 	**************
 	*notropari_ch*
 	**************
-	by idh_ch, sort: egen notropari_ch=sum(relacion_ci==4)
+	egen byte notropari_ch=sum(relacion_ci==4), by(idh_ch)
 	
 	****************
 	*notronopari_ch*
 	****************
-	by idh_ch, sort: egen notronopari_ch=sum(relacion_ci==5)
+	egen byte notronopari_ch=sum(relacion_ci==5), by(idh_ch)
 	
 	************
 	*nempdom_ch*
 	************
-	by idh_ch, sort: egen nempdom_ch=sum(relacion_ci==6)
+	egen byte nempdom_ch=sum(relacion_ci==6), by(idh_ch)
+
+	************
+	*miembros_ci
+	************
+	gen byte miembros_ci=(relacion_ci>=1 & relacion_ci<=5) 
+	tab miembros_ci	
 	
 	*************
 	*clasehog_ch*
@@ -212,53 +276,282 @@ replace civil_ci=4 if pcp34==7
 	**************
 	*nmiembros_ch*
 	**************
-	by idh_ch, sort: egen byte nmiembros_ch=sum(relacion_ci>0 & relacion_ci<9)
+	egen byte nmiembros_ch=sum(relacion_ci>0 & relacion_ci<=5), by(idh_ch)
 
 	*************
 	*nmayor21_ch*
 	*************
-	by idh_ch, sort: egen byte nmayor21_ch=sum((relacion_ci>0 & relacion_ci<9) & (edad_ci>=21 & edad_ci<=98))
+	egen byte nmayor21_ch=sum((relacion_ci>=1 & relacion_ci<=5) & (edad_ci>=21 & edad_ci!=.)), by(idh_ch) 
 
 	*************
 	*nmenor21_ch*
 	*************
-	by idh_ch, sort: egen byte nmenor21_ch=sum((relacion_ci>0 & relacion_ci<9) & (edad_ci<21))
+	egen byte nmenor21_ch=sum((relacion_ci>=1 & relacion_ci<=5) & (edad_ci<21)), by(idh_ch) 
 
 	*************
 	*nmayor65_ch*
 	*************
-	by idh_ch, sort: egen byte nmayor65_ch=sum((relacion_ci>0 & relacion_ci<9) & (edad_ci>=65 & edad_ci!=.))
+	egen byte nmayor65_ch=sum((relacion_ci>=1 & relacion_ci<=5) & (edad_ci>=65 & edad_ci!=.)), by(idh_ch) 
 
 	************
 	*nmenor6_ch*
 	************
-	by idh_ch, sort: egen byte nmenor6_ch=sum((relacion_ci>0 & relacion_ci<9) & (edad_ci<6))
+	egen byte nmenor6_ch=sum((relacion_ci>0 & relacion_ci<=5) & (edad_ci<6)), by(idh_ch) 
 
 	************
 	*nmenor1_ch*
 	************
-	by idh_ch, sort: egen byte nmenor1_ch=sum((relacion_ci>0 & relacion_ci<9) & (edad_ci<1))
+	egen byte nmenor1_ch=sum((relacion_ci>0 & relacion_ci<=5) & (edad_ci<1)), by(idh_ch) 
 
-	************
-	*miembros_ci
-	************
-	gen miembros_ci=(relacion_ci>=1 & relacion_ci<9) 
-	tab miembros_ci	
 	
+************************************
+*** 3. Diversidad (11 variables) ***
+************************************		
 	
+	*********
+	*afro_ci*
+	*********
+	gen byte afro_ci = . 
 	
+	*********
+	*indi_ci*
+	*********	
+	gen byte ind_ci =. 
+
+	**************
+	*noafroind_ci*
+	**************
+	gen byte noafroind_ci =. 
+	
+	***************
+	***afroind_ci***
+	***************
+	gen byte afroind_ci=. 
+	replace afroind_ci=1 if pcp12==1 | pcp12==2 | pcp12==3 
+	replace afroind_ci=2 if pcp12==4
+	replace afroind_ci=3 if pcp12==5 | pcp12==6 
+
+	*********
+	*afro_ch*
+	*********
+	gen byte afro_ch =.
+
+	********
+	*ind_ch*
+	********	
+	gen byte ind_ch =.
+
+	**************
+	*noafroind_ch*
+	**************
+	gen byte noafroind_ch =.
+	
+   ***************
+	***afroind_ch***
+	***************
+	gen byte afroind_jefe= afroind_ci if jefe_ci==1
+	egen afroind_ch  = min(afroind_jefe), by(idh_ch) 
+	drop afroind_jefe 
+
+	*******************
+	***dis_ci***
+	*******************
+	/*	
+	No, sin dificultad ..................1
+	Sí, con algo de dificultad ......... 2
+	Sí, con mucha dificultad ........... 3
+	No puede ............................4
+	*/
+	gen dis_ci=.
+	replace dis_ci=1 if inrange(pcp16_a,2,4) | inrange(pcp16_b,2,4) | inrange(pcp16_c,2,4) | inrange(pcp16_d,2,4) | inrange(pcp16_e,2,4) | inrange(pcp16_f,2,4)
+	replace dis_ci=0 if pcp16_a==1 & pcp16_b==1 & pcp16_c==1 & pcp16_d==1 & pcp16_e==1 & pcp16_f==1
+
+						
+	**********
+	*disWG_ci*
+	**********
+	gen byte disWG_ci=. 
+	
+	*******************
+	***dis_ch***
+	*******************
+	egen byte dis_ch  = sum(dis_ci), by(idh_ch) 
+	replace dis_ch=1 if dis_ch>=1 & dis_ch!=.
+
 **********************************
-**** VARIABLES DE LA VIVIENDA ****
+*** 4. Migración (3 variables) ***
 **********************************
+
+    *******************
+    ****migrante_ci****
+    *******************
+	gen byte migrante_ci = 0
+	replace migrante_ci=1 if migra_vida==1 | migra_rec==1
 		
-	************
-	*aguared_ch*
-	************
-	* se crea conforme las tablas de armonización IPUMS
-	gen aguared_ch=.
-	replace aguared_ch=1 if pch4 == 1 | pch4 == 2 | pch4 == 3
-	replace aguared_ch=0 if pch4>=4 & pch4<=10
+	*******************
+    **migrantiguo5_ci**
+    *******************
+	gen byte migrantiguo5_ci =.
 	
+	**********************
+	****** miglac_ci *****
+	**********************
+	gen byte miglac_ci = .
+	
+***********************************
+*** 5. Educación (13 variables) ***
+***********************************
+
+	*************
+	***aedu_ci***
+	*************
+	gen byte aedu_ci =aneduca
+
+	**************
+	***eduno_ci***
+	**************
+	gen byte eduno_ci=(aedu_ci==0) // never attended or pre-school
+	replace eduno_ci=. if aedu_ci==. // NIU & missing
+
+	**************
+	***edupi_ci***
+	**************
+	gen byte edupi_ci=(aedu_ci>0 & aedu_ci<6) //
+	replace edupi_ci=. if aedu_ci==. // NIU & missing
+
+	**************
+	***edupc_ci***
+	**************
+	gen byte edupc_ci=(aedu_ci==6) 
+	replace edupc_ci=. if aedu_ci==. // NIU & missing
+
+	**************
+	***edusi_ci***
+	**************
+	gen byte edusi_ci=(aedu_ci>6 & aedu_ci<11) // 7 a 10 anos de educación
+	replace edusi_ci=. if aedu_ci==. // NIU & missing
+
+	**************
+	***edusc_ci***
+	**************
+	gen byte edusc_ci=(aedu_ci>=11) // 11 anos de educación
+	replace edusc_ci=. if aedu_ci==. // NIU & missing
+
+	***************
+	***edus1i_ci***
+	***************
+	gen byte edus1i_ci=(aedu_ci>6 & aedu_ci<9)
+	replace edus1i_ci=. if aedu_ci==. // missing a los NIU & missing
+
+	***************
+	***edus1c_ci***
+	***************
+	gen byte edus1c_ci=(aedu_ci==9)
+	replace edus1c_ci=. if aedu_ci==. // missing a los NIU & missing
+
+	***************
+	***edus2i_ci***
+	***************
+	gen byte edus2i_ci=(aedu_ci>9 & aedu_ci<11)
+	replace edus2i_ci=. if aedu_ci==. // missing a los NIU & missing
+
+	***************
+	***edus2c_ci***
+	***************
+	gen byte edus2c_ci=(aedu_ci>=11)
+	replace edus2c_ci=. if aedu_ci==. // missing a los NIU & missing
+
+	***************
+	***edupre_ci***
+	***************
+	gen byte edupre_ci=(nivgrado==2)
+	replace edupre_ci=. if aedu_ci==.
+	*label variable edupre_ci "Educacion preescolar"
+
+	***************
+	***asiste_ci***
+	***************
+	gen byte asiste_ci=.
+	replace asiste_ci=1 if pcp18==1
+	replace asiste_ci=0 if pcp18==2
+	*label variable asiste_ci "Asiste actualmente a la escuela"
+
+	**************
+	***literacy***
+	**************
+	gen byte literacy=. 
+
+****************************************
+*** 6. Mercado laboral (7 variables) ***
+****************************************
+
+    *******************
+    ****condocup_ci****
+    *******************
+    gen byte condocup_ci=.
+	replace condocup_ci=1 if pocupa==1 
+	replace condocup_ci=2 if pdesoc==1
+	replace condocup_ci=3 if pei==1
+	replace condocup_ci=4 if edad_ci<7
+	
+	************
+    ***emp_ci***
+    ************
+    gen byte emp_ci=0
+	replace emp_ci=1 if pocupa==1 
+	
+	****************
+    ***desemp_ci***
+    ****************	
+	gen byte desemp_ci=0
+	replace desemp_ci=1 if pdesoc==1
+	
+	*************
+    ***pea_ci***
+    *************
+    gen byte pea_ci=.
+	replace pea_ci=1 if condocup_ci==1
+	replace pea_ci=1 if condocup_ci==2
+	replace pea_ci=0 if condocup_ci==3
+	replace pea_ci=0 if condocup_ci==4
+	
+	*************
+	**rama_ci****
+	*************
+	gen rama_ci=.
+	replace rama_ci=1 if pcp32_2d>=1 & pcp32_2d<=3
+	replace rama_ci=2 if pcp32_2d>=5 & pcp32_2d<=9
+	replace rama_ci=3 if pcp32_2d>=10 & pcp32_2d<=33
+	replace rama_ci=4 if pcp32_2d>=35 & pcp32_2d<=39
+	replace rama_ci=5 if pcp32_2d>=41 & pcp32_2d<=43
+	replace rama_ci=6 if (pcp32_2d>=45 & pcp32_2d<=47) | (pcp32_2d>=55 & pcp32_2d<=56)
+	replace rama_ci=7 if (pcp32_2d>=49 & pcp32_2d<=53) | pcp32_2d==61 
+	replace rama_ci=8 if pcp32_2d>=64 & pcp32_2d<=68
+	replace rama_ci=9 if (pcp32_2d>=69 & pcp32_2d<=99) | (pcp32_2d>=58 & pcp32_2d<=60) | (pcp32_2d>=62 & pcp32_2d<=63)
+
+	
+	 *********************
+     ****categopri_ci****
+     *********************
+	 *OBSERVACIONES: El censo no distingue entre actividad principal o secundaria, asigno por default principal.
+	 gen byte categopri_ci=.
+	 replace categopri_ci=1 if pcp31_d==1
+	 replace categopri_ci=2 if pcp31_d==2 | pcp31_d==3
+	 replace categopri_ci=3 if pcp31_d==4 | pcp31_d==5 | pcp31_d==6
+	 replace categopri_ci=4 if emp_ci==1  & pcp31_d==7
+	 
+	 *****************
+     ***spublico_ci***
+     *****************
+    gen byte spublico_ci=.
+	replace spublico_ci=1 if emp_ci==1 & pcp32_1d ==15
+	replace spublico_ci=0 if emp_ci==1 & pcp32_1d ~=15
+	
+	
+**********************************************************
+***  7.1 Vivienda - variables generales (15 variables) ***
+**********************************************************		
+
 	********
 	*luz_ch*
 	********
@@ -267,51 +560,25 @@ replace civil_ci=4 if pcp34==7
 	replace luz_ch=0 if pch8>=2 & pch8<=5
 	
 	*********
-	*bano_ch*
-	*********
-	gen bano_ch=.
-	replace bano_ch=1 if pch5>=1 & pch5<=4
-	replace bano_ch=0 if pch5==5
-	
-	
-	*********
-	*des1_ch*
-	*********
-	gen des1_ch=.
-	replace des1_ch=0 if bano_ch ==0
-	replace des1_ch=1 if pch5 == 1 | pch5 == 2
-	replace des1_ch=2 if pch5 == 3 | pch5 == 4
-	
-	
-	*********
 	*piso_ch*
 	*********
-	gen piso_ch=.
+	gen byte piso_ch=.
 	replace piso_ch = 0 if pcv5 == 7
 	replace piso_ch = 1 if pcv5 == 1 | pcv5 == 2 | pcv5 == 4 | pcv5 == 5 | pcv5 == 6
 	replace piso_ch = 2 if pcv5 == 3 | pcv5 == 8
-	
-	*****************
-	*banomejorado_ch*
-	*****************
-	gen banomejorado_ch=.
-	replace banomejorado_ch=1 if pch5 == 1 | pch5==2
-	replace banomejorado_ch=0 if pch5 == 3 | pch5==4| pch5==5
-	
-	
+		
 	**********
 	*pared_ch*
 	**********
-	gen pared_ch=.
+	gen byte pared_ch=.
 	replace pared_ch=0 if pcv2 ==9 
 	replace pared_ch=1 if pcv2 == 1 | pcv2==2 | pcv2 ==3 | pcv2 ==5
 	replace pared_ch=2 if pcv2 == 4 | pcv2==6 | pcv2 ==7 | pcv2 ==8 | pcv2 ==10 | pcv2 ==11
 
-	
 	**********
 	*techo_ch*
 	**********
-	gen techo_ch=.
+	gen byte techo_ch=.
 	replace techo_ch=0 if pcv3 ==6
 	replace techo_ch=1 if pcv3 ==1 | pcv3 == 2 | pcv3 == 3 | pcv3==4
 	replace techo_ch=2 if pcv3 ==5 | pcv3 == 7 | pcv3 == 8
@@ -319,7 +586,7 @@ replace civil_ci=4 if pcp34==7
 	**********
 	*resid_ch*
 	**********
-	gen resid_ch=. 
+	gen byte resid_ch=. 
     replace resid_ch=0 if pch10 ==1 | pch10 == 2
 	replace resid_ch=1 if pch10 ==3 | pch10 == 4 
 	replace resid_ch=2 if pch10 ==5 | pch10 == 6
@@ -327,328 +594,276 @@ replace civil_ci=4 if pcp34==7
 	*********
 	*dorm_ch*
 	*********
-	gen dorm_ch=pch12
-	
+	gen byte dorm_ch=pch12
 	
 	************
 	*cuartos_ch*
 	************
-	gen cuartos_ch=pch11
+	gen byte cuartos_ch=pch11
 	
 	***********
 	*cocina_ch*
 	***********
-	gen cocina_ch=pch13
+	gen byte cocina_ch=pch13
 	replace cocina_ch=0 if pch13==2
 	
 	***********
 	*telef_ch*
 	***********
 	*sin dato
-	gen telef_ch=.
+	gen byte telef_ch=.
 	
 	***********
 	*refrig_ch*
 	***********
-	gen refrig_ch=pch9_e
+	gen byte refrig_ch=pch9_e
 	replace refrig_ch=0 if pch9_e==2
 	
 	*********
 	*auto_ch*
 	*********
-	gen auto_ch=pch9_m
+	gen byte auto_ch=pch9_m
 	replace auto_ch = 0 if pch9_m==2
 	
 	********
 	*compu_ch*
 	********
-	gen compu_ch=pch9_h
+	gen byte compu_ch=pch9_h
 	replace compu_ch =0 if pch9_h==2
 	
 	*************
 	*internet_ch*
 	************* 
-	gen internet_ch=pch9_i
+	gen byte internet_ch=pch9_i
 	replace internet_ch=0 if pch9_i==2
 	
 	********
 	*cel_ch*
 	********
-	*sin dato
-	gen cel_ch=.
+	gen byte cel_ch=.
 	
 	*************
 	*viviprop_ch*
 	*************
-	gen viviprop_ch1=.
-	replace viviprop_ch1=0 if pch1 == 3
-	replace viviprop_ch1=1 if pch1 ==1 
-	replace viviprop_ch1=2 if pch1 == 2 
+	gen byte viviprop_ch=.
+	replace viviprop_ch=0 if inlist(pch1, 3,6,4) 
+	replace viviprop_ch=1 if  inlist(pch1, 1,2,5) 
+	replace viviprop_ch=2 if pch1 == 2 
 
+***************************************************
+*** 7.2 Vivienda - variables Wash (13 variables) ***
+***************************************************	
 
-
-**********************************************
-***      VARIABLES DEL MERCADO LABORAL     ***
-**********************************************	
-
-     *******************
-     ****condocup_ci****
-     *******************
-    gen condocup_ci=.
-	replace condocup_ci=1 if pocupa==1 
-	replace condocup_ci=2 if pdesoc==1
-	replace condocup_ci=3 if pei==1
-	replace condocup_ci=4 if edad_ci<7
-	
+	*****************
+	*aguaentubada_ch*
+	*****************
+	gen byte aguaentubada_ch=.
+	replace aguaentubada_ch=1 if pch4 == 1 | pch4 == 2 
+	replace aguaentubada_ch=0 if pch4>=3 & pch4<=10
+		
 	************
-     ***emp_ci***
-     ************
-    gen emp_ci=0
-	replace emp_ci=1 if pocupa==1 
+	*aguared_ch*
+	************
+	gen byte aguared_ch=.
+	replace aguared_ch = 1 if inlist(pch4, 1,2)
+	replace aguared_ch = 0 if inlist(pch4,3,4,5,6,8,9,10)
 	
-	****************
-     ***desemp_ci***
-     ****************	
-	gen desemp_ci=0
-	replace desemp_ci=1 if pdesoc==1
-
+    ***************
+	*aguafuente_ch*
+	***************
+	gen byte aguafuente_ch=.
+	replace aguafuente_ch = 1 if inlist(pch4, 1,2)
+	replace aguafuente_ch = 2 if pch4 ==3
+	replace aguafuente_ch = 5 if pch4 ==5
+	replace aguafuente_ch = 6 if pch4 ==9
+	replace aguafuente_ch = 8 if inlist(pch4, 6,7)
+	replace aguafuente_ch = 10 if inlist(pch4, 4,8,10)
 	
 	*************
-      ***pea_ci***
-      *************
-    gen pea_ci=.
-	replace pea_ci=1 if condocup_ci==1
-	replace pea_ci=1 if condocup_ci==2
-	replace pea_ci=0 if condocup_ci==3
-	replace pea_ci=0 if condocup_ci==4
+	*aguadist_ch*
+	*************
+	gen byte aguadist_ch=.
+	replace aguadist_ch = 1 if inlist(pch4, 1)
+	replace aguadist_ch = 2 if inlist(pch4, 2)
+	replace aguadist_ch = 3 if inlist(pch4, 3)
+	replace aguadist_ch = 0 if inlist(pch4, 4,5,6,7,8,9,10)
 	
-	 *************************
-     ****rama de actividad****
-     *************************
-*************
-**rama_ci****
-*************
-gen rama_ci=.
-replace rama_ci=1 if pcp32_2d>=1 & pcp32_2d<=3
-replace rama_ci=2 if pcp32_2d>=5 & pcp32_2d<=9
-replace rama_ci=3 if pcp32_2d>=10 & pcp32_2d<=33
-replace rama_ci=4 if pcp32_2d>=35 & pcp32_2d<=39
-replace rama_ci=5 if pcp32_2d>=41 & pcp32_2d<=43
-replace rama_ci=6 if (pcp32_2d>=45 & pcp32_2d<=47) | (pcp32_2d>=55 & pcp32_2d<=56)
-replace rama_ci=7 if (pcp32_2d>=49 & pcp32_2d<=53) | pcp32_2d==61 
-replace rama_ci=8 if pcp32_2d>=64 & pcp32_2d<=68
-replace rama_ci=9 if (pcp32_2d>=69 & pcp32_2d<=99) | (pcp32_2d>=58 & pcp32_2d<=60) | (pcp32_2d>=62 & pcp32_2d<=63)
+	**************
+	*aguadisp1_ch*
+	**************
+	gen byte aguadisp1_ch =9 
+	
+	**************
+	*aguadisp2_ch*
+	**************
+	gen byte aguadisp2_ch =9
+	
+	*************
+	*aguamide_ch*
+	*************
+	gen byte aguamide_ch = 9
+	
+	*********
+	*bano_ch*
+	*********
+	gen byte bano_ch = . 
+	replace bano_ch = 0 if pch5 == 5
+	replace bano_ch = 1 if pch5 == 1
+	replace bano_ch = 2 if pch5 == 2
+	replace bano_ch = 6 if inlist(pch5, 3,4)
+	
+	***********
+	*banoex_ch*
+	***********
+	gen byte banoex_ch =.
+	replace banoex_ch = 0 if inlist(pch6,2)
+	replace banoex_ch = 1 if inlist(pch6,1)
 
+	************
+	*sinbano_ch*
+	************
+	gen byte sinbano_ch =.
+	replace sinbano_ch = 3 if inlist(pch5,5)
+	replace sinbano_ch = 0 if inlist(pch5, 1,2,3,4)
 	
-	*********************
-     ****categopri_ci****
-     *********************
-	 *OBSERVACIONES: El censo no distingue entre actividad principal o secundaria, asigno por default principal.
-	 gen categopri_ci=.
-	 replace categopri_ci=1 if pcp31_d==1
-	 replace categopri_ci=2 if pcp31_d==2 | pcp31_d==3
-	 replace categopri_ci=3 if pcp31_d==4 | pcp31_d==5 | pcp31_d==6
-	 replace categopri_ci=4 if emp_ci==1  & pcp31_d==7
-	 
-	 
-	 *****************
-     ***spublico_ci***
-     *****************
-    gen spublico_ci=.
-	replace spublico_ci=1 if emp_ci==1 & pcp32_1d ==15
-	replace spublico_ci=0 if emp_ci==1 & pcp32_1d ~=15
+	*********
+	*conbano_ch*
+	*********
+	gen byte conbano_ch=.
+	replace conbano_ch=1 if pch5>=1 & pch5<=4
+	replace conbano_ch=0 if pch5==5
+	
+	*****************
+	*banoalcantarillado_ch*
+	*****************
+	gen byte banoalcantarillado_ch=.
+	replace banoalcantarillado_ch=1 if pch5 == 1 | pch5==2
+	replace banoalcantarillado_ch=0 if pch5 == 3 | pch5==4| pch5==5
+	
+	*********
+	*des1_ch*
+	*********
+	gen byte des1_ch=.
+	replace des1_ch=0 if bano_ch ==0
+	replace des1_ch=1 if pch5 == 1 | pch5 == 2
+	replace des1_ch=2 if pch5 == 3 | pch5 == 4
 	
 
-**********************************
-**** VARIABLES DE INGRESO ****
-***********************************
+
+*************************************************************
+*** 8. Otras variables específicas por país (6 variables) ***
+*************************************************************	
+* si no existe la variable, crearla con un missing value (.). Cambia ISOalpha3Pais
+* por el país que te toca. Por ejemplo si te toca Ecuador debe ser 
+* ECU_m_pared_ch, ECU_m_piso_ch, etc.
+ 
+	**************************
+	*ISOalpha3Pais_m_pared_ch*
+	**************************	
+	gen byte GTM_m_pared_ch= pcv2
+	label var GTM_m_pared_ch  "Material de las paredes según el censo del país - variable original"
+
+	*************************
+	*ISOalpha3Pais_m_piso_ch*
+	*************************
+	gen byte GTM_m_piso_ch= pcv3
+	label var GTM_m_piso_ch  "Material de los pisos según el censo del país - variable original"
+
+	**************************
+	*ISOalpha3Pais_m_techo_ch*
+	**************************	
+	gen byte GTM_m_techo_ch= pcv5
+	label var GTM_m_techo_ch  "Material del techo según el censo del país - variable original"
+
 *Guatemala 2018 no tiene variables de ingreso
 
-   gen ylm_ci=.
- 
-   gen ynlm_ci=.
-   
-   gen ylm_ch =.
-   
-   gen ynlm_ch=.
-   
-   
-*******************************************************
-***           VARIABLES DE MIGRACIÓN              ***
-*******************************************************
+	**************************
+	*ISOalpha3Pais_ingreso_ci*
+	**************************	
+	gen long GTM_ingreso_ci = .
+	label var GTM_ingreso_ci  "Ingreso total según el censo del país - variable original"
+	
+	*****************************
+	*ISOalpha3Pais_ingresolab_ci*
+	*****************************
+	gen long GTM_ingresolab_ci = .	
+	label var GTM_ingresolab_ci  "Ingreso laboral según el censo del país - variable original"
 
-    *******************
-    ****migrante_ci****
-    *******************
-	gen migrante_ci = 0
-	replace migrante_ci=1 if migra_vida==1 | migra_rec==1
-	
-	*******************
-    **migantiguo5_ci***
-    *******************
-	gen migantiguo5_ci =.
-	replace migantiguo5_ci=1 if migra_vida==1
-	
 	**********************
-	*** migrantelac_ci ***
+	*ISOalpha3Pais_dis_ci*
 	**********************
-	gen migrantelac_ci = .
-	
-	*******************
-    **migrantiguo5_ci**
-    *******************
-	gen migrantiguo5_ci =.
-	
-	**********************
-	****** miglac_ci *****
-	**********************
-	gen miglac_ci = .
-		
-	
-***************************************
-************** Education **************
-***************************************
-
-*************
-***aedu_ci***
-*************
-gen aedu_ci =aneduca
+	gen byte GTM_dis_ci = .
+	label var GTM_dis_ci  "Individuos con discapacidad según el censo del país - variable original"
 
 
-**************
-***eduno_ci***
-**************
-gen eduno_ci=(aedu_ci==0) // never attended or pre-school
-replace eduno_ci=. if aedu_ci==. // NIU & missing
+/*******************************************************************************
+   III. Incluir variables externas
+*******************************************************************************/
+capture drop _merge
+merge m:1 pais_c anio_c using "Z:/general_documentation/data_externa/poverty/International_Poverty_Lines/5_International_Poverty_Lines_LAC_long_PPP17.dta", keepusing (cpi_2017 lp19_2011 lp31_2011 lp5_2011 tc_wdi lp365_2017 lp685_201)
+drop if _merge ==2
 
-**************
-***edupi_ci***
-**************
-gen edupi_ci=(aedu_ci>0 & aedu_ci<6) //
-replace edupi_ci=. if aedu_ci==. // NIU & missing
+g tc_c     = tc_wdi
+g ipc_c    = cpi_2017
+g lp19_ci  = lp19_2011 
+g lp31_ci  = lp31_2011 
+g lp5_ci   = lp5_2011
 
+capture label var tc_c "Tasa de cambio LCU/USD Fuente: WB/WDI"
+capture label var ipc_c "Índice de precios al consumidor base 2017=100 Fuente: IMF/WEO"
+capture label var lp19_ci  "Línea de pobreza USD1.9 día en moneda local a precios corrientes a PPA 2011"
+capture label var lp31_ci  "Línea de pobreza USD3.1 día en moneda local a precios corrientes a PPA 2011"
+capture label var lp5_ci "Línea de pobreza USD5 por día en moneda local a precios corrientes a PPA 2011"
+capture label var lp365_2017  "Línea de pobreza USD3.65 día en moneda local a precios corrientes a PPA 2017"
+capture label var lp685_2017 "Línea de pobreza USD6.85 por día en moneda local a precios corrientes a PPA 2017"
 
-**************
-***edupc_ci***
-**************
-gen edupc_ci=(aedu_ci==6) 
-replace edupc_ci=. if aedu_ci==. // NIU & missing
+drop  lp19_2011 lp31_2011 lp5_2011 tc_wdi _merge
 
-**************
-***edusi_ci***
-**************
-gen edusi_ci=(aedu_ci>6 & aedu_ci<11) // 7 a 10 anos de educación
-replace edusi_ci=. if aedu_ci==. // NIU & missing
+/*******************************************************************************
+   IV. Revisión de que se hayan creado todas las variables
+*******************************************************************************/
+* CALIDAD: revisa que hayas creado todas las variables. Si alguna no está
+* creada, te apacerá en rojo el nombre. 
 
-**************
-***edusc_ci***
-**************
-gen edusc_ci=(aedu_ci>=11) // 11 anos de educación
-replace edusc_ci=. if aedu_ci==. // NIU & missing
+global lista_variables region_BID_c region_c geolev1 pais_c anio_c idh_ch idp_ci factor_ci factor_ch estrato_ci upm zona_c sexo_c edad_ci relacion_ci civil_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch miembros_ci clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch afro_ci ind_ci noafroind_ci afroind_ci afro_ch ind_ch noafroind_ch afroind_ch  dis_ci disWG_ci dis_ch migrante_ci migrantiguo5_ci miglac_ci aedu_ci eduno_ci edupi_ci edupc_ci edusi_ci edusc_ci edus1i_ci edus1c_ci edus2i_ci edus2c_ci edupre_ci asiste_ci literacy condocup_ci emp_ci desemp_ci pea_ci rama_ci  categopri_ci spublico_ci luz_ch piso_ch pared_ch techo_ch resid_ch dorm_ch cuartos_ch cocina_ch telef_ch refrig_ch auto_ch compu_ch internet_ch cel_ch viviprop_ch aguaentubada_ch aguared_ch aguafuente_ch aguadist_ch aguadisp1_ch aguadisp2_ch aguamide_ch bano_ch banoex_ch banoalcantarillado_ch sinbano_ch conbano_ch des1_ch ${PAIS}_ingreso_ci ${PAIS}_ingresolab_ci ${PAIS}_m_pared_ch ${PAIS}_m_piso_ch ${PAIS}_m_techo_ch ${PAIS}_dis_ci tc_c ipc_c lp19_ci lp31_ci lp5_ci lp365_2017  lp685_2017
 
-***************
-***edus1i_ci***
-***************
-gen byte edus1i_ci=(aedu_ci>6 & aedu_ci<9)
-replace edus1i_ci=. if aedu_ci==. // missing a los NIU & missing
-
-***************
-***edus1c_ci***
-***************
-gen byte edus1c_ci=(aedu_ci==9)
-replace edus1c_ci=. if aedu_ci==. // missing a los NIU & missing
-
-***************
-***edus2i_ci***
-***************
-gen byte edus2i_ci=(aedu_ci>9 & aedu_ci<11)
-replace edus2i_ci=. if aedu_ci==. // missing a los NIU & missing
-
-***************
-***edus2c_ci***
-***************
-gen byte edus2c_ci=(aedu_ci>=11)
-replace edus2c_ci=. if aedu_ci==. // missing a los NIU & missing
-
-***************
-***edupre_ci***
-***************
-gen byte edupre_ci=(nivgrado==2)
-replace edupre_ci=. if aedu_ci==.
-*label variable edupre_ci "Educacion preescolar"
-
-***************
-***asiste_ci***
-***************
-gen asiste_ci=.
-replace asiste_ci=1 if pcp18==1
-replace asiste_ci=0 if pcp18==2
-*label variable asiste_ci "Asiste actualmente a la escuela"
-
-**************
-***literacy***
-**************
-gen literacy=. 
+* selecciona las siguientes 6 líneas y ejecuta (do)
+foreach v of global lista_variables {
+	cap confirm variable `v'
+	if _rc == 111 {
+		display in red "variable `v' NO existe."
+	}
+}
 
 
-*******************************************************
-***           VARIABLES DE DIVERSIDAD               ***
-*******************************************************				
-			
-	***************
-	***afroind_ci***
-	***************
-gen afroind_ci=. 
-replace afroind_ci=1 if pcp12==1 | pcp12==2 | pcp12==3 
-replace afroind_ci=2 if pcp12==4
-replace afroind_ci=3 if pcp12==5 | pcp12==6 
+/*******************************************************************************
+   V. Borrar variables originales con exepción de los identificadores 
+*******************************************************************************/
+* En "..." agregar la lista de variables de ID originales (por ejemplo los ID de personas, vivienda y hogar)
+
+keep  $lista_variables num_vivienda num_hogar pcp1
+
+* selecciona las 3 lineas y ejecuta (do). Deben quedar 105 variables de las secciones II y III más las 
+* variables originales de ID que hayas mantenido
+ds
+local varconteo: word count `r(varlist)'
+display "Número de variables de la base: `varconteo'"
 
 
-   ***************
-	***afroind_ch***
-	***************
-	gen afroind_jefe= afroind_ci if jefe_ci==1
-	egen afroind_ch  = min(afroind_jefe), by(idh_ch) 
-	
-	drop afroind_jefe 
-
-	*******************
-	***afroind_ano_c***
-	*******************
-gen afroind_ano_c=1964	
-
-	*******************
-	***dis_ci***
-	*******************
-/*	
-No, sin dificultad ..................1
-Sí, con algo de dificultad ......... 2
-Sí, con mucha dificultad ........... 3
-No puede ............................4
-*/
-gen dis_ci=0
-replace dis_ci=1 if (pcp16_a>=2 & pcp16_a<=4) | (pcp16_b>=2 & pcp16_b<=4) | (pcp16_c>=2 & pcp16_c<=4)
-replace dis_ci=1 if (pcp16_d>=2 & pcp16_d<=4) | (pcp16_e>=2 & pcp16_e<=4) | (pcp16_f>=2 & pcp16_f<=4)
-replace dis_ci=. if pcp16_a==9 & pcp16_b==9 & pcp16_c==9 & pcp16_d==9 & pcp16_e==9 & pcp16_f==9 & ///
-					pcp16_a==. & pcp16_b==. & pcp16_c==. & pcp16_d==. & pcp16_e==. & pcp16_f==. 
-
-	*******************
-	***dis_ch***
-	*******************
-egen dis_ch  = sum(dis_ci), by(idh_ch) 
-replace dis_ch=1 if dis_ch>=1 & dis_ch!=.
+/*******************************************************************************
+   VI. Incluir etiquetas para las variables y categorías
+*******************************************************************************/
+include "$gitFolder\armonizacion_censos_poblacion_scl\Base\labels_general.do"
 
 
-*****************************
-** Include all labels of   **
-**  harmonized variables   **
-*****************************
-include "$gitFolder\armonizacion_censos_poblacion_scl\Base\labels.do"
-
-
+/*******************************************************************************
+   VII. Guardar la base armonizada 
+*******************************************************************************/
 compress
+save "$base_out", replace 
 
-save "`base_out'", replace 
-log close	
+log close
 
-	
+********************************************************************************
+******************* FIN. Muchas gracias por tu trabajo ;) **********************
+********************************************************************************
