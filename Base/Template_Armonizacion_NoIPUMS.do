@@ -850,24 +850,24 @@ rename *, lower
    III. Incluir variables externas
 *******************************************************************************/
 capture drop _merge
-merge m:1 pais_c anio_c using "Z:/general_documentation/data_externa/poverty/International_Poverty_Lines/5_International_Poverty_Lines_LAC_long_PPP17.dta", keepusing (lp19_2011 lp31_2011 lp5_2011 tc_wdi lp365_2017 lp685_201 cpi_2017)
+merge m:1 pais_c anio_c using "Z:/general_documentation/data_externa/poverty/International_Poverty_Lines/5_International_Poverty_Lines_LAC_long_PPP17.dta", keepusing (tc_wdi ppp_wdi ppp_2017 cpi_c cpi2017 cpi_2017 lp365_2017 lp685_2017 )
 drop if _merge ==2
 
 g tc_c     = tc_wdi
-g ipc_c    = cpi_2017
-g lp19_ci  = lp19_2011 
-g lp31_ci  = lp31_2011 
-g lp5_ci   = lp5_2011
+g ppp_c    = ppp_wdi
+g cpi_c    = cpi
+g ratio_cpi2017 = cpi_2017
 
-capture label var tc_c "Tasa de cambio LCU/USD Fuente: WB/WDI"
-capture label var ipc_c "Índice de precios al consumidor base 2017=100 Fuente: IMF/WEO"
-capture label var lp19_ci  "Línea de pobreza USD1.9 día en moneda local a precios corrientes a PPA 2011"
-capture label var lp31_ci  "Línea de pobreza USD3.1 día en moneda local a precios corrientes a PPA 2011"
-capture label var lp5_ci "Línea de pobreza USD5 por día en moneda local a precios corrientes a PPA 2011"
-capture label var lp365_2017  "Línea de pobreza USD3.65 día en moneda local a precios corrientes a PPA 2017"
-capture label var lp685_2017 "Línea de pobreza USD6.85 por día en moneda local a precios corrientes a PPA 2017"
+cap label var tc_c     "Tipo de cambio oficial (año de la encuesta)"
+cap label var ppp_c    "Poder de paridad adquisitivo (año de la encuesta)"
+cap label var ppp_2017 "Poder de paridad adquisitivo (PPP) 2017"
+cap label var cpi_c   "Índice de precios al consumidor (año de la encuesta)"
+cap label var cpi2017 "Índice de precios al consumidor (2017)"
+cap label var ratio_cpi2017 "Tasa de índice de precios al consumidor (CPI_actual/CPI_2017)"
+cap label var lp365_2017 "Línea de pobreza extrema USD 3.1 per capita, moneda local PPP 2017"
+cap label var lp685_2017 "Línea de pobreza moderada USD 6.85 per capita, moneda local PPP 2017"
 
-drop  cpi_2017 lp19_2011 lp31_2011 lp5_2011 tc_wdi _merge
+drop  cpi_2017 tc_wdi _merge
 
 /*******************************************************************************
    IV. Revisión de que se hayan creado todas las variables
