@@ -59,7 +59,7 @@ INSTRUCCIONES:
 		
    (10) En la sección V, borra todas las variables excepto las variables 
 		creadas en las secciones II y III y las variables de ID originales. 
-		Corre el código y verificalo. Debes tener 94 variables de las secciones 
+		Corre el código y verificalo. Debes tener 108 variables de las secciones 
 		II y III más las variables de ID originales (control de calidad).
 		
    (11) En la sección VII, guarda la base con el formato 
@@ -842,27 +842,30 @@ rename *, lower
 
 
 /*******************************************************************************
-   III. Incluir variables externas (7 variables)
+   III. Incluir variables externas (10 variables)
 *******************************************************************************/
 capture drop _merge
-merge m:1 pais_c anio_c using "Z:/general_documentation/data_externa/poverty/International_Poverty_Lines/5_International_Poverty_Lines_LAC_long_PPP17.dta", keepusing ( lp19_2011 lp31_2011 lp5_2011 tc_wdi cpi_2017 lp365_2017 lp685_201)
+merge m:1 pais_c anio_c using "Z:/general_documentation/data_externa/poverty/International_Poverty_Lines/5_International_Poverty_Lines_LAC_long_PPP17.dta", keepusing(tc_wdi ppp_wdi ppp_2017 cpi cpi2017 cpi_2017 lp365_2017 lp685_2017 lp14_2017 lp81_2017 )
 drop if _merge ==2
 
 g tc_c     = tc_wdi
-g ipc_c    = cpi_2017
-g lp19_ci  = lp19_2011 
-g lp31_ci  = lp31_2011 
-g lp5_ci   = lp5_2011
+g ppp_c    = ppp_wdi
+g cpi_c    = cpi
+g ratio_cpi2017 = cpi_2017
 
-capture label var tc_c "Tasa de cambio LCU/USD Fuente: WB/WDI"
-capture label var ipc_c "Índice de precios al consumidor base 2017=100 Fuente: IMF/WEO"
-capture label var lp19_ci  "Línea de pobreza USD1.9 día en moneda local a precios corrientes a PPA 2011"
-capture label var lp31_ci  "Línea de pobreza USD3.1 día en moneda local a precios corrientes a PPA 2011"
-capture label var lp5_ci "Línea de pobreza USD5 por día en moneda local a precios corrientes a PPA 2011"
-capture label var lp365_2017  "Línea de pobreza USD3.65 día en moneda local a precios corrientes a PPA 2017"
-capture label var lp685_2017 "Línea de pobreza USD6.85 por día en moneda local a precios corrientes a PPA 2017"
+cap label var tc_c     "Tipo de cambio oficial (año de la encuesta)"
+cap label var ppp_c    "Poder de paridad adquisitivo (año de la encuesta)"
+cap label var ppp_2017 "Poder de paridad adquisitivo (PPP) 2017"
+cap label var cpi_c   "Índice de precios al consumidor (año de la encuesta)"
+cap label var cpi2017 "Índice de precios al consumidor (2017)"
+cap label var ratio_cpi2017 "Tasa de índice de precios al consumidor (CPI_actual/CPI_2017)"
+cap label var lp365_2017 "Línea de pobreza extrema USD 3.1 per capita, moneda local PPP 2017"
+cap label var lp685_2017 "Línea de pobreza moderada USD 6.85 per capita, moneda local PPP 2017"
+cap label var lp14_2017  "Línea de vulnerabilidad USD 14.15 per capita, moneda local PPP 2017"
+cap label var lp81_2017  "Línea de clase media USD 81.22 per capita, moneda local PPP 2017"
 
-drop cpi_2017 lp19_2011 lp31_2011 lp5_2011 tc_wdi _merge
+drop  cpi_2017 tc_wdi _merge
+
 
 /*******************************************************************************
    IV. Revisión de que se hayan creado todas las variables
@@ -885,7 +888,7 @@ foreach v of global lista_variables {
 *******************************************************************************/
 
 keep  $lista_variables u_dpto u_mpio ua_clase cod_encuestas u_vivienda p_nrohog p_nro_per
-* selecciona las 3 lineas y ejecuta (do). Deben quedar 105 variables de las secciones II y III más las variables originales de ID que hayas mantenido (108)
+* selecciona las 3 lineas y ejecuta (do). Deben quedar 115 variables de las secciones II y III más las variables originales de ID que hayas mantenido (108)
 ds
 local varconteo: word count `r(varlist)'
 display "Número de variables de la base: `varconteo'"

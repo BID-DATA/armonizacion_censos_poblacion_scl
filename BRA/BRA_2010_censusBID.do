@@ -269,7 +269,7 @@ foreach v of global lista_variables {
 * En "..." agregar la lista de variables de ID originales (por ejemplo los ID de personas, vivienda y hogar)
 
 keep  $lista_variables serial pernum
-* selecciona las 3 lineas y ejecuta (do). Deben quedar 105 variables de las secciones II y III más las 
+* selecciona las 3 lineas y ejecuta (do). Deben quedar 108 variables de las secciones II y III más las 
 * variables originales de ID que hayas mantenido
 ds
 local varconteo: word count `r(varlist)'
