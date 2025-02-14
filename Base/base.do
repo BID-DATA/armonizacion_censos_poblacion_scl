@@ -80,14 +80,13 @@ if  `"$PAIS"' =="BHS" |  `"$PAIS"' =="GUY" | `"$PAIS"' =="JAM" |  `"$PAIS"' =="S
 	******************
     *idh_ch (id hogar)*
     ******************
-    gen idh_ch =serial 
-	tostring idh_ch, replace
+	tostring serial, gen(idh_ch) format("%20.0f")
 	
 	******************
     *idp_ci (idpersonas)*
     ******************
 	egen idp_ci = concat(idh_ch pernum)
-	tostring idp_ci , replace
+	tostring idp_ci, replace format("%20.0f")
 	
 	****************************************
 	*factor expansión individio (factor_ci)*
