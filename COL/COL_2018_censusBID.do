@@ -625,9 +625,6 @@ rename *, lower
 	replace piso_ch = 1 if v_mat_piso == 1 | v_mat_piso == 2 | v_mat_piso == 3
 	replace piso_ch = 2 if  v_mat_piso == 4 | v_mat_piso == 5
 	replace piso_ch = . if v_mat_piso==9 | v_mat_piso==.
-	label variable piso_ch "Materiales de construcción del piso"
-	label def piso_ch 0"Sin piso o sin terminar (tierra)" 1"Materiales no permanentes" 2 "Materiales permanentes"
-	label val piso_ch piso_ch
 	
 	**********
 	*pared_ch*
@@ -636,9 +633,6 @@ rename *, lower
 	replace pared_ch = 0 if v_mat_pared == 9
 	replace pared_ch = 1 if inrange(v_mat_pared, 4, 8)
 	replace pared_ch = 2 if inrange(v_mat_pared, 1, 3)
-	label variable pared_ch "Materiales de construcción de las paredes del hogar"
-	label def pared_ch 0"No tiene paredes" 1"Materiales no permanentes" 2 "Materiales permanentes"
-	label val pared_ch pared_ch
 	
 	**********
 	*techo_ch*
