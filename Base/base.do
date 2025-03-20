@@ -249,46 +249,6 @@ if  `"$PAIS"' =="BHS" |  `"$PAIS"' =="GUY" | `"$PAIS"' =="JAM" |  `"$PAIS"' =="S
 	************
 	egen byte nmenor1_ch=sum((relacion_ci>0 & relacion_ci<=5) & (edad_ci<1)), by(idh_ch) 
 
-
-************************************
-*** 3. Diversidad (11 variables) ***
-************************************
-
-	*********
-	*afro_ci*
-	*********
-	gen byte afro_ci = .
-	
-	*********
-	*indi_ci*
-	*********	
-	gen byte ind_ci =. 	
-	
-	**************
-	*noafroind_ci*
-	**************
-	gen byte noafroind_ci =. 
-	
-	*********
-	*afro_ch*
-	*********
-	gen byte afro_ch=.
-	
-	********
-	*ind_ch*
-	********	
-	gen byte ind_ch=.
-	
-	**************
-	*noafroind_ch*
-	**************
-	gen byte noafroind_ch =.
-	
-	**********
-	*disWG_ci*
-	**********
-	gen byte disWG_ci=. 
-
 	
 **********************************
 *** 4. Migración (3 variables) ***
