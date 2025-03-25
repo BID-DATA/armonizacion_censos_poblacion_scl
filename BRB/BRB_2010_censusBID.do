@@ -83,7 +83,7 @@ global base_in  = "$ruta\\raw\\$PAIS\\$ANIO\\data_orig\\${PAIS}_${ANIO}_NOIPUMS.
 global base_out = "$ruta\\clean\\$PAIS\\${PAIS}_${ANIO}_censusBID.dta"
 global log_file ="$ruta\\clean\\$PAIS\\${PAIS}_${ANIO}_censusBID.log"                                                   
 capture log close
-log using `"$log_file"' , replace  //agregar ,replace si ya está creado el log_file en tu carpeta
+*log using `"$log_file"' , replace  //agregar ,replace si ya está creado el log_file en tu carpeta
 
 use "$base_in", clear
 
@@ -307,51 +307,66 @@ rename *, lower
 
 
 ************************************
-*** 3. Diversidad (11 variables) ***
+*** 3. Diversidad (12 variables) ***
 ************************************		
 
 	*********
 	*afro_ci*
 	*********
-	gen byte afro_ci = . 
+	gen byte afro_ci = . 	  // se queda como missing (.) si no existe la pregunta
+	replace afro_ci =1 if p10 == 1
+	replace afro_ci =0 if p10 != 1
+	replace afro_ci =. if p10 == 9 // not stated
 	
 	*********
-	*indi_ci*
+	*ind_ci*
 	*********	
-	gen byte ind_ci =. 	
-
+	gen byte ind_ci =. 	// No hay opciones de respuesta sobre identificación indígena (ind_ci = .)
+	
 	**************
 	*noafroind_ci*
 	**************
-	gen byte noafroind_ci =.
-	
-	***************
-	***afroind_ci***
-	***************
-	gen byte afroind_ci=. 
-	replace afroind_ci=2 if p10==1
-	replace afroind_ci=3 if inrange(p10,2,9)
+	gen byte noafroind_ci =.   // se queda como missing (.) si no existe la pregunta
+	replace noafroind_ci =1 if (afro_ci==0 & ind_ci==0)
+	replace noafroind_ci =0 if (afro_ci==1 | ind_ci==1)
+	replace noafroind_ci =. if (afro_ci==. | ind_ci==.) //Esto solo en el caso que se tenga ambas opciones no disponibles. 
+	ta noafroind_ci,m
 
+	************
+	*afroind_ci*
+	************
+	gen byte afroind_ci=. 
+	replace afroind_ci=1 if ind_ci==1 
+	replace afroind_ci=2 if afro_ci==1
+	replace afroind_ci=3 if noafroind_ci == 1
+	ta afroind_ci,m
+	
 	*********
 	*afro_ch*
 	*********
-	gen byte afro_ch =.
+	gen byte afro_jefe = afro_ci if relacion_ci==1
+	egen afro_ch  = max(afro_jefe), by(idh_ch) 
+	drop afro_jefe
 	
 	********
 	*ind_ch*
 	********	
-	gen byte ind_ch = .
+	gen byte ind_jefe = ind_ci if relacion_ci==1
+	egen ind_ch = max(ind_jefe), by(idh_ch) 
+	drop ind_jefe
 
 	**************
 	*noafroind_ch*
 	**************
-	gen byte noafroind_ch =.
-	
-	***************
-	***afroind_ch**
-	***************
-    gen byte afroind_jefe= afroind_ci if jefe_ci==1
-	egen byte afroind_ch  = min(afroind_jefe), by(idh_ch) 
+	gen byte noafroind_jefe = noafroind_ci if relacion_ci==1
+	egen noafroind_ch = max(noafroind_jefe), by(idh_ch) 
+	drop noafroind_jefe
+
+	************
+	*afroind_ch*
+	************
+    gen byte afroind_jefe = afroind_ci if jefe_ci==1
+	egen afroind_ch = min(afroind_jefe), by(idh_ch) 
 	drop afroind_jefe 
 
 	************
@@ -368,6 +383,15 @@ rename *, lower
 	***dis_ch***
 	************
 	bysort idh_ch: egen byte dis_ch  = max(dis_ci)
+	
+	******************
+	*ISOalpha3_dis_ci*
+	******************
+	gen byte BRB_dis_ci = . 
+	replace BRB_dis_ci = 1 if p12a1 == 1 
+	replace BRB_dis_ci = 0 if p12a1 == 2 
+
+
 
 **********************************
 *** 4. Migración (3 variables) ***
