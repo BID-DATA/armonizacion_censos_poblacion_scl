@@ -24,11 +24,11 @@ Autores:
 							SCL/LMK - IADB
 ****************************************************************************/
 ****************************************************************************
-
+*/
 *****************************************************
 ******* Variables específicas del censo    **********
 *****************************************************
-include "../Base/base.do"
+include "C:\Users\RSENRA\OneDrive - Inter-American Development Bank Group\Documents\GitHub\armonizacion_censos_poblacion_scl\Base/base.do"
 
 ****************
  *** region_c ***
@@ -50,44 +50,101 @@ include "../Base/base.do"
    label value region_c region_c 
 
 	
-
 *******************************************************
 ***           VARIABLES DE DIVERSIDAD               ***
 *******************************************************
-* Cesar Lins & Nathalia Maya - Septiembre 2021	
+	*********
+	*afro_ci*
+	*********
+	gen byte afro_ci = . 	  // se queda como missing (.) si no existe la pregunta
+	replace afro_ci =1 if ethnicbo == 6
+	replace afro_ci =0 if ethnicbo != 6 // incluye unkown
+	replace afro_ci =. if ethnicbo == 99 // niu (not in universe)
+	tab afro_ci
+	
+	*********
+	*indi_ci*
+	*********	
+	gen byte ind_ci =. 		  // se queda como missing (.) si no existe la pregunta
+	replace ind_ci =1 if indig == 1
+	replace ind_ci =0 if indig == 2
+	tab ind_ci
+	
+	**************
+	*noafroind_ci*
+	**************
+	gen byte noafroind_ci =.   // se queda como missing (.) si no existe la pregunta
+	replace noafroind_ci =1 if (afro_ci==0 & ind_ci==0)
+	replace noafroind_ci =0 if (afro_ci==1 | ind_ci==1)
+	replace noafroind_ci =. if (afro_ci==. | ind_ci==.) //Esto solo en el caso que se tenga ambas opciones no disponibles. 
+	ta noafroind_ci,m
 
-	***************
-	***afroind_ci***
-	***************
-**Pregunta: 
+	************
+	*afroind_ci*
+	************
+	gen byte afroind_ci=. 
+	replace afroind_ci=1 if ind_ci==1 
+	replace afroind_ci=2 if afro_ci==1
+	replace afroind_ci=3 if noafroind_ci == 1
+	ta afroind_ci,m
+	
+	*********
+	*afro_ch*
+	*********
+	gen byte afro_jefe = afro_ci if relacion_ci==1
+	egen afro_ch  = max(afro_jefe), by(idh_ch) 
+	drop afro_jefe
+	
+	********
+	*ind_ch*
+	********	
+	gen byte ind_jefe = ind_ci if relacion_ci==1
+	egen ind_ch = max(ind_jefe), by(idh_ch) 
+	drop ind_jefe
 
-gen afroind_ci=. 
-replace afroind_ci=1 if indig == 1
-replace afroind_ci=2 if ethnicbo == 6
-replace afroind_ci=3 if indig == 2 & ethnicbo!=6
-replace afroind_ci=. if ethnicbo == 98 // Unknown
+	**************
+	*noafroind_ch*
+	**************
+	gen byte noafroind_jefe = noafroind_ci if relacion_ci==1
+	egen noafroind_ch = max(noafroind_jefe), by(idh_ch) 
+	drop noafroind_jefe
 
+	************
+	*afroind_ch*
+	************
+    gen byte afroind_jefe = afroind_ci if jefe_ci==1
+	egen afroind_ch = min(afroind_jefe), by(idh_ch) 
+	drop afroind_jefe 
 
-	***************
-	***afroind_ch***
-	***************
-gen afroind_jefe= afroind_ci if relate==1
-egen afroind_ch  = min(afroind_jefe), by(idh_ch) 
+	********
+	*dis_ci*
+	********
+	gen byte dis_ci=0
+	*replace dis_ci=1 if 
+	replace dis_ci=. 
+	
+	tab dis_ci,m
+	
+	**********
+	*disWG_ci*
+	**********
+	gen byte disWG_ci=0 
+	*replace disWG_ci=1
+	replace disWG_ci=.  
+	
+	tab disWG_ci
+	
+	********
+	*dis_ch*
+	********
+	egen byte dis_ch = max(dis_ci), by(idh_ch) 
 
-drop afroind_jefe 
-
-	*******************
-	***afroind_ano_c***
-	*******************
-gen afroind_ano_c=2001
-
-********************
-*** discapacid
-********************
-gen dis_ci=.
-gen dis_ch=.
-
-
+	************
+	*BOL_dis_ci*
+	************
+	gen BOL_dis_ci = .
+	
+	
 ************************
 * VARIABLES EDUCATIVAS *
 ************************
