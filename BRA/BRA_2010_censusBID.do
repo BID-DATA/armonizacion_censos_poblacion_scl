@@ -20,7 +20,7 @@ Autores: Cesar Lins
 Última versión: Septiembre, 2021
 							SCL/LMK - IADB
 ****************************************************************************/
-
+*/
 
 global PAIS BRA   				 //cambiar
 global ANIO 2010   				 //cambiar
@@ -75,50 +75,89 @@ label values region_c region_c
 *******************************************************
 ***           VARIABLES DE DIVERSIDAD               ***
 *******************************************************				
-* Cesar Lins & Nathalia Maya - Septiembre 2021	
+* Mayte Ysique - Marzo 2025
 
-	***************
-	***afroind_ci***
-	***************
-**Pregunta: 
+	*********
+	*afro_ci*
+	*********
+	gen byte afro_ci = . 	  // se queda como missing (.) si no existe la pregunta
+	replace afro_ci =1 if inlist(race,20,51)
+	replace afro_ci =0 if inlist(race,10,30,40)
+	
+	*********
+	*indi_ci*
+	*********	
+	gen byte ind_ci =. 		  // se queda como missing (.) si no existe la pregunta
+	replace ind_ci =1 if race==30
+	replace ind_ci =0 if inlist(race,10,20,40,51)
 
-gen afroind_ci=. 
-replace afroind_ci=1  if race == 30
-replace afroind_ci=2 if race == 20 | race == 51 
-replace afroind_ci=3 if race == 10 | race == 40 
-replace afroind_ci=. if race == 99
+	**************
+	*noafroind_ci*
+	**************
+	gen byte noafroind_ci =.   // se queda como missing (.) si no existe la pregunta
+	replace noafroind_ci =1 if (afro_ci==0 & ind_ci==0)
+	replace noafroind_ci =0 if (afro_ci==1 | ind_ci==1)
+	replace noafroind_ci =. if (afro_ci==. | ind_ci==.) //Esto solo en el caso que se tenga ambas opciones no disponibles. 
+	ta noafroind_ci,m
 
-	***************
-	***afroind_ch***
-	***************
-gen afroind_jefe= afroind_ci if relate==1
-egen afroind_ch  = min(afroind_jefe), by(idh_ch) 
+	************
+	*afroind_ci*
+	************
+	gen byte afroind_ci=. 
+	replace afroind_ci=1 if ind_ci==1 
+	replace afroind_ci=2 if afro_ci==1
+	replace afroind_ci=3 if noafroind_ci == 1
+	ta afroind_ci,m
+	
+	*********
+	*afro_ch*
+	*********
+	gen byte afro_jefe = afro_ci if relacion_ci==1
+	egen afro_ch  = max(afro_jefe), by(idh_ch) 
+	drop afro_jefe
+	
+	********
+	*ind_ch*
+	********	
+	gen byte ind_jefe = ind_ci if relacion_ci==1
+	egen ind_ch = max(ind_jefe), by(idh_ch) 
+	drop ind_jefe
 
-drop afroind_jefe 
+	**************
+	*noafroind_ch*
+	**************
+	gen byte noafroind_jefe = noafroind_ci if relacion_ci==1
+	egen noafroind_ch = max(noafroind_jefe), by(idh_ch) 
+	drop noafroind_jefe
 
-	*******************
-	***afroind_ano_c***
-	*******************
-gen afroind_ano_c=1960
+	************
+	*afroind_ch*
+	************
+    gen byte afroind_jefe = afroind_ci if jefe_ci==1
+	egen afroind_ch = min(afroind_jefe), by(idh_ch) 
+	drop afroind_jefe 
 
-************************
-*** Discapacidad (WG)***
-************************
-/* Identificación de si una persona reporta por lo menos alguna dificultad en una o más de las preguntas del Washington Group Questionnaire */
-
-gen dis_ci = 0
-recode dis_ci nonmiss=. if inlist(9,br2010a_dissee,br2010a_dishear,br2010a_dismob) //
-recode dis_ci nonmiss=. if br2010a_dissee>=. & br2010a_dishear>=. & br2010a_dismob>=. //
-	foreach i in see hear mob {
-		forvalues j=1/3 {
-		replace dis_ci=1 if br2010a_dis`i'==`j'
-		}
-		}
-
-/*Identificación de si un hogar tiene uno o más miembros que reportan por lo menos alguna dificultad en una o más de las preguntas del Washington Group Questionnaire */		
-
-egen dis_ch  = sum(dis_ci), by(idh_ch) 
-replace dis_ch=1 if dis_ch>=1 & dis_ch!=. 
+	********
+	*dis_ci*
+	********
+	gen byte dis_ci=.
+	replace dis_ci = 1 if br2010a_dissee<=3 | br2010a_dishear<=3 | br2010a_dismob<=3
+	replace dis_ci = 0 if br2010a_dissee==4 & br2010a_dishear==4 & br2010a_dismob==4 
+	
+	**********
+	*disWG_ci*
+	**********
+	gen byte disWG_ci=.
+	
+	********
+	*dis_ch*
+	********
+	egen byte dis_ch = max(dis_ci), by(idh_ch) 
+	
+	******************
+	*ISOalpha3_dis_ci*
+	******************
+	gen byte BRA_dis_ci = .
 
 
 ****************************
