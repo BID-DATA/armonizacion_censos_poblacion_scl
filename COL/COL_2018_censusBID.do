@@ -402,50 +402,62 @@ rename *, lower
 	*afro_ci*
 	*********
 	gen byte afro_ci = .
+	replace afro_ci = 1 if pa1_grp_etnic == 3 | pa1_grp_etnic == 4 | pa1_grp_etnic == 5
+	replace afro_ci = 0 if pa1_grp_etnic == 1 | pa1_grp_etnic == 2 | pa1_grp_etnic == 6
 	
 	*********
-	*indi_ci*
+	*ind_ci*
 	*********	
-	gen byte ind_ci =.
+	gen byte ind_ci = .
+	replace ind_ci = 1 if pa1_grp_etnic == 1
+	replace ind_ci = 0 if pa1_grp_etnic == 2 | pa1_grp_etnic == 3 | pa1_grp_etnic == 4 | pa1_grp_etnic == 5 | pa1_grp_etnic == 6
 	
 	**************
 	*noafroind_ci*
 	**************
-	gen byte noafroind_ci =.
-	
-	***************
-	***afroind_ci***
-	***************
-	**Pregunta: De acuerdo con su cultura, pueblo o rasgos físicos, … es o se reconoce como:(P6080) (1- Indigena 2- Gitano - Rom 3- Raizal del archipiélago de San Andrés y providencia 4- Palenquero de San basilio o descendiente 5- Negro(a), mulato(a), Afrocolombiano(a) o Afrodescendiente 6- Ninguno de los anteriores (mestizo, blanco, etc)) 
-	gen byte afroind_ci=. 
-	replace afroind_ci=1 if pa1_grp_etnic == 1 
-	replace afroind_ci=2 if pa1_grp_etnic == 3 | pa1_grp_etnic == 4 | pa1_grp_etnic == 5
-	replace afroind_ci=3 if pa1_grp_etnic == 2 | pa1_grp_etnic == 6
-	replace afroind_ci=. if pa1_grp_etnic ==.
-	label var afroind_ci "Raza o etnia del individuo"
+	gen byte noafroind_ci =.   // se queda como missing (.) si no existe la pregunta
+	replace noafroind_ci =1 if (afro_ci==0 & ind_ci==0)
+	replace noafroind_ci =0 if (afro_ci==1 | ind_ci==1)
+	replace noafroind_ci =. if (afro_ci==. | ind_ci==.) //Esto solo en el caso que se tenga ambas opciones no disponibles. 
+	ta noafroind_ci,m
 
+	************
+	*afroind_ci*
+	************
+	gen byte afroind_ci=. 
+	replace afroind_ci=1 if ind_ci==1 
+	replace afroind_ci=2 if afro_ci==1
+	replace afroind_ci=3 if noafroind_ci == 1
+	ta afroind_ci,m
+	
 	*********
 	*afro_ch*
 	*********
-	gen byte afro_ch = .
+	gen byte afro_jefe = afro_ci if relacion_ci==1
+	egen afro_ch  = max(afro_jefe), by(idh_ch) 
+	drop afro_jefe
 	
 	********
 	*ind_ch*
-	********
-	gen byte ind_ch = .
+	********	
+	gen byte ind_jefe = ind_ci if relacion_ci==1
+	egen ind_ch = max(ind_jefe), by(idh_ch) 
+	drop ind_jefe
 
 	**************
 	*noafroind_ch*
 	**************
-	gen byte noafroind_ch = .
-	
-	***************
-	***afroind_ch***
-	***************
-	gen afroind_jefe= afroind_ci if relacion_ci==1
-	egen afroind_ch  = min(afroind_jefe), by(idh_ch) 
-	label var afroind_ch "Raza/etnia del hogar en base a raza/etnia del jefe de hogar"
-	drop afroind_jefe
+	gen byte noafroind_jefe = noafroind_ci if relacion_ci==1
+	egen noafroind_ch = max(noafroind_jefe), by(idh_ch) 
+	drop noafroind_jefe
+
+	************
+	*afroind_ch*
+	************
+    gen byte afroind_jefe = afroind_ci if jefe_ci==1
+	egen afroind_ch = min(afroind_jefe), by(idh_ch) 
+	drop afroind_jefe 
+
 
 	*******************
 	***dis_ci***
@@ -464,6 +476,13 @@ rename *, lower
 	gen byte dis_ch=. 
 	lab var dis_ch "Hogares con miembros con discapacidad"
 
+	******************
+	*COL_dis_ci*
+	******************
+	gen byte COL_dis_ci = .
+	replace COL_dis_ci = 1 if condicion_fisica == 1
+	replace COL_dis_ci = 0 if condicion_fisica == 2
+	
 **********************************
 *** 4. Migración (3 variables) ***
 **********************************	
