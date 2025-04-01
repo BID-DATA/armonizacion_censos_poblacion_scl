@@ -20,6 +20,7 @@ Autores:
 Última versión: 
 
 							SCL/LMK - IADB
+*/
 ****************************************************************************/
 ****************************************************************************
 global PAIS DOM  				 //cambiar
@@ -156,27 +157,85 @@ include "../Base/base.do"
 	*******************************************************
 	***           VARIABLES DE DIVERSIDAD               ***
 	*******************************************************
-	* Cesar Lins & Nathalia Maya - Septiembre 2021	
 
-		***************
-		***afroind_ci***
-		***************
-	**Pregunta: 
+	*********
+	*afro_ci*
+	*********
+	gen byte afro_ci = . 	  // se queda como missing (.) si no existe la pregunta
+	
+	*********
+	*indi_ci*
+	*********	
+	gen byte ind_ci =. 		  // se queda como missing (.) si no existe la pregunta
+	
+	**************
+	*noafroind_ci*
+	**************
+	gen byte noafroind_ci =.   // se queda como missing (.) si no existe la pregunta
+	
+	************
+	*afroind_ci*
+	************
+	gen byte afroind_ci=. 
+	
+	*********
+	*afro_ch*
+	*********
+	gen byte afro_jefe = afro_ci if relacion_ci==1
+	egen afro_ch  = max(afro_jefe), by(idh_ch) 
+	drop afro_jefe
+	
+	********
+	*ind_ch*
+	********	
+	gen byte ind_jefe = ind_ci if relacion_ci==1
+	egen ind_ch = max(ind_jefe), by(idh_ch) 
+	drop ind_jefe
 
-	gen afroind_ci=. 
+	**************
+	*noafroind_ch*
+	**************
+	gen byte noafroind_jefe = noafroind_ci if relacion_ci==1
+	egen noafroind_ch = max(noafroind_jefe), by(idh_ch) 
+	drop noafroind_jefe
 
-		***************
-		***afroind_ch***
-		***************
-	gen afroind_jefe=.
-	gen afroind_ch  =.
-
+	************
+	*afroind_ch*
+	************
+    gen byte afroind_jefe = afroind_ci if jefe_ci==1
+	egen afroind_ch = min(afroind_jefe), by(idh_ch) 
 	drop afroind_jefe 
 
-		*******************
-		***afroind_ano_c***
-		*******************
-	gen afroind_ano_c=.
+	********
+	*dis_ci*
+	********
+	gen byte dis_ci=0
+	replace dis_ci = 1 if  do2010a_blind == 1 | do2010a_deaf == 1 | do2010a_dismob == 1 | do2010a_disconc == 1 | do2010a_dishands == 1
+	replace dis_ci = . if  do2010a_blind == 9 & do2010a_deaf == 9 & do2010a_dismob == 9 & do2010a_disconc == 9 & do2010a_dishands == 9
+	
+	tab dis_ci,m
+	
+	**********
+	*disWG_ci*
+	**********
+	gen byte disWG_ci=0 
+	*replace disWG_ci=1
+	replace disWG_ci=.  
+	
+	tab disWG_ci
+	
+	********
+	*dis_ch*
+	********
+	egen byte dis_ch = sum(dis_ci), by(idh_ch) 
+	replace dis_ch=1 if dis_ch>=1 & dis_ch!=.
+
+	******************
+	*ISOalpha3_dis_ci*
+	******************
+	gen byte DOM_dis_ci = dis_ci
+
+
 
 ************************
 *** Discapacidad (WG)***
