@@ -21,7 +21,7 @@ Autores: Cesar Lins
 
 							SCL/LMK - IADB
 ****************************************************************************/
-
+*/
 
 global PAIS ECU  				 //cambiar
 global ANIO 2010   				 //cambiar
@@ -67,37 +67,90 @@ include "../Base/base.do"
 *******************************************************				
 * Cesar Lins & Nathalia Maya - Septiembre 2021	
 
-	***************
-	***afroind_ci***
-	***************
-
-gen afroind_ci=. 
-replace afroind_ci=1  if race == 30 | indig == 1 
-replace afroind_ci=2 if race == 20 | race == 23 | race == 53
-replace afroind_ci=3 if race == 10 | race == 52 | race == 60 | race == 61 
-replace afroind_ci=. if (race==90 & indig!=1)
 
 
-	***************
-	***afroind_ch***
-	***************
-gen afroind_jefe= afroind_ci if relate==1
-egen afroind_ch  = min(afroind_jefe), by(idh_ch) 
+	*********
+	*afro_ci*
+	*********
+	gen byte afro_ci = . 	  // se queda como missing (.) si no existe la pregunta
+	replace afro_ci =1 if race==20 | race==23 | race==53
+	replace afro_ci =0 if inlist(race, 10, 30,52,60,61)
+	
+	*********
+	*indi_ci*
+	*********	
+	gen byte ind_ci =. 		  // se queda como missing (.) si no existe la pregunta
+	replace ind_ci =1 if race==30 | indig==1
+	replace ind_ci =0 if indig==2
 
-drop afroind_jefe 
+	**************
+	*noafroind_ci*
+	**************
+	gen byte noafroind_ci =.   // se queda como missing (.) si no existe la pregunta
+	replace noafroind_ci =1 if (afro_ci==0 & ind_ci==0)
+	replace noafroind_ci =0 if (afro_ci==1 | ind_ci==1)
+	replace noafroind_ci =. if (afro_ci==. | ind_ci==.) //Esto solo en el caso que se tenga ambas opciones no disponibles. 
+	ta noafroind_ci,m
 
-	*******************
-	***afroind_ano_c***
-	*******************
-gen afroind_ano_c=2001
+	************
+	*afroind_ci*
+	************
+	gen byte afroind_ci=. 
+	replace afroind_ci=1 if ind_ci==1 
+	replace afroind_ci=2 if afro_ci==1
+	replace afroind_ci=3 if noafroind_ci == 1
+	ta afroind_ci,m
+	
+	*********
+	*afro_ch*
+	*********
+	gen byte afro_jefe = afro_ci if relacion_ci==1
+	egen afro_ch  = max(afro_jefe), by(idh_ch) 
+	drop afro_jefe
+	
+	********
+	*ind_ch*
+	********	
+	gen byte ind_jefe = ind_ci if relacion_ci==1
+	egen ind_ch = max(ind_jefe), by(idh_ch) 
+	drop ind_jefe
 
+	**************
+	*noafroind_ch*
+	**************
+	gen byte noafroind_jefe = noafroind_ci if relacion_ci==1
+	egen noafroind_ch = max(noafroind_jefe), by(idh_ch) 
+	drop noafroind_jefe
 
-********************
-*** discapacidad ***
-********************
-gen dis_ci=.
-gen dis_ch=.
+	************
+	*afroind_ch*
+	************
+    gen byte afroind_jefe = afroind_ci if jefe_ci==1
+	egen afroind_ch = min(afroind_jefe), by(idh_ch) 
+	drop afroind_jefe 
 
+	********
+	*dis_ci*
+	********
+	gen byte dis_ci=.
+	
+	**********
+	*disWG_ci*
+	**********
+	gen byte disWG_ci=
+	
+	********
+	*dis_ch*
+	********
+	egen byte dis_ch = max(dis_ci), by(idh_ch) 
+	
+	******************
+	*ECU_dis_ci*
+	******************
+	gen byte ECU_dis_ci = .
+	replace ECU_dis_ci = 1 if  disabled==1
+	replace ECU_dis_ci = 0 if  disabled==2
+	
 
 ******************************************************
 ***           VARIABLES DE EDUCACIÓN               ***
