@@ -312,46 +312,62 @@ rename *, lower
 	*afro_ci*
 	*********
 	gen byte afro_ci = . 
+	replace afro_ci = 1 if pcp12==4
+	replace afro_ci = 0 if pcp12 !=4 & pcp12 !=.
 	
 	*********
 	*indi_ci*
 	*********	
 	gen byte ind_ci =. 
-
+	replace ind_ci = 1 if pcp12==1 | pcp12==2 | pcp12==3
+	replace ind_ci = 0 if pcp12!=1 & pcp12!=2 & pcp12!=3 & pcp12 !=.
+	
 	**************
 	*noafroind_ci*
 	**************
-	gen byte noafroind_ci =. 
-	
-	***************
-	***afroind_ci***
-	***************
-	gen byte afroind_ci=. 
-	replace afroind_ci=1 if pcp12==1 | pcp12==2 | pcp12==3 
-	replace afroind_ci=2 if pcp12==4
-	replace afroind_ci=3 if pcp12==5 | pcp12==6 
+	gen byte noafroind_ci =.   // se queda como missing (.) si no existe la pregunta
+	replace noafroind_ci =1 if (afro_ci==0 & ind_ci==0)
+	replace noafroind_ci =0 if (afro_ci==1 | ind_ci==1)
+	replace noafroind_ci =. if (afro_ci==. | ind_ci==.) //Esto solo en el caso que se tenga ambas opciones no disponibles. 
+	ta noafroind_ci,m
 
+	************
+	*afroind_ci*
+	************
+	gen byte afroind_ci=. 
+	replace afroind_ci=1 if ind_ci==1 
+	replace afroind_ci=2 if afro_ci==1
+	replace afroind_ci=3 if noafroind_ci == 1
+	ta afroind_ci,m
+	
 	*********
 	*afro_ch*
 	*********
-	gen byte afro_ch =.
-
+	gen byte afro_jefe = afro_ci if relacion_ci==1
+	egen afro_ch  = max(afro_jefe), by(idh_ch) 
+	drop afro_jefe
+	
 	********
 	*ind_ch*
 	********	
-	gen byte ind_ch =.
+	gen byte ind_jefe = ind_ci if relacion_ci==1
+	egen ind_ch = max(ind_jefe), by(idh_ch) 
+	drop ind_jefe
 
 	**************
 	*noafroind_ch*
 	**************
-	gen byte noafroind_ch =.
-	
-   ***************
-	***afroind_ch***
-	***************
-	gen byte afroind_jefe= afroind_ci if jefe_ci==1
-	egen afroind_ch  = min(afroind_jefe), by(idh_ch) 
+	gen byte noafroind_jefe = noafroind_ci if relacion_ci==1
+	egen noafroind_ch = max(noafroind_jefe), by(idh_ch) 
+	drop noafroind_jefe
+
+	************
+	*afroind_ch*
+	************
+    gen byte afroind_jefe = afroind_ci if jefe_ci==1
+	egen afroind_ch = min(afroind_jefe), by(idh_ch) 
 	drop afroind_jefe 
+
 
 	*******************
 	***dis_ci***
@@ -371,6 +387,9 @@ rename *, lower
 	*disWG_ci*
 	**********
 	gen byte disWG_ci=. 
+	replace disWG_ci=1 if inrange(pcp16_a,3,4) | inrange(pcp16_b,3,4) | inrange(pcp16_c,3,4) | inrange(pcp16_d,3,4) | inrange(pcp16_e,3,4) | inrange(pcp16_f,3,4)
+	replace disWG_ci=0 if inrange(pcp16_a,1,2) & inrange(pcp16_b,1,2) & inrange(pcp16_c,1,2) & inrange(pcp16_d,1,2) & inrange(pcp16_e,1,2) & inrange(pcp16_f,1,2)
+	
 	
 	*******************
 	***dis_ch***
@@ -378,6 +397,12 @@ rename *, lower
 	egen byte dis_ch  = sum(dis_ci), by(idh_ch) 
 	replace dis_ch=1 if dis_ch>=1 & dis_ch!=.
 
+	******************
+	*ISOalpha3_dis_ci*
+	******************
+	gen byte GTM_dis_ci = dis_ci
+	
+	
 **********************************
 *** 4. Migración (3 variables) ***
 **********************************
