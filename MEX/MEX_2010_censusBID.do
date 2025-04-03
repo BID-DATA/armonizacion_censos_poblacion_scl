@@ -21,10 +21,10 @@ Autores: Cesar Lins
 
 							SCL/LMK - IADB
 ****************************************************************************/
+*/
 
-
-local PAIS MEX
-local ANO "2010"
+global PAIS MEX
+global ANIO 2010
 
 **************************************
 ** Setup code, load database,       **
@@ -117,43 +117,93 @@ label var region_c "division politico-administrativa, estados"
 *******************************************************				
 * Cesar Lins & Nathalia Maya - Septiembre 2021	
 
-	***************
-	***afroind_ci***
-	***************
-	gen afroind_ci=. 
-	replace afroind_ci=1  if indig==1 
-	replace afroind_ci=3 if indig==2
+	*********
+	*afro_ci*
+	*********
+	gen byte afro_ci = . 	  // se queda como missing (.) si no existe la pregunta
 
+	*********
+	*indi_ci*
+	*********	
+	gen byte ind_ci =. 		  // se queda como missing (.) si no existe la pregunta
+	replace ind_ci =1 if indig == 1
+	replace ind_ci =0 if indig == 2
+	tab ind_ci
 
-	***************
-	***afroind_ch***
-	***************
-	gen afroind_jefe= afroind_ci if relate==1
-	egen afroind_ch  = min(afroind_jefe), by(idh_ch) 
+	**************
+	*noafroind_ci*
+	**************
+	gen byte noafroind_ci =.   // se queda como missing (.) si no existe la pregunta
+	replace noafroind_ci =1 if (ind_ci==0)
+	replace noafroind_ci =0 if (ind_ci==1)
+	replace noafroind_ci =. if (afro_ci==. & ind_ci==.) //Esto solo en el caso que se tenga ambas opciones no disponibles. 
+	ta noafroind_ci,m
+
+	************
+	*afroind_ci*
+	************
+	gen byte afroind_ci=. 
+	replace afroind_ci=1 if ind_ci==1 
+	replace afroind_ci=2 if afro_ci==1
+	replace afroind_ci=3 if noafroind_ci == 1
+	ta afroind_ci,m
 	
+	*********
+	*afro_ch*
+	*********
+	gen byte afro_jefe = afro_ci if relacion_ci==1
+	egen afro_ch  = max(afro_jefe), by(idh_ch) 
+	drop afro_jefe
+	
+	********
+	*ind_ch*
+	********	
+	gen byte ind_jefe = ind_ci if relacion_ci==1
+	egen ind_ch = max(ind_jefe), by(idh_ch) 
+	drop ind_jefe
+
+	**************
+	*noafroind_ch*
+	**************
+	gen byte noafroind_jefe = noafroind_ci if relacion_ci==1
+	egen noafroind_ch = max(noafroind_jefe), by(idh_ch) 
+	drop noafroind_jefe
+
+	************
+	*afroind_ch*
+	************
+    gen byte afroind_jefe = afroind_ci if jefe_ci==1
+	egen afroind_ch = min(afroind_jefe), by(idh_ch) 
 	drop afroind_jefe 
 
-	*******************
-	***afroind_ano_c***
-	*******************
-	gen afroind_ano_c=2000
+	********
+	*dis_ci*
+	********
+	gen byte dis_ci=.
+	replace dis_ci=1 if mx2010a_dissee==1 | mx2010a_dishear==1 | mx2010a_disspk==1 | mx2010a_diswalk==1 | mx2010a_dislrn==1 | mx2010a_discare==1 
+	replace dis_ci=0 if mx2010a_dissee==2 & mx2010a_dishear==2 & mx2010a_disspk==2 & mx2010a_diswalk==2 & mx2010a_dislrn==2 & mx2010a_discare==2
+	tab dis_ci,m
+	
+	**********
+	*disWG_ci*
+	**********
+	gen byte disWG_ci=0 
+	*replace disWG_ci=1
+	replace disWG_ci=.  
+	
+	********
+	*dis_ch*
+	********
+	egen byte dis_ch = sum(dis_ci), by(idh_ch) 
+	replace dis_ch=1 if dis_ch>=1 & dis_ch!=.
 
-
-************************
-*** Discapacidad (WG)***
-************************
-/* Identificación de si una persona reporta por lo menos alguna dificultad en una o más de las preguntas del Washington Group Questionnaire */
-
-gen dis_ci = 0
-recode dis_ci nonmiss=. if inlist(9,mx2010a_dissee,mx2010a_dishear,mx2010a_disspk,mx2010a_diswalk,mx2010a_dislrn,mx2010a_discare) //
-recode dis_ci nonmiss=. if mx2010a_dissee>=. & mx2010a_dishear>=. & mx2010a_disspk>=. & mx2010a_diswalk>=. & mx2010a_dislrn>=. & mx2010a_discare>=. //
-replace dis_ci=1 if mx2010a_dissee==1 | mx2010a_dishear==1 | mx2010a_disspk==1 | mx2010a_diswalk==1 | mx2010a_dislrn==1 | mx2010a_discare==1 
-
-
-/*Identificación de si un hogar tiene uno o más miembros que reportan por lo menos alguna dificultad en una o más de las preguntas del Washington Group Questionnaire */		
-
-egen dis_ch  = sum(dis_ci), by(idh_ch) 
-replace dis_ch=1 if dis_ch>=1 & dis_ch!=. 
+	******************
+	*ISOalpha3_dis_ci*
+	******************
+	gen byte MEX_dis_ci = .
+	replace MEX_dis_ci=1 if mx2010a_dissee==1 | mx2010a_dishear==1 | mx2010a_disspk==1 | mx2010a_diswalk==1 | mx2010a_dislrn==1 | mx2010a_discare==1 |  mx2010a_disment ==1
+	replace MEX_dis_ci=0 if mx2010a_dissee==2 & mx2010a_dishear==2 & mx2010a_disspk==2 & mx2010a_diswalk==2 & mx2010a_dislrn==2 & mx2010a_discare==2 & mx2010a_disment==2
+	tab MEX_dis_ci,m	
 
 
 
