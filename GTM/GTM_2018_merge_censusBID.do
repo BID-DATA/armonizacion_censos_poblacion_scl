@@ -1,5 +1,13 @@
-*Script de merge
-***************************************************************************
+/***************************************************************************
+                 BASES DE DATOS DE CENSOS POBLACIONALES
+País: Guatemala
+Año: 2018
+Autores: Eric Torres
+Última versión: May, 2022
+
+======================================================
+ Script de merge
+****************************************************************************
 */
 
 clear all
@@ -12,13 +20,11 @@ global ruta_raw = "$ruta\\raw\\`PAIS'\2018\data_orig\GTM2018_original"
 local log_file = "$ruta_clean\\log\\`PAIS'_`ANO'_censusBID_merge.log"
 capture log close
 
-@@ -21,30 +23,34 @@ capture log using "`log_file'", replace
+capture log using "`log_file'", replace
 
-*****************************************************************************/
+*****************************************************************************
 
-
-
-/**from sav to dta
+/**from sav to dta: Solo correr una vez
 
 	foreach x in HOGAR MIGRACION PERSONA VIVIENDA {
 	clear
@@ -27,6 +33,7 @@ capture log close
 	}
 
 */
+
 ssc install elabel
 
 *merge
@@ -47,3 +54,4 @@ order departamento municipio cod_municipio zona area num_vivienda pcv1 pcv2 pcv3
 save "$ruta\\raw\\`PAIS'\2018\data_orig\GTM_2018_NOIPUMS.dta", replace
 
 log close
+
