@@ -166,7 +166,7 @@ rename *, lower
 	******************
     *idp_ci (idpersonas)*
     ******************
-	egen idp_ci = concat(idh_ch individu) 
+	egen idp_ci = concat(idh_ch id_p) 
 	
 	****************************************
 	*factor expansión individio (factor_ci)* 
