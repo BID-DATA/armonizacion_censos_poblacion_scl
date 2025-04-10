@@ -121,7 +121,9 @@ label var region_c "division politico-administrativa, estados"
 	*afro_ci*
 	*********
 	gen byte afro_ci = . 	  // se queda como missing (.) si no existe la pregunta
-
+	replace afro_ci = 1 if mx2015a_afrdes == 1 | mx2015a_afrdes == 2
+	replace afro_ci = 0 if mx2015a_afrdes == 3
+	
 	*********
 	*indi_ci*
 	*********	
