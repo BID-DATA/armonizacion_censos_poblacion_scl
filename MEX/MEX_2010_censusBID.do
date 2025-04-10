@@ -115,7 +115,6 @@ label var region_c "division politico-administrativa, estados"
 *******************************************************
 ***           VARIABLES DE DIVERSIDAD               ***
 *******************************************************				
-* Cesar Lins & Nathalia Maya - Septiembre 2021	
 
 	*********
 	*afro_ci*
@@ -187,9 +186,9 @@ label var region_c "division politico-administrativa, estados"
 	**********
 	*disWG_ci*
 	**********
-	gen byte disWG_ci=0 
+	gen byte disWG_ci=. 
 	*replace disWG_ci=1
-	replace disWG_ci=.  
+	*replace disWG_ci=0
 	
 	********
 	*dis_ch*
