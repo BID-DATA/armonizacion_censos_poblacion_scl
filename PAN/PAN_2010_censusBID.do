@@ -16,21 +16,18 @@ set more off
                  BASES DE DATOS DE CENSOS POBLACIONALES
 País: Panamá
 Año: 2010
-Autores: Cesar Lins
-Última versión: Septiembre, 2021
 
-							SCL/LMK - IADB
 ****************************************************************************/
+*/
 
-
-local PAIS PAN
-local ANO "2010"
+global PAIS PAN
+global ANIO 2010
 
 **************************************
 ** Setup code, load database,       **
 ** and include all common variables **
 **************************************
-include "$gitFolder\armonizacion_censos_poblacion_scl/Base/base.do"
+include "../Base/base.do"
 
 
 *****************************************************
@@ -58,41 +55,93 @@ include "$gitFolder\armonizacion_censos_poblacion_scl/Base/base.do"
 *******************************************************
 ***           VARIABLES DE DIVERSIDAD               ***
 *******************************************************				
-* Cesar Lins & Nathalia Maya - Septiembre 2021	
 
-	***************
-	***afroind_ci***
-	***************
-**Pregunta: 
-/* IPUMS does not keep the afro question */
-gen afroind_ci=. 
-replace afroind_ci=1  if indig==1 
-replace afroind_ci=3 if indig==2 
-
-gen etnia_ci=.
-
-	***************
-	***afroind_ch***
-	***************
-gen afroind_jefe= afroind_ci if relate==1
-egen afroind_ch  = min(afroind_jefe), by(idh_ch) 
-
-drop afroind_jefe 
-
-	*******************
-	***afroind_ano_c***
-	*******************
-gen afroind_ano_c=1990
-
-********************
-*** discapacidad ***
-********************
-	gen dis_ci=.
-	replace dis_ci=((dismobil==1) | (disblnd==1) | (disdeaf==1) | (dismute==1) | (disuppr==1))
-	replace dis_ci=. if (dismobil==0 | dismobil==9) & (disblnd==0 | disblnd==9) & (disdeaf==0 | disdeaf==9) & (dismute==0 | dismute==9)	& (disuppr==0 | disuppr==9)
+	*********
+	*afro_ci*
+	*********
+	gen byte afro_ci = . 	  // se queda como missing (.) si no existe la pregunta
+	replace afro_ci =1 if pa2010a_black != 5
+	replace afro_ci =0 if pa2010a_black == 5 | pa2010a_black == 9 // incluye unkown
+	tab afro_ci
 	
-	egen dis_ch = sum(dis_ci), by(idh_ch) 
-	replace dis_ch=1 if dis_ch>=1 & dis_ch!=. 
+	*********
+	*indi_ci*
+	*********	
+	gen byte ind_ci =. 		  // se queda como missing (.) si no existe la pregunta
+	replace ind_ci =1 if indig == 1
+	replace ind_ci =0 if indig == 2
+	tab ind_ci
+	
+	**************
+	*noafroind_ci*
+	**************
+	gen byte noafroind_ci =.   // se queda como missing (.) si no existe la pregunta
+	replace noafroind_ci =1 if (afro_ci==0 & ind_ci==0)
+	replace noafroind_ci =0 if (afro_ci==1 | ind_ci==1)
+	replace noafroind_ci =. if (afro_ci==. | ind_ci==.) //Esto solo en el caso que se tenga ambas opciones no disponibles. 
+	ta noafroind_ci,m
+
+	************
+	*afroind_ci*
+	************
+	gen byte afroind_ci=. 
+	replace afroind_ci=1 if ind_ci==1 
+	replace afroind_ci=2 if afro_ci==1
+	replace afroind_ci=3 if noafroind_ci == 1
+	ta afroind_ci,m
+	
+	*********
+	*afro_ch*
+	*********
+	gen byte afro_jefe = afro_ci if relacion_ci==1
+	egen afro_ch  = max(afro_jefe), by(idh_ch) 
+	drop afro_jefe
+	
+	********
+	*ind_ch*
+	********	
+	gen byte ind_jefe = ind_ci if relacion_ci==1
+	egen ind_ch = max(ind_jefe), by(idh_ch) 
+	drop ind_jefe
+
+	**************
+	*noafroind_ch*
+	**************
+	gen byte noafroind_jefe = noafroind_ci if relacion_ci==1
+	egen noafroind_ch = max(noafroind_jefe), by(idh_ch) 
+	drop noafroind_jefe
+
+	************
+	*afroind_ch*
+	************
+    gen byte afroind_jefe = afroind_ci if jefe_ci==1
+	egen afroind_ch = min(afroind_jefe), by(idh_ch) 
+	drop afroind_jefe 
+
+	********
+	*dis_ci*
+	********
+	gen byte dis_ci = .
+	replace dis_ci = 1 if (pa2010a_diffhear==1) | (pa2010a_diffsee==1) | (pa2010a_diffwalk==1) | (pa2010a_diffarms==1) | (pa2010a_diffspeak==1) | (pa2010a_difflearn==1)
+	replace dis_ci = 0 if (pa2010a_diffhear==2) & (pa2010a_diffsee==2) & (pa2010a_diffwalk==2) & (pa2010a_diffarms==2) & (pa2010a_diffspeak==2) & (pa2010a_difflearn==2)
+	tab dis_ci,m
+	
+	**********
+	*disWG_ci*
+	**********
+	gen byte disWG_ci=.
+
+	******************
+	*ISOalpha3_dis_ci*
+	******************
+	gen byte PAN_dis_ci = dis_ci
+
+	********
+	*dis_ch*
+	********
+	egen byte dis_ch = sum(dis_ci), by(idh_ch) 
+	replace dis_ch=1 if dis_ch>=1 & dis_ch!=.
+
 
 *******************************************************
 ***           VARIABLES DE INGRESO                  ***
