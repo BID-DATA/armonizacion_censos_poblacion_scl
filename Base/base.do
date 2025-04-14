@@ -771,6 +771,4 @@ if  `"$PAIS"' =="BHS" |  `"$PAIS"' =="GUY" | `"$PAIS"' =="JAM" |  `"$PAIS"' =="S
 	label var ${PAIS}_ingresolab_ci  "Ingreso laboral según el censo del país - variable original"
 
 
-	
-
  
