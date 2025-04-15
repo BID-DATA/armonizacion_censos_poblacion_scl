@@ -20,8 +20,9 @@ Autores:
 Última versión: 
 
 							SCL/LMK - IADB
-****************************************************************************/
 ****************************************************************************
+****************************************************************************
+*/
 
 global PAIS ARG  				 //cambiar
 global ANIO 2010   				 //cambiar
@@ -76,30 +77,74 @@ include "../Base/base.do"
 *******************************************************
 ***           VARIABLES DE DIVERSIDAD               ***
 *******************************************************
-* No hay variables de diversidad para este censo se crean vacias
-
-	***************
-	***afroind_ci***
-	***************
-	gen afroind_ci=. 
-
-	***************
-	***afroind_ch***
-	***************
-	gen afroind_ch=.
-
-	*******************
-	***afroind_ano_c***
-	*******************
-	gen afroind_ano_c=.
-
-	********************
-	*** discapacidad ***
-	********************
-	gen dis_ci=.
-	gen dis_ch=.
+	*********
+	*afro_ci*
+	*********
+	gen byte afro_ci = . 	  // se queda como missing (.) si no existe la pregunta
 	
-  
+	*********
+	*indi_ci*
+	*********	
+	gen byte ind_ci =. 		  // se queda como missing (.) si no existe la pregunta
+
+	**************
+	*noafroind_ci*
+	**************
+	gen byte noafroind_ci =.   // se queda como missing (.) si no existe la pregunta
+
+	************
+	*afroind_ci*
+	************
+	gen byte afroind_ci=. 
+	
+	*********
+	*afro_ch*
+	*********
+	gen byte afro_jefe = afro_ci if relacion_ci==1
+	egen afro_ch  = max(afro_jefe), by(idh_ch) 
+	drop afro_jefe
+	
+	********
+	*ind_ch*
+	********	
+	gen byte ind_jefe = ind_ci if relacion_ci==1
+	egen ind_ch = max(ind_jefe), by(idh_ch) 
+	drop ind_jefe
+
+	**************
+	*noafroind_ch*
+	**************
+	gen byte noafroind_jefe = noafroind_ci if relacion_ci==1
+	egen noafroind_ch = max(noafroind_jefe), by(idh_ch) 
+	drop noafroind_jefe
+
+	************
+	*afroind_ch*
+	************
+    gen byte afroind_jefe = afroind_ci if jefe_ci==1
+	egen afroind_ch = min(afroind_jefe), by(idh_ch) 
+	drop afroind_jefe 
+
+	********
+	*dis_ci*
+	********
+	gen byte dis_ci=.
+	
+	**********
+	*disWG_ci*
+	**********
+	gen byte disWG_ci=.
+	
+	********
+	*dis_ch*
+	********
+	egen byte dis_ch = max(dis_ci), by(idh_ch) 
+	
+	******************
+	*ISOalpha3_dis_ci*
+	******************
+	gen byte ARG_dis_ci = .
+	
 
 ******************************************************
 ***           VARIABLES DE EDUCACIÓN               ***
