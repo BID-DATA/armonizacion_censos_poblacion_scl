@@ -18,7 +18,6 @@ global ruta_clean = "$ruta\\clean\\`PAIS'"
 global ruta_raw = "$ruta\\raw\\`PAIS'\2018\data_orig\GTM2018_original"
 
 local log_file = "$ruta_clean\\log\\`PAIS'_`ANO'_censusBID_merge.log"
-capture log close
 
 capture log using "`log_file'", replace
 
