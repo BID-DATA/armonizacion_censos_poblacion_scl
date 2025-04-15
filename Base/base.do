@@ -770,11 +770,5 @@ if  `"$PAIS"' =="BHS" |  `"$PAIS"' =="GUY" | `"$PAIS"' =="JAM" |  `"$PAIS"' =="S
 	gen long ${PAIS}_ingresolab_ci = .	
 	label var ${PAIS}_ingresolab_ci  "Ingreso laboral según el censo del país - variable original"
 
-	**********************
-	*ISOalpha3Pais_dis_ci*
-	**********************
-	gen byte ${PAIS}_dis_ci = .
-	label var ${PAIS}_dis_ci  "Individuos con discapacidad según el censo del país - variable original"
-	
 
  

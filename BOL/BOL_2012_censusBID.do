@@ -24,16 +24,17 @@ Autores:
 							SCL/LMK - IADB
 ****************************************************************************/
 ****************************************************************************
+*/
+
+include "../Base/base.do"
 
 *****************************************************
 ******* Variables específicas del censo    **********
 *****************************************************
-include "../Base/base.do"
 
 ****************
  *** region_c ***
  ****************
-
 
    gen region_c=.
    replace region_c=1 if geo1_bo==68001  
@@ -50,135 +51,193 @@ include "../Base/base.do"
    label value region_c region_c 
 
 	
-
 *******************************************************
 ***           VARIABLES DE DIVERSIDAD               ***
 *******************************************************
-* Cesar Lins & Nathalia Maya - Septiembre 2021	
 
-	***************
-	***afroind_ci***
-	***************
-**Pregunta: 
+	*********
+	*afro_ci*
+	*********
+	gen byte afro_ci = . 	  // se queda como missing (.) si no existe la pregunta
+	replace afro_ci =1 if ethnicbo == 6
+	replace afro_ci =0 if ethnicbo != 6 // incluye unkown
+	replace afro_ci =. if ethnicbo == 99 // niu (not in universe)
+	tab afro_ci
+	
+	*********
+	*indi_ci*
+	*********	
+	gen byte ind_ci =. 		  // se queda como missing (.) si no existe la pregunta
+	replace ind_ci =1 if indig == 1
+	replace ind_ci =0 if indig == 2
+	tab ind_ci
+	
+	**************
+	*noafroind_ci*
+	**************
+	gen byte noafroind_ci =.   // se queda como missing (.) si no existe la pregunta
+	replace noafroind_ci =1 if (afro_ci==0 & ind_ci==0)
+	replace noafroind_ci =0 if (afro_ci==1 | ind_ci==1)
+	replace noafroind_ci =. if (afro_ci==. | ind_ci==.) //Esto solo en el caso que se tenga ambas opciones no disponibles. 
+	ta noafroind_ci,m
 
-gen afroind_ci=. 
-replace afroind_ci=1 if indig == 1
-replace afroind_ci=2 if ethnicbo == 6
-replace afroind_ci=3 if indig == 2 & ethnicbo!=6
-replace afroind_ci=. if ethnicbo == 98 // Unknown
+	************
+	*afroind_ci*
+	************
+	gen byte afroind_ci=. 
+	replace afroind_ci=1 if ind_ci==1 
+	replace afroind_ci=2 if afro_ci==1
+	replace afroind_ci=3 if noafroind_ci == 1
+	ta afroind_ci,m
+	
+	*********
+	*afro_ch*
+	*********
+	gen byte afro_jefe = afro_ci if relacion_ci==1
+	egen afro_ch  = max(afro_jefe), by(idh_ch) 
+	drop afro_jefe
+	
+	********
+	*ind_ch*
+	********	
+	gen byte ind_jefe = ind_ci if relacion_ci==1
+	egen ind_ch = max(ind_jefe), by(idh_ch) 
+	drop ind_jefe
 
+	**************
+	*noafroind_ch*
+	**************
+	gen byte noafroind_jefe = noafroind_ci if relacion_ci==1
+	egen noafroind_ch = max(noafroind_jefe), by(idh_ch) 
+	drop noafroind_jefe
 
-	***************
-	***afroind_ch***
-	***************
-gen afroind_jefe= afroind_ci if relate==1
-egen afroind_ch  = min(afroind_jefe), by(idh_ch) 
+	************
+	*afroind_ch*
+	************
+    gen byte afroind_jefe = afroind_ci if jefe_ci==1
+	egen afroind_ch = min(afroind_jefe), by(idh_ch) 
+	drop afroind_jefe 
 
-drop afroind_jefe 
+	********
+	*dis_ci*
+	********
+	gen byte dis_ci=0
+	*replace dis_ci=1 if 
+	replace dis_ci=. 
+	
+	tab dis_ci,m
+	
+	**********
+	*disWG_ci*
+	**********
+	gen byte disWG_ci=0 
+	*replace disWG_ci=1
+	replace disWG_ci=.  
+	
+	tab disWG_ci
+	
+	********
+	*dis_ch*
+	********
+	egen byte dis_ch = max(dis_ci), by(idh_ch) 
 
-	*******************
-	***afroind_ano_c***
-	*******************
-gen afroind_ano_c=2001
-
-********************
-*** discapacid
-********************
-gen dis_ci=.
-gen dis_ch=.
-
-
+	************
+	*BOL_dis_ci*
+	************
+	gen BOL_dis_ci = .
+	
+	
 ************************
 * VARIABLES EDUCATIVAS *
 ************************
 
-***************
-***asiste_ci*** 
-***************
-gen asiste_ci=1 if school==1
-replace asiste_ci=. if school==0 // not in universe as missing 
-replace asiste_ci=. if school==9 // Unknown/missing as missing
-replace asiste_ci=0 if school==2
+	***************
+	***asiste_ci*** 
+	***************
+	gen asiste_ci=1 if school==1
+	replace asiste_ci=. if school==0 // not in universe as missing 
+	replace asiste_ci=. if school==9 // Unknown/missing as missing
+	replace asiste_ci=0 if school==2
 
-*************
-***aedu_ci*** 
-************* 
-gen aedu_ci=yrschool
-replace aedu_ci=. if yrschool>=90 & yrschool<100 // categorias NIU; missing; + categorias nivel educativo pero pero sin años de escolaridad
+	*************
+	***aedu_ci*** 
+	************* 
+	gen aedu_ci=yrschool
+	replace aedu_ci=. if yrschool>=90 & yrschool<100 // categorias NIU; missing; + categorias nivel educativo pero pero sin años de escolaridad
 
-**************
-***eduno_ci*** // no ha completado ningún año de educación
-**************
-gen byte eduno_ci=0
-replace eduno_ci=1 if aedu_ci==0
-replace eduno_ci=. if yrschool==90| yrschool==98| yrschool==99 // Se asignan como missing NIU and missing (no asi las otras)
+	**************
+	***eduno_ci*** // no ha completado ningún año de educación
+	**************
+	gen byte eduno_ci=0
+	replace eduno_ci=1 if aedu_ci==0
+	replace eduno_ci=. if yrschool==90| yrschool==98| yrschool==99 // Se asignan como missing NIU and missing (no asi las otras)
 
-**************
-***edupi_ci*** // no completó la educación primaria
-**************
-gen byte edupi_ci=0
-replace edupi_ci=1 if aedu_ci>0 & aedu_ci<5 // se pone menor a 5 porque hay cohortes que tiene completa con 5 
-replace edupi_ci=1 if yrschool==91 // Some primary
-replace edupi_ci=. if yrschool==90| yrschool==98| yrschool==99 // Se asignan como missing NIU and missing (no asi las otras)
+	**************
+	***edupi_ci*** // no completó la educación primaria
+	**************
+	gen byte edupi_ci=0
+	replace edupi_ci=1 if aedu_ci>0 & aedu_ci<5 // se pone menor a 5 porque hay cohortes que tiene completa con 5 
+	replace edupi_ci=1 if yrschool==91 // Some primary
+	replace edupi_ci=. if yrschool==90| yrschool==98| yrschool==99 // Se asignan como missing NIU and missing (no asi las otras)
 
-**************
-***edupc_ci***
-**************
-gen byte edupc_ci=0
-replace edupc_ci=1 if aedu_ci==6
-replace edupc_ci=. if yrschool==90| yrschool==98| yrschool==99 // Se asignan como missing NIU and missing (no asi las otras)
+	**************
+	***edupc_ci***
+	**************
+	gen byte edupc_ci=0
+	replace edupc_ci=1 if aedu_ci==6
+	replace edupc_ci=. if yrschool==90| yrschool==98| yrschool==99 // Se asignan como missing NIU and missing (no asi las otras)
 
-**************
-***edusi_ci***
-**************
-gen byte edusi_ci=0
-replace edusi_ci=1 if aedu_ci>6 & aedu_ci<12
-replace edusi_ci=1 if yrschool==92 | yrschool==93 // Some techinical after primary and some secondary
-replace edusi_ci=. if yrschool==90| yrschool==98| yrschool==99 // Se asignan como missing NIU and missing (no asi las otras)
+	**************
+	***edusi_ci***
+	**************
+	gen byte edusi_ci=0
+	replace edusi_ci=1 if aedu_ci>6 & aedu_ci<12
+	replace edusi_ci=1 if yrschool==92 | yrschool==93 // Some techinical after primary and some secondary
+	replace edusi_ci=. if yrschool==90| yrschool==98| yrschool==99 // Se asignan como missing NIU and missing (no asi las otras)
 
-**************
-***edusc_ci***
-**************
-gen byte edusc_ci=0
-replace edusc_ci=1 if aedu_ci==12
-replace edusc_ci=. if yrschool==90| yrschool==98| yrschool==99 // Se asignan como missing NIU and missing (no asi las otras)
+	**************
+	***edusc_ci***
+	**************
+	gen byte edusc_ci=0
+	replace edusc_ci=1 if aedu_ci==12
+	replace edusc_ci=. if yrschool==90| yrschool==98| yrschool==99 // Se asignan como missing NIU and missing (no asi las otras)
 
-***************
-***edus1i_ci***
-***************
-gen edus1i_ci=(aedu_ci==7)
-replace edus1i_ci=. if aedu_ci==. // NIU
+	***************
+	***edus1i_ci***
+	***************
+	gen edus1i_ci=(aedu_ci==7)
+	replace edus1i_ci=. if aedu_ci==. // NIU
 
-***************
-***edus1c_ci***
-***************
-gen edus1c_ci=(aedu_ci==8)
-replace edus1c_ci=. if aedu_ci==. // NIU
+	***************
+	***edus1c_ci***
+	***************
+	gen edus1c_ci=(aedu_ci==8)
+	replace edus1c_ci=. if aedu_ci==. // NIU
 
-***************
-***edus2i_ci***
-***************
-gen edus2i_ci=(aedu_ci>=9 & aedu_ci<12)
-replace edus2i_ci=. if aedu_ci==. // NIU
+	***************
+	***edus2i_ci***
+	***************
+	gen edus2i_ci=(aedu_ci>=9 & aedu_ci<12)
+	replace edus2i_ci=. if aedu_ci==. // NIU
 
-***************
-***edus2c_ci***
-***************
-gen edus2c_ci=(aedu_ci==12)
-replace edus2c_ci=. if aedu_ci==. // NIU
+	***************
+	***edus2c_ci***
+	***************
+	gen edus2c_ci=(aedu_ci==12)
+	replace edus2c_ci=. if aedu_ci==. // NIU
 
-***************
-***edupre_ci***
-***************
-gen edupre_ci=(educbo==120) // pre-school
-replace edupre_ci=. if aedu_ci==. // NIU & missing
+	***************
+	***edupre_ci***
+	***************
+	gen edupre_ci=(educbo==120) // pre-school
+	replace edupre_ci=. if aedu_ci==. // NIU & missing
 
-**************
-***literacy***
-**************
-gen literacy=. if lit==0
-replace literacy=0 if lit==1
-replace literacy=1 if lit==2
+	**************
+	***literacy***
+	**************
+	gen literacy=. if lit==0
+	replace literacy=0 if lit==1
+	replace literacy=1 if lit==2
 
 
 /*******************************************************************************
@@ -221,7 +280,6 @@ foreach v of global lista_variables {
 		display in red "variable `v' NO existe."
 	}
 }
-
 
 
 /*******************************************************************************
