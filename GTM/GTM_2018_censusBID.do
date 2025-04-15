@@ -814,11 +814,6 @@ rename *, lower
 	gen long GTM_ingresolab_ci = .	
 	label var GTM_ingresolab_ci  "Ingreso laboral según el censo del país - variable original"
 
-	**********************
-	*ISOalpha3Pais_dis_ci*
-	**********************
-	gen byte GTM_dis_ci = .
-	label var GTM_dis_ci  "Individuos con discapacidad según el censo del país - variable original"
 
 
 /*******************************************************************************
