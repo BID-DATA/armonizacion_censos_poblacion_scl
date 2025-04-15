@@ -137,7 +137,7 @@ include "../Base/base.do"
 	**********
 	*disWG_ci*
 	**********
-	gen byte disWG_ci=
+	gen byte disWG_ci=.
 	
 	********
 	*dis_ch*
