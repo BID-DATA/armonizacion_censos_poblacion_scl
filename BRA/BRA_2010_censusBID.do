@@ -163,100 +163,100 @@ label values region_c region_c
 ****************************
 ***	VARIABLES EDUCATIVAS ***
 ****************************
-* BRA 2010 no tiene vairables yrschool se contruye a partir de eddatain y educbr
+	* BRA 2010 no tiene vairables yrschool se contruye a partir de eddatain y educbr
 
-***********
-*asiste_ci*
-***********
-gen asiste_ci=(school==1) // 0 includes attended in the past (3) and never attended (4)
-replace asiste_ci=. if school==0 | school==9 | school==. // missing a los NIU & missing
-	
-*********
-*aedu_ci* // años de educacion aprobados
-*********
-gen aedu_ci=.
-replace aedu_ci=0 if educbr<2000
-replace aedu_ci=1 if educbr==2110
-replace aedu_ci=2 if educbr==2120
-replace aedu_ci=3 if educbr==2130
-replace aedu_ci=4 if educbr==2141
-replace aedu_ci=5 if educbr==2210
-replace aedu_ci=6 if educbr==2220
-replace aedu_ci=7 if educbr==2230
-replace aedu_ci=8 if educbr==2241
-replace aedu_ci=9 if educbr==2242
-replace aedu_ci=10 if educbr==3100
-replace aedu_ci=11 if educbr==3200
-replace aedu_ci=12 if educbr==3300
-replace aedu_ci=13 if educbr==4170 | educbr==4180
-replace aedu_ci=16 if educbr==4190
-replace aedu_ci=18 if educbr==4230 | educbr==4240 | educbr==4270 | educbr==4280
-replace aedu_ci=20 if educbr==4250 | educbr==4260
+	***********
+	*asiste_ci*
+	***********
+	gen asiste_ci=(school==1) // 0 includes attended in the past (3) and never attended (4)
+	replace asiste_ci=. if school==0 | school==9 | school==. // missing a los NIU & missing
+		
+	*********
+	*aedu_ci* // años de educacion aprobados
+	*********
+	gen aedu_ci=.
+	replace aedu_ci=0 if educbr<2000
+	replace aedu_ci=1 if educbr==2110
+	replace aedu_ci=2 if educbr==2120
+	replace aedu_ci=3 if educbr==2130
+	replace aedu_ci=4 if educbr==2141
+	replace aedu_ci=5 if educbr==2210
+	replace aedu_ci=6 if educbr==2220
+	replace aedu_ci=7 if educbr==2230
+	replace aedu_ci=8 if educbr==2241
+	replace aedu_ci=9 if educbr==2242
+	replace aedu_ci=10 if educbr==3100
+	replace aedu_ci=11 if educbr==3200
+	replace aedu_ci=12 if educbr==3300
+	replace aedu_ci=13 if educbr==4170 | educbr==4180
+	replace aedu_ci=16 if educbr==4190
+	replace aedu_ci=18 if educbr==4230 | educbr==4240 | educbr==4270 | educbr==4280
+	replace aedu_ci=20 if educbr==4250 | educbr==4260
 
-**********
-*eduno_ci*
-**********
-gen eduno_ci=(aedu_ci==0) // none
-replace eduno_ci=. if aedu_ci==.
+	**********
+	*eduno_ci*
+	**********
+	gen eduno_ci=(aedu_ci==0) // none
+	replace eduno_ci=. if aedu_ci==.
 
-***********
-*edupre_ci*
-***********
-gen edupre_ci=.
-	
-**********
-*edupi_ci* // no completó la educación primaria
-**********	
-gen edupi_ci=(aedu_ci>=1 & aedu_ci<=4) // 1 a 4 anos de educación 
-replace edupi_ci=. if aedu_ci==.
-	
-********** 
-*edupc_ci* // completó la educación primaria
-**********
-gen edupc_ci=(aedu_ci==5) // 5 anos de educación
-replace edupc_ci=. if aedu_ci==.
+	***********
+	*edupre_ci*
+	***********
+	gen edupre_ci=.
+		
+	**********
+	*edupi_ci* // no completó la educación primaria
+	**********	
+	gen edupi_ci=(aedu_ci>=1 & aedu_ci<=4) // 1 a 4 anos de educación 
+	replace edupi_ci=. if aedu_ci==.
+		
+	********** 
+	*edupc_ci* // completó la educación primaria
+	**********
+	gen edupc_ci=(aedu_ci==5) // 5 anos de educación
+	replace edupc_ci=. if aedu_ci==.
 
-**********
-*edusi_ci* // no completó la educación secundaria
-**********
-gen edusi_ci=(aedu_ci>=6 & aedu_ci<=11) // De 6 a 11 anos de educación
-replace edusi_ci=. if aedu_ci==.
+	**********
+	*edusi_ci* // no completó la educación secundaria
+	**********
+	gen edusi_ci=(aedu_ci>=6 & aedu_ci<=11) // De 6 a 11 anos de educación
+	replace edusi_ci=. if aedu_ci==.
 
-**********
-*edusc_ci* // completó la educación secundaria
-**********	
-gen edusc_ci=(aedu_ci==12) // 12 anos de educación
-replace edusc_ci=. if aedu_ci==.
+	**********
+	*edusc_ci* // completó la educación secundaria
+	**********	
+	gen edusc_ci=(aedu_ci==12) // 12 anos de educación
+	replace edusc_ci=. if aedu_ci==.
 
-***********
-*edus1i_ci* // no completó el primer ciclo de la educación secundaria
-***********
-gen edus1i_ci=(aedu_ci>=6 & aedu_ci<=8) // De 6 a 8 anos de educación
-replace edus1i_ci=. if aedu_ci==.
+	***********
+	*edus1i_ci* // no completó el primer ciclo de la educación secundaria
+	***********
+	gen edus1i_ci=(aedu_ci>=6 & aedu_ci<=8) // De 6 a 8 anos de educación
+	replace edus1i_ci=. if aedu_ci==.
 
-***********
-*edus1c_ci* // completó el primer ciclo de la educación secundaria
-***********
-gen edus1c_ci=(aedu_ci==9) // 9 anos de educación
-replace edus1c_ci=. if aedu_ci==.
+	***********
+	*edus1c_ci* // completó el primer ciclo de la educación secundaria
+	***********
+	gen edus1c_ci=(aedu_ci==9) // 9 anos de educación
+	replace edus1c_ci=. if aedu_ci==.
 
-***********
-*edus2i_ci* // no completó el segundo ciclo de la educación secundaria
-***********
-gen edus2i_ci=(aedu_ci>=10 & aedu_ci<=11) // De 10 a 11 anos de educación
-replace edus2i_ci=. if aedu_ci==.
+	***********
+	*edus2i_ci* // no completó el segundo ciclo de la educación secundaria
+	***********
+	gen edus2i_ci=(aedu_ci>=10 & aedu_ci<=11) // De 10 a 11 anos de educación
+	replace edus2i_ci=. if aedu_ci==.
 
-***********
-*edus2c_ci* // completó el segundo ciclo de la educación secundaria
-***********
-gen edus2c_ci=(aedu_ci==12) // 12 anos de educación
-replace edus2c_ci=. if aedu_ci==.
+	***********
+	*edus2c_ci* // completó el segundo ciclo de la educación secundaria
+	***********
+	gen edus2c_ci=(aedu_ci==12) // 12 anos de educación
+	replace edus2c_ci=. if aedu_ci==.
 
-************
-* literacy *
-************
-gen literacy=1 if lit==2 // literate
-replace literacy=0 if lit==1 // illiterate
+	************
+	* literacy *
+	************
+	gen literacy=1 if lit==2 // literate
+	replace literacy=0 if lit==1 // illiterate
 
 
 /*******************************************************************************
