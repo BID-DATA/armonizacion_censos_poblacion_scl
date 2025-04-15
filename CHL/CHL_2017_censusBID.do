@@ -276,7 +276,7 @@ include "../Base/base.do"
 	******************
 	*ISOalpha3_dis_ci*
 	******************
-	gen byte CHI_dis_ci = .
+	gen byte CHL_dis_ci= .
 
 /*******************************************************************************
    Incluir variables externas
