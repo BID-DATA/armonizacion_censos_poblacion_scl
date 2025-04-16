@@ -397,13 +397,7 @@ rename *, lower
 	********
 	egen byte dis_ch = max(dis_ci), by(idh_ch) 
 	
-	******************
-	*ISOalpha3_dis_ci*
-	******************
-	gen byte JAM_dis_ci = .
-	replace JAM_dis_ci = 1 if inrange(q1_7seei,2,4) | inrange(q1_7hear,2,4)  | inrange(q1_7walk,2,4)  | inrange(q1_7memo,2,4)  | inrange(q1_7self,2,4) | inrange(q1_7comm,2,4)
-	replace JAM_dis_ci = 0 if q1_7seei==1 & q1_7hear==1 & q1_7walk==1 & q1_7memo==1 & q1_7self==1 & q1_7comm==1	
-	
+
 	
 **********************************
 *** 4. Migración (3 variables) ***
@@ -862,18 +856,22 @@ rename *, lower
 	**************************	
 	gen long JAM_ingreso_ci = .
 	label var JAM_ingreso_ci  "Ingreso total según el censo del país - variable original"
-	
+
 	*****************************
 	*ISOalpha3Pais_ingresolab_ci*
 	*****************************
 	gen long JAM_ingresolab_ci = .	
 	label var JAM_ingresolab_ci  "Ingreso laboral según el censo del país - variable original"
 
-	**********************
-	*ISOalpha3Pais_dis_ci*
-	**********************
+	******************
+	*ISOalpha3_dis_ci*
+	******************
 	gen byte JAM_dis_ci = .
+	replace JAM_dis_ci = 1 if inrange(q1_7seei,2,4) | inrange(q1_7hear,2,4)  | inrange(q1_7walk,2,4)  | inrange(q1_7memo,2,4)  | inrange(q1_7self,2,4) | inrange(q1_7comm,2,4)
+	replace JAM_dis_ci = 0 if q1_7seei==1 & q1_7hear==1 & q1_7walk==1 & q1_7memo==1 & q1_7self==1 & q1_7comm==1	
 	label var JAM_dis_ci  "Individuos con discapacidad según el censo del país - variable original"
+	
+	
 
 
 /*******************************************************************************
