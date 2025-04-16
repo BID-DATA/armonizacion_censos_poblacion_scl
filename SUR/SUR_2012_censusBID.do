@@ -20,7 +20,8 @@ Autores: Cesar Lins
 Última versión: Septiembre, 2021
 
 							SCL/LMK - IADB
-****************************************************************************/
+***************************************************************************
+*/
 
 
 global PAIS SUR   				 //cambiar
@@ -56,45 +57,92 @@ include "../Base/base.do"
 
 *******************************************************
 ***           VARIABLES DE DIVERSIDAD               ***
-*******************************************************				
+*******************************************************
+		
+	*********
+	*afro_ci*
+	*********
+	gen byte afro_ci = . 	  // se queda como missing (.) si no existe la pregunta
 
-	***************
-	***afroind_ci***
-	***************
-**Pregunta: 
-/* IPUMS does not keep the afro question */
-gen afroind_ci=. 
-replace afroind_ci=1  if indig==1 
-replace afroind_ci=3 if indig==2 
+	
+	*********
+	*indi_ci*
+	*********	
+	gen byte ind_ci =. 		  // se queda como missing (.) si no existe la pregunta
+	replace ind_ci =1 if indig==1 
+	replace ind_ci =0 if indig==2
 
-	***************
-	***afroind_ch***
-	***************
-gen afroind_jefe= afroind_ci if relate==1
-egen afroind_ch  = min(afroind_jefe), by(idh_ch) 
-drop afroind_jefe 
+	**************
+	*noafroind_ci*
+	**************
+	gen byte noafroind_ci =.   // se queda como missing (.) si no existe la pregunta
+	replace noafroind_ci =1 if (ind_ci==0)
+	replace noafroind_ci =0 if (ind_ci==1)
+	replace noafroind_ci =. if (ind_ci==.) //Esto solo en el caso que se tenga ambas opciones no disponibles. 
+	ta noafroind_ci,m
 
+	************
+	*afroind_ci*
+	************
+	gen byte afroind_ci=. 
+	replace afroind_ci=1 if ind_ci==1 
+	replace afroind_ci=2 if afro_ci==1
+	replace afroind_ci=3 if noafroind_ci == 1
+	ta afroind_ci,m
+	
+	*********
+	*afro_ch*
+	*********
+	gen byte afro_jefe = afro_ci if relacion_ci==1
+	egen afro_ch  = max(afro_jefe), by(idh_ch) 
+	drop afro_jefe
+	
+	********
+	*ind_ch*
+	********	
+	gen byte ind_jefe = ind_ci if relacion_ci==1
+	egen ind_ch = max(ind_jefe), by(idh_ch) 
+	drop ind_jefe
 
-	*************
-	*** dis_ci***
-	*************
-	/* Identificación de si una persona reporta por lo menos alguna dificultad en una o más de las preguntas del Washington Group Questionnaire */
+	**************
+	*noafroind_ch*
+	**************
+	gen byte noafroind_jefe = noafroind_ci if relacion_ci==1
+	egen noafroind_ch = max(noafroind_jefe), by(idh_ch) 
+	drop noafroind_jefe
 
-	gen dis_ci = 0
-	recode dis_ci nonmiss=. if inlist(9,sr2012a_dissight,sr2012a_dishear,sr2012a_dismobil,sr2012a_dismntl,sr2012a_discare,sr2012a_dislift,sr2012a_discomm) 
-	recode dis_ci nonmiss=. if sr2012a_dissight>=. & sr2012a_dishear>=. & sr2012a_dismobil>=. & sr2012a_dismntl>=. & sr2012a_discare>=. & sr2012a_dislift >=. & sr2012a_discomm>=. 
+	************
+	*afroind_ch*
+	************
+    gen byte afroind_jefe = afroind_ci if jefe_ci==1
+	egen afroind_ch = min(afroind_jefe), by(idh_ch) 
+	drop afroind_jefe 
 
-	foreach x in sight hear mobil mntl care lift comm {
-		forvalue j=2/4 {
-			replace dis_ci=1 if sr2012a_dis`x'==`j'
-		}
-	}
-
-	/*Identificación de si un hogar tiene uno o más miembros que reportan por lo menos alguna dificultad en una o más de las preguntas del Washington Group Questionnaire */		
-
-	egen dis_ch  = sum(dis_ci), by(idh_ch) 
-	replace dis_ch=1 if dis_ch>=1 & dis_ch!=. 
-
+	********
+	*dis_ci*
+	********
+	gen byte dis_ci=. 
+	replace dis_ci = 1 if inrange(wgcare,2,4) | inrange(wgcogn,2,4) | inrange(wgcomm,2,4) | inrange(wghear,2,4) | inrange(wgmobil,2,4) | inrange(wgvision,2,4)
+	replace dis_ci = 0 if wgcare==1 & wgcogn==1 & wgcomm==1 & wghear==1 & wgmobil==1 & wgvision==1
+	
+	**********
+	*disWG_ci*
+	**********
+	gen byte disWG_ci=.
+	replace disWG_ci = 1 if inrange(wgcare,3,4) | inrange(wgcogn,3,4) | inrange(wgcomm,3,4) | inrange(wghear,3,4) | inrange(wgmobil,3,4) | inrange(wgvision,3,4)
+	replace disWG_ci = 0 if inrange(wgcare,1,2) & inrange(wgcogn,1,2) & inrange(wgcomm,1,2) & inrange(wghear,1,2) & inrange(wgmobil,1,2) & inrange(wgvision,1,2) 
+	
+	
+	********
+	*dis_ch*
+	********
+	egen byte dis_ch = max(dis_ci), by(idh_ch) 
+	
+	******************
+	*SUR_dis_ci*
+	******************
+	gen byte SUR_dis_ci = dis_ci
+	
    
 ******************************************************
 ***           VARIABLES DE EDUCACIÓN               ***
