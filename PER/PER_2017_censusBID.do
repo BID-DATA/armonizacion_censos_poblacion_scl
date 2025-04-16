@@ -417,11 +417,6 @@ rename *, lower
 	**********
 	gen byte disWG_ci = . 
 
-	******************
-	*PER_dis_ci*
-	******************
-	gen byte PER_dis_ci = dis_ci
-
 	********
 	*dis_ch*
 	********
@@ -870,7 +865,7 @@ El censo no da la opcion de "no tiene" en cuanto a las instalaciones sanitarias
 	**********************
 	*ISOalpha3Pais_dis_ci*
 	**********************
-	gen byte PER_dis_ci = .
+	gen byte PER_dis_ci = dis_ci
 	label var PER_dis_ci  "Individuos con discapacidad según el censo del país - variable original"
    
  
