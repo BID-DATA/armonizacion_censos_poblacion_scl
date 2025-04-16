@@ -80,14 +80,13 @@ if  `"$PAIS"' =="BHS" |  `"$PAIS"' =="GUY" | `"$PAIS"' =="JAM" |  `"$PAIS"' =="S
 	******************
     *idh_ch (id hogar)*
     ******************
-    gen idh_ch =serial 
-	tostring idh_ch, replace
+	tostring serial, gen(idh_ch) format("%20.0f")
 	
 	******************
     *idp_ci (idpersonas)*
     ******************
 	egen idp_ci = concat(idh_ch pernum)
-	tostring idp_ci , replace
+	tostring idp_ci, replace format("%20.0f")
 	
 	****************************************
 	*factor expansión individio (factor_ci)*
@@ -249,46 +248,6 @@ if  `"$PAIS"' =="BHS" |  `"$PAIS"' =="GUY" | `"$PAIS"' =="JAM" |  `"$PAIS"' =="S
 	*nmenor1_ch*
 	************
 	egen byte nmenor1_ch=sum((relacion_ci>0 & relacion_ci<=5) & (edad_ci<1)), by(idh_ch) 
-
-
-************************************
-*** 3. Diversidad (11 variables) ***
-************************************
-
-	*********
-	*afro_ci*
-	*********
-	gen byte afro_ci = .
-	
-	*********
-	*indi_ci*
-	*********	
-	gen byte ind_ci =. 	
-	
-	**************
-	*noafroind_ci*
-	**************
-	gen byte noafroind_ci =. 
-	
-	*********
-	*afro_ch*
-	*********
-	gen byte afro_ch=.
-	
-	********
-	*ind_ch*
-	********	
-	gen byte ind_ch=.
-	
-	**************
-	*noafroind_ch*
-	**************
-	gen byte noafroind_ch =.
-	
-	**********
-	*disWG_ci*
-	**********
-	gen byte disWG_ci=. 
 
 	
 **********************************
@@ -811,11 +770,5 @@ if  `"$PAIS"' =="BHS" |  `"$PAIS"' =="GUY" | `"$PAIS"' =="JAM" |  `"$PAIS"' =="S
 	gen long ${PAIS}_ingresolab_ci = .	
 	label var ${PAIS}_ingresolab_ci  "Ingreso laboral según el censo del país - variable original"
 
-	**********************
-	*ISOalpha3Pais_dis_ci*
-	**********************
-	gen byte ${PAIS}_dis_ci = .
-	label var ${PAIS}_dis_ci  "Individuos con discapacidad según el censo del país - variable original"
-	
 
  

@@ -24,16 +24,17 @@ Autores:
 							SCL/LMK - IADB
 ****************************************************************************/
 ****************************************************************************
+*/
+
+include "../Base/base.do"
 
 *****************************************************
 ******* Variables específicas del censo    **********
 *****************************************************
-include "../Base/base.do"
 
 ****************
  *** region_c ***
  ****************
-
 
    gen region_c=.
    replace region_c=1 if geo1_bo==68001  
@@ -50,159 +51,219 @@ include "../Base/base.do"
    label value region_c region_c 
 
 	
-
 *******************************************************
 ***           VARIABLES DE DIVERSIDAD               ***
 *******************************************************
-* Cesar Lins & Nathalia Maya - Septiembre 2021	
 
-	***************
-	***afroind_ci***
-	***************
-**Pregunta: 
+	*********
+	*afro_ci*
+	*********
+	gen byte afro_ci = . 	  // se queda como missing (.) si no existe la pregunta
+	replace afro_ci =1 if ethnicbo == 6
+	replace afro_ci =0 if ethnicbo != 6 // incluye unkown
+	replace afro_ci =. if ethnicbo == 99 // niu (not in universe)
+	tab afro_ci
+	
+	*********
+	*indi_ci*
+	*********	
+	gen byte ind_ci =. 		  // se queda como missing (.) si no existe la pregunta
+	replace ind_ci =1 if indig == 1
+	replace ind_ci =0 if indig == 2
+	tab ind_ci
+	
+	**************
+	*noafroind_ci*
+	**************
+	gen byte noafroind_ci =.   // se queda como missing (.) si no existe la pregunta
+	replace noafroind_ci =1 if (afro_ci==0 & ind_ci==0)
+	replace noafroind_ci =0 if (afro_ci==1 | ind_ci==1)
+	replace noafroind_ci =. if (afro_ci==. | ind_ci==.) //Esto solo en el caso que se tenga ambas opciones no disponibles. 
+	ta noafroind_ci,m
 
-gen afroind_ci=. 
-replace afroind_ci=1 if indig == 1
-replace afroind_ci=2 if ethnicbo == 6
-replace afroind_ci=3 if indig == 2 & ethnicbo!=6
-replace afroind_ci=. if ethnicbo == 98 // Unknown
+	************
+	*afroind_ci*
+	************
+	gen byte afroind_ci=. 
+	replace afroind_ci=1 if ind_ci==1 
+	replace afroind_ci=2 if afro_ci==1
+	replace afroind_ci=3 if noafroind_ci == 1
+	ta afroind_ci,m
+	
+	*********
+	*afro_ch*
+	*********
+	gen byte afro_jefe = afro_ci if relacion_ci==1
+	egen afro_ch  = max(afro_jefe), by(idh_ch) 
+	drop afro_jefe
+	
+	********
+	*ind_ch*
+	********	
+	gen byte ind_jefe = ind_ci if relacion_ci==1
+	egen ind_ch = max(ind_jefe), by(idh_ch) 
+	drop ind_jefe
 
+	**************
+	*noafroind_ch*
+	**************
+	gen byte noafroind_jefe = noafroind_ci if relacion_ci==1
+	egen noafroind_ch = max(noafroind_jefe), by(idh_ch) 
+	drop noafroind_jefe
 
-	***************
-	***afroind_ch***
-	***************
-gen afroind_jefe= afroind_ci if relate==1
-egen afroind_ch  = min(afroind_jefe), by(idh_ch) 
+	************
+	*afroind_ch*
+	************
+    gen byte afroind_jefe = afroind_ci if jefe_ci==1
+	egen afroind_ch = min(afroind_jefe), by(idh_ch) 
+	drop afroind_jefe 
 
-drop afroind_jefe 
+	********
+	*dis_ci*
+	********
+	gen byte dis_ci=0
+	*replace dis_ci=1 if 
+	replace dis_ci=. 
+	
+	tab dis_ci,m
+	
+	**********
+	*disWG_ci*
+	**********
+	gen byte disWG_ci=0 
+	*replace disWG_ci=1
+	replace disWG_ci=.  
+	
+	tab disWG_ci
+	
+	********
+	*dis_ch*
+	********
+	egen byte dis_ch = max(dis_ci), by(idh_ch) 
 
-	*******************
-	***afroind_ano_c***
-	*******************
-gen afroind_ano_c=2001
-
-********************
-*** discapacid
-********************
-gen dis_ci=.
-gen dis_ch=.
-
-
+	************
+	*BOL_dis_ci*
+	************
+	gen BOL_dis_ci = .
+	
+	
 ************************
 * VARIABLES EDUCATIVAS *
 ************************
 
-***************
-***asiste_ci*** 
-***************
-gen asiste_ci=1 if school==1
-replace asiste_ci=. if school==0 // not in universe as missing 
-replace asiste_ci=. if school==9 // Unknown/missing as missing
-replace asiste_ci=0 if school==2
+	***************
+	***asiste_ci*** 
+	***************
+	gen asiste_ci=1 if school==1
+	replace asiste_ci=. if school==0 // not in universe as missing 
+	replace asiste_ci=. if school==9 // Unknown/missing as missing
+	replace asiste_ci=0 if school==2
 
-*************
-***aedu_ci*** 
-************* 
-gen aedu_ci=yrschool
-replace aedu_ci=. if yrschool>=90 & yrschool<100 // categorias NIU; missing; + categorias nivel educativo pero pero sin años de escolaridad
+	*************
+	***aedu_ci*** 
+	************* 
+	gen aedu_ci=yrschool
+	replace aedu_ci=. if yrschool>=90 & yrschool<100 // categorias NIU; missing; + categorias nivel educativo pero pero sin años de escolaridad
 
-**************
-***eduno_ci*** // no ha completado ningún año de educación
-**************
-gen byte eduno_ci=0
-replace eduno_ci=1 if aedu_ci==0
-replace eduno_ci=. if yrschool==90| yrschool==98| yrschool==99 // Se asignan como missing NIU and missing (no asi las otras)
+	**************
+	***eduno_ci*** // no ha completado ningún año de educación
+	**************
+	gen byte eduno_ci=0
+	replace eduno_ci=1 if aedu_ci==0
+	replace eduno_ci=. if yrschool==90| yrschool==98| yrschool==99 // Se asignan como missing NIU and missing (no asi las otras)
 
-**************
-***edupi_ci*** // no completó la educación primaria
-**************
-gen byte edupi_ci=0
-replace edupi_ci=1 if aedu_ci>0 & aedu_ci<5 // se pone menor a 5 porque hay cohortes que tiene completa con 5 
-replace edupi_ci=1 if yrschool==91 // Some primary
-replace edupi_ci=. if yrschool==90| yrschool==98| yrschool==99 // Se asignan como missing NIU and missing (no asi las otras)
+	**************
+	***edupi_ci*** // no completó la educación primaria
+	**************
+	gen byte edupi_ci=0
+	replace edupi_ci=1 if aedu_ci>0 & aedu_ci<5 // se pone menor a 5 porque hay cohortes que tiene completa con 5 
+	replace edupi_ci=1 if yrschool==91 // Some primary
+	replace edupi_ci=. if yrschool==90| yrschool==98| yrschool==99 // Se asignan como missing NIU and missing (no asi las otras)
 
-**************
-***edupc_ci***
-**************
-gen byte edupc_ci=0
-replace edupc_ci=1 if aedu_ci==6
-replace edupc_ci=. if yrschool==90| yrschool==98| yrschool==99 // Se asignan como missing NIU and missing (no asi las otras)
+	**************
+	***edupc_ci***
+	**************
+	gen byte edupc_ci=0
+	replace edupc_ci=1 if aedu_ci==6
+	replace edupc_ci=. if yrschool==90| yrschool==98| yrschool==99 // Se asignan como missing NIU and missing (no asi las otras)
 
-**************
-***edusi_ci***
-**************
-gen byte edusi_ci=0
-replace edusi_ci=1 if aedu_ci>6 & aedu_ci<12
-replace edusi_ci=1 if yrschool==92 | yrschool==93 // Some techinical after primary and some secondary
-replace edusi_ci=. if yrschool==90| yrschool==98| yrschool==99 // Se asignan como missing NIU and missing (no asi las otras)
+	**************
+	***edusi_ci***
+	**************
+	gen byte edusi_ci=0
+	replace edusi_ci=1 if aedu_ci>6 & aedu_ci<12
+	replace edusi_ci=1 if yrschool==92 | yrschool==93 // Some techinical after primary and some secondary
+	replace edusi_ci=. if yrschool==90| yrschool==98| yrschool==99 // Se asignan como missing NIU and missing (no asi las otras)
 
-**************
-***edusc_ci***
-**************
-gen byte edusc_ci=0
-replace edusc_ci=1 if aedu_ci==12
-replace edusc_ci=. if yrschool==90| yrschool==98| yrschool==99 // Se asignan como missing NIU and missing (no asi las otras)
+	**************
+	***edusc_ci***
+	**************
+	gen byte edusc_ci=0
+	replace edusc_ci=1 if aedu_ci==12
+	replace edusc_ci=. if yrschool==90| yrschool==98| yrschool==99 // Se asignan como missing NIU and missing (no asi las otras)
 
-***************
-***edus1i_ci***
-***************
-gen edus1i_ci=(aedu_ci==7)
-replace edus1i_ci=. if aedu_ci==. // NIU
+	***************
+	***edus1i_ci***
+	***************
+	gen edus1i_ci=(aedu_ci==7)
+	replace edus1i_ci=. if aedu_ci==. // NIU
 
-***************
-***edus1c_ci***
-***************
-gen edus1c_ci=(aedu_ci==8)
-replace edus1c_ci=. if aedu_ci==. // NIU
+	***************
+	***edus1c_ci***
+	***************
+	gen edus1c_ci=(aedu_ci==8)
+	replace edus1c_ci=. if aedu_ci==. // NIU
 
-***************
-***edus2i_ci***
-***************
-gen edus2i_ci=(aedu_ci>=9 & aedu_ci<12)
-replace edus2i_ci=. if aedu_ci==. // NIU
+	***************
+	***edus2i_ci***
+	***************
+	gen edus2i_ci=(aedu_ci>=9 & aedu_ci<12)
+	replace edus2i_ci=. if aedu_ci==. // NIU
 
-***************
-***edus2c_ci***
-***************
-gen edus2c_ci=(aedu_ci==12)
-replace edus2c_ci=. if aedu_ci==. // NIU
+	***************
+	***edus2c_ci***
+	***************
+	gen edus2c_ci=(aedu_ci==12)
+	replace edus2c_ci=. if aedu_ci==. // NIU
 
-***************
-***edupre_ci***
-***************
-gen edupre_ci=(educbo==120) // pre-school
-replace edupre_ci=. if aedu_ci==. // NIU & missing
+	***************
+	***edupre_ci***
+	***************
+	gen edupre_ci=(educbo==120) // pre-school
+	replace edupre_ci=. if aedu_ci==. // NIU & missing
 
-**************
-***literacy***
-**************
-gen literacy=. if lit==0
-replace literacy=0 if lit==1
-replace literacy=1 if lit==2
+	**************
+	***literacy***
+	**************
+	gen literacy=. if lit==0
+	replace literacy=0 if lit==1
+	replace literacy=1 if lit==2
 
 
 /*******************************************************************************
    Incluir variables externas
 *******************************************************************************/
 capture drop _merge
-merge m:1 pais_c anio_c using "Z:/general_documentation/data_externa/poverty/International_Poverty_Lines/5_International_Poverty_Lines_LAC_long_PPP17.dta", keepusing (lp19_2011 lp31_2011 lp5_2011 tc_wdi lp365_2017 lp685_201 cpi_2017)
+merge m:1 pais_c anio_c using "Z:/general_documentation/data_externa/poverty/International_Poverty_Lines/5_International_Poverty_Lines_LAC_long_PPP17.dta", keepusing(tc_wdi ppp_wdi ppp_2017 cpi cpi2017 cpi_2017 lp365_2017 lp685_2017 lp14_2017 lp81_2017 )
 drop if _merge ==2
 
 g tc_c     = tc_wdi
-g ipc_c    = cpi_2017
-g lp19_ci  = lp19_2011 
-g lp31_ci  = lp31_2011 
-g lp5_ci   = lp5_2011
+g ppp_c    = ppp_wdi
+g cpi_c    = cpi
+g ratio_cpi2017 = cpi_2017
 
-capture label var tc_c "Tasa de cambio LCU/USD Fuente: WB/WDI"
-capture label var ipc_c "Índice de precios al consumidor base 2017=100 Fuente: IMF/WEO"
-capture label var lp19_ci  "Línea de pobreza USD1.9 día en moneda local a precios corrientes a PPA 2011"
-capture label var lp31_ci  "Línea de pobreza USD3.1 día en moneda local a precios corrientes a PPA 2011"
-capture label var lp5_ci "Línea de pobreza USD5 por día en moneda local a precios corrientes a PPA 2011"
-capture label var lp365_2017  "Línea de pobreza USD3.65 día en moneda local a precios corrientes a PPA 2017"
-capture label var lp685_2017 "Línea de pobreza USD6.85 por día en moneda local a precios corrientes a PPA 2017"
+cap label var tc_c     "Tipo de cambio oficial (año de la encuesta)"
+cap label var ppp_c    "Poder de paridad adquisitivo (año de la encuesta)"
+cap label var ppp_2017 "Poder de paridad adquisitivo (PPP) 2017"
+cap label var cpi_c   "Índice de precios al consumidor (año de la encuesta)"
+cap label var cpi2017 "Índice de precios al consumidor (2017)"
+cap label var ratio_cpi2017 "Tasa de índice de precios al consumidor (CPI_actual/CPI_2017)"
+cap label var lp365_2017 "Línea de pobreza extrema USD 3.1 per capita, moneda local PPP 2017"
+cap label var lp685_2017 "Línea de pobreza moderada USD 6.85 per capita, moneda local PPP 2017"
+cap label var lp14_2017  "Línea de vulnerabilidad USD 14.15 per capita, moneda local PPP 2017"
+cap label var lp81_2017  "Línea de clase media USD 81.22 per capita, moneda local PPP 2017"
 
-drop  cpi_2017 lp19_2011 lp31_2011 lp5_2011 tc_wdi _merge
+drop  cpi_2017 tc_wdi _merge
 
 /*******************************************************************************
    Revisión de que se hayan creado todas las variables
@@ -210,7 +271,7 @@ drop  cpi_2017 lp19_2011 lp31_2011 lp5_2011 tc_wdi _merge
 * CALIDAD: revisa que hayas creado todas las variables. Si alguna no está
 * creada, te apacerá en rojo el nombre. 
 
-global lista_variables region_BID_c region_c geolev1 pais_c anio_c idh_ch idp_ci factor_ci factor_ch estrato_ci upm zona_c sexo_c edad_ci relacion_ci civil_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch miembros_ci clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch afro_ci ind_ci noafroind_ci afroind_ci afro_ch ind_ch noafroind_ch afroind_ch  dis_ci disWG_ci dis_ch migrante_ci migrantiguo5_ci miglac_ci aedu_ci eduno_ci edupi_ci edupc_ci edusi_ci edusc_ci edus1i_ci edus1c_ci edus2i_ci edus2c_ci edupre_ci asiste_ci literacy condocup_ci emp_ci desemp_ci pea_ci rama_ci  categopri_ci spublico_ci luz_ch piso_ch pared_ch techo_ch resid_ch dorm_ch cuartos_ch cocina_ch telef_ch refrig_ch auto_ch compu_ch internet_ch cel_ch viviprop_ch aguaentubada_ch aguared_ch aguafuente_ch aguadist_ch aguadisp1_ch aguadisp2_ch aguamide_ch bano_ch banoex_ch banoalcantarillado_ch sinbano_ch conbano_ch des1_ch ${PAIS}_ingreso_ci ${PAIS}_ingresolab_ci ${PAIS}_m_pared_ch ${PAIS}_m_piso_ch ${PAIS}_m_techo_ch ${PAIS}_dis_ci tc_c ipc_c lp19_ci lp31_ci lp5_ci lp365_2017  lp685_2017
+global lista_variables region_BID_c region_c geolev1 pais_c anio_c idh_ch idp_ci factor_ci factor_ch estrato_ci upm zona_c sexo_c edad_ci relacion_ci civil_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch miembros_ci clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch afro_ci ind_ci noafroind_ci afroind_ci afro_ch ind_ch noafroind_ch afroind_ch  dis_ci disWG_ci dis_ch migrante_ci migrantiguo5_ci miglac_ci aedu_ci eduno_ci edupi_ci edupc_ci edusi_ci edusc_ci edus1i_ci edus1c_ci edus2i_ci edus2c_ci edupre_ci asiste_ci literacy condocup_ci emp_ci desemp_ci pea_ci rama_ci  categopri_ci spublico_ci luz_ch piso_ch pared_ch techo_ch resid_ch dorm_ch cuartos_ch cocina_ch telef_ch refrig_ch auto_ch compu_ch internet_ch cel_ch viviprop_ch aguaentubada_ch aguared_ch aguafuente_ch aguadist_ch aguadisp1_ch aguadisp2_ch aguamide_ch bano_ch banoex_ch banoalcantarillado_ch sinbano_ch conbano_ch des1_ch ${PAIS}_ingreso_ci ${PAIS}_ingresolab_ci ${PAIS}_m_pared_ch ${PAIS}_m_piso_ch ${PAIS}_m_techo_ch ${PAIS}_dis_ci tc_c ppp_c ppp_2017 cpi_c cpi2017 ratio_cpi2017 lp365_2017 lp685_2017 lp14_2017  lp81_2017
 
 * selecciona las siguientes 6 líneas y ejecuta (do)
 foreach v of global lista_variables {
@@ -227,7 +288,7 @@ foreach v of global lista_variables {
 * En "..." agregar la lista de variables de ID originales (por ejemplo los ID de personas, vivienda y hogar)
 
 keep  $lista_variables serial pernum
-* selecciona las 3 lineas y ejecuta (do). Deben quedar 105 variables de las secciones II y III más las 
+* selecciona las 3 lineas y ejecuta (do). Deben quedar 108 variables de las secciones II y III más las 
 * variables originales de ID que hayas mantenido
 ds
 local varconteo: word count `r(varlist)'
