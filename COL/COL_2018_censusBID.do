@@ -476,12 +476,6 @@ rename *, lower
 	gen byte dis_ch=. 
 	lab var dis_ch "Hogares con miembros con discapacidad"
 
-	******************
-	*COL_dis_ci*
-	******************
-	gen byte COL_dis_ci = .
-	replace COL_dis_ci = 1 if condicion_fisica == 1
-	replace COL_dis_ci = 0 if condicion_fisica == 2
 	
 **********************************
 *** 4. Migración (3 variables) ***
@@ -847,12 +841,13 @@ rename *, lower
 	gen long COL_ingresolab_ci = .
 	label var   COL_ingresolab_ci  "Ingreso laboral según el censo del país - variable original"
 
-	**********************
-	*ISOalpha3Pais_dis_ci*
-	**********************
+	******************
+	*COL_dis_ci*
+	******************
 	gen byte COL_dis_ci = .
+	replace COL_dis_ci = 1 if condicion_fisica == 1
+	replace COL_dis_ci = 0 if condicion_fisica == 2
 	label var COL_dis_ci  "Individuos con discapacidad según el censo del país - variable original"
-
 
 /*******************************************************************************
    III. Incluir variables externas (10 variables)
