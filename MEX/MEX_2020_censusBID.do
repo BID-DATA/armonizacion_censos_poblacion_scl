@@ -441,15 +441,7 @@ use "$base_in", clear
 	egen byte dis_ch = sum(dis_ci), by(idh_ch) 
 	replace dis_ch=1 if dis_ch>=1 & dis_ch!=.
 
-	******************
-	*ISOalpha3_dis_ci*
-	******************
-	gen byte MEX_dis_ci = .
-	replace MEX_dis_ci = 1 if inrange(dis_ver,2,4) | inrange(dis_oir,2,4) | inrange(dis_caminar,2,4) | inrange(dis_recordar,2,4) | inrange(dis_banarse,2,4) | inrange(dis_hablar,2,4) | dis_mental == 5 
-	replace MEX_dis_ci = 0 if dis_ver == 1 & dis_oir == 1 & dis_caminar == 1 & dis_recordar == 1 & dis_banarse == 1 & dis_hablar == 1 & dis_mental == 6
-	tab MEX_dis_ci,m	
-	
-	
+
 
 **********************************
 *** 4. Migración (3 variables) ***
@@ -913,6 +905,8 @@ gen long MEX_ingreso_ci = .
 	*ISOalpha3Pais_dis_ci*
 	**********************
 	gen byte MEX_dis_ci = .
+	replace MEX_dis_ci = 1 if inrange(dis_ver,2,4) | inrange(dis_oir,2,4) | inrange(dis_caminar,2,4) | inrange(dis_recordar,2,4) | inrange(dis_banarse,2,4) | inrange(dis_hablar,2,4) | dis_mental == 5 
+	replace MEX_dis_ci = 0 if dis_ver == 1 & dis_oir == 1 & dis_caminar == 1 & dis_recordar == 1 & dis_banarse == 1 & dis_hablar == 1 & dis_mental == 6
 	label var MEX_dis_ci  "Individuos con discapacidad según el censo del país - variable original"
 	
 /*******************************************************************************
