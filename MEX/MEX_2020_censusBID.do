@@ -361,25 +361,35 @@ use "$base_in", clear
 	*********
 	*afro_ci*
 	*********
-	gen byte afro_ci = . 
-	
+	gen byte afro_ci = .
+	replace afro_ci = 1 if afrodes == 1
+	replace afro_ci = 0 if afrodes == 3
+
 	*********
-	*indi_ci*
+	*ind_ci*
 	*********	
-	gen byte ind_ci =. 
-	
+	gen byte ind_ci = . 
+	replace ind_ci = 1 if perte_indigena == 1
+	replace ind_ci = 0 if perte_indigena == 3
+	tab ind_ci
+
 	**************
 	*noafroind_ci*
 	**************
-	gen byte noafroind_ci =. 
-	
-	***************
-	***afroind_ci***
-	***************
+	gen byte noafroind_ci =.   // se queda como missing (.) si no existe la pregunta
+	replace noafroind_ci =1 if (ind_ci==0)
+	replace noafroind_ci =0 if (ind_ci==1)
+	replace noafroind_ci =. if (afro_ci==. & ind_ci==.) //Esto solo en el caso que se tenga ambas opciones no disponibles. 
+	ta noafroind_ci,m
+
+	************
+	*afroind_ci*
+	************
 	gen byte afroind_ci=. 
-	replace afroind_ci=1  if (perte_indigena == 1)
-	replace afroind_ci=2  if (afrodes == 1)
-	replace afroind_ci=3 if (perte_indigena !=1 & afrodes!=1)
+	replace afroind_ci=1 if ind_ci==1 
+	replace afroind_ci=2 if afro_ci==1
+	replace afroind_ci=3 if noafroind_ci == 1
+	ta afroind_ci,m
 
 	*********
 	*afro_ch*
@@ -387,46 +397,51 @@ use "$base_in", clear
 	gen byte afro_jefe = afro_ci if relacion_ci==1
 	egen afro_ch  = max(afro_jefe), by(idh_ch) 
 	drop afro_jefe
-	
+
 	********
 	*ind_ch*
-	********
+	********	
 	gen byte ind_jefe = ind_ci if relacion_ci==1
 	egen ind_ch = max(ind_jefe), by(idh_ch) 
 	drop ind_jefe
-	
+
 	**************
 	*noafroind_ch*
 	**************
 	gen byte noafroind_jefe = noafroind_ci if relacion_ci==1
 	egen noafroind_ch = max(noafroind_jefe), by(idh_ch) 
 	drop noafroind_jefe
-	
-	***************
-	***afroind_ch***
-	***************
-	gen afroind_jefe= afroind_ci if relacion_ci==1
-	egen afroind_ch  = min(afroind_jefe), by(idh_ch) 
+
+	************
+	*afroind_ch*
+	************
+    gen byte afroind_jefe = afroind_ci if jefe_ci==1
+	egen afroind_ch = min(afroind_jefe), by(idh_ch) 
 	drop afroind_jefe 
 
 	********
 	*dis_ci*
 	********
-	gen byte dis_ci=.
-	replace dis_ci=0 if ( (dis_caminar==1 |dis_caminar==2) & (dis_ver==1 | dis_ver==2) & (dis_recordar==1 |dis_recordar==2) & (dis_oir==1 | dis_oir==2) & (dis_banarse==1 | dis_banarse==2) & (dis_hablar==1|dis_hablar==2) &   dis_mental==6)
-	replace dis_ci=1 if dis_ci!=0
-	replace dis_ci=. if (dis_caminar==9 & dis_ver==9 & dis_recordar==9 & dis_oir==9 & dis_banarse==9 & dis_hablar==9 & dis_mental ==9)
-	
+	gen byte dis_ci = .
+	replace dis_ci = 1 if inrange(dis_ver,2,4) | inrange(dis_oir,2,4) | inrange(dis_caminar,2,4) | inrange(dis_recordar,2,4) | inrange(dis_banarse,2,4) | inrange(dis_hablar,2,4) 
+	replace dis_ci = 0 if dis_ver == 1 & dis_oir == 1 & dis_caminar == 1 & dis_recordar == 1 & dis_banarse == 1 & dis_hablar == 1 
+	tab dis_ci,m
+
 	**********
 	*disWG_ci*
 	**********
-	gen byte disWG_ci=.
-	
+	gen byte disWG_ci = .
+	replace disWG_ci = 1 if inrange(dis_ver,3,4) | inrange(dis_oir,3,4) | inrange(dis_caminar,3,4) | inrange(dis_recordar,3,4) | inrange(dis_banarse,3,4) | inrange(dis_hablar,3,4) 
+	replace disWG_ci= 0 if dis_ver == 1 & dis_oir == 1 & dis_caminar == 1 & dis_recordar == 1 & dis_banarse == 1 & dis_hablar == 1 
+	tab disWG_ci,m
+
 	********
 	*dis_ch*
 	********
 	egen byte dis_ch = sum(dis_ci), by(idh_ch) 
-	replace dis_ch=1 if dis_ch>=1 & dis_ch!=. 
+	replace dis_ch=1 if dis_ch>=1 & dis_ch!=.
+
+
 
 **********************************
 *** 4. Migración (3 variables) ***
@@ -890,6 +905,8 @@ gen long MEX_ingreso_ci = .
 	*ISOalpha3Pais_dis_ci*
 	**********************
 	gen byte MEX_dis_ci = .
+	replace MEX_dis_ci = 1 if inrange(dis_ver,2,4) | inrange(dis_oir,2,4) | inrange(dis_caminar,2,4) | inrange(dis_recordar,2,4) | inrange(dis_banarse,2,4) | inrange(dis_hablar,2,4) | dis_mental == 5 
+	replace MEX_dis_ci = 0 if dis_ver == 1 & dis_oir == 1 & dis_caminar == 1 & dis_recordar == 1 & dis_banarse == 1 & dis_hablar == 1 & dis_mental == 6
 	label var MEX_dis_ci  "Individuos con discapacidad según el censo del país - variable original"
 	
 /*******************************************************************************
