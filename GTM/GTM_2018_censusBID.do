@@ -312,15 +312,15 @@ rename *, lower
 	*afro_ci*
 	*********
 	gen byte afro_ci = . 
-	replace afro_ci = 1 if pcp12==4
-	replace afro_ci = 0 if pcp12 !=4 & pcp12 !=.
+	replace afro_ci = 1 if inlist(pcp12,2,4)
+	replace afro_ci = 0 if inlist(pcp12,1,3,5,6)
 	
 	*********
 	*indi_ci*
 	*********	
 	gen byte ind_ci =. 
-	replace ind_ci = 1 if pcp12==1 | pcp12==2 | pcp12==3
-	replace ind_ci = 0 if pcp12!=1 & pcp12!=2 & pcp12!=3 & pcp12 !=.
+	replace ind_ci = 1 if inlist(pcp12,1,2,3)
+	replace ind_ci = 0 if inlist(pcp12,4,5,6)
 	
 	**************
 	*noafroind_ci*
@@ -335,8 +335,8 @@ rename *, lower
 	*afroind_ci*
 	************
 	gen byte afroind_ci=. 
-	replace afroind_ci=1 if ind_ci==1 
 	replace afroind_ci=2 if afro_ci==1
+	replace afroind_ci=1 if ind_ci==1 
 	replace afroind_ci=3 if noafroind_ci == 1
 	ta afroind_ci,m
 	
