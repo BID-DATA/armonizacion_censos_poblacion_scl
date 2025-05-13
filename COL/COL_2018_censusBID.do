@@ -762,6 +762,15 @@ rename *, lower
 	*aguamide_ch*
 	*************
 	gen byte aguamide_ch = 9
+	
+	*************
+	*aguamejorada_ch*
+	*************
+	gen byte aguamejorada_ch=.
+	replace aguamejorada_ch = 0 if inlist(aguafuente_ch, 8,9)
+	replace aguamejorada_ch = 1 if inlist(aguafuente_ch, 1,2,3,4,5,6,7)
+	replace aguamejorada_ch = 2 if inlist(aguafuente_ch, 10)
+
 
 	*********
 	*bano_ch*
