@@ -782,7 +782,7 @@ use "$base_in", clear
 	replace bano_ch = 1 if inlist(V20,1)
 	replace bano_ch = 2 if inlist(V20,2)
 	replace bano_ch = 4 if inlist(V20, 6,7) 
-	replace bano_ch = 6 if inlist(V20, 3,4,5)
+	replace bano_ch = 6 if inlist(V20, 3,4,5,9)  | (missing(V20) & jefe_ci ==1)
 	
 	***********
 	*banoex_ch*
