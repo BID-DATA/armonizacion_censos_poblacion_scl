@@ -722,7 +722,7 @@ rename *, lower
 	replace aguafuente_ch=6 if inlist(q3_13wat,8)
 	replace aguafuente_ch=7 if inlist(q3_13wat,3,4)
 	replace aguafuente_ch=8 if inlist(q3_13wat,7)
-	replace aguafuente_ch=10 if inlist(q3_13wat,6,9,99)
+	replace aguafuente_ch=10 if inlist(q3_13wat,6,9,99)|(missing(q3_13wat) & jefe_ci==1)
 	replace aguafuente_ch=3 if q3_14dri ==1
 	
 	*************
