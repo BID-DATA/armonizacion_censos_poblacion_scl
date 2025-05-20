@@ -723,7 +723,7 @@ OBSERVACIONES:
 	***************
 	gen byte aguafuente_ch = .
 	replace aguafuente_ch=2 if inlist(h18,4)
-	replace aguafuente_ch=10 if inlist(h18,1,2,3,5,6,7,99)
+	replace aguafuente_ch=10 if inlist(h18,1,2,3,5,6,7,9,99)
 	
 	*************
 	*aguadist_ch*
@@ -763,7 +763,7 @@ OBSERVACIONES:
 	gen byte bano_ch= .
 	replace bano_ch = 0 if h19a ==4
 	replace bano_ch = 1 if h19a ==1
-	replace bano_ch = 6 if inlist(h19a, 2,3,5,6)
+	replace bano_ch = 6 if inlist(h19a, 2,3,5,6,9)
 	
 	***********
 	*banoex_ch*
