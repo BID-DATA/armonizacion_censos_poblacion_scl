@@ -803,7 +803,7 @@ rename *, lower
 	replace aguafuente_ch=7 if inlist(h44,10) | (inlist(h44,1,2) & inlist(h43,1,2,3,6,9))
 	replace aguafuente_ch=8 if inlist(h44,9) 
 	replace aguafuente_ch=9 if inlist(h44,8) 
-	replace aguafuente_ch=10 if inlist(h44,11)  | (inlist(h44,1,2) & inlist(h43,7,8,10,11))
+	replace aguafuente_ch=10 if inlist(h44,11)  | (inlist(h44,1,2) & inlist(h43,7,8,10,11)) |( h44 ==. & jefe_ci == 1)
 	
 	*************
 	*aguadist_ch*
@@ -846,7 +846,7 @@ rename *, lower
 	replace bano_ch = 2 if h45 ==2
 	replace bano_ch = 3 if inlist(h45,3,4)
 	replace bano_ch = 5 if inlist(h45,5)
-	replace bano_ch = 6 if inlist(h45, 7)
+	replace bano_ch = 6 if inlist(h45, 7) | (h45 ==. & jefe_ci ==1)
 	
 	***********
 	*banoex_ch*
