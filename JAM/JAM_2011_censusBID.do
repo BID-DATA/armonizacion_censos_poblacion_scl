@@ -725,6 +725,7 @@ rename *, lower
 	replace aguafuente_ch=10 if inlist(q3_13wat,6,9,99)|(missing(q3_13wat) & jefe_ci==1)
 	replace aguafuente_ch=3 if q3_14dri ==1
 	
+	
 	*************
 	*aguadist_ch*
 	*************
@@ -764,7 +765,7 @@ rename *, lower
 	gen byte bano_ch= .
 	replace bano_ch = 0 if q3_9toil ==5
 	replace bano_ch = 1 if q3_9toil ==1
-	replace bano_ch = 6 if inlist(q3_9toil, 2,3,4,9)
+	replace bano_ch = 6 if inlist(q3_9toil, 2,3,4,9) |(missing(q3_9toil) & jefe_ci==1)
 	
 	***********
 	*banoex_ch*
