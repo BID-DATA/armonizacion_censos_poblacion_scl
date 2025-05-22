@@ -870,7 +870,7 @@ ta p05_nacio p03b_reg_civil
 	replace bano_ch = 0 if v11_sanit == 4
 	replace bano_ch = 1 if v11_sanit == 1
 	replace bano_ch = 2 if v11_sanit == 2
-	replace bano_ch = 6 if v11_sanit == 3
+	replace bano_ch = 6 if v11_sanit == 3  |(missing(v11_sanit) & jefe_ci==1)
 	
 	***********
 	*banoex_ch*
