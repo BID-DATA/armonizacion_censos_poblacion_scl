@@ -785,8 +785,8 @@ rename *, lower
 	replace aguafuente_ch = 6 if inlist(hh15,6)
 	replace aguafuente_ch = 7 if inlist(hh15,9,4) | (hh15== 11 & inlist(hh14,1,2,3,4,5,6) )
 	replace aguafuente_ch = 8 if inlist(hh15, 10) | (hh15== 11 & hh14==9)
-	replace aguafuente_ch = 9 if (hh15== 11 & inlist(hh14,7) )
-	replace aguafuente_ch = 10 if inlist(hh15, 12,88) | (hh15== 11 & inlist(hh14,11,88))
+	replace aguafuente_ch = 9 if hh15 == 8| (hh15== 11 & inlist(hh14,7) )
+	replace aguafuente_ch = 10 if inlist(hh15, 88,99) | (hh15== 11 & inlist(hh14,8,88,99,.))
 		
 	*************
 	*aguadist_ch*
@@ -825,11 +825,11 @@ rename *, lower
 	*bano_ch*
 	*********
 	gen bano_ch = . 
-	replace bano_ch = 0 if hh16a == 2 
+	replace bano_ch = 0 if hh16a == 2 | hh16b ==7
 	replace bano_ch = 1 if  hh16a == 1 & hh16b == 1
 	replace bano_ch = 2 if  hh16a == 1 & hh16b == 2
 	replace bano_ch = 3 if  hh16a == 1 & inlist(hh16b,3)
-	replace bano_ch = 6 if hh16a == 1 & inlist(hh16b,4,5,6,8)
+	replace bano_ch = 6 if hh16a == 1 & inlist(hh16b,4,5,6,8,9)
 	
 	***********
 	*banoex_ch*
