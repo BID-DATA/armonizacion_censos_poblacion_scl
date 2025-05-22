@@ -4,9 +4,7 @@
 						   Script de armonización
 País: PERÚ
 Año: 2017
-Autores: Cesar Lins
-Última versión: 30OCT2021
-División: SCL/SCL - IADB
+
 *******************************************************************************
 
 ********
@@ -61,7 +59,7 @@ INSTRUCCIONES:
 		
    (10) En la sección V, borra todas las variables excepto las variables 
 		creadas en las secciones II y III y las variables de ID originales. 
-		Corre el código y verificalo. Debes tener 94 variables de las secciones 
+		Corre el código y verificalo. Debes tener 108 variables de las secciones 
 		II y III más las variables de ID originales (control de calidad).
 		
    (11) En la sección VII, guarda la base con el formato 
@@ -99,6 +97,7 @@ rename *, lower
 /****************************************************************************
    II. Armonización de variables 
 *****************************************************************************/
+
 
 *************************************
 *** Identificación (12 variables) ***
@@ -337,72 +336,91 @@ rename *, lower
 	************
 	egen byte nmenor1_ch=sum((relacion_ci>0 & relacion_ci<=5) & (edad_ci<1)), by(idh_ch) 
 
+	
 ************************************
 *** 3. Diversidad (11 variables) ***
 ************************************	
-
 	*********
 	*afro_ci*
 	*********
-	gen byte afro_ci = . 
+	gen byte afro_ci = . 	  // se queda como missing (.) si no existe la pregunta
+	replace afro_ci =1 if c5_p25 == 5
+	replace afro_ci =0 if c5_p25 != 5 // incluye unkown
+	tab afro_ci
 	
 	*********
 	*indi_ci*
 	*********	
-	gen byte ind_ci =. 
-
+	gen byte ind_ci =. 		  // se queda como missing (.) si no existe la pregunta
+	replace ind_ci =1 if inrange(c5_p25,1,4) | inrange(c5_p25,10,13)
+	replace ind_ci =0 if inrange(c5_p25,5,10) | inrange(c5_p25,13,15) 
+	tab ind_ci
+	
 	**************
 	*noafroind_ci*
 	**************
-	gen byte noafroind_ci =. 
-			
-	***************
-	***afroind_ci***
-	***************
-	gen byte afroind_ci=. 
-	replace afroind_ci=1 if c5_p25==1 | c5_p25==2 | c5_p25==3 | c5_p25==4
-	replace afroind_ci=2 if c5_p25==5
-	replace afroind_ci=3 if c5_p25==6 | c5_p25==7 | c5_p25==8
+	gen byte noafroind_ci =.   // se queda como missing (.) si no existe la pregunta
+	replace noafroind_ci =1 if (afro_ci==0 & ind_ci==0)
+	replace noafroind_ci =0 if (afro_ci==1 | ind_ci==1)
+	replace noafroind_ci =. if (afro_ci==. | ind_ci==.) //Esto solo en el caso que se tenga ambas opciones no disponibles. 
+	ta noafroind_ci,m
 
+	************
+	*afroind_ci*
+	************
+	gen byte afroind_ci=. 
+	replace afroind_ci=1 if ind_ci==1 
+	replace afroind_ci=2 if afro_ci==1
+	replace afroind_ci=3 if noafroind_ci == 1
+	ta afroind_ci,m
+	
 	*********
 	*afro_ch*
 	*********
-	gen byte afro_ch =.
-
+	gen byte afro_jefe = afro_ci if relacion_ci==1
+	egen afro_ch  = max(afro_jefe), by(idh_ch) 
+	drop afro_jefe
+	
 	********
 	*ind_ch*
 	********	
-	gen byte ind_ch =.
+	gen byte ind_jefe = ind_ci if relacion_ci==1
+	egen ind_ch = max(ind_jefe), by(idh_ch) 
+	drop ind_jefe
 
 	**************
 	*noafroind_ch*
 	**************
-	gen byte noafroind_ch =.
-	
-	***************
-	***afroind_ch***
-	***************
-    gen byte afroind_jefe= afroind_ci if jefe_ci==1
-	egen afroind_ch  = min(afroind_jefe), by(idh_ch) 	
+	gen byte noafroind_jefe = noafroind_ci if relacion_ci==1
+	egen noafroind_ch = max(noafroind_jefe), by(idh_ch) 
+	drop noafroind_jefe
+
+	************
+	*afroind_ch*
+	************
+    gen byte afroind_jefe = afroind_ci if jefe_ci==1
+	egen afroind_ch = min(afroind_jefe), by(idh_ch) 
 	drop afroind_jefe 
 
-	*******************
-	***dis_ci***
-	*******************
-	gen byte dis_ci=. 
-	replace dis_ci=1 if c5_p9_1==1 | c5_p9_2==1 | c5_p9_3==1 |c5_p9_4==1 | c5_p9_5==1 | c5_p9_6==1
-	replace dis_ci=0 if c5_p9_1==0  & c5_p9_2==0 & c5_p9_3==0 & c5_p9_4==0 & c5_p9_5==0 & c5_p9_6==0
-	replace dis_ci=0 if c5_p9_7==1
-
+	********
+	*dis_ci*
+	********
+	gen byte dis_ci = .
+	replace dis_ci = 1 if c5_p9_1==1 | c5_p9_2==1 | c5_p9_3==1 |c5_p9_4==1 | c5_p9_5==1 | c5_p9_6==1
+	replace dis_ci = 0 if c5_p9_1==0  & c5_p9_2==0 & c5_p9_3==0 & c5_p9_4==0 & c5_p9_5==0 & c5_p9_6==0
+	replace dis_ci = 0 if c5_p9_7==1
+	
+	tab dis_ci,m
+	
 	**********
 	*disWG_ci*
 	**********
-	gen byte disWG_ci=. 
-	
-	************
-	***dis_ch***
-	************
-	egen  byte dis_ch  = sum(dis_ci), by(idh_ch) 
+	gen byte disWG_ci = . 
+
+	********
+	*dis_ch*
+	********
+	egen byte dis_ch = sum(dis_ci), by(idh_ch) 
 	replace dis_ch=1 if dis_ch>=1 & dis_ch!=.
 
 	
@@ -708,13 +726,17 @@ rename *, lower
 	/* Nota: 
 El censo no da la opcion de "no tiene" en cuanto a las instalaciones sanitarias
 */
-	*****************
+
+**********************************
+**** VARIABLES DE LA VIVIENDA ****
+**********************************
+		
+	************
 	*aguaentubada_ch*
-	*****************
-	* se crea conforme las tablas de armonización IPUMS
-	gen byte aguaentubada_ch=.
-	replace aguaentubada_ch=1 if c2_p6 == 1 | c2_p6 == 2 | c2_p6 == 3
-	replace aguaentubada_ch=0 if c2_p6>3 & c2_p6<9
+	************
+	gen aguaentubada_ch=.
+	replace aguaentubada_ch=1 if c2_p6 == 1 | c2_p6 == 2 
+	replace aguaentubada_ch=0 if c2_p6>2 & c2_p6<9 
 		
 	************
 	*aguared_ch*
@@ -759,6 +781,15 @@ El censo no da la opcion de "no tiene" en cuanto a las instalaciones sanitarias
 	*aguamide_ch*
 	*************
 	gen byte aguamide_ch =9
+	
+	*************
+	*aguamejorada_ch*
+	*************
+	gen byte aguamejorada_ch=.
+	replace aguamejorada_ch = 0 if inlist(aguafuente_ch, 8,9)
+	replace aguamejorada_ch = 1 if inlist(aguafuente_ch, 1,2,3,4,5,6,7)
+	replace aguamejorada_ch = 2 if inlist(aguafuente_ch, 10)
+
 	
 	*********
 	*bano_ch*
@@ -843,7 +874,7 @@ El censo no da la opcion de "no tiene" en cuanto a las instalaciones sanitarias
 	**********************
 	*ISOalpha3Pais_dis_ci*
 	**********************
-	gen byte PER_dis_ci = .
+	gen byte PER_dis_ci = dis_ci
 	label var PER_dis_ci  "Individuos con discapacidad según el censo del país - variable original"
    
  
@@ -851,32 +882,34 @@ El censo no da la opcion de "no tiene" en cuanto a las instalaciones sanitarias
    III. Incluir variables externas
 *******************************************************************************/
 capture drop _merge
-merge m:1 pais_c anio_c using "Z:/general_documentation/data_externa/poverty/International_Poverty_Lines/5_International_Poverty_Lines_LAC_long_PPP17.dta", keepusing (lp19_2011 lp31_2011 lp5_2011 tc_wdi lp365_2017 lp685_201 cpi_2017)
+merge m:1 pais_c anio_c using "Z:/general_documentation/data_externa/poverty/International_Poverty_Lines/5_International_Poverty_Lines_LAC_long_PPP17.dta", keepusing(tc_wdi ppp_wdi ppp_2017 cpi cpi2017 cpi_2017 lp365_2017 lp685_2017 lp14_2017 lp81_2017 )
 drop if _merge ==2
 
 g tc_c     = tc_wdi
-g ipc_c    = cpi_2017
-g lp19_ci  = lp19_2011 
-g lp31_ci  = lp31_2011 
-g lp5_ci   = lp5_2011
+g ppp_c    = ppp_wdi
+g cpi_c    = cpi
+g ratio_cpi2017 = cpi_2017
 
-capture label var tc_c "Tasa de cambio LCU/USD Fuente: WB/WDI"
-capture label var ipc_c "Índice de precios al consumidor base 2017=100 Fuente: IMF/WEO"
-capture label var lp19_ci  "Línea de pobreza USD1.9 día en moneda local a precios corrientes a PPA 2011"
-capture label var lp31_ci  "Línea de pobreza USD3.1 día en moneda local a precios corrientes a PPA 2011"
-capture label var lp5_ci "Línea de pobreza USD5 por día en moneda local a precios corrientes a PPA 2011"
-capture label var lp365_2017  "Línea de pobreza USD3.65 día en moneda local a precios corrientes a PPA 2017"
-capture label var lp685_2017 "Línea de pobreza USD6.85 por día en moneda local a precios corrientes a PPA 2017"
+cap label var tc_c     "Tipo de cambio oficial (año de la encuesta)"
+cap label var ppp_c    "Poder de paridad adquisitivo (año de la encuesta)"
+cap label var ppp_2017 "Poder de paridad adquisitivo (PPP) 2017"
+cap label var cpi_c   "Índice de precios al consumidor (año de la encuesta)"
+cap label var cpi2017 "Índice de precios al consumidor (2017)"
+cap label var ratio_cpi2017 "Tasa de índice de precios al consumidor (CPI_actual/CPI_2017)"
+cap label var lp365_2017 "Línea de pobreza extrema USD 3.1 per capita, moneda local PPP 2017"
+cap label var lp685_2017 "Línea de pobreza moderada USD 6.85 per capita, moneda local PPP 2017"
+cap label var lp14_2017  "Línea de vulnerabilidad USD 14.15 per capita, moneda local PPP 2017"
+cap label var lp81_2017  "Línea de clase media USD 81.22 per capita, moneda local PPP 2017"
 
-drop  cpi_2017 lp19_2011 lp31_2011 lp5_2011 tc_wdi _merge
+drop  cpi_2017 tc_wdi _merge
 
 /*******************************************************************************
-   IV. Revisión de que se hayan creado todas las variables
+   Revisión de que se hayan creado todas las variables
 *******************************************************************************/
 * CALIDAD: revisa que hayas creado todas las variables. Si alguna no está
 * creada, te apacerá en rojo el nombre. 
 
-global lista_variables region_BID_c region_c geolev1 pais_c anio_c idh_ch idp_ci factor_ci factor_ch estrato_ci upm zona_c sexo_c edad_ci relacion_ci civil_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch miembros_ci clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch afro_ci ind_ci noafroind_ci afroind_ci afro_ch ind_ch noafroind_ch afroind_ch  dis_ci disWG_ci dis_ch migrante_ci migrantiguo5_ci miglac_ci aedu_ci eduno_ci edupi_ci edupc_ci edusi_ci edusc_ci edus1i_ci edus1c_ci edus2i_ci edus2c_ci edupre_ci asiste_ci literacy condocup_ci emp_ci desemp_ci pea_ci rama_ci  categopri_ci spublico_ci luz_ch piso_ch pared_ch techo_ch resid_ch dorm_ch cuartos_ch cocina_ch telef_ch refrig_ch auto_ch compu_ch internet_ch cel_ch viviprop_ch aguaentubada_ch aguared_ch aguafuente_ch aguadist_ch aguadisp1_ch aguadisp2_ch aguamide_ch bano_ch banoex_ch banoalcantarillado_ch sinbano_ch conbano_ch des1_ch ${PAIS}_ingreso_ci ${PAIS}_ingresolab_ci ${PAIS}_m_pared_ch ${PAIS}_m_piso_ch ${PAIS}_m_techo_ch ${PAIS}_dis_ci tc_c ipc_c lp19_ci lp31_ci lp5_ci lp365_2017  lp685_2017
+global lista_variables region_BID_c region_c geolev1 pais_c anio_c idh_ch idp_ci factor_ci factor_ch estrato_ci upm zona_c sexo_c edad_ci relacion_ci civil_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch miembros_ci clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch afro_ci ind_ci noafroind_ci afroind_ci afro_ch ind_ch noafroind_ch afroind_ch  dis_ci disWG_ci dis_ch migrante_ci migrantiguo5_ci miglac_ci aedu_ci eduno_ci edupi_ci edupc_ci edusi_ci edusc_ci edus1i_ci edus1c_ci edus2i_ci edus2c_ci edupre_ci asiste_ci literacy condocup_ci emp_ci desemp_ci pea_ci rama_ci  categopri_ci spublico_ci luz_ch piso_ch pared_ch techo_ch resid_ch dorm_ch cuartos_ch cocina_ch telef_ch refrig_ch auto_ch compu_ch internet_ch cel_ch viviprop_ch aguaentubada_ch aguared_ch aguafuente_ch aguadist_ch aguadisp1_ch aguadisp2_ch aguamide_ch aguamejorada_ch bano_ch banoex_ch banoalcantarillado_ch sinbano_ch conbano_ch des1_ch ${PAIS}_ingreso_ci ${PAIS}_ingresolab_ci ${PAIS}_m_pared_ch ${PAIS}_m_piso_ch ${PAIS}_m_techo_ch ${PAIS}_dis_ci tc_c ppp_c ppp_2017 cpi_c cpi2017 ratio_cpi2017 lp365_2017 lp685_2017 lp14_2017  lp81_2017
 
 * selecciona las siguientes 6 líneas y ejecuta (do)
 foreach v of global lista_variables {
@@ -887,6 +920,7 @@ foreach v of global lista_variables {
 }
 
 
+
 /*******************************************************************************
    V. Borrar variables originales con exepción de los identificadores 
 *******************************************************************************/
@@ -894,7 +928,7 @@ foreach v of global lista_variables {
 
 keep  $lista_variables id_hog_imp_f id_pob_imp_f
 
-* selecciona las 3 lineas y ejecuta (do). Deben quedar 105 variables de las secciones II y III más las 
+* selecciona las 3 lineas y ejecuta (do). Deben quedar 108 variables de las secciones II y III más las 
 * variables originales de ID que hayas mantenido
 ds
 local varconteo: word count `r(varlist)'
