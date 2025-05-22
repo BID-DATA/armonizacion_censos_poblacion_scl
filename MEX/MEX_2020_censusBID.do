@@ -792,7 +792,7 @@ use "$base_in", clear
 	replace aguafuente_ch = 5 if inlist(aba_agua_entu, 6) | inlist(aba_agua_no_entu,6)
 	replace aguafuente_ch = 6 if inlist(aba_agua_entu, 4) | inlist(aba_agua_no_entu,5)
 	replace aguafuente_ch = 8 if inlist(aba_agua_no_entu,4)
-	replace aguafuente_ch = 10 if inlist(aba_agua_entu, 2,3,5,7,8,9) | inlist(aba_agua_no_entu, 1,3,9) | inlist(agua_entubada, 9)
+	replace aguafuente_ch = 10 if inlist(aba_agua_entu, 2,3,5,7,8,9) | inlist(aba_agua_no_entu, 1,3,9) | inlist(agua_entubada, 9) | (missing(aba_agua_entu) & jefe_ci==1)
 	
 	*************
 	*aguadist_ch*
@@ -836,7 +836,7 @@ use "$base_in", clear
 	replace bano_ch = 2 if sersan == 1 & drenaje == 2
 	replace bano_ch = 3 if inlist(sersan,2) & inlist(drenaje,1, 2)
 	replace bano_ch = 4 if inlist(sersan, 1,2) & inlist(drenaje, 3,4)
-	replace bano_ch = 6 if (inlist(sersan,1,2) & inlist(drenaje,5,9)) | sersan == 9 
+	replace bano_ch = 6 if (inlist(sersan,1,2) & inlist(drenaje,5,9)) | sersan == 9 | (missing(drenaje) & jefe_ci==1)
 	
 	***********
 	*banoex_ch*
