@@ -752,8 +752,9 @@ El censo no da la opcion de "no tiene" en cuanto a las instalaciones sanitarias
 	replace aguafuente_ch = 1 if inlist(c2_p6, 1,2)
 	replace aguafuente_ch = 2 if c2_p6 ==3
 	replace aguafuente_ch = 6 if c2_p6 ==4
+	replace aguafuente_ch = 7 if c2_p6 ==6
 	replace aguafuente_ch = 8 if inlist(c2_p6, 7)
-	replace aguafuente_ch = 10 if inlist(c2_p6, 6,7,8)
+	replace aguafuente_ch = 10 if inlist(c2_p6,5,7,8)|(missing(c2_p6) & jefe_ci ==1)
 		
 	*************
 	*aguadist_ch*
@@ -798,7 +799,7 @@ El censo no da la opcion de "no tiene" en cuanto a las instalaciones sanitarias
 	replace bano_ch = 1 if inlist(c2_p10,1,2)
 	replace bano_ch = 2 if c2_p10 == 3
 	replace bano_ch = 4 if inlist(c2_p10, 6,7) 
-	replace bano_ch = 6 if inlist(c2_p10, 4,5,8)
+	replace bano_ch = 6 if inlist(c2_p10, 4,5,8)|(missing(c2_p10) & jefe_ci ==1)
 	
 	***********
 	*banoex_ch*
