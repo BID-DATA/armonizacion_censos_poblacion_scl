@@ -741,7 +741,7 @@ rename *, lower
 	replace aguafuente_ch = 5 if inlist(h_agua_cocin, 6)
 	replace aguafuente_ch = 6 if inlist(h_agua_cocin, 9,10)
 	replace aguafuente_ch = 8 if inlist(h_agua_cocin, 7)
-	replace aguafuente_ch = 10 if inlist(h_agua_cocin, 5)
+	replace aguafuente_ch = 10 if inlist(h_agua_cocin, 5,99) | (missing(h_agua_cocin)& jefe_ci ==1)
 	
 	*************
 	*aguadist_ch*
@@ -780,7 +780,7 @@ rename *, lower
 	replace bano_ch = 1 if v_tipo_sersa == 1 
 	replace bano_ch = 2 if v_tipo_sersa == 2
 	replace bano_ch = 4 if v_tipo_sersa == 5
-	replace bano_ch = 6 if inlist(v_tipo_sersa,3,4)
+	replace bano_ch = 6 if inlist(v_tipo_sersa,3,4,9)| (missing(v_tipo_sersa)& jefe_ci ==1)
 	
 	***********
 	*banoex_ch*
