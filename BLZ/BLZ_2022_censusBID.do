@@ -829,7 +829,7 @@ rename *, lower
 	replace bano_ch = 1 if  hh16a == 1 & hh16b == 1
 	replace bano_ch = 2 if  hh16a == 1 & hh16b == 2
 	replace bano_ch = 3 if  hh16a == 1 & inlist(hh16b,3)
-	replace bano_ch = 6 if hh16a == 1 & inlist(hh16b,4,5,6,8,9)
+	replace bano_ch = 6 if hh16a == 1 & inlist(hh16b,4,5,6,8,9) | (hh16a ==9)
 	
 	***********
 	*banoex_ch*
