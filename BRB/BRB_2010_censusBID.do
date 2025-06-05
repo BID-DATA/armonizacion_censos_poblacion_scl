@@ -763,7 +763,7 @@ OBSERVACIONES:
 	gen byte bano_ch= .
 	replace bano_ch = 0 if h19a ==4
 	replace bano_ch = 1 if h19a ==1
-	replace bano_ch = 6 if inlist(h19a, 2,3,5,6,9)
+	replace bano_ch = 6 if inlist(h19a, 2,3,5,6,9) | missing(h19a)
 	
 	***********
 	*banoex_ch*
