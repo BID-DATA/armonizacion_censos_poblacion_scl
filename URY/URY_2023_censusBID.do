@@ -199,7 +199,8 @@ rename *, lower
     *idh_ch (ID hogar)*
     *******************
 	egen  idh_ch =concat(direccion_id departamento localidad vivid hogid) 	
-	replace  idh_ch="" if hogid=="NA"
+	replace  idh_ch="" if hogid=="NA" 
+	replace  idh_ch="" if vivvo00==2 |vivvo00==8888
 	* revisar número de hogares
 	egen unique_tag = tag(idh_ch)
 	count if unique_tag == 1
@@ -266,9 +267,9 @@ rename *, lower
 	replace relacion_ci = 2 if perpa01==2    //conyuge
 	replace relacion_ci = 3 if perpa01==3 | perpa01==4 | perpa01==5  //hijoa
 	replace relacion_ci = 4 if perpa01>=6 & perpa01<=12  | perpa01==16 //otro pariente
-	replace relacion_ci = 5 if perpa01==13 |  perpa01==15   //otro no pariente
+	replace relacion_ci = 5 if perpa01==13  //otro no pariente
 	replace relacion_ci = 6 if perpa01==14   //empleado
-	replace relacion_ci = . if perpa01==8888 | perpa01==9898 
+	replace relacion_ci = . if perpa01==8888 | perpa01==9898 |  perpa01==15  
 	tab perpa01, mi
 	tab relacion_ci, mi
 	tab perpa01 relacion_ci , mi
