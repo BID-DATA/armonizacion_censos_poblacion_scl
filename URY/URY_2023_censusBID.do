@@ -265,10 +265,10 @@ rename *, lower
 	replace relacion_ci = 1 if perpa01==1   //jefea
 	replace relacion_ci = 2 if perpa01==2    //conyuge
 	replace relacion_ci = 3 if perpa01==3 | perpa01==4 | perpa01==5  //hijoa
-	replace relacion_ci = 4 if perpa01>=6 & perpa01<=12   //otro pariente
+	replace relacion_ci = 4 if perpa01>=6 & perpa01<=12  | perpa01==16 //otro pariente
 	replace relacion_ci = 5 if perpa01==13 |  perpa01==15   //otro no pariente
 	replace relacion_ci = 6 if perpa01==14   //empleado
-	replace relacion_ci = . if perpa01==8888 | perpa01==9898 | perpa01==16
+	replace relacion_ci = . if perpa01==8888 | perpa01==9898 
 	tab perpa01, mi
 	tab relacion_ci, mi
 	tab perpa01 relacion_ci , mi
