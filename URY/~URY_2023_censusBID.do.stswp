@@ -474,4 +474,251 @@ rename *, lower
 	replace dis_ch=1 if dis_ch>=1 & dis_ch!=.
 	replace  dis_ch=. if idh_ch==""
 	br if idh_ch==""
+
 	
+**********************************
+*** 4. Migración (3 variables) ***
+**********************************	
+
+    *****************
+    *migrante_ci****
+    ****************
+	gen byte migrante_ci=. 
+	replace migrante_ci=1 if permi01==4
+	replace migrante_ci=0 if permi01==1 | permi01==3
+	 
+	****************
+    *migrantiguo5_ci*
+    ****************
+	gen byte migrantiguo5_ci=.
+	replace migrantiguo5_ci=1 if permi02<=2018 
+	replace migrantiguo5_ci=0 if permi02>2018 & permi02<=2023
+	
+	***********
+	*miglac_ci*
+	***********
+	gen byte miglac_ci=0
+
+	replace miglac_ci = 1 if migrante_ci == 1 & ///
+		(permi01_4 == 32  /* Argentina */             | ///
+		 permi01_4 == 44  /* Bahamas */               | ///
+		 permi01_4 == 52  /* Barbados */              | ///
+		 permi01_4 == 68  /* Bolivia */               | ///
+		 permi01_4 == 76  /* Brasil */                | ///
+		 permi01_4 == 84  /* Belice */                | ///
+		 permi01_4 == 152 /* Chile */                 | ///
+		 permi01_4 == 170 /* Colombia */              | ///
+		 permi01_4 == 188 /* Costa Rica */            | ///
+		 permi01_4 == 192 /* Cuba */                  | ///
+		 permi01_4 == 212 /* Dominica */              | ///
+		 permi01_4 == 214 /* República Dominicana */  | ///
+		 permi01_4 == 218 /* Ecuador */               | ///
+		 permi01_4 == 222 /* El Salvador */           | ///
+		 permi01_4 == 308 /* Granada */               | ///
+		 permi01_4 == 320 /* Guatemala */             | ///
+		 permi01_4 == 332 /* Haití */                 | ///
+		 permi01_4 == 340 /* Honduras */              | ///
+		 permi01_4 == 388 /* Jamaica */               | ///
+		 permi01_4 == 484 /* México */                | ///
+		 permi01_4 == 591 /* Panamá */                | ///
+		 permi01_4 == 600 /* Paraguay */              | ///
+		 permi01_4 == 604 /* Perú */                  | ///
+		 permi01_4 == 659 /* San Cristóbal y Nieves */| ///
+		 permi01_4 == 662 /* Santa Lucía */           | ///
+		 permi01_4 == 670 /* San Vicente, Granadinas */  | ///
+		 permi01_4 == 740 /* Surinam */               | ///
+		 permi01_4 == 780 /* Trinidad y Tobago */     | ///
+		 permi01_4 == 858 /* Uruguay */               | ///
+		 permi01_4 == 862 /* Venezuela */)
+	 
+	replace miglac_ci=. if migrante_ci!=1
+
+***********************************
+*** 5. Educación (13 variables) ***
+***********************************
+/* son dos preguntas. ambas son útiles para armar aedu_ci
+pered03 NIVEL EDUCATIVO CURSANDO ACTUALMENTE	
+		1	Educación Inicial o Educación Preescolar (aedu_ci = 0)
+		2	Primaria común (>= 1 & < 6) --> 6 completa
+		3	Primaria especial (no se considera)
+		13	Educación media básica o Ciclo Básico (Liceo o UTU) (>= 6 & <= 9)
+		14	Educación media superior o Bachillerato (Liceo o UTU) (> 9 & <= 12)
+		15	Capacitaciones o cursos de UTU que NO acreditan Ciclo Básico NI Bachillerato  (no se considera)
+		9	Magisterio o profesorado (12)
+		10	Terciario no universitario  (12)
+		11	Universidad o similar (Carrera de grado o Licenciatura) 
+		12	Posgrado (diploma, maestría, doctorado) 
+pered05_1  AÑOS APROBADOS EN ESE NIVEL	
+	1	Sí, tiene años aprobados
+	2	No tiene años aprobados
+pered05_1_1 numero de años
+---------------
+pered03_1	 NIVEL MÁS ALTO QUE CURSÓ	
+		1	Educación Inicial o Educación Preescolar
+		2	Primaria común
+		3	Primaria especial
+		13	Educación media básica o Ciclo Básico (Liceo o UTU)
+		14	Educación media superior o Bachillerato (Liceo o UTU)
+		15	Capacitaciones o cursos de UTU que NO acreditan Ciclo Básico NI Bachillerato 
+		9	Magisterio o profesorado
+		10	Terciario no universitario
+		11	Universidad o similar (Carrera de grado o Licenciatura)
+		12	Posgrado (diploma, maestría, doctorado)	
+pered04	FINALIZÓ ESE NIVEL	
+		1	Sí 
+		2	No	
+PERED05_2 AÑOS APROBADOS EN ESE NIVEL	
+		1	Sí, tiene años aprobados
+		2	No tiene años aprobados
+pered05_2_1 AÑOS APROBADOS EN ESE NIVEL		
+*/
+
+	*********
+	*aedu_ci*
+	*********
+	gen byte aedu_ci=.
+	replace aedu_ci=0 if pered03==1 | pered03_1==1  //cursando o nivel más alto preescolar (complete o incompleta)
+	
+	*primaria (1-6 años)
+	
+		replace aedu_ci=1 if   pered03==2 & pered05_1==1 & pered05_1_1==1
+		replace aedu_ci=1 if pered03_1==2 & pered05_2==1 & pered05_2_1==1 	
+
+		replace aedu_ci=2 if   pered03==2 & pered05_1==1 & pered05_1_1==2
+		replace aedu_ci=2 if pered03_1==2 & pered05_2==1 & pered05_2_1==2 	
+
+		replace aedu_ci=3 if   pered03==2 & pered05_1==1 & pered05_1_1==3
+		replace aedu_ci=3 if pered03_1==2 & pered05_2==1 & pered05_2_1==3 	
+		
+		replace aedu_ci=4 if   pered03==2 & pered05_1==1 & pered05_1_1==4
+		replace aedu_ci=4 if pered03_1==2 & pered05_2==1 & pered05_2_1==4 	
+		
+		replace aedu_ci=5 if   pered03==2 & pered05_1==1 & pered05_1_1==5
+		replace aedu_ci=5 if pered03_1==2 & pered05_2==1 & pered05_2_1==5 		
+		
+		replace aedu_ci=6 if   pered03==2 & pered05_1==1 & (pered05_1_1>=6 & pered05_1_1<99)     
+		replace aedu_ci=6 if pered03_1==2 & pered05_2==1 & (pered05_2_1>=6 & pered05_2_1<99)		
+	
+	*secundaria o media básica (7-9 años)
+	
+		replace aedu_ci=7 if   pered03==13 & pered05_1==1 & pered05_1_1==1
+		replace aedu_ci=7 if pered03_1==13 & pered05_2==1 & pered05_2_1==1
+		
+		replace aedu_ci=8 if   pered03==13 & pered05_1==1 & pered05_1_1==2
+		replace aedu_ci=8 if pered03_1==13 & pered05_2==1 & pered05_2_1==2
+
+		replace aedu_ci=9 if   pered03==13 & pered05_1==1 & (pered05_1_1>=3 & pered05_1_1<99 )
+		replace aedu_ci=9 if pered03_1==13 & pered05_2==1 & (pered05_2_1>=3 & pered05_2_1<99)	
+
+	*secundaria o media superior (10-12 años)
+	
+		replace aedu_ci=10 if   pered03==14 & pered05_1==1 & pered05_1_1==1
+		replace aedu_ci=10 if pered03_1==14 & pered05_2==1 & pered05_2_1==1	
+		
+		replace aedu_ci=11 if   pered03==14 & pered05_1==1 & pered05_1_1==2
+		replace aedu_ci=11 if pered03_1==14 & pered05_2==1 & pered05_2_1==2
+
+		replace aedu_ci=12 if   pered03==14 & pered05_1==1 & pered05_1_1>=3 & pered05_1_1<99 
+		replace aedu_ci=12 if pered03_1==14 & pered05_2==1 & pered05_2_1>=3 & pered05_2_1<99	
+	
+	*Superior no uniersitaria // 	* Se hizo la consulta a EDU/ Olga Dulce y confirmó que Magisterio o profesorado  equivale a superior no universitaria
+	
+		*Magisterio o profesorado  
+		replace aedu_ci=12 if   pered03==9 & pered05_1==1 
+		replace aedu_ci=12 if pered03_1==9 & pered05_2==1 	
+		*Terciario no universitario 
+		replace aedu_ci=12 if   pered03==10 & pered05_1==1 
+		replace aedu_ci=12 if pered03_1==10 & pered05_2==1 	
+	
+	
+	*Superior
+	tab pered03 pered05_2 if pered03==9 | pered03==11 | pered03==12  //no repórtan  pered05_2. No contestan 
+	tab pered03 pered05_2 if pered03==9 | pered03==11 | pered03==12  //no repórtan  pered05_2. No contestan 
+
+		* universitario
+		replace aedu_ci=12 + pered05_1_1 if pered03==11 
+		replace aedu_ci=12 + pered05_1_1 if pered03_1==11 
+		* postgrado
+		replace aedu_ci=16 + pered05_1_1 if pered03==12 
+		replace aedu_ci=16 + pered05_1_1 if pered03_1==12 
+	
+	replace aedu_ci=18 if aedu_ci>18
+	
+	**********
+	*eduno_ci*
+	**********
+	gen byte eduno_ci=(aedu_ci==0) 
+	replace eduno_ci=. if aedu_ci==. 
+
+	**********
+	*edupi_ci*
+	**********
+	gen byte edupi_ci=(aedu_ci>=1 & aedu_ci<6) 
+	replace edupi_ci=. if aedu_ci==. 
+
+	**********
+	*edupc_ci*
+	**********
+	gen byte edupc_ci=(aedu_ci==6) 
+	replace edupc_ci=. if aedu_ci==. 
+
+	**********
+	*edusi_ci*
+	**********
+	gen byte edusi_ci=(aedu_ci>=6 & aedu_ci<=12) 
+	replace edusi_ci=. if aedu_ci==. 
+
+	**********
+	*edusc_ci*
+	**********
+	gen byte edusc_ci=(aedu_ci==12) 
+	replace edusc_ci=. if aedu_ci==. 
+
+	***********
+	*edus1i_ci*
+	***********
+	gen byte edus1i_ci=(aedu_ci>6 & aedu_ci<9)
+	replace edus1i_ci=. if aedu_ci==. 
+
+	***********
+	*edus1c_ci*
+	***********
+	gen byte edus1c_ci=(aedu_ci==9)
+	replace edus1c_ci=. if aedu_ci==. 
+
+	***********
+	*edus2i_ci*
+	***********
+	gen byte edus2i_ci=(aedu_ci>9 & aedu_ci<12)
+	replace edus2i_ci=. if aedu_ci==. 
+
+	***********
+	*edus2c_ci*
+	***********
+	gen byte edus2c_ci=(aedu_ci>=12)
+	replace edus2c_ci=. if aedu_ci==. 
+
+	***********
+	*edupre_ci*
+	***********
+	gen byte edupre_ci= .
+	
+	***********
+	*asiste_ci*
+	***********
+	gen byte asiste_ci=.
+	replace asiste_ci=1 if pered00<=3 // Menores de 3 años
+	replace asiste_ci=1 if pered01<=2  // Personas de 4 años y mayores
+	replace asiste_ci=0 if pered00==4
+	replace asiste_ci=0 if pered01==3 | pered01==4
+	
+	**********
+	*literacy*
+	**********
+	* Aplica para Para personas >= 10 años que nunca asistieron a un centro educativo,
+	* que cursan/cursaron Primaria especial o Primaria común con hasta 3 años aprobados.
+	gen byte literacy=.
+	replace literacy=1 if pered08==1
+	replace literacy=0 if pered08==2
+		
+
