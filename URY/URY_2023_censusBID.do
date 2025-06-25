@@ -722,3 +722,466 @@ pered05_2_1 AÑOS APROBADOS EN ESE NIVEL
 	replace literacy=0 if pered08==2
 		
 
+****************************************
+*** 6. Mercado laboral (7 variables) ***
+****************************************
+/*POBPCOAC
+1	Menor de 12 años
+2	Ocupados
+3	Desocupados propiamente dichos
+4	Inactivos, jubilados o pensionistas
+5	Inactivos, otras causas */
+
+    *************
+    *condocup_ci*
+    *************
+	*se considera menor de 12 años en la base, mientras que en el manual es 15
+    gen byte condocup_ci=.
+	replace condocup_ci=1 if pobpcoac==2	//ocupados
+	replace condocup_ci=2 if pobpcoac==3	//desocupados	
+	replace condocup_ci=3 if pobpcoac==4| pobpcoac==5	//inactivos
+	replace condocup_ci=4 if pobpcoac==1	//no responde por ser menor de edad
+		
+	********
+    *emp_ci*
+    ********
+	gen byte emp_ci=.
+	replace emp_ci=(condocup_ci==1) if condocup_ci!=.
+
+	***********
+    *desemp_ci*
+    ***********	
+	gen byte desemp_ci=.
+	replace desemp_ci=(condocup_ci==2) if condocup_ci!=.
+
+	********
+    *pea_ci*
+    ********
+	gen byte pea_ci=.
+	replace pea_ci=1 if inlist(condocup_ci,1,2)
+	replace pea_ci=0 if inlist(condocup_ci,3,4)
+
+	**********
+    *rama_ci**
+    **********
+	gen byte rama_ci = . 
+	
+	**************
+    *categopri_ci*
+    **************
+	gen byte categopri_ci=.
+	replace categopri_ci=0 if (peral08==7 |peral08==11) & emp_ci==1
+	replace categopri_ci=1 if peral08==4 & emp_ci==1 //patrón
+	replace categopri_ci=2 if peral08==5 & emp_ci==1 //Cuenta Propia o independiente
+	replace categopri_ci=3 if peral08==1 | emp_ci==2 //Empleado o asalariado
+	replace categopri_ci=4 if peral08==6 & emp_ci==1  //Trabajador no remunerado
+	 
+	*************
+    *spublico_ci*
+    *************
+	gen byte spublico_ci=.	
+		
+**********************************************************
+***  7.1 Vivienda - variables generales (15 variables) ***
+**********************************************************		
+
+	* se usa esta variable agregada del ONE para complementar algunas preguntas de vivienda de de pared, techo y piso
+	encode materialidad, gen(_materialidad)
+	
+	/* se usa esta variable 
+                       47,266         1  7777
+                       12,303         2  8888
+                           87         3  9898
+                        3,756         4  Materiales de desecho en
+                                         paredes o techos
+                        3,890         5  Materiales livianos en paredes
+                                         y techos y piso no resistente
+                      117,702         6  Materiales livianos en paredes
+                                         y techos y piso resistente
+                          236         7  Materiales pesados en paredes y
+                                         techos y piso no resistente
+                    1,665,516         8  Materiales pesados en paredes y
+                                         techos y piso resistente
+                        1,720         9  Materiales pesados en paredes,
+                                         techo liviano y piso no
+                                         resistente
+                    1,168,015        10  Materiales pesados en paredes,
+                                         techo liviano y piso resistente
+                      351,837        11  NA
+                      123,679        12  Otras combinaciones de
+                                         materiales
+                           58        13  Paredes de barro o adobe, techo
+                                         liviano y piso no resistente
+                        3,386        14  Paredes de barro o adobe, techo
+                                         liviano y piso resistente */
+
+	********
+	*luz_ch*
+	*******
+	destring vivdv07, replace force
+	gen byte luz_ch=.
+	replace luz_ch=1 if vivdv07<=5
+	replace luz_ch=0 if vivdv07==6
+	replace luz_ch=. if idh_ch==""
+	tab luz_ch
+	
+	*********
+	*piso_ch*
+	*********
+	destring vivdv03, replace force
+	gen byte piso_ch=.
+	replace piso_ch = 0 if vivdv03 == 4 | vivdv03 == 3
+	replace piso_ch = 1 if vivdv03 == 2   //no permamentes 
+	replace piso_ch = 2 if vivdv03 == 1   // permanentes	
+	replace piso_ch = 2 if inlist(_materialidad,8,10,14) 
+	replace piso_ch=. if idh_ch==""
+	tab piso_ch 
+	
+	**********
+	*pared_ch*
+	**********
+	destring vivdv01, replace force
+	gen byte pared_ch=.
+	replace pared_ch=1 if inlist(vivdv01, 5, 6,4,9)       //no permamentes 
+	replace pared_ch=2 if inlist(vivdv01,1,2,3,8)   // permanentes	
+	replace pared_ch=2 if inlist(_materialidad,8,10,7,9) 
+	replace pared_ch=. if idh_ch==""
+	tab pared_ch
+
+	**********
+	*techo_ch*
+	**********
+	destring vivdv02, replace force
+	gen byte techo_ch=.
+	replace techo_ch=1 if inlist(vivdv02,5,4)    //no permanentes
+	replace techo_ch=2 if inlist(vivdv02,2,7,9,3,10,8)    //permanentes  
+	replace techo_ch=2 if inlist(_materialidad,7,8) 
+	replace techo_ch=. if idh_ch==""
+	tab techo_ch
+
+	**********
+	*resid_ch*
+	**********
+	destring hogrs01, replace force
+	gen byte resid_ch=.
+	replace resid_ch=0 if inlist(hogrs01,1,2) //servicio de recolección pública o privada
+	replace resid_ch=1 if inlist(hogrs01,3,4)  //Servicio de quemados o enterrados
+	replace resid_ch=2 if inlist(hogrs01,5,6)  //Servicio de tirado a un espacio abierto
+	replace resid_ch=3 if hogrs01 ==7  //Otro método
+	replace resid_ch=. if idh_ch==""
+	tab resid_ch
+
+	*********
+	*dorm_ch*
+	*********
+	destring hoghd01, replace force
+	gen byte dorm_ch=hoghd01
+	replace dorm_ch=. if inlist(hoghd01,8888,9898)
+	replace dorm_ch=. if idh_ch==""
+	tab dorm_ch
+	*revisar br if dorm_ch >20
+
+	************
+	*cuartos_ch*
+	************
+	destring hoghd00, replace force
+	gen byte cuartos_ch=hoghd00
+	replace cuartos_ch =. if inlist(hoghd00,8888,9898)
+	replace cuartos_ch=. if idh_ch==""
+
+	***********
+	*cocina_ch*
+	***********
+	gen byte cocina_ch=.
+	
+	***********
+	*telef_ch*
+	***********
+	gen byte telef_ch=.
+	
+	***********
+	*refrig_ch*
+	***********
+	destring hogce03, replace force
+	gen byte refrig_ch=.
+	replace refrig_ch=1 if hogce03==1
+	replace refrig_ch=0 if hogce03==2
+	replace refrig_ch=. if idh_ch==""
+	
+	*********
+	*auto_ch*
+	*********
+	destring hogce13, replace force
+	gen byte auto_ch=.
+	replace auto_ch=1 if hogce13>=1
+	replace auto_ch=0 if hogce13==0
+	replace auto_ch=. if inlist(hogce13,99,8888,9898)
+	replace auto_ch=. if idh_ch==""
+
+	**********
+	*compu_ch*
+	**********
+	*no se puede distinguir pues la pregunta agrupa computadora, notebook, tablet, etc
+	gen byte compu_ch=.
+
+	*************
+	*internet_ch*
+	************* 
+	destring hogce11, replace force
+	gen byte internet_ch=.
+	replace internet_ch=1 if hogce11==1
+	replace internet_ch=0 if hogce11==2
+	tab internet_ch
+	replace internet_ch=. if idh_ch==""
+
+	********
+	*cel_ch*
+	********
+	gen byte cel_ch=.
+
+	*************
+	*viviprop_ch*
+	*************
+	*se asume que "integrante de una cooperativa de vivienda (incluye copperativas de propietarios y de usuarios) No pertenece a a los habitantes del hogar"
+	destring hogte01, replace force
+	gen byte viviprop_ch=.
+	replace viviprop_ch=1 if hogte01 ==1 
+	replace viviprop_ch=0 if inlist(hogte01,2,3,4)
+	replace viviprop_ch=. if idh_ch==""
+
+***************************************************
+*** 7.2 Vivienda - variables Wash (13 variables) ***
+***************************************************	
+
+	*****************
+	*aguaentubada_ch*
+	*****************
+	destring vivdv06, replace force
+	gen byte aguaentubada_ch=.
+	replace aguaentubada_ch= 1 if inlist(vivdv06,1,2,3)
+	replace aguaentubada_ch= 0 if vivdv06==4
+	replace aguaentubada_ch=. if idh_ch==""
+	tab aguaentubada_ch
+	
+	************
+	*aguared_ch*
+	************
+	destring vivdv05, replace force
+	gen byte aguared_ch=.
+	replace aguared_ch=1 if vivdv05==1
+	replace aguared_ch=0 if vivdv05>1&vivdv05<=7
+	replace aguared_ch=. if idh_ch==""
+	tab aguared_ch
+
+    ***************
+	*aguafuente_ch*
+	***************
+ 	gen byte aguafuente_ch=.
+	replace aguafuente_ch=2 if vivdv05==1	
+	replace aguafuente_ch=4 if vivdv05==2
+	replace aguafuente_ch=8 if vivdv05==6
+	replace aguafuente_ch=10 if  inlist(vivdv05,3,4,5,7)
+	replace aguafuente_c=. if idh_ch==""
+
+	*************
+	*aguadist_ch*
+	*************
+	gen byte aguadist_ch=0
+	replace aguadist_ch=1 if vivdv05==1	
+	replace aguadist_ch=2 if vivdv05==2	
+	replace aguadist_ch=3 if vivdv05==3
+	replace aguadist_ch=. if idh_ch==""
+	          
+	**************
+	*aguadisp1_ch*
+	**************
+	gen byte aguadisp1_ch = .
+		
+	**************
+	*aguadisp2_ch*
+	**************
+	gen byte aguadisp2_ch = .
+	
+	*************
+	*aguamide_ch*
+	*************
+	gen byte aguamide_ch = .
+	
+	*********
+	*bano_ch*
+	*********
+	destring hogsh01 hogsh03, replace force
+	gen byte bano_ch = . 
+	replace bano_ch = 0 if hogsh01==3 
+	replace bano_ch = 1 if (hogsh01==1 |hogsh01==2) & hogsh03==1 
+	replace bano_ch = 2 if (hogsh01==1 |hogsh01==2) & hogsh03==2
+	replace bano_ch = 4 if (hogsh01==1 |hogsh01==2) & (hogsh03==3| hogsh03==4)
+	replace bano_ch=. if idh_ch==""
+	
+	***********
+	*banoex_ch*
+	***********
+	destring hogsh02, replace force
+	gen byte banoex_ch = .
+	replace banoex_ch = 1 if hogsh02 ==1 
+	replace banoex_ch = 0 if hogsh02 ==2
+	replace banoex_ch=. if idh_ch==""
+	
+	************
+	*sinbano_ch*
+	************
+	gen byte sinbano_ch =.
+
+	*********
+	*conbano_ch*
+	*********
+	gen byte conbano_ch=.
+	
+	***********************
+	*banoalcantarillado_ch*
+	***********************
+	gen byte banoalcantarillado_ch=.
+	replace banoalcantarillado_ch=1 if hogsh03 ==1
+	replace banoalcantarillado_ch=0 if inlist(hogsh03,2,3,4)
+	replace banoalcantarillado_ch=. if idh_ch==""
+		
+	*********
+	*des1_ch*
+	*********
+	gen byte des1_ch=.
+	replace des1_ch=0 if hogsh01==3 
+	replace des1_ch=1 if (hogsh01==1 |hogsh01==2) & hogsh03==1
+	replace des1_ch=2 if (hogsh01==1 |hogsh01==2) & inlist(hogsh03,2,3,4)
+	replace des1_ch=. if idh_ch==""
+
+	
+*************************************************************
+*** 8. Otras variables específicas por país (6 variables) ***
+*************************************************************	
+* si no existe la variable, crearla con un missing value (.). Cambia ISOalpha3Pais
+* por el país que te toca. Por ejemplo si te toca Ecuador debe ser 
+* ECU_m_pared_ch, ECU_m_piso_ch, etc.
+ 
+	**************************
+	*ISOalpha3Pais_m_pared_ch*
+	**************************	
+	clonevar URY_m_pared_ch= vivdv01
+	label var URY_m_pared_ch  "Material de las paredes según el censo del país - variable original"
+	label def URY_m_pared_ch  1 "Ladrillos, ticholos, piedras o bloques CON terminación" 2 "Ladrillos, ticholos, piedras o bloques SIN terminación" 3 "Materiales livianos (madera o chapa) CON revestimiento" 4 "Materiales livianos (madera o chapa) SIN revestimiento" 8 "Sistema constructivo no tradicional de tipo construcción en seco (isopanel, steel frame, wood frame, etc) CON terminación" 9 "Sistema constructivo no tradicional de tipo construcción en seco (isopanel, steel frame, wood frame, etc) SIN terminación" 5 "Barro (terrón, adobe o fajina)" 6 "Materiales de desecho" 7 "Otro material"  8888 "No relevado" 9898 "Ignorado" //categorías originales del país
+	label val URY_m_pared_ch  URY_m_pared_ch 
+	replace URY_m_pared_ch=. if idh_ch==""
+
+
+	*************************
+	*ISOalpha3Pais_m_piso_ch*
+	*************************
+	clonevar URY_m_piso_ch= vivdv03 
+	label var URY_m_piso_ch  "Material de los pisos según el censo del país - variable original"
+	label def URY_m_piso_ch  1 "Cerámica, baldosas, piedra laja, madera, moqueta, linóleo, vinílico" 2 "Arena y portland" 3 "Sólo contrapiso sin piso" 4 "Tierra sin piso ni contrapiso" 5 "Otro material" 6 "No relevado" 7 "Ignorado"  8888 "No relevado" 9898 "Ignorado" //categorías originales del país
+	label val URY_m_piso_ch  URY_m_piso_ch 
+	replace URY_m_piso_ch=. if idh_ch==""
+
+	**************************
+	*ISOalpha3Pais_m_techo_ch*
+	**************************	
+	clonevar URY_m_techo_ch= vivdv02 
+	label var URY_m_techo_ch  "Material del techo según el censo del país - variable original"
+	label def URY_m_techo_ch  7 "Planchada de hormigón  o bovedilla CON protección (tejas u otros)" 8 "Planchada de hormigón o bovedilla SIN protección" 2 "Liviano CON cielo raso"  3 "Liviano SIN cielo raso" 9 "Sistema constructivo no tradicional (isopanel, techo verde, steel frame) CON cielo raso" 10 "Sistema constructivo no tradicional (isopanel, techo verde, steel frame) SIN cielo raso" 4 "Quincha"  5 "Materiales de desecho" 6 "Otro material" 8888 "No relevado" 9898 "Ignorado" //categorías originales del país
+	label val URY_m_techo_ch URY_m_techo_ch 
+	replace URY_m_techo_ch=. if idh_ch==""
+
+	**************************
+	*ISOalpha3Pais_ingreso_ci*
+	**************************	
+	gen long URY_ingreso_ci = .
+	label var URY_ingreso_ci  "Ingreso total según el censo del país - variable original"
+	
+	*****************************
+	*ISOalpha3Pais_ingresolab_ci*
+	*****************************
+	gen long URY_ingresolab_ci = .	
+	label var URY_ingresolab_ci  "Ingreso laboral según el censo del país - variable original"
+
+	**********************
+	*ISOalpha3Pais_dis_ci*
+	**********************
+	gen byte URY_dis_ci = dis_ci
+	label var URY_dis_ci  "Individuos con discapacidad según el censo del país - variable original"
+	label def URY_dis_ci 1 "Sí" 0 "No"   //categorías originales del país
+	label val URY_dis_ci URY_dis_ci
+ 
+
+/*******************************************************************************
+   III. Incluir variables externas
+*******************************************************************************/
+capture drop _merge
+merge m:1 pais_c anio_c using "Z:/general_documentation/data_externa/poverty/International_Poverty_Lines/5_International_Poverty_Lines_LAC_long_PPP17.dta", keepusing (tc_wdi ppp_wdi ppp_2017 cpi cpi2017 cpi_2017 lp365_2017 lp685_2017 lp14_2017 lp81_2017 )
+drop if _merge ==2
+
+g tc_c     = tc_wdi
+g ppp_c    = ppp_wdi
+g cpi_c    = cpi
+g ratio_cpi2017 = cpi_2017
+
+cap label var tc_c     "Tipo de cambio oficial (año de la encuesta)"
+cap label var ppp_c    "Poder de paridad adquisitivo (año de la encuesta)"
+cap label var ppp_2017 "Poder de paridad adquisitivo (PPP) 2017"
+cap label var cpi_c   "Índice de precios al consumidor (año de la encuesta)"
+cap label var cpi2017 "Índice de precios al consumidor (2017)"
+cap label var ratio_cpi2017 "Tasa de índice de precios al consumidor (CPI_actual/CPI_2017)"
+cap label var lp365_2017 "Línea de pobreza extrema USD 3.1 per capita, moneda local PPP 2017"
+cap label var lp685_2017 "Línea de pobreza moderada USD 6.85 per capita, moneda local PPP 2017"
+cap label var lp14_2017  "Línea de vulnerabilidad USD 14.15 per capita, moneda local PPP 2017"
+cap label var lp81_2017  "Línea de clase media USD 81.22 per capita, moneda local PPP 2017"
+
+drop  cpi_2017 tc_wdi _merge
+
+/*******************************************************************************
+   IV. Revisión de que se hayan creado todas las variables
+*******************************************************************************/
+* CALIDAD: revisa que hayas creado todas las variables. Si alguna no está
+* creada, te apacerá en rojo el nombre. 
+
+global lista_variables region_BID_c region_c geolev1 pais_c anio_c idh_ch idp_ci factor_ci factor_ch estrato_ci upm zona_c sexo_c edad_ci relacion_ci civil_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch miembros_ci clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch afro_ci ind_ci noafroind_ci afroind_ci afro_ch ind_ch noafroind_ch afroind_ch  dis_ci disWG_ci dis_ch migrante_ci migrantiguo5_ci miglac_ci aedu_ci eduno_ci edupi_ci edupc_ci edusi_ci edusc_ci edus1i_ci edus1c_ci edus2i_ci edus2c_ci edupre_ci asiste_ci literacy condocup_ci emp_ci desemp_ci pea_ci rama_ci  categopri_ci spublico_ci luz_ch piso_ch pared_ch techo_ch resid_ch dorm_ch cuartos_ch cocina_ch telef_ch refrig_ch auto_ch compu_ch internet_ch cel_ch viviprop_ch aguaentubada_ch aguared_ch aguafuente_ch aguadist_ch aguadisp1_ch aguadisp2_ch aguamide_ch bano_ch banoex_ch banoalcantarillado_ch sinbano_ch conbano_ch des1_ch ${PAIS}_ingreso_ci ${PAIS}_ingresolab_ci ${PAIS}_m_pared_ch ${PAIS}_m_piso_ch ${PAIS}_m_techo_ch ${PAIS}_dis_ci tc_c ppp_c ppp_2017 cpi_c cpi2017 ratio_cpi2017 lp365_2017 lp685_2017 lp14_2017  lp81_2017
+
+* selecciona las siguientes 6 líneas y ejecuta (do)
+foreach v of global lista_variables {
+	cap confirm variable `v'
+	if _rc == 111 {
+		display in red "variable `v' NO existe."
+	}
+}
+
+
+/*******************************************************************************
+   V. Borrar variables originales con exepción de los identificadores 
+*******************************************************************************/
+* En "..." agregar la lista de variables de ID originales (por ejemplo los ID de personas, vivienda y hogar)
+
+keep  $lista_variables id_censo direccion_id departamento localidad vivid hogid
+
+
+* selecciona las 3 lineas y ejecuta (do). Deben quedar 108 variables de las secciones II y III más las 
+* variables originales de ID que hayas mantenido
+ds
+local varconteo: word count `r(varlist)'
+display "Número de variables de la base: `varconteo'"
+
+
+/*******************************************************************************
+   VI. Incluir etiquetas para las variables y categorías
+*******************************************************************************/
+include "$gitFolder\armonizacion_censos_poblacion_scl\Base\labels_general.do"
+
+
+/*******************************************************************************
+   VII. Guardar la base armonizada 
+*******************************************************************************/
+compress
+save "$base_out", replace 
+
+log close
+
+********************************************************************************
+******************* FIN. Muchas gracias por tu trabajo ;) **********************
+********************************************************************************
