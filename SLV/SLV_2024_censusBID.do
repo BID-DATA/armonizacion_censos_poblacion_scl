@@ -933,9 +933,9 @@ include "$gitFolder\armonizacion_censos_poblacion_scl\Base\labels_general.do"
    VII. Guardar la base armonizada 
 *******************************************************************************/
 compress
-save "$base_out", replace 
+cap save "$base_out", replace 
 
-log close
+cap log close
 
 ********************************************************************************
 ******************* FIN. Muchas gracias por tu trabajo ;) **********************
