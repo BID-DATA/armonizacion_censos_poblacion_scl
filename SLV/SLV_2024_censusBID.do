@@ -468,13 +468,13 @@ rename *, lower
 	replace aedu_ci=7 if p10_1_grado_aprobado == 17
 	replace aedu_ci=8 if p10_1_grado_aprobado == 18
 	replace aedu_ci=9 if p10_1_grado_aprobado == 19
-	replace aedu_ci=10 if p10_1_grado_aprobado == 21
-	replace aedu_ci=11 if p10_1_grado_aprobado == 22
-	replace aedu_ci=12 if p10_1_grado_aprobado ==23 | p10_1_grado_aprobado == 31 | p10_1_grado_aprobado == 36 | p10_1_grado_aprobado == 41
-	replace aedu_ci=13 if p10_1_grado_aprobado ==24 | p10_1_grado_aprobado == 32 | p10_1_grado_aprobado == 37 | p10_1_grado_aprobado == 42
-	replace aedu_ci=14 if p10_1_grado_aprobado == 36| p10_1_grado_aprobado == 43
-	replace aedu_ci=15 if p10_1_grado_aprobado == 37| p10_1_grado_aprobado == 44
-	replace aedu_ci=16 if p10_1_grado_aprobado == 38| p10_1_grado_aprobado == 45
+	replace aedu_ci=10 if p10_1_grado_aprobado == 21 | p10_1_grado_aprobado == 31 
+	replace aedu_ci=11 if p10_1_grado_aprobado == 22 | p10_1_grado_aprobado == 32 
+	replace aedu_ci=12 if p10_1_grado_aprobado ==23 | p10_1_grado_aprobado == 36 | p10_1_grado_aprobado == 41
+	replace aedu_ci=13 if p10_1_grado_aprobado ==24 | p10_1_grado_aprobado == 37 | p10_1_grado_aprobado == 42
+	replace aedu_ci=14 if p10_1_grado_aprobado == 38| p10_1_grado_aprobado == 43
+	replace aedu_ci=15 if p10_1_grado_aprobado == 44
+	replace aedu_ci=16 if p10_1_grado_aprobado == 45
 	replace aedu_ci=17 if p10_1_grado_aprobado == 46 | p10_1_grado_aprobado ==51 | p10_1_grado_aprobado ==61
 	replace aedu_ci=18 if p10_1_grado_aprobado == 47 | p10_1_grado_aprobado ==52 | p10_1_grado_aprobado ==62
 	replace aedu_ci=18 if p10_1_grado_aprobado == 48 | p10_1_grado_aprobado ==53 | p10_1_grado_aprobado ==63
@@ -727,7 +727,7 @@ rename *, lower
 	*aguaentubada_ch*
 	*****************
 	gen byte aguaentubada_ch=.
-	replace aguaentubada_ch= 1 if v11_viv_agua==1 | v11_viv_agua
+	replace aguaentubada_ch= 1 if v11_viv_agua==1 | v11_viv_agua ==2
 	replace aguaentubada_ch= 0 if v11_viv_agua==3
 	
 	************
@@ -740,17 +740,13 @@ rename *, lower
     ***************
 	*aguafuente_ch*
 	***************
- 	gen byte aguafuente_ch=.
-	replace aguafuente_ch=1 if v12_viv_proviene_agua ==1
-	replace aguafuente_ch=2 if v12_viv_proviene_agua==2 | v12_viv_proviene_agua==3 | v12_viv_proviene_agua ==6 | v12_viv_proviene_agua==7
-	*replace aguafuente_ch=3 
-	replace aguafuente_ch=4 if v12_viv_proviene_agua == 4 | v12_viv_proviene_agua == 5
-	replace aguafuente_ch=5 if v12_viv_proviene_agua ==10
-	replace aguafuente_ch=6 if v12_viv_proviene_agua == 9
-	*replace aguafuente_ch=7 if 
-	replace aguafuente_ch=8 if v12_viv_proviene_agua == 8
-	replace aguafuente_ch=9 if v12_viv_proviene_agua == 11
-	*replace aguafuente_ch=10 if ...	
+	gen aguafuente_ch = 1 if v12_viv_proviene_agua==1 | v12_viv_proviene_agua==2| v12_viv_proviene_agua==3
+	*rainwater
+	replace aguafuente_ch = 5 if v12_viv_proviene_agua==10
+	replace aguafuente_ch= 6 if v12_viv_proviene_agua==9 
+	*Trucked
+	replace aguafuente_ch = 8 if v12_viv_proviene_agua==8 
+	replace aguafuente_ch= 10 if inlist(v12_viv_proviene_agua,4,5,6,7,11,12) 	
 	
 	*************
 	*aguadist_ch*
@@ -918,7 +914,7 @@ foreach v of global lista_variables {
 *******************************************************************************/
 * En "..." agregar la lista de variables de ID originales (por ejemplo los ID de personas, vivienda y hogar)
 
-keep  $lista_variables ... ... ...
+keep  $lista_variables cod_prop cod_viv cod_hog cod_per
 
 * selecciona las 3 lineas y ejecuta (do). Deben quedar 108 variables de las secciones II y III más las 
 * variables originales de ID que hayas mantenido
