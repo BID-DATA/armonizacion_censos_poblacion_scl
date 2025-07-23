@@ -623,7 +623,7 @@ if  `"$PAIS"' =="BHS" |  `"$PAIS"' =="GUY" | `"$PAIS"' =="JAM" |  `"$PAIS"' =="S
 	cap confirm watsup
 	if (_rc==0) {
 	replace aguafuente_ch = 2 if watsup ==17 | watsup == 18
-	replace aguafuente_ch = 6 if inrange(watsup,10,16) | inrange(watsup,20,99)
+	replace aguafuente_ch = 10 if inrange(watsup,0,16) | inrange(watsup,20,99)
 	}
 	
 	**************
