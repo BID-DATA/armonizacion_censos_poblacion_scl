@@ -604,7 +604,7 @@ if  `"$PAIS"' =="BHS" |  `"$PAIS"' =="GUY" | `"$PAIS"' =="JAM" |  `"$PAIS"' =="S
 	*aguaentubada_ch*
 	*****************
 	gen byte aguaentubada_ch=.
-	cap confirm watsup
+	cap confirm varaible watsup
 	if (_rc==0) {
 	replace aguaentubada_ch = 1 if inrange(watsup,10,17)
 	replace aguaentubada_ch = 0 if inrange(watsup,18,20)
