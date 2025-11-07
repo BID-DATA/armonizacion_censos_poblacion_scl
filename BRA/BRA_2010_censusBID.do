@@ -297,6 +297,7 @@ foreach v of global lista_variables {
 	cap confirm variable `v'
 	if _rc == 111 {
 		display in red "variable `v' NO existe."
+		gen `v' = .
 	}
 }
 
