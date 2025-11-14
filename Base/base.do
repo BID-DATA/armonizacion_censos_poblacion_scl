@@ -604,7 +604,7 @@ if  `"$PAIS"' =="BHS" |  `"$PAIS"' =="GUY" | `"$PAIS"' =="JAM" |  `"$PAIS"' =="S
 	*aguaentubada_ch*
 	*****************
 	gen byte aguaentubada_ch=.
-	cap confirm watsup
+	cap confirm variable watsup
 	if (_rc==0) {
 	replace aguaentubada_ch = 1 if inrange(watsup,10,17)
 	replace aguaentubada_ch = 0 if inrange(watsup,18,20)
@@ -620,17 +620,17 @@ if  `"$PAIS"' =="BHS" |  `"$PAIS"' =="GUY" | `"$PAIS"' =="JAM" |  `"$PAIS"' =="S
 	*aguafuente_ch*
 	***************
 	gen byte aguafuente_ch=.
-	cap confirm watsup
+	cap confirm variable watsup
 	if (_rc==0) {
 	replace aguafuente_ch = 2 if watsup ==17 | watsup == 18
-	replace aguafuente_ch = 6 if inrange(watsup,10,16) | inrange(watsup,20,99)
+	replace aguafuente_ch = 10 if inrange(watsup,0,16) | inrange(watsup,20,99)
 	}
 	
 	**************
 	*aguadist_ch*
 	**************
 	gen byte aguadist_ch =.
-	cap confirm watsup
+	cap confirm variable watsup
 	if (_rc==0) {
 	replace aguadist_ch =1 if watsup == 11
 	replace aguadist_ch =2 if inrange(watsup,14,16)
@@ -714,7 +714,7 @@ if  `"$PAIS"' =="BHS" |  `"$PAIS"' =="GUY" | `"$PAIS"' =="JAM" |  `"$PAIS"' =="S
 	*banomejorado_ch*
 	*****************
 	gen banomejorado_ch=.
-	cap confirm sewage toilet
+	cap confirm variable sewage toilet
 	if (_rc==0) {
 	cap replace banomejorado_ch =1 if inrange(bano_ch, 1,3)
 	cap replace banomejorado_ch =2 if bano_ch ==6
@@ -725,7 +725,7 @@ if  `"$PAIS"' =="BHS" |  `"$PAIS"' =="GUY" | `"$PAIS"' =="JAM" |  `"$PAIS"' =="S
 	*des1_ch*
 	*********
 	gen des1_ch=.
-	cap confirm toilet
+	cap confirm variable toilet
 	if (_rc==0) {
 	replace des1_ch=0 if bano_ch==0
 	replace des1_ch=1 if toilet==21
