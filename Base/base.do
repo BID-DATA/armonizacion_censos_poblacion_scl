@@ -668,11 +668,11 @@ if  `"$PAIS"' =="BHS" |  `"$PAIS"' =="GUY" | `"$PAIS"' =="JAM" |  `"$PAIS"' =="S
 	gen bano_ch=.
 	cap confirm variable sewage bathrooms toilet
 	if (_rc==0) {
-		replace bano_ch= 0 if toilet==10 
-		replace bano_ch= 1 if toilet==21 & sewage==11 
+		replace bano_ch= 1 if toilet==21 & sewage==11
 		replace bano_ch= 2 if toilet==21 & sewage==12
-		replace bano_ch= 3 if toilet==22 & (sewage ==12 | sewage ==10)
-		replace bano_ch= 6 if (inrange(toilet, 20,99) & (sewage == 20 | sewage ==99)) | (missing(sewage) & toilet !=10)| (toilet ==0) | (sewage==0)
+		replace bano_ch= 3 if (toilet==22 & sewage ==12) | sewage ==10
+		replace bano_ch= 6 if (inrange(toilet, 11,99) & inlist(sewage, 00,20,99)) | missing(sewage)
+		replace bano_ch= 0 if toilet==10
 	}
 		
 	***********
@@ -724,15 +724,10 @@ if  `"$PAIS"' =="BHS" |  `"$PAIS"' =="GUY" | `"$PAIS"' =="JAM" |  `"$PAIS"' =="S
 	*********
 	*des1_ch*
 	*********
-	gen des1_ch=.
-	cap confirm variable toilet
-	if (_rc==0) {
-	replace des1_ch=0 if bano_ch==0
-	replace des1_ch=1 if toilet==21
-	replace des1_ch=2 if toilet==22
+	gen des1_ch=2
+	replace des1_ch=0 if toilet ==10
+	replace des1_ch=1 if toilet==21 & sewage==11
 	replace des1_ch=. if toilet==99
-	}
-	
 *************************************************************
 *** 8. Otras variables específicas por país (6 variables) ***
 *************************************************************	
