@@ -666,7 +666,7 @@ if  `"$PAIS"' =="BHS" |  `"$PAIS"' =="GUY" | `"$PAIS"' =="JAM" |  `"$PAIS"' =="S
 	*bano_ch*
 	*********
 	gen bano_ch=.
-	cap confirm variable sewage bathrooms toilet
+	cap confirm variable sewage toilet
 	if (_rc==0) {
 		replace bano_ch= 0 if toilet==10 
 		replace bano_ch= 1 if toilet==21 & sewage==11 
