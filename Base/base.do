@@ -724,10 +724,15 @@ if  `"$PAIS"' =="BHS" |  `"$PAIS"' =="GUY" | `"$PAIS"' =="JAM" |  `"$PAIS"' =="S
 	*********
 	*des1_ch*
 	*********
-	gen des1_ch=2
-	replace des1_ch=0 if toilet ==10
-	replace des1_ch=1 if toilet==21 & sewage==11
-	replace des1_ch=. if toilet==99
+	cap confirm variable toilet sewage
+	gen des1_ch=.
+	if (_rc==0) {
+		replace des1_ch=2
+		replace des1_ch=0 if toilet ==10
+		replace des1_ch=1 if toilet==21 & sewage==11
+		replace des1_ch=. if toilet==99
+	}
+
 *************************************************************
 *** 8. Otras variables específicas por país (6 variables) ***
 *************************************************************	
