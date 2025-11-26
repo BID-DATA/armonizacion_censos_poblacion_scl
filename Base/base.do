@@ -668,9 +668,9 @@ if  `"$PAIS"' =="BHS" |  `"$PAIS"' =="GUY" | `"$PAIS"' =="JAM" |  `"$PAIS"' =="S
       gen bano_ch=.
       cap confirm variable sewage toilet
       if (_rc==0) {
-            replace bano_ch= 1 if inrange(toilet, 20,23) & sewage==11
-            replace bano_ch= 2 if inrange(toilet, 20,23) & sewage==12
-            replace bano_ch= 3 if (toilet==22 & sewage ==12) | sewage ==10
+            replace bano_ch= 1 if inlist(toilet, 21,20) & sewage==11
+            replace bano_ch= 2 if inlist(toilet, 21,20) & sewage==12
+            replace bano_ch= 3 if (inlist(toilet,22,23) & inlist(sewage,11,12)) | sewage ==10
             replace bano_ch= 6 if (inrange(toilet, 11,99) & inlist(sewage, 00,20,99)) | missing(sewage)
             replace bano_ch= 0 if toilet==10
       }
