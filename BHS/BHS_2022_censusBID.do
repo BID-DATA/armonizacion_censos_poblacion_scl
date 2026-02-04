@@ -405,9 +405,10 @@ use "$base_in", clear
 	***********
 	*miglac_ci*
 	***********
-	gen byte miglac_ci=0
-	replace miglac_ci=1 if inlist(p3_isl_cntry, 328,332,388) & migrante_ci ==1
-	replace miglac_ci=. if migrante_ci!=1
+	gen byte miglac_ci=.
+	* not recommended to create variable
+	*replace miglac_ci=1 if inlist(p3_isl_cntry, 328,332,388) & migrante_ci ==1
+	*replace miglac_ci=. if migrante_ci!=1
 
 ***********************************
 *** 5. Educación (13 variables) ***
