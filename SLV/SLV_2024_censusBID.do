@@ -871,7 +871,7 @@ rename *, lower
    III. Incluir variables externas
 *******************************************************************************/
 capture drop _merge
-merge m:1 pais_c anio_c using "Z:/general_documentation/data_externa/poverty/International_Poverty_Lines/5_International_Poverty_Lines_LAC_long_PPP17.dta", keepusing (tc_wdi ppp_wdi ppp_2017 cpi cpi2017 cpi_2017 lp365_2017 lp685_2017 lp14_2017 lp81_2017 )
+merge m:1 pais_c anio_c using "\\sapidbshares.file.core.windows.net\idbshares\SURVEYS\general_documentation\data_externa\poverty\International_Poverty_Lines\5_International_Poverty_Lines_LAC_long_PPP17.dta", keepusing (tc_wdi ppp_wdi ppp_2017 cpi cpi2017 cpi_2017 lp365_2017 lp685_2017 lp14_2017 lp81_2017 )
 drop if _merge ==2
 
 g tc_c     = tc_wdi
@@ -937,6 +937,3 @@ cap save "$base_out", replace
 
 cap log close
 
-********************************************************************************
-******************* FIN. Muchas gracias por tu trabajo ;) **********************
-********************************************************************************
