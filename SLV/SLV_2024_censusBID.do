@@ -409,14 +409,14 @@ rename *, lower
 	*dis_ci*
 	********
 	gen byte dis_ci=. 
-	replace dis_ci=1 if p13a_discapacidad==1
-	replace dis_ci=0 if p13a_discapacidad==2
-	
+	replace dis_ci=0 if (p13_1_discap_caminar==1 ) & (p13_2_discap_brazos==1) & (p13_3_discap_recordar==1) & (p13_4_discap_cuidado_personal==1)  & (p13_5_discap_comunicarse==1)  & (p13_6_discap_visual==1)  & (p13_7_discap_oir==1)
+	replace dis_ci=1 if (p13_1_discap_caminar==4 | p13_1_discap_caminar ==3 | p13_1_discap_caminar ==2) | (p13_2_discap_brazos==4| p13_2_discap_brazos==3 | p13_2_discap_brazos==2) | (p13_3_discap_recordar==4| p13_3_discap_recordar==3 | p13_3_discap_recordar==2) | (p13_4_discap_cuidado_personal==4| p13_4_discap_cuidado_personal==3 | p13_4_discap_cuidado_personal==2) | (p13_5_discap_comunicarse==4| p13_5_discap_comunicarse==3 | p13_5_discap_comunicarse==2) | (p13_6_discap_visual==4| p13_6_discap_visual==3 | p13_6_discap_visual==2) | (p13_7_discap_oir==4| p13_7_discap_oir==3 | p13_7_discap_oir==2)
+
 	**********
 	*disWG_ci*
 	**********
 	gen byte disWG_ci=. 
-	replace disWG_ci=0 if (p13_1_discap_caminar ==1 | p13_1_discap_caminar ==2) | (p13_2_discap_brazos==1| p13_2_discap_brazos==2) | (p13_3_discap_recordar==1| p13_3_discap_recordar==2)| (p13_4_discap_cuidado_personal==1| p13_4_discap_cuidado_personal==2) | (p13_5_discap_comunicarse==1| p13_5_discap_comunicarse==2) | (p13_6_discap_visual==1| p13_6_discap_visual==2) | (p13_7_discap_oir==1| p13_7_discap_oir==2)	
+	replace disWG_ci=0 if (p13_1_discap_caminar ==1 | p13_1_discap_caminar ==2) & (p13_2_discap_brazos==1| p13_2_discap_brazos==2) & (p13_3_discap_recordar==1| p13_3_discap_recordar==2) & (p13_4_discap_cuidado_personal==1| p13_4_discap_cuidado_personal==2) & (p13_5_discap_comunicarse==1| p13_5_discap_comunicarse==2) & (p13_6_discap_visual==1| p13_6_discap_visual==2) & (p13_7_discap_oir==1| p13_7_discap_oir==2)	
 	replace disWG_ci=1 if (p13_1_discap_caminar ==4 | p13_1_discap_caminar ==3) | (p13_2_discap_brazos==4| p13_2_discap_brazos==3) | (p13_3_discap_recordar==4| p13_3_discap_recordar==3)| (p13_4_discap_cuidado_personal==4| p13_4_discap_cuidado_personal==3) | (p13_5_discap_comunicarse==4| p13_5_discap_comunicarse==3) | (p13_6_discap_visual==4| p13_6_discap_visual==3) | (p13_7_discap_oir==4| p13_7_discap_oir==3)
 
 	********
