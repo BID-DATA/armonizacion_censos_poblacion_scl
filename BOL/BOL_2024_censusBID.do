@@ -327,7 +327,8 @@ rename *, lower
 	*********	
 	gen byte ind_ci = .
 	replace ind_ci =1 if p32_pueblo_per == 1 & p32_pueblos!=1 & p32_pueblos!=98 & p32_pueblos!=99
-
+	replace ind_ci =0 if p32_pueblo_per!=1
+	
 	**************
 	*noafroind_ci*
 	**************
