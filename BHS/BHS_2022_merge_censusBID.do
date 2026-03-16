@@ -63,17 +63,17 @@ global ruta_raw = "${censusFolder}\\raw\\`PAIS'"
 
 cap log close
 local date: di %tdCCYYNNDD daily("$S_DATE", "DMY") 
-local log_file ="$ruta_raw\\`PAIS'_`ANIO'_NOIPUMS_`date'.log"
-log using "`log_file'"
+local log_file ="$ruta_raw\\2022\\`PAIS'_`ANIO'_NOIPUMS_`date'.log"
+log using "`log_file'", replace
 
 /****************************************************************************
    II. Unir módulos en una sola base
 *****************************************************************************/
 * Append de las bases de población //cambia el nombre de las bases.dta
-use "$ruta_raw\2022 Census of Population and Housing_BAHAMAS_persons.dta" , clear
+use "$ruta_raw\\2022\\2022 Census of Population and Housing_BAHAMAS_persons.dta" , clear
 
 * Merge de los módulos //cambia el nombre de las bases.dta
-merge m:1 hhid  using "$ruta_raw\2022 Census of Population and Housing_households BAHAMAS.dta"
+merge m:1 hhid  using "$ruta_raw\\2022\\2022 Census of Population and Housing_households BAHAMAS.dta"
 
 /****************************************************************************
   III. Verificar que merge se haya hecho correctamente y no hayan duplicados
@@ -89,7 +89,6 @@ drop _merge
 ****************************************************************************/
 
 compress  
-save "$ruta_raw\BHS_2022_NOIPUMS.dta", replace
+save "$ruta_raw\\2022\\BHS_2022_NOIPUMS.dta", replace
 
 log close
-
