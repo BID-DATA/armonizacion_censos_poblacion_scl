@@ -1,4 +1,4 @@
-* (Versión Stata 17)
+* (Versión Stata 19)
 /*==============================================================================
 							CENSOS POBLACIONALES
 						   Script de armonización
@@ -81,7 +81,7 @@ global ruta = "${censusFolder}"  //cambiar ruta seleccionada
 global PAIS BHS    				 //cambiar
 global ANIO 2022   				 //cambiar
 
-global base_in  = "$ruta\\raw\\$PAIS\\${PAIS}_${ANIO}_NOIPUMS.dta"
+global base_in  = "$ruta\\raw\\$PAIS\\$ANIO\\${PAIS}_${ANIO}_NOIPUMS.dta"
 global base_out = "$ruta\\clean\\$PAIS\\${PAIS}_${ANIO}_censusBID.dta"
 global log_file ="$ruta\\clean\\$PAIS\\${PAIS}_${ANIO}_censusBID.log"                                                   
 capture log close
