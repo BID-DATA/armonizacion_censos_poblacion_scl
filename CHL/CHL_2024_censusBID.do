@@ -1,4 +1,4 @@
-* (Versión Stata 17)
+* (Versión Stata 19)
 /*==============================================================================
 							CENSOS POBLACIONALES
 						   Script de armonización
@@ -74,21 +74,20 @@ INSTRUCCIONES:
    I. Define las rutas de trabajo y abre la base de datos raw
 *****************************************************************************/
 
-clear
+clear all
 set more off
 
 global ruta = "${censusFolder}"
-global PAIS CHL
-global ANIO 2024
+local PAIS CHL
+local ANIO 2024
 
-global base_in  = "$ruta\\raw\\$PAIS\\`ANIO'\\data_merge\\`PAIS'_`ANIO'_NOIPUMS.dta""
-
-global base_out = "$ruta\\clean\\$PAIS\\${PAIS}_${ANIO}_censusBID.dta"
-global log_file ="$ruta\\clean\\$PAIS\\${PAIS}_${ANIO}_censusBID.log"                                                   
+local base_in  = "$ruta\\raw\\`PAIS'\\`ANIO'\\data_merge\\`PAIS'_`ANIO'_NOIPUMS.dta" 
+local base_out = "$ruta\\clean\\`PAIS'\\`PAIS'_`ANIO'_censusBID.dta"
+local log_file ="$ruta\\clean\\`PAIS'\\`PAIS'_`ANIO'_censusBID.log"                                                   
 capture log close
-log using "$log_file"  //agregar ,replace si ya está creado el log_file en tu carpeta
+log using "`log_file'", replace  //agregar ,replace si ya está creado el log_file en tu carpeta
 
-use "$base_in", clear
+use "`base_in'", clear
 
 rename *, lower
 
@@ -463,7 +462,7 @@ rename *, lower
 	gen byte afroind_ci=. 
 	replace afroind_ci=1 if ind_ci==1 
 	replace afroind_ci=2 if afro_ci==1
-	replace afroind_ci=3 if noafroind_ci = 1
+	replace afroind_ci=3 if noafroind_ci== 1
 	
 	*********
 	*afro_ch*
@@ -978,13 +977,13 @@ replace disWG_ci=1 if inlist(p32a_dificultad_ver,3,4) | inlist(p32b_dificultad_o
 	*ISOalpha3Pais_ingreso_ci*
 	**************************	
 	gen long CHL_ingreso_ci = .
-	label var CHL "Ingreso total según el censo del país - variable original"
+	label var CHL_ingreso_ci "Ingreso total según el censo del país - variable original"
 	
 	*****************************
 	*ISOalpha3Pais_ingresolab_ci*
 	*****************************
 	gen long CHL_ingresolab_ci = .	
-	label var CHL_ingreso_ci  "Ingreso laboral según el censo del país - variable original"
+	label var CHL_ingresolab_ci  "Ingreso laboral según el censo del país - variable original"
 
 	**********************
 	*ISOalpha3Pais_dis_ci*
@@ -1009,7 +1008,7 @@ drop if _merge ==2
 * CALIDAD: revisa que hayas creado todas las variables. Si alguna no está
 * creada, te apacerá en rojo el nombre. 
 
-global lista_variables region_BID_c region_c geolev1 pais_c anio_c idh_ch idp_ci factor_ci factor_ch estrato_ci upm zona_c sexo_c edad_ci relacion_ci civil_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch miembros_ci clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch afro_ci ind_ci noafroind_ci afroind_ci afro_ch ind_ch noafroind_ch afroind_ch  dis_ci disWG_ci dis_ch migrante_ci migrantiguo5_ci miglac_ci aedu_ci eduno_ci edupi_ci edupc_ci edusi_ci edusc_ci edus1i_ci edus1c_ci edus2i_ci edus2c_ci edupre_ci asiste_ci literacy condocup_ci emp_ci desemp_ci pea_ci rama_ci  categopri_ci spublico_ci luz_ch piso_ch pared_ch techo_ch resid_ch dorm_ch cuartos_ch cocina_ch telef_ch refrig_ch auto_ch compu_ch internet_ch cel_ch viviprop_ch1 aguared_ch bano_ch banomejorado_ch des1_ch ${PAIS}_ingreso_ci ${PAIS}_ingresolab_ci ${PAIS}_m_pared_ch ${PAIS}_m_piso_ch ${PAIS}_m_techo_ch ${PAIS}_dis_ci tc_c ipc_c lp19_ci lp31_ci lp5_ci
+global lista_variables region_BID_c region_c geolev1 pais_c anio_c idh_ch idp_ci factor_ci factor_ch estrato_ci upm zona_c sexo_c edad_ci relacion_ci civil_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch miembros_ci clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch afro_ci ind_ci noafroind_ci afroind_ci afro_ch ind_ch noafroind_ch afroind_ch  dis_ci disWG_ci dis_ch migrante_ci migrantiguo5_ci miglac_ci aedu_ci eduno_ci edupi_ci edupc_ci edusi_ci edusc_ci edus1i_ci edus1c_ci edus2i_ci edus2c_ci edupre_ci asiste_ci literacy condocup_ci emp_ci desemp_ci pea_ci rama_ci  categopri_ci spublico_ci luz_ch piso_ch pared_ch techo_ch resid_ch dorm_ch cuartos_ch cocina_ch telef_ch refrig_ch auto_ch compu_ch internet_ch cel_ch aguared_ch bano_ch des1_ch CHL_ingreso_ci CHL_ingresolab_ci CHL_m_pared_ch CHL_m_piso_ch CHL_m_techo_ch CHL_dis_ci tc_wdi ppp_wdi ppp_2021 ppp_2017 cpi cpi_2017 cpi2017 cpi_2021 cpi2021 lp365_2017 lp685_2017 lp14_2017 lp81_2017 lp420_2021 lp830_2021
 
 * selecciona las siguientes 6 líneas y ejecuta (do)
 foreach v of global lista_variables {
@@ -1024,60 +1023,7 @@ foreach v of global lista_variables {
 *******************************************************************************/
 * En "..." agregar la lista de variables de ID originales (por ejemplo los ID de personas, vivienda y hogar)
 
-keep  $lista_variables ... ... ...
-
-* selecciona las 3 lineas y ejecuta (do). Deben quedar 94 variables de las secciones II y III más las 
-* variables originales de ID que hayas mantenido
-ds
-local varconteo: word count `r(varlist)'
-display "Número de variables de la base: `varconteo'"
-
-
-/*******************************************************************************
-   VI. Incluir etiquetas para las variables y categorías
-*******************************************************************************/
-include "$ruta\labels.do"
-
-
-/*******************************************************************************
-   VII. Guardar la base armonizada 
-*******************************************************************************/
-compress
-save "$base_out", replace 
-
-log close
-
-/*******************************************************************************
-   III. Incluir variables externas
-*******************************************************************************/
-capture drop _merge
-merge m:1 pais_c anio_c using "\\sapidbshares.file.core.windows.net\idbshares\SURVEYS\general_documentation\data_externa\poverty\International_Poverty_Lines\5_International_Poverty_Lines_LAC_long_PPP21.dta", keepusing (tc_wdi ppp_wdi ppp_2021 ppp_2017 cpi cpi_2017 cpi2017 cpi_2021 cpi2021 lp365_2017 lp685_2017 lp14_2017 lp81_2017 lp420_2021 lp830_2021)
-drop if _merge ==2
-
-
-/*******************************************************************************
-   IV. Revisión de que se hayan creado todas las variables
-*******************************************************************************/
-* CALIDAD: revisa que hayas creado todas las variables. Si alguna no está
-* creada, te apacerá en rojo el nombre. 
-
-global lista_variables region_BID_c region_c geolev1 pais_c anio_c idh_ch idp_ci factor_ci factor_ch estrato_ci upm zona_c sexo_ci edad_ci relacion_ci civil_ci jefe_ci nconyuges_ch nhijos_ch notropari_ch notronopari_ch nempdom_ch miembros_ci clasehog_ch nmiembros_ch nmayor21_ch nmenor21_ch nmayor65_ch nmenor6_ch nmenor1_ch afro_ci ind_ci noafroind_ci afroind_ci afro_ch ind_ch noafroind_ch afroind_ch  dis_ci disWG_ci dis_ch migrante_ci migrantiguo5_ci miglac_ci aedu_ci eduno_ci edupi_ci edupc_ci edusi_ci edusc_ci edus1i_ci edus1c_ci edus2i_ci edus2c_ci edupre_ci asiste_ci literacy condocup_ci emp_ci desemp_ci pea_ci rama_ci  categopri_ci spublico_ci luz_ch piso_ch pared_ch techo_ch resid_ch dorm_ch cuartos_ch cocina_ch telef_ch refrig_ch auto_ch compu_ch internet_ch cel_ch viviprop_ch aguaentubada_ch aguared_ch aguafuente_ch aguadist_ch aguadisp1_ch aguadisp2_ch bano_ch banoex_ch  sinbano_ch conbano_ch banoalcantarillado_ch des1_ch ${PAIS}_ingreso_ci ${PAIS}_ingresolab_ci ${PAIS}_m_pared_ch ${PAIS}_m_piso_ch ${PAIS}_m_techo_ch ${PAIS}_dis_ci tc_wdi ppp_wdi ppp_2021 ppp_2017 cpi cpi_2017 cpi2017 cpi_2021 cpi2021 lp365_2017 lp685_2017 lp14_2017 lp81_2017 lp420_2021 lp830_2021
-
-* selecciona las siguientes 6 líneas y ejecuta (do)
-foreach v of global lista_variables {
-	cap confirm variable `v'
-	if _rc == 111 {
-		display in red "variable `v' NO existe."
-	}
-}
-
-
-/*******************************************************************************
-   V. Borrar variables originales con exepción de los identificadores 
-*******************************************************************************/
-* En "..." agregar la lista de variables de ID originales (por ejemplo los ID de personas, vivienda y hogar)
-
-keep  $lista_variables 
+keep  $lista_variables
 
 * selecciona las 3 lineas y ejecuta (do). Deben quedar 94 variables de las secciones II y III más las 
 * variables originales de ID que hayas mantenido
@@ -1090,7 +1036,6 @@ display "Número de variables de la base: `varconteo'"
    VI. Incluir etiquetas para las variables y categorías
 *******************************************************************************/
 *include "$ruta\labels.do"
-
 
 /*******************************************************************************
    VII. Guardar la base armonizada 
