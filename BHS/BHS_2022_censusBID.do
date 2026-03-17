@@ -74,7 +74,7 @@ INSTRUCCIONES:
    I. Define las rutas de trabajo y abre la base de datos raw
 *****************************************************************************/
 
-clear
+clear all
 set more off
 
 global ruta = "${censusFolder}"  //cambiar ruta seleccionada 
