@@ -131,7 +131,7 @@ use "$base_in", clear
     ********
 	*pais_c*
 	********
-	gen str3 pais_c = "BHM"
+	gen str3 pais_c = "BHS"
 
     ********
 	*anio_c*
