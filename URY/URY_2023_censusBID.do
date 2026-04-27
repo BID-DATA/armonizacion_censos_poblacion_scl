@@ -1,11 +1,11 @@
-* (Versión Stata 17)
+* (Versión Stata 19)
 /*==============================================================================
 							CENSOS POBLACIONALES
 						   Script de armonización
 País: Uruguay
 Año: 2023
-Autores: CarolinaRivas/Jillie Chang
-Última versión: 24JUN2025
+Autores: CarolinaRivas/Jillie Chang/ Matias Rodriguez
+Última versión: 27/04/206
 División: SCL/SCL - IADB
 *******************************************************************************
 
@@ -739,7 +739,7 @@ pered05_2_1 AÑOS APROBADOS EN ESE NIVEL
 	*se considera menor de 12 años en la base, mientras que en el manual es 15
     gen byte condocup_ci=.
 	replace condocup_ci=1 if pobpcoac==2	//ocupados
-	replace condocup_ci=2 if pobpcoac==3	//desocupados	
+	replace condocup_ci=2 if pobpcoac==3 	//desocupados	
 	replace condocup_ci=3 if pobpcoac==4| pobpcoac==5	//inactivos
 	replace condocup_ci=4 if pobpcoac==1	//no responde por ser menor de edad
 		
@@ -774,13 +774,14 @@ pered05_2_1 AÑOS APROBADOS EN ESE NIVEL
 	replace categopri_ci=0 if (peral08==7 |peral08==11) & emp_ci==1
 	replace categopri_ci=1 if peral08==4 & emp_ci==1 //patrón
 	replace categopri_ci=2 if peral08==5 & emp_ci==1 //Cuenta Propia o independiente
-	replace categopri_ci=3 if peral08==1 | emp_ci==2 //Empleado o asalariado
+	replace categopri_ci=3 if (peral08==1 |peral08==2) & emp_ci==1 //Empleado o asalariado
 	replace categopri_ci=4 if peral08==6 & emp_ci==1  //Trabajador no remunerado
 	 
+
 	*************
     *spublico_ci*
     *************
-	gen byte spublico_ci=.	
+	gen byte spublico_ci= peral08==2 & emp_ci==1
 		
 **********************************************************
 ***  7.1 Vivienda - variables generales (15 variables) ***
@@ -893,7 +894,9 @@ pered05_2_1 AÑOS APROBADOS EN ESE NIVEL
 	***********
 	*cocina_ch*
 	***********
-	gen byte cocina_ch=.
+	gen byte cocina_ch= .
+	replace cocina_ch= 1 if inlist(hogsc01, "1", "2")
+	replace cocina_ch= 0 if hogsc01=="3" 
 	
 	***********
 	*telef_ch*
@@ -1032,11 +1035,16 @@ pered05_2_1 AÑOS APROBADOS EN ESE NIVEL
 	*sinbano_ch*
 	************
 	gen byte sinbano_ch =.
+	replace sinbano_ch= 3 if hogsh01=="3"
+	replace sinbano_ch= 0 if   inlist(hogsh01, "1", "2")
 
 	*********
 	*conbano_ch*
 	*********
 	gen byte conbano_ch=.
+	replace sinbano_ch= 1 if inlist(hogsh01, "1", "2")
+	replace sinbano_ch= 0 if hogsh01=="3"
+	
 	
 	***********************
 	*banoalcantarillado_ch*
