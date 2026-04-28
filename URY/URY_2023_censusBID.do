@@ -1035,15 +1035,15 @@ pered05_2_1 AÑOS APROBADOS EN ESE NIVEL
 	*sinbano_ch*
 	************
 	gen byte sinbano_ch =.
-	replace sinbano_ch= 3 if hogsh01=="3"
-	replace sinbano_ch= 0 if   inlist(hogsh01, "1", "2")
+	replace sinbano_ch= 3 if hogsh01="3
+	replace sinbano_ch= 0 if   inlist(hogsh01, 1, 2)
 
 	*********
 	*conbano_ch*
 	*********
 	gen byte conbano_ch=.
-	replace sinbano_ch= 1 if inlist(hogsh01, "1", "2")
-	replace sinbano_ch= 0 if hogsh01=="3"
+	replace sinbano_ch= 1 if inlist(hogsh01, 1, 2)
+	replace sinbano_ch= 0 if hogsh01==3
 	
 	
 	***********************
